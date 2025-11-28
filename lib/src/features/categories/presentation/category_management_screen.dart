@@ -1,0 +1,151 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../constants/app_colors.dart';
+import '../../../constants/app_text_styles.dart';
+import '../data/category_repository.dart';
+import '../domain/category.dart';
+
+class CategoryManagementScreen extends ConsumerStatefulWidget {
+  const CategoryManagementScreen({super.key});
+
+  @override
+  ConsumerState<CategoryManagementScreen> createState() => _CategoryManagementScreenState();
+}
+
+class _CategoryManagementScreenState extends ConsumerState<CategoryManagementScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => context.pop(),
+        ),
+        title: Text('Categories', style: AppTextStyles.h2),
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: AppColors.primary,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: AppColors.primary,
+          tabs: const [
+            Tab(text: 'Expense'),
+            Tab(text: 'Income'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _CategoryList(type: CategoryType.expense),
+          _CategoryList(type: CategoryType.income),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.push('/categories/add');
+        },
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class _CategoryList extends ConsumerWidget {
+  final CategoryType type;
+
+  const _CategoryList({required this.type});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categoriesAsync = ref.watch(categoryListProvider(type));
+
+    return categoriesAsync.when(
+      data: (categories) {
+        if (categories.isEmpty) {
+          return Center(child: Text('No categories found', style: AppTextStyles.bodyMedium));
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: categories.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final category = categories[index];
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: category.color.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _getIconData(category.iconPath),
+                    color: category.color,
+                  ),
+                ),
+                title: Text(category.name, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                subtitle: Text('${category.subCategories.length} sub-categories', style: AppTextStyles.bodySmall),
+                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                onTap: () {
+                  context.push('/categories/edit/${category.id}');
+                },
+              ),
+            );
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error: $err')),
+    );
+  }
+
+  IconData _getIconData(String iconPath) {
+    // Reuse the icon mapping logic or move it to a shared utility
+    // For now, simple mapping
+    switch (iconPath) {
+      case 'fastfood': return Icons.fastfood;
+      case 'directions_bus': return Icons.directions_bus;
+      case 'shopping_bag': return Icons.shopping_bag;
+      case 'movie': return Icons.movie;
+      case 'medical_services': return Icons.medical_services;
+      case 'school': return Icons.school;
+      case 'receipt': return Icons.receipt;
+      case 'more_horiz': return Icons.more_horiz;
+      case 'attach_money': return Icons.attach_money;
+      case 'store': return Icons.store;
+      case 'card_giftcard': return Icons.card_giftcard;
+      case 'trending_up': return Icons.trending_up;
+      default: return Icons.category;
+    }
+  }
+}
