@@ -4,12 +4,18 @@ import '../../../constants/app_text_styles.dart';
 import 'widgets/main_account_card.dart';
 import 'widgets/quick_record_section.dart';
 import 'widgets/recent_transactions_list.dart';
+import 'widgets/dashboard_filter_bar.dart';
 
-class DashboardScreen extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dashboard_filter_provider.dart';
+
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transactionsAsync = ref.watch(filteredTransactionsProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -32,11 +38,17 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const DashboardFilterBar(),
+              const SizedBox(height: 16),
               const MainAccountCard(),
               const SizedBox(height: 24),
               const QuickRecordSection(),
               const SizedBox(height: 24),
-              const RecentTransactionsList(),
+              transactionsAsync.when(
+                data: (transactions) => RecentTransactionsList(transactions: transactions),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
+              ),
               const SizedBox(height: 80), // Bottom padding for scrolling
             ],
           ),

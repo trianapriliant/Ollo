@@ -5,6 +5,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'wallet_provider.dart';
 import '../../settings/presentation/currency_provider.dart';
+import '../../../common_widgets/wallet_icon.dart';
 
 class WalletScreen extends ConsumerWidget {
   const WalletScreen({super.key});
@@ -60,44 +61,45 @@ class WalletScreen extends ConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final wallet = wallets[index];
-              return Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentBlue.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(16),
+              return GestureDetector(
+                onTap: () => context.push('/wallet-detail', extra: wallet),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
                       ),
-                      child: const Icon(Icons.account_balance_wallet, color: AppColors.primary),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(wallet.name, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
-                          Text(wallet.type.name.toUpperCase(), style: AppTextStyles.bodyMedium.copyWith(fontSize: 12, color: Colors.grey)),
-                        ],
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      WalletIcon(
+                        iconPath: wallet.iconPath,
+                        size: 24,
+                        backgroundColor: AppColors.accentBlue.withOpacity(0.2),
+                        color: AppColors.primary,
                       ),
-                    ),
-                    Text(
-                      '${ref.watch(currencyProvider).symbol} ${wallet.balance.toStringAsFixed(2)}',
-                      style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(wallet.name, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
+                            Text(wallet.type.name.toUpperCase(), style: AppTextStyles.bodyMedium.copyWith(fontSize: 12, color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        '${ref.watch(currencyProvider).symbol} ${wallet.balance.toStringAsFixed(2)}',
+                        style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

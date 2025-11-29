@@ -4,6 +4,7 @@ import '../domain/wallet.dart';
 
 abstract class WalletRepository {
   Future<void> addWallet(Wallet wallet);
+  Future<void> updateWallet(Wallet wallet);
   Future<List<Wallet>> getAllWallets();
   Stream<List<Wallet>> watchWallets();
   Future<Wallet?> getWallet(String id);
@@ -32,6 +33,15 @@ class InMemoryWalletRepository implements WalletRepository {
       _data.add(wallet); // Add new
     }
     _controller.add(List.from(_data));
+  }
+
+  @override
+  Future<void> updateWallet(Wallet wallet) async {
+    final index = _data.indexWhere((w) => w.id == wallet.id);
+    if (index != -1) {
+      _data[index] = wallet;
+      _controller.add(List.from(_data));
+    }
   }
 
   @override

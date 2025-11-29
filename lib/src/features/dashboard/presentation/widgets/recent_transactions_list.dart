@@ -1,88 +1,192 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
-import '../transaction_provider.dart';
 import '../../../settings/presentation/currency_provider.dart';
+import '../../../wallets/data/wallet_repository.dart';
+import '../../../wallets/domain/wallet.dart';
+import '../../../transactions/domain/transaction.dart';
+import '../../../categories/data/category_repository.dart';
+import '../../../categories/domain/category.dart';
+import '../dashboard_filter_provider.dart';
+import '../../../../utils/icon_helper.dart';
+
+final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
+  final repo = await ref.watch(walletRepositoryProvider.future);
+  return repo.getAllWallets();
+});
+
+final allCategoriesProvider = FutureProvider<List<Category>>((ref) async {
+  final repo = ref.watch(categoryRepositoryProvider);
+  final expenseCategories = await repo.getCategories(CategoryType.expense);
+  final incomeCategories = await repo.getCategories(CategoryType.income);
+  return [...expenseCategories, ...incomeCategories];
+});
 
 class RecentTransactionsList extends ConsumerWidget {
-  const RecentTransactionsList({super.key});
+  final List<Transaction> transactions;
+  
+  const RecentTransactionsList({super.key, required this.transactions});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transactionsAsync = ref.watch(transactionListProvider);
+    // final transactionsAsync = ref.watch(filteredTransactionsProvider); // Removed
     final currencySymbol = ref.watch(currencyProvider).symbol;
+    final walletsAsync = ref.watch(walletsListProvider);
+    final wallets = walletsAsync.valueOrNull ?? [];
+    final categoriesAsync = ref.watch(allCategoriesProvider);
+    final categories = categoriesAsync.valueOrNull ?? [];
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    // Directly use the passed transactions list
+    if (transactions.isEmpty) {
+      return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.receipt_long_outlined, size: 48, color: Colors.grey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Belum ada transaksi",
+                    style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Ayo mulai catat pengeluaran dan pemasukanmu agar keuangan lebih rapi! 🚀",
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final groupedTransactions = _groupTransactions(transactions);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Recent Transactions', style: AppTextStyles.h2),
-            TextButton(
-              onPressed: () {},
-              child: Text('See All', style: AppTextStyles.bodyMedium),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        transactionsAsync.when(
-          data: (transactions) {
-            if (transactions.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.receipt_long_outlined, size: 48, color: Colors.grey[300]),
-                      const SizedBox(height: 16),
-                      Text(
-                        "Belum ada transaksi",
-                        style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[600], fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Ayo mulai catat pengeluaran dan pemasukanmu agar keuangan lebih rapi! 🚀",
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[500]),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            // Take only last 5 transactions for dashboard
-            final recentTransactions = transactions.take(5).toList();
-
-            return ListView.separated(
+            const SizedBox(height: 16),
+            ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: recentTransactions.length,
+              itemCount: groupedTransactions.length,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
-                final transaction = recentTransactions[index];
-                final dateStr = "${transaction.date.day}/${transaction.date.month}/${transaction.date.year}";
+                final group = groupedTransactions[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDateHeader(group.date, group.dailyTotal, currencySymbol),
+                    const SizedBox(height: 12),
+                    ...group.transactions.map((transaction) {
+                      final walletName = wallets.firstWhere((w) => w.id == transaction.walletId, orElse: () => Wallet()..name = 'Unknown').name;
+                      
+                      // Find category and subcategory
+                      Category? category;
+                      
+                      if (transaction.categoryId != null) {
+                         category = categories.firstWhere((c) => c.id == transaction.categoryId, orElse: () => Category(id: 'unknown', name: 'Unknown', iconPath: 'help', type: CategoryType.expense, color: Colors.grey, subCategories: []));
+                      }
 
-                return _buildActivityItem(
-                  transaction.title,
-                  dateStr,
-                  transaction.amount,
-                  Icons.shopping_bag,
-                  transaction.isExpense,
-                  currencySymbol,
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.push('/transaction-detail', extra: transaction);
+                          },
+                          child: _buildActivityItem(
+                            transaction.title,
+                            walletName,
+                            transaction.amount,
+                            category,
+                            transaction.isExpense,
+                            currencySymbol,
+                            transaction.note,
+                            transaction.date,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
                 );
               },
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+            ),
+          ],
+        );
+  }
+
+  List<_TransactionGroup> _groupTransactions(List<Transaction> transactions) {
+    final groups = <DateTime, _TransactionGroup>{};
+
+    for (var transaction in transactions) {
+      final dateKey = DateTime(transaction.date.year, transaction.date.month, transaction.date.day);
+      if (!groups.containsKey(dateKey)) {
+        groups[dateKey] = _TransactionGroup(date: dateKey, transactions: [], dailyTotal: 0);
+      }
+      groups[dateKey]!.transactions.add(transaction);
+      
+      if (transaction.isExpense) {
+        groups[dateKey]!.dailyTotal -= transaction.amount;
+      } else {
+        groups[dateKey]!.dailyTotal += transaction.amount;
+      }
+    }
+
+    final sortedGroups = groups.values.toList()
+      ..sort((a, b) => b.date.compareTo(a.date)); // Sort by date desc
+
+    return sortedGroups;
+  }
+
+  Widget _buildDateHeader(DateTime date, double dailyTotal, String currencySymbol) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    String dateLabel = DateFormat('dd MMM yyyy').format(date);
+
+    final isPositive = dailyTotal >= 0;
+    final formattedTotal = '${isPositive ? "+" : ""}$currencySymbol ${dailyTotal.abs().toStringAsFixed(2)}';
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          dateLabel,
+          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+        ),
+        Text(
+          formattedTotal,
+          style: AppTextStyles.bodyMedium.copyWith(
+            fontWeight: FontWeight.bold,
+            color: isPositive ? Colors.green : Colors.red,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildActivityItem(String title, String date, double amount, IconData icon, bool isExpense, String currencySymbol) {
+  Widget _buildActivityItem(
+    String title, 
+    String walletName, 
+    double amount, 
+    Category? category, 
+    bool isExpense, 
+    String currencySymbol,
+    String? note,
+    DateTime date,
+  ) {
+    final iconData = category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline;
+    final iconColor = category?.color ?? AppColors.primary;
+    final backgroundColor = category?.color.withOpacity(0.1) ?? AppColors.accentBlue;
+    final timeStr = DateFormat('HH:mm').format(date);
+    final noteStr = note != null && note.isNotEmpty ? ' - $note' : '';
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -101,22 +205,49 @@ class RecentTransactionsList extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isExpense ? AppColors.accentPurple : AppColors.accentBlue,
+              color: backgroundColor,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: AppColors.primary),
+            child: Icon(iconData, color: iconColor),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title, 
-                  style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600),
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        title, 
+                        style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      timeStr,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textSecondary.withOpacity(0.5),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(date, style: AppTextStyles.bodyMedium.copyWith(fontSize: 12)),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.account_balance_wallet_outlined, size: 14, color: AppColors.textSecondary),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        '$walletName$noteStr', 
+                        style: AppTextStyles.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -132,4 +263,12 @@ class RecentTransactionsList extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _TransactionGroup {
+  final DateTime date;
+  final List<Transaction> transactions;
+  double dailyTotal;
+
+  _TransactionGroup({required this.date, required this.transactions, required this.dailyTotal});
 }

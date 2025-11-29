@@ -5,6 +5,7 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
 import '../../../settings/presentation/currency_provider.dart';
+import '../dashboard_filter_provider.dart';
 
 class MainAccountCard extends ConsumerWidget {
   const MainAccountCard({super.key});
@@ -14,6 +15,8 @@ class MainAccountCard extends ConsumerWidget {
     final totalBalanceAsync = ref.watch(totalBalanceProvider);
     final totalBalance = totalBalanceAsync.valueOrNull ?? 0.0;
     final currency = ref.watch(currencyProvider);
+    final totalsAsync = ref.watch(dashboardTotalsProvider);
+    final totals = totalsAsync.valueOrNull ?? {'income': 0.0, 'expense': 0.0};
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -30,37 +33,75 @@ class MainAccountCard extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => context.push('/add-transaction', extra: false), // Income
-                  icon: const Icon(Icons.arrow_downward),
-                  label: const Text('Income'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
+                child: _buildSummaryItem(
+                  context,
+                  label: 'Income',
+                  amount: totals['income']!,
+                  currencySymbol: currency.symbol,
+                  icon: Icons.arrow_downward,
+                  color: Colors.green,
+                  backgroundColor: Colors.white,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => context.push('/add-transaction', extra: true), // Expense
-                  icon: const Icon(Icons.arrow_upward),
-                  label: const Text('Expense'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
+                child: _buildSummaryItem(
+                  context,
+                  label: 'Expense',
+                  amount: totals['expense']!,
+                  currencySymbol: currency.symbol,
+                  icon: Icons.arrow_upward,
+                  color: Colors.red,
+                  backgroundColor: Colors.white,
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryItem(
+    BuildContext context, {
+    required String label,
+    required double amount,
+    required String currencySymbol,
+    required IconData icon,
+    required Color color,
+    required Color backgroundColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12), // Smaller corner radius as requested
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 16, color: color),
+              ),
+              const SizedBox(width: 8),
+              Text(label, style: AppTextStyles.bodySmall),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '$currencySymbol ${amount.toStringAsFixed(2)}',
+            style: AppTextStyles.bodyLarge.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

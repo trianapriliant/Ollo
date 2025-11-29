@@ -11,6 +11,10 @@ import '../features/profile/presentation/profile_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/categories/presentation/category_management_screen.dart';
 import '../features/categories/presentation/add_edit_category_screen.dart';
+import '../features/transactions/presentation/transaction_detail_screen.dart';
+import '../features/transactions/domain/transaction.dart';
+import '../features/wallets/presentation/wallet_detail_screen.dart';
+import '../features/wallets/domain/wallet.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -63,8 +67,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/add-transaction',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) {
-          final isExpense = state.extra as bool? ?? true;
-          return AddTransactionScreen(isExpense: isExpense);
+          final extra = state.extra;
+          bool isExpense = true;
+          Transaction? transactionToEdit;
+
+          if (extra is bool) {
+            isExpense = extra;
+          } else if (extra is Transaction) {
+            transactionToEdit = extra;
+            isExpense = transactionToEdit.isExpense;
+          }
+
+          return AddTransactionScreen(
+            isExpense: isExpense,
+            transactionToEdit: transactionToEdit,
+          );
         },
       ),
       GoRoute(
@@ -94,6 +111,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/transaction-detail',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final transaction = state.extra as Transaction;
+          return TransactionDetailScreen(transaction: transaction);
+        },
+      ),
+      GoRoute(
+        path: '/wallet-detail',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final wallet = state.extra as Wallet;
+          return WalletDetailScreen(wallet: wallet);
+        },
       ),
     ],
   );
