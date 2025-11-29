@@ -56,3 +56,88 @@ final statisticsProvider = FutureProvider.family<List<CategoryData>, bool>((ref,
 
   return data;
 });
+
+class MonthlyData {
+  final DateTime month;
+  final double income;
+  final double expense;
+
+  MonthlyData({required this.month, required this.income, required this.expense});
+}
+
+final monthlyStatisticsProvider = FutureProvider<List<MonthlyData>>((ref) async {
+  final transactions = await ref.watch(transactionListProvider.future);
+  
+  // Get last 6 months
+  final now = DateTime.now();
+  final List<MonthlyData> data = [];
+
+  for (int i = 5; i >= 0; i--) {
+    final monthStart = DateTime(now.year, now.month - i, 1);
+    final monthEnd = DateTime(now.year, now.month - i + 1, 0);
+
+    final monthTransactions = transactions.where((t) {
+      return t.date.isAfter(monthStart.subtract(const Duration(seconds: 1))) &&
+             t.date.isBefore(monthEnd.add(const Duration(seconds: 1)));
+    }).toList();
+
+    double income = 0;
+    double expense = 0;
+
+    for (var t in monthTransactions) {
+      if (t.isExpense) {
+        expense += t.amount;
+      } else {
+        income += t.amount;
+      }
+    }
+
+    data.add(MonthlyData(month: monthStart, income: income, expense: expense));
+  }
+
+  return data;
+});
+
+class DailyData {
+  final int day;
+  final double income;
+  final double expense;
+
+  DailyData({required this.day, required this.income, required this.expense});
+}
+
+final dailyStatisticsProvider = FutureProvider<List<DailyData>>((ref) async {
+  final transactions = await ref.watch(transactionListProvider.future);
+  
+  final now = DateTime.now();
+  final monthStart = DateTime(now.year, now.month, 1);
+  final monthEnd = DateTime(now.year, now.month + 1, 0);
+  final daysInMonth = monthEnd.day;
+
+  final List<DailyData> data = [];
+
+  // Filter for current month
+  final monthTransactions = transactions.where((t) {
+    return t.date.isAfter(monthStart.subtract(const Duration(seconds: 1))) &&
+           t.date.isBefore(monthEnd.add(const Duration(seconds: 1)));
+  }).toList();
+
+  for (int day = 1; day <= daysInMonth; day++) {
+    final dayTransactions = monthTransactions.where((t) => t.date.day == day);
+    
+    double income = 0;
+    double expense = 0;
+
+    for (var t in dayTransactions) {
+      if (t.isExpense) {
+        expense += t.amount;
+      } else {
+        income += t.amount;
+      }
+    }
+    
+    data.add(DailyData(day: day, income: income, expense: expense));
+  }
+
+  return data;
+});

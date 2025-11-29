@@ -6,6 +6,9 @@ import '../../settings/presentation/currency_provider.dart';
 import '../domain/category_data.dart';
 import 'statistics_provider.dart';
 import 'widgets/category_pie_chart.dart';
+import 'widgets/monthly_bar_chart.dart';
+import 'widgets/daily_line_chart.dart';
+import 'widgets/insight_card.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
@@ -22,6 +25,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     final statisticsAsync = ref.watch(statisticsProvider(_isExpense));
     final currencySymbol = ref.watch(currencyProvider).symbol;
 
+    final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider);
+    final dailyStatsAsync = ref.watch(dailyStatisticsProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -34,7 +40,79 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 0. Key Insights (This Month)
+              if (monthlyStatsAsync.valueOrNull != null && monthlyStatsAsync.valueOrNull!.isNotEmpty) ...[
+                Builder(
+                  builder: (context) {
+                    final currentMonth = monthlyStatsAsync.valueOrNull!.last;
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: InsightCard(
+                            title: 'Income',
+                            value: '${currencySymbol} ${currentMonth.income.toStringAsFixed(0)}',
+                            icon: Icons.arrow_downward,
+                            color: Colors.green,
+                            subtitle: 'This Month',
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: InsightCard(
+                            title: 'Expense',
+                            value: '${currencySymbol} ${currentMonth.expense.toStringAsFixed(0)}',
+                            icon: Icons.arrow_upward,
+                            color: Colors.red,
+                            subtitle: 'This Month',
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+              ],
+
+              // 1. Monthly Trends (Bar Chart)
+              Text('Monthly Trends', style: AppTextStyles.h3),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: monthlyStatsAsync.when(
+                  data: (data) => MonthlyBarChart(data: data),
+                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                  error: (err, _) => Text('Error: $err'),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // 2. Daily Trends (Line Chart)
+              Text('Daily Trends (This Month)', style: AppTextStyles.h3),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: dailyStatsAsync.when(
+                  data: (data) => DailyLineChart(data: data),
+                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                  error: (err, _) => Text('Error: $err'),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // 3. Category Breakdown (Donut Chart)
+              Text('Category Breakdown', style: AppTextStyles.h3),
+              const SizedBox(height: 16),
+              
               // Toggle Button (Income / Expense)
               Container(
                 padding: const EdgeInsets.all(4),
