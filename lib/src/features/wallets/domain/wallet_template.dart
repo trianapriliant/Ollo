@@ -15,7 +15,7 @@ class WalletTemplate {
 
 const List<WalletTemplate> bankTemplates = [
   WalletTemplate(name: 'Bank Mandiri', assetPath: 'assets/wallets/mandiri.png', type: WalletType.bank),
-  WalletTemplate(name: 'BRI', assetPath: 'assets/wallets/bri.png', type: WalletType.bank),
+  WalletTemplate(name: 'BRI', assetPath: 'assets/wallets/bri.svg', type: WalletType.bank),
   WalletTemplate(name: 'BCA', assetPath: 'assets/wallets/bca.png', type: WalletType.bank),
   WalletTemplate(name: 'BNI', assetPath: 'assets/wallets/bni.png', type: WalletType.bank),
   WalletTemplate(name: 'BTN', assetPath: 'assets/wallets/btn.png', type: WalletType.bank),

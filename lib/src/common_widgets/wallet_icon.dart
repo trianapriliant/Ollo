@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../utils/icon_helper.dart';
 
 class WalletIcon extends StatelessWidget {
@@ -27,20 +28,7 @@ class WalletIcon extends StatelessWidget {
           color: backgroundColor ?? Colors.transparent,
           shape: BoxShape.circle,
         ),
-        child: Image.asset(
-          iconPath,
-          width: size,
-          height: size,
-          fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) {
-            // Fallback to a generic icon if image fails
-            return Icon(
-              Icons.account_balance_wallet,
-              size: size,
-              color: color ?? Colors.grey,
-            );
-          },
-        ),
+        child: _buildAssetIcon(),
       );
     }
 
@@ -56,6 +44,37 @@ class WalletIcon extends StatelessWidget {
         size: size,
         color: color ?? Colors.black,
       ),
+    );
+  }
+
+  Widget _buildAssetIcon() {
+    if (iconPath.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.asset(
+        iconPath,
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+        // Optional: Apply color filter if color is provided, 
+        // but usually wallet logos have their own colors.
+        // colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        placeholderBuilder: (BuildContext context) => _buildErrorIcon(),
+      );
+    } else {
+      return Image.asset(
+        iconPath,
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
+      );
+    }
+  }
+
+  Widget _buildErrorIcon() {
+    return Icon(
+      Icons.account_balance_wallet,
+      size: size,
+      color: color ?? Colors.grey,
     );
   }
 }

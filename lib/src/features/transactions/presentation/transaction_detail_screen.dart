@@ -27,7 +27,10 @@ class TransactionDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currencySymbol = ref.watch(currencyProvider).symbol;
     
-    final categoryAsync = ref.watch(categoryListProvider(transaction.isExpense ? CategoryType.expense : CategoryType.income));
+    // For transfer, we might not have a category, or we can show a default "Transfer" category
+    final categoryAsync = ref.watch(categoryListProvider(
+      transaction.type == TransactionType.expense ? CategoryType.expense : CategoryType.income
+    ));
     final walletsAsync = ref.watch(walletsListProvider);
     
     return Scaffold(
@@ -54,9 +57,15 @@ class TransactionDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 32),
                   _buildDetailItem('Judul', transaction.title),
                   _buildDivider(),
-                  _buildDetailItem('Kategori', _getCategoryName(categoryAsync, transaction.categoryId)),
-                  _buildDivider(),
+                  if (transaction.type != TransactionType.transfer) ...[
+                    _buildDetailItem('Kategori', _getCategoryName(categoryAsync, transaction.categoryId)),
+                    _buildDivider(),
+                  ],
                   _buildDetailItem('Wallet', _getWalletName(walletsAsync, transaction.walletId)),
+                  if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) ...[
+                     _buildDivider(),
+                     _buildDetailItem('To Wallet', _getWalletName(walletsAsync, transaction.destinationWalletId)),
+                  ],
                   _buildDivider(),
                   _buildDetailItem('Tanggal', DateFormat('dd MMM yyyy').format(transaction.date)),
                   _buildDivider(),
@@ -76,31 +85,56 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildAmountSection(String currencySymbol) {
+    final isExpense = transaction.type == TransactionType.expense;
+    final isTransfer = transaction.type == TransactionType.transfer;
+    
+    Color color;
+    IconData icon;
+    String label;
+    String prefix;
+
+    if (isTransfer) {
+      color = Colors.blue;
+      icon = Icons.swap_horiz;
+      label = 'Transfer';
+      prefix = '';
+    } else if (isExpense) {
+      color = Colors.red;
+      icon = Icons.arrow_upward;
+      label = 'Pengeluaran';
+      prefix = '-';
+    } else {
+      color = Colors.green;
+      icon = Icons.arrow_downward;
+      label = 'Pemasukan';
+      prefix = '+';
+    }
+
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: transaction.isExpense ? AppColors.accentPurple.withOpacity(0.2) : AppColors.accentBlue.withOpacity(0.2),
+            color: color.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
-            transaction.isExpense ? Icons.arrow_upward : Icons.arrow_downward,
+            icon,
             size: 40,
-            color: transaction.isExpense ? Colors.red : Colors.green,
+            color: color,
           ),
         ),
         const SizedBox(height: 16),
         Text(
-          '${transaction.isExpense ? "-" : "+"}$currencySymbol ${transaction.amount.toStringAsFixed(0)}',
+          '$prefix$currencySymbol ${transaction.amount.toStringAsFixed(0)}',
           style: AppTextStyles.h1.copyWith(
-            color: transaction.isExpense ? Colors.red : Colors.green,
+            color: color,
             fontSize: 32,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          transaction.isExpense ? 'Pengeluaran' : 'Pemasukan',
+          label,
           style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
         ),
       ],
@@ -169,9 +203,11 @@ class TransactionDetailScreen extends ConsumerWidget {
                   // Delete logic
                   // 1. Revert balance
                   final walletRepo = await ref.read(walletRepositoryProvider.future);
+                  
+                  // Source Wallet
                   final wallet = await walletRepo.getWallet(transaction.walletId!);
                   if (wallet != null) {
-                    if (transaction.isExpense) {
+                    if (transaction.type == TransactionType.expense || transaction.type == TransactionType.transfer) {
                       wallet.balance += transaction.amount;
                     } else {
                       wallet.balance -= transaction.amount;
@@ -179,9 +215,18 @@ class TransactionDetailScreen extends ConsumerWidget {
                     await walletRepo.addWallet(wallet);
                   }
 
+                  // Destination Wallet (for Transfer)
+                  if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
+                    final destWallet = await walletRepo.getWallet(transaction.destinationWalletId!);
+                    if (destWallet != null) {
+                      destWallet.balance -= transaction.amount; // Revert addition
+                      await walletRepo.addWallet(destWallet);
+                    }
+                  }
+
                   // 2. Delete transaction
                   final transactionRepo = await ref.read(transactionRepositoryProvider.future);
-                  await transactionRepo.deleteTransaction(transaction.id.toString()); // Ensure ID type match
+                  await transactionRepo.deleteTransaction(transaction.id.toString()); 
 
                   if (context.mounted) {
                     context.pop(); // Close detail screen
@@ -207,8 +252,6 @@ class TransactionDetailScreen extends ConsumerWidget {
             child: ElevatedButton.icon(
               onPressed: () {
                 context.push('/add-transaction', extra: transaction); 
-                // Note: We need to update app_router to handle passing Transaction object to AddTransactionScreen
-                // Currently it expects bool. We need to adjust it.
               },
               icon: const Icon(Icons.edit_outlined),
               label: const Text('Edit'),
@@ -229,6 +272,7 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   String _getCategoryName(AsyncValue<List<Category>> categoryAsync, String? categoryId) {
+    if (categoryId == null) return '-';
     return categoryAsync.when(
       data: (categories) {
         final category = categories.firstWhere(

@@ -24,10 +24,11 @@ class AddTransactionBottomSheet extends ConsumerStatefulWidget {
 
 class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottomSheet> {
   String _amountStr = '0';
-  bool _isExpense = true;
+  TransactionType _selectedType = TransactionType.expense;
   Category? _selectedCategory;
   SubCategory? _selectedSubCategory;
   String? _selectedWalletId;
+  String? _selectedDestinationWalletId; // For Transfer
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
 
@@ -42,11 +43,8 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
       if (_amountStr == '0') {
         _amountStr = number;
       } else {
-        // Prevent multiple decimals
         if (number == '.' && _amountStr.contains('.')) return;
-        // Limit length
         if (_amountStr.length > 10) return;
-        
         _amountStr += number;
       }
     });
@@ -73,20 +71,35 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
       _showError("Please select a wallet");
       return;
     }
-    if (_selectedCategory == null) {
-      _showError("Please select a category");
-      return;
+
+    if (_selectedType == TransactionType.transfer) {
+      if (_selectedDestinationWalletId == null) {
+        _showError("Please select a destination wallet");
+        return;
+      }
+      if (_selectedWalletId == _selectedDestinationWalletId) {
+        _showError("Source and destination wallets must be different");
+        return;
+      }
+    } else {
+      if (_selectedCategory == null) {
+        _showError("Please select a category");
+        return;
+      }
     }
 
     // 1. Create Transaction
     final newTransaction = Transaction()
-      ..title = _selectedSubCategory?.name ?? _selectedCategory!.name
+      ..title = _selectedType == TransactionType.transfer 
+          ? 'Transfer' 
+          : (_selectedSubCategory?.name ?? _selectedCategory!.name)
       ..date = _selectedDate
       ..amount = amount
-      ..isExpense = _isExpense
+      ..type = _selectedType
       ..walletId = _selectedWalletId
-      ..categoryId = _selectedCategory!.id
-      ..note = _noteController.text; // Optional note
+      ..destinationWalletId = _selectedDestinationWalletId
+      ..categoryId = _selectedCategory?.id
+      ..note = _noteController.text;
 
     // 2. Save Transaction
     final transactionRepo = await ref.read(transactionRepositoryProvider.future);
@@ -94,14 +107,25 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
 
     // 3. Update Wallet Balance
     final walletRepo = await ref.read(walletRepositoryProvider.future);
-    final wallet = await walletRepo.getWallet(_selectedWalletId!);
-    if (wallet != null) {
-      if (_isExpense) {
-        wallet.balance -= amount;
+    
+    // Source Wallet
+    final sourceWallet = await walletRepo.getWallet(_selectedWalletId!);
+    if (sourceWallet != null) {
+      if (_selectedType == TransactionType.expense || _selectedType == TransactionType.transfer) {
+        sourceWallet.balance -= amount;
       } else {
-        wallet.balance += amount;
+        sourceWallet.balance += amount;
       }
-      await walletRepo.addWallet(wallet);
+      await walletRepo.addWallet(sourceWallet);
+    }
+
+    // Destination Wallet (for Transfer)
+    if (_selectedType == TransactionType.transfer && _selectedDestinationWalletId != null) {
+      final destWallet = await walletRepo.getWallet(_selectedDestinationWalletId!);
+      if (destWallet != null) {
+        destWallet.balance += amount;
+        await walletRepo.addWallet(destWallet);
+      }
     }
 
     if (mounted) {
@@ -121,7 +145,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
     final walletsAsync = ref.watch(walletListProvider);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9, // Increase height slightly
+      height: MediaQuery.of(context).size.height * 0.9,
       decoration: const BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
@@ -152,7 +176,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Income/Expense Toggle
+                        // Type Toggle
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -160,8 +184,9 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                           ),
                           child: Row(
                             children: [
-                              _buildTypeButton('Expense', true),
-                              _buildTypeButton('Income', false),
+                              _buildTypeButton('Expense', TransactionType.expense),
+                              _buildTypeButton('Income', TransactionType.income),
+                              _buildTypeButton('Transfer', TransactionType.transfer),
                             ],
                           ),
                         ),
@@ -201,7 +226,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
 
                   const SizedBox(height: 16),
 
-                  // Wallet Selector
+                  // Wallet Selector (From)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: walletsAsync.when(
@@ -214,39 +239,110 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                           });
                         }
 
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.primary.withOpacity(0.1)),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: _selectedWalletId,
-                              isExpanded: true,
-                              icon: const Icon(Icons.keyboard_arrow_down),
-                              items: wallets.map((w) {
-                                return DropdownMenuItem(
-                                  value: w.id,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.account_balance_wallet, size: 20, color: AppColors.primary),
-                                      const SizedBox(width: 12),
-                                      Text(w.name, style: AppTextStyles.bodyMedium),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (val) => setState(() => _selectedWalletId = val),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (_selectedType == TransactionType.transfer)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0, left: 4),
+                                child: Text("From", style: AppTextStyles.bodySmall),
+                              ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _selectedWalletId,
+                                  isExpanded: true,
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: wallets.map((w) {
+                                    return DropdownMenuItem(
+                                      value: w.id,
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.account_balance_wallet, size: 20, color: AppColors.primary),
+                                          const SizedBox(width: 12),
+                                          Text(w.name, style: AppTextStyles.bodyMedium),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _selectedWalletId = val;
+                                      // If destination wallet is same as new source wallet, reset destination
+                                      if (_selectedType == TransactionType.transfer && 
+                                          _selectedDestinationWalletId == val) {
+                                        _selectedDestinationWalletId = null;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         );
                       },
                       loading: () => const SizedBox(),
                       error: (_, __) => const SizedBox(),
                     ),
                   ),
+
+                  // Destination Wallet (To) - Only for Transfer
+                  if (_selectedType == TransactionType.transfer) ...[
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: walletsAsync.when(
+                        data: (wallets) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0, left: 4),
+                                child: Text("To", style: AppTextStyles.bodySmall),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: _selectedDestinationWalletId,
+                                    isExpanded: true,
+                                    hint: const Text("Select Destination"),
+                                    icon: const Icon(Icons.keyboard_arrow_down),
+                                    items: wallets.where((w) => w.id != _selectedWalletId).map((w) {
+                                      return DropdownMenuItem(
+                                        value: w.id,
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.account_balance_wallet, size: 20, color: Colors.green),
+                                            const SizedBox(width: 12),
+                                            Text(w.name, style: AppTextStyles.bodyMedium),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (val) => setState(() => _selectedDestinationWalletId = val),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                        loading: () => const SizedBox(),
+                        error: (_, __) => const SizedBox(),
+                      ),
+                    ),
+                  ],
 
                   const SizedBox(height: 16),
 
@@ -275,51 +371,52 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
 
                   const SizedBox(height: 16),
 
-                  // Category Selector
-                  // Category Selector
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final categoriesAsync = ref.watch(categoryListProvider(_isExpense ? CategoryType.expense : CategoryType.income));
-                      
-                      return categoriesAsync.when(
-                        data: (categories) {
-                          // Auto-select first category if none selected
-                          if (_selectedCategory == null && categories.isNotEmpty) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (mounted) {
-                                setState(() {
-                                  _selectedCategory = categories.first;
-                                  // Also reset sub-category if needed, though usually null initially
-                                });
-                              }
-                            });
-                          }
-
-                          return CategorySelector(
-                            categories: categories,
-                            selectedCategory: _selectedCategory,
-                            onCategorySelected: (category) {
-                              setState(() {
-                                _selectedCategory = category;
-                                _selectedSubCategory = null; // Reset sub-category
+                  // Category Selector (Hide for Transfer)
+                  if (_selectedType != TransactionType.transfer) ...[
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final categoriesAsync = ref.watch(categoryListProvider(
+                          _selectedType == TransactionType.expense ? CategoryType.expense : CategoryType.income
+                        ));
+                        
+                        return categoriesAsync.when(
+                          data: (categories) {
+                            if (_selectedCategory == null && categories.isNotEmpty) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted) {
+                                  setState(() {
+                                    _selectedCategory = categories.first;
+                                  });
+                                }
                               });
-                            },
-                          );
-                        },
-                        loading: () => const SizedBox(height: 90, child: Center(child: CircularProgressIndicator())),
-                        error: (_, __) => const SizedBox(),
-                      );
-                    },
-                  ),
+                            }
 
-                  if (_selectedCategory != null && _selectedCategory!.subCategories.isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    SubCategorySelector(
-                      subCategories: _selectedCategory!.subCategories,
-                      selectedSubCategory: _selectedSubCategory,
-                      onSubCategorySelected: (sub) => setState(() => _selectedSubCategory = sub),
-                      color: _selectedCategory!.color,
+                            return CategorySelector(
+                              categories: categories,
+                              selectedCategory: _selectedCategory,
+                              onCategorySelected: (category) {
+                                setState(() {
+                                  _selectedCategory = category;
+                                  _selectedSubCategory = null;
+                                });
+                              },
+                            );
+                          },
+                          loading: () => const SizedBox(height: 90, child: Center(child: CircularProgressIndicator())),
+                          error: (_, __) => const SizedBox(),
+                        );
+                      },
                     ),
+
+                    if (_selectedCategory != null && _selectedCategory!.subCategories.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      SubCategorySelector(
+                        subCategories: _selectedCategory!.subCategories,
+                        selectedSubCategory: _selectedSubCategory,
+                        onSubCategorySelected: (sub) => setState(() => _selectedSubCategory = sub),
+                        color: _selectedCategory!.color,
+                      ),
+                    ],
                   ],
 
                   const SizedBox(height: 16),
@@ -364,17 +461,21 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
     );
   }
 
-  Widget _buildTypeButton(String label, bool isExpenseBtn) {
-    final isSelected = _isExpense == isExpenseBtn;
+  Widget _buildTypeButton(String label, TransactionType type) {
+    final isSelected = _selectedType == type;
     return GestureDetector(
       onTap: () {
         setState(() {
-          _isExpense = isExpenseBtn;
-          _selectedCategory = null; // Reset category when switching type
+          _selectedType = type;
+          _selectedCategory = null;
+          // Reset destination if switching away from transfer (optional, but good for cleanup)
+          if (type != TransactionType.transfer) {
+            _selectedDestinationWalletId = null;
+          }
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? Colors.black : Colors.transparent,
           borderRadius: BorderRadius.circular(20),

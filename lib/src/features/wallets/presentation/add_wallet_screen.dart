@@ -56,7 +56,9 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
     String? newIcon;
 
     // Smart Icon Detection (Fallback for manual entry)
-    if (name.contains('bca') || name.contains('mandiri') || name.contains('bni') || name.contains('bri')) {
+    if (name.contains('bri')) {
+      newIcon = 'assets/wallets/bri.svg';
+    } else if (name.contains('bca') || name.contains('mandiri') || name.contains('bni')) {
       newIcon = 'account_balance';
     } else if (name.contains('cash') || name.contains('tunai') || name.contains('dompet')) {
       newIcon = 'payments';

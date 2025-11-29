@@ -68,18 +68,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) {
           final extra = state.extra;
-          bool isExpense = true;
+          TransactionType type = TransactionType.expense;
           Transaction? transactionToEdit;
 
           if (extra is bool) {
-            isExpense = extra;
+            type = extra ? TransactionType.expense : TransactionType.income;
+          } else if (extra is TransactionType) {
+            type = extra;
           } else if (extra is Transaction) {
             transactionToEdit = extra;
-            isExpense = transactionToEdit.isExpense;
+            type = transactionToEdit.type;
           }
 
           return AddTransactionScreen(
-            isExpense: isExpense,
+            type: type,
             transactionToEdit: transactionToEdit,
           );
         },

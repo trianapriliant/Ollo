@@ -12,10 +12,10 @@ import '../../categories/domain/category.dart';
 import '../../settings/presentation/currency_provider.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
-  final bool isExpense;
+  final TransactionType type;
   final Transaction? transactionToEdit;
   
-  const AddTransactionScreen({super.key, required this.isExpense, this.transactionToEdit});
+  const AddTransactionScreen({super.key, required this.type, this.transactionToEdit});
 
   @override
   ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -65,11 +65,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isExpense = widget.isExpense;
-    final primaryColor = isExpense ? Colors.red[400]! : Colors.green[600]!;
+    final type = widget.type;
+    final primaryColor = type == TransactionType.expense ? Colors.red[400]! : Colors.green[600]!;
     
     final walletsAsync = ref.watch(walletListProvider);
-    final categoriesAsync = ref.watch(categoryListProvider(isExpense ? CategoryType.expense : CategoryType.income));
+    final categoriesAsync = ref.watch(categoryListProvider(type == TransactionType.expense ? CategoryType.expense : CategoryType.income));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -82,8 +82,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         ),
         title: Text(
           widget.transactionToEdit != null 
-            ? (isExpense ? 'Edit Expense' : 'Edit Income')
-            : (isExpense ? 'Add Expense' : 'Add Income'),
+            ? 'Edit Transaction'
+            : 'Add Transaction',
           style: AppTextStyles.h2,
         ),
         centerTitle: true,
@@ -360,7 +360,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     // Apply new balance
                     final newWallet = await walletRepo.getWallet(_selectedWalletId!);
                     if (newWallet != null) {
-                      if (isExpense) {
+                      if (type == TransactionType.expense) {
                         newWallet.balance -= amount;
                       } else {
                         newWallet.balance += amount;
@@ -374,7 +374,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..title = title
                       ..date = DateTime.now()
                       ..amount = amount
-                      ..isExpense = isExpense
+                      ..type = type
                       ..walletId = _selectedWalletId
                       ..categoryId = _selectedItem!.category.id
                       ..note = _noteController.text;
@@ -384,7 +384,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     // Update Wallet Balance
                     final wallet = await walletRepo.getWallet(_selectedWalletId!);
                     if (wallet != null) {
-                      if (isExpense) {
+                      if (type == TransactionType.expense) {
                         wallet.balance -= amount;
                       } else {
                         wallet.balance += amount;
