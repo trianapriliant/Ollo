@@ -30,6 +30,7 @@ class DashboardBudgetCard extends ConsumerWidget {
 
             String title = 'Monthly Budget';
             if (filterState.filterType == TimeFilterType.day) title = 'Daily Budget';
+            if (filterState.filterType == TimeFilterType.week) title = 'Weekly Budget';
             if (filterState.filterType == TimeFilterType.year) title = 'Yearly Budget';
 
             return Container(
@@ -110,6 +111,12 @@ class DashboardBudgetCard extends ConsumerWidget {
         start = DateTime(now.year, now.month, now.day);
         end = start.add(const Duration(days: 1)).subtract(const Duration(milliseconds: 1));
         multiplier = 1 / 30; // Approx
+        break;
+      case TimeFilterType.week:
+        start = now.subtract(Duration(days: now.weekday - 1));
+        start = DateTime(start.year, start.month, start.day);
+        end = start.add(const Duration(days: 7)).subtract(const Duration(milliseconds: 1));
+        multiplier = 1 / 4; // Approx
         break;
       case TimeFilterType.year:
         start = DateTime(now.year, 1, 1);

@@ -17,10 +17,10 @@ class DashboardFilterBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildFilterTab(context, ref, 'Day', TimeFilterType.day, filterState.filterType),
+          _buildFilterTab(context, ref, 'Week', TimeFilterType.week, filterState.filterType),
           _buildFilterTab(context, ref, 'Month', TimeFilterType.month, filterState.filterType),
           _buildFilterTab(context, ref, 'Year', TimeFilterType.year, filterState.filterType),
           _buildFilterTab(context, ref, 'All', TimeFilterType.all, filterState.filterType),
-          _buildFilterTab(context, ref, 'Custom', TimeFilterType.custom, filterState.filterType),
         ],
       ),
     );
@@ -37,11 +37,7 @@ class DashboardFilterBar extends ConsumerWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          if (type == TimeFilterType.custom) {
-            _showCustomRangePicker(context, ref);
-          } else {
-            ref.read(dashboardFilterProvider.notifier).setFilterType(type);
-          }
+          ref.read(dashboardFilterProvider.notifier).setFilterType(type);
         },
         child: Container(
           alignment: Alignment.center,
@@ -59,35 +55,5 @@ class DashboardFilterBar extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _showCustomRangePicker(BuildContext context, WidgetRef ref) async {
-    final initialDateRange = DateTimeRange(
-      start: DateTime.now().subtract(const Duration(days: 7)),
-      end: DateTime.now(),
-    );
-    
-    final pickedRange = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      initialDateRange: initialDateRange,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
-              onSurface: AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (pickedRange != null) {
-      ref.read(dashboardFilterProvider.notifier).setCustomRange(pickedRange);
-    }
   }
 }

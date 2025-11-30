@@ -3,27 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../transactions/data/transaction_repository.dart';
 
-enum TimeFilterType { day, month, year, all, custom }
+enum TimeFilterType { day, week, month, year, all }
 
 class DashboardFilterState {
   final TimeFilterType filterType;
-  final DateTimeRange? customRange;
-  final DateTime selectedDate; // For day/month/year navigation
+  final DateTime selectedDate; // For navigation
 
   DashboardFilterState({
     this.filterType = TimeFilterType.month,
-    this.customRange,
     required this.selectedDate,
   });
 
   DashboardFilterState copyWith({
     TimeFilterType? filterType,
-    DateTimeRange? customRange,
     DateTime? selectedDate,
   }) {
     return DashboardFilterState(
       filterType: filterType ?? this.filterType,
-      customRange: customRange ?? this.customRange,
       selectedDate: selectedDate ?? this.selectedDate,
     );
   }
@@ -36,10 +32,6 @@ class DashboardFilterNotifier extends StateNotifier<DashboardFilterState> {
     state = state.copyWith(filterType: type);
   }
 
-  void setCustomRange(DateTimeRange range) {
-    state = state.copyWith(filterType: TimeFilterType.custom, customRange: range);
-  }
-
   void setSelectedDate(DateTime date) {
     state = state.copyWith(selectedDate: date);
   }
@@ -49,7 +41,6 @@ final dashboardFilterProvider = StateNotifierProvider<DashboardFilterNotifier, D
   return DashboardFilterNotifier();
 });
 
-// Provider for filtered transactions
 // Provider for filtered transactions
 final filteredTransactionsProvider = StreamProvider<List<Transaction>>((ref) async* {
   final repository = await ref.watch(transactionRepositoryProvider.future);
@@ -64,16 +55,24 @@ final filteredTransactionsProvider = StreamProvider<List<Transaction>>((ref) asy
       switch (filterState.filterType) {
         case TimeFilterType.day:
           return date.year == now.year && date.month == now.month && date.day == now.day;
+        case TimeFilterType.week:
+          // Find start of week (Monday)
+          final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+          final endOfWeek = startOfWeek.add(const Duration(days: 6));
+          
+          // Normalize dates to ignore time for comparison
+          final tDate = DateTime(date.year, date.month, date.day);
+          final sDate = DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+          final eDate = DateTime(endOfWeek.year, endOfWeek.month, endOfWeek.day);
+          
+          return (tDate.isAtSameMomentAs(sDate) || tDate.isAfter(sDate)) && 
+                 (tDate.isAtSameMomentAs(eDate) || tDate.isBefore(eDate));
         case TimeFilterType.month:
           return date.year == now.year && date.month == now.month;
         case TimeFilterType.year:
           return date.year == now.year;
         case TimeFilterType.all:
           return true;
-        case TimeFilterType.custom:
-          if (filterState.customRange == null) return true;
-          return date.isAfter(filterState.customRange!.start.subtract(const Duration(seconds: 1))) &&
-                 date.isBefore(filterState.customRange!.end.add(const Duration(seconds: 1)));
       }
     }).toList();
   }

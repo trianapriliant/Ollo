@@ -44,6 +44,30 @@ class DashboardMenuGrid extends StatelessWidget {
           // TODO: Navigate to Bills Screen
         },
       ),
+      _MenuItem(
+        icon: Icons.handshake_outlined,
+        label: 'Debts',
+        color: Colors.purple,
+        onTap: () {
+          // TODO: Navigate to Debts Screen
+        },
+      ),
+      _MenuItem(
+        icon: Icons.card_giftcard,
+        label: 'Wishlist',
+        color: Colors.pink,
+        onTap: () {
+          // TODO: Navigate to Wishlist Screen
+        },
+      ),
+      _MenuItem(
+        icon: Icons.subscriptions_outlined,
+        label: 'Subs',
+        color: Colors.teal,
+        onTap: () {
+          // TODO: Navigate to Subscriptions Screen
+        },
+      ),
     ];
 
     return Column(
@@ -51,10 +75,15 @@ class DashboardMenuGrid extends StatelessWidget {
       children: [
         Text('Menu', style: AppTextStyles.h2),
         const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: menuItems.map((item) => _buildMenuCard(item)).toList(),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: menuItems.map((item) => Padding(
+              padding: const EdgeInsets.only(right: 20), // Slightly larger spacing
+              child: _buildMenuCard(item),
+            )).toList(),
+          ),
         ),
       ],
     );
@@ -66,7 +95,7 @@ class DashboardMenuGrid extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 56, // Fixed width for consistency
+            width: 56,
             height: 56,
             decoration: BoxDecoration(
               color: item.color.withOpacity(0.1),
@@ -76,7 +105,7 @@ class DashboardMenuGrid extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            width: 64, // Limit text width
+            width: 64,
             child: Text(
               item.label,
               style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
