@@ -4,13 +4,14 @@ import 'package:path_provider/path_provider.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../wallets/domain/wallet.dart';
 import '../../categories/domain/category.dart';
+import '../../budget/domain/budget.dart';
 import 'package:flutter/material.dart';
 
 final isarProvider = FutureProvider<Isar>((ref) async {
   final dir = await getApplicationDocumentsDirectory();
   
   final isar = await Isar.open(
-    [TransactionSchema, WalletSchema, CategorySchema],
+    [TransactionSchema, WalletSchema, CategorySchema, BudgetSchema],
     directory: dir.path,
   );
 

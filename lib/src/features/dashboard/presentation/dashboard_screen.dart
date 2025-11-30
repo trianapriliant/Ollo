@@ -5,6 +5,8 @@ import 'widgets/main_account_card.dart';
 import 'widgets/quick_record_section.dart';
 import 'widgets/recent_transactions_list.dart';
 import 'widgets/dashboard_filter_bar.dart';
+import 'widgets/dashboard_menu_grid.dart';
+import 'widgets/dashboard_budget_card.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dashboard_filter_provider.dart';
@@ -41,6 +43,10 @@ class DashboardScreen extends ConsumerWidget {
               const DashboardFilterBar(),
               const SizedBox(height: 16),
               const MainAccountCard(),
+              const SizedBox(height: 24),
+              const DashboardMenuGrid(),
+              const SizedBox(height: 24),
+              const DashboardBudgetCard(),
               const SizedBox(height: 24),
               const QuickRecordSection(),
               const SizedBox(height: 24),
