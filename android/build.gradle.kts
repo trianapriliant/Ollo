@@ -19,3 +19,30 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+subprojects {
+    if (project.name == "isar_flutter_libs") {
+        val applyNamespace = {
+            val android = project.extensions.findByName("android")
+            if (android != null) {
+                try {
+                    val setNamespace = android.javaClass.getMethod("setNamespace", String::class.java)
+                    setNamespace.invoke(android, "dev.isar.isar_flutter_libs")
+
+                    val setCompileSdkVersion = android.javaClass.getMethod("setCompileSdkVersion", Int::class.javaPrimitiveType)
+                    setCompileSdkVersion.invoke(android, 35)
+                } catch (e: Exception) {
+                    println("Could not apply fixes for isar_flutter_libs: $e")
+                }
+            }
+        }
+
+        if (project.state.executed) {
+            applyNamespace()
+        } else {
+            project.afterEvaluate {
+                applyNamespace()
+            }
+        }
+    }
+}

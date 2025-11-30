@@ -99,7 +99,7 @@ class WalletDetailScreen extends ConsumerWidget {
                 data: (allTransactions) {
                   // Filter transactions for this wallet
                   final walletTransactions = allTransactions
-                      .where((t) => t.walletId == wallet.id)
+                      .where((t) => t.walletId == (wallet.externalId ?? wallet.id.toString()))
                       .toList();
                   
                   return RecentTransactionsList(transactions: walletTransactions);

@@ -19,7 +19,7 @@ final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
 });
 
 final allCategoriesProvider = FutureProvider<List<Category>>((ref) async {
-  final repo = ref.watch(categoryRepositoryProvider);
+  final repo = await ref.watch(categoryRepositoryProvider.future);
   final expenseCategories = await repo.getCategories(CategoryType.expense);
   final incomeCategories = await repo.getCategories(CategoryType.income);
   return [...expenseCategories, ...incomeCategories];
@@ -85,13 +85,24 @@ class RecentTransactionsList extends ConsumerWidget {
                     _buildDateHeader(group.date, group.dailyTotal, currencySymbol),
                     const SizedBox(height: 12),
                     ...group.transactions.map((transaction) {
-                      final walletName = wallets.firstWhere((w) => w.id == transaction.walletId, orElse: () => Wallet()..name = 'Unknown').name;
+                      final walletName = wallets.firstWhere(
+                        (w) => (w.externalId ?? w.id.toString()) == transaction.walletId, 
+                        orElse: () => Wallet()..name = 'Unknown'
+                      ).name;
                       
                       // Find category and subcategory
                       Category? category;
                       
                       if (transaction.categoryId != null) {
-                         category = categories.firstWhere((c) => c.id == transaction.categoryId, orElse: () => Category(id: 'unknown', name: 'Unknown', iconPath: 'help', type: CategoryType.expense, color: Colors.grey, subCategories: []));
+                         category = categories.firstWhere(
+                           (c) => (c.externalId ?? c.id.toString()) == transaction.categoryId, 
+                           orElse: () => Category(
+                             name: 'Unknown', 
+                             iconPath: 'help', 
+                             type: CategoryType.expense, 
+                             colorValue: Colors.grey.value
+                           )
+                         );
                       }
 
                       return Padding(

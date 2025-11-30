@@ -1,33 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+
+part 'category.g.dart';
 
 enum CategoryType { income, expense }
 
+@embedded
 class SubCategory {
-  final String id;
-  final String name;
-  final String iconPath;
+  String? id;
+  String? name;
+  String? iconPath;
 
   SubCategory({
-    required this.id,
-    required this.name,
-    required this.iconPath,
+    this.id,
+    this.name,
+    this.iconPath,
   });
 }
 
+@collection
 class Category {
-  final String id;
-  final String name;
-  final String iconPath; // Using string for now, can be mapped to IconData or SVG
-  final CategoryType type;
-  final Color color;
-  final List<SubCategory> subCategories;
+  Id id = Isar.autoIncrement;
+
+  String? externalId; // For predefined IDs like 'food'
+
+  late String name;
+  late String iconPath;
+
+  @Enumerated(EnumType.name)
+  late CategoryType type;
+
+  // Isar doesn't support Color directly, store as int
+  int? colorValue;
+
+  @ignore
+  Color get color => Color(colorValue ?? 0xFF000000);
+  
+  @ignore
+  set color(Color c) => colorValue = c.value;
+
+  List<SubCategory>? subCategories;
 
   Category({
-    required this.id,
+    this.externalId,
     required this.name,
     required this.iconPath,
     required this.type,
-    required this.color,
-    this.subCategories = const [],
+    required this.colorValue,
+    this.subCategories,
   });
 }

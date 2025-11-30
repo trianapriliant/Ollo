@@ -226,7 +226,7 @@ class TransactionDetailScreen extends ConsumerWidget {
 
                   // 2. Delete transaction
                   final transactionRepo = await ref.read(transactionRepositoryProvider.future);
-                  await transactionRepo.deleteTransaction(transaction.id.toString()); 
+                  await transactionRepo.deleteTransaction(transaction.id); 
 
                   if (context.mounted) {
                     context.pop(); // Close detail screen
@@ -276,8 +276,13 @@ class TransactionDetailScreen extends ConsumerWidget {
     return categoryAsync.when(
       data: (categories) {
         final category = categories.firstWhere(
-          (c) => c.id == categoryId, 
-          orElse: () => Category(id: 'unknown', name: 'Unknown', iconPath: 'help', type: CategoryType.expense, color: Colors.grey, subCategories: [])
+          (c) => (c.externalId ?? c.id.toString()) == categoryId, 
+          orElse: () => Category(
+            name: 'Unknown', 
+            iconPath: 'help', 
+            type: CategoryType.expense, 
+            colorValue: Colors.grey.value
+          )
         );
         return category.name;
       },
@@ -290,7 +295,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     return walletsAsync.when(
       data: (wallets) {
         final wallet = wallets.firstWhere(
-          (w) => w.id == walletId, 
+          (w) => (w.externalId ?? w.id.toString()) == walletId, 
           orElse: () => Wallet()..name = 'Unknown'
         );
         return wallet.name;

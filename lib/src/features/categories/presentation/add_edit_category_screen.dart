@@ -47,7 +47,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
   }
 
   Future<void> _loadCategory() async {
-    final repository = ref.read(categoryRepositoryProvider);
+    final repository = await ref.read(categoryRepositoryProvider.future);
     // In a real app, we might need a getCategoryById method. 
     // For now, we'll search in both lists.
     final expenses = await repository.getCategories(CategoryType.expense);
@@ -55,10 +55,11 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
     
     Category? category;
     try {
-      category = expenses.firstWhere((c) => c.id == widget.categoryId);
+      // Check externalId or id.toString()
+      category = expenses.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
     } catch (_) {
       try {
-        category = incomes.firstWhere((c) => c.id == widget.categoryId);
+        category = incomes.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
       } catch (_) {}
     }
 
@@ -68,7 +69,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
         _type = category!.type;
         _selectedColor = category!.color;
         _selectedIcon = category!.iconPath;
-        _subCategories = List.from(category!.subCategories);
+        _subCategories = List.from(category!.subCategories ?? []);
       });
     }
   }
@@ -82,21 +83,49 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
   void _saveCategory() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final repository = ref.read(categoryRepositoryProvider);
+    final repository = await ref.read(categoryRepositoryProvider.future);
+    
+    // For new categories, we don't set ID manually if using autoIncrement, 
+    // but we might need externalId if we want to refer to it by string later?
+    // Or just let Isar handle it.
+    // However, the app logic seems to rely on passing String IDs.
+    // If it's an update, we need the Isar ID (int).
+    // But we only have the String ID (widget.categoryId).
+    // We need to fetch the existing category to get its Isar ID.
     final category = Category(
-      id: _isNew ? const Uuid().v4() : widget.categoryId!,
+      externalId: _isNew ? const Uuid().v4() : widget.categoryId,
       name: _nameController.text,
       iconPath: _selectedIcon,
       type: _type,
-      color: _selectedColor,
+      colorValue: _selectedColor.value,
       subCategories: _subCategories,
     );
 
     if (_isNew) {
       await repository.addCategory(category);
     } else {
+      // Find existing to get Isar ID
+      final expenses = await repository.getCategories(CategoryType.expense);
+      final incomes = await repository.getCategories(CategoryType.income);
+      Category? existing;
+      try {
+        existing = expenses.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+      } catch (_) {
+        try {
+          existing = incomes.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+        } catch (_) {}
+      }
+      
+      if (existing != null) {
+        category.id = existing.id;
+      }
       await repository.updateCategory(category);
     }
+    
+    // ... wait, I'll fix the logic below in a separate block or just do a quick lookup here.
+    // Actually, let's just fetch it again to be safe.
+    
+    // Logic moved above
 
     if (mounted) {
       context.pop();
@@ -108,8 +137,24 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
   void _deleteCategory() async {
     if (widget.categoryId == null) return;
     
-    final repository = ref.read(categoryRepositoryProvider);
-    await repository.deleteCategory(widget.categoryId!);
+    final repository = await ref.read(categoryRepositoryProvider.future);
+    
+    // Need Isar ID to delete
+    // Same lookup logic...
+     final expenses = await repository.getCategories(CategoryType.expense);
+     final incomes = await repository.getCategories(CategoryType.income);
+     Category? existing;
+     try {
+       existing = expenses.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+     } catch (_) {
+       try {
+         existing = incomes.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+       } catch (_) {}
+     }
+     
+     if (existing != null) {
+       await repository.deleteCategory(existing.id);
+     }
     
     if (mounted) {
       context.pop();
@@ -301,7 +346,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.subdirectory_arrow_right, size: 20, color: Colors.grey),
-                      title: Text(sub.name),
+                      title: Text(sub.name ?? 'Unknown'),
                       trailing: IconButton(
                         icon: const Icon(Icons.close, size: 18, color: Colors.grey),
                         onPressed: () {

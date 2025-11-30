@@ -37,7 +37,7 @@ final statisticsProvider = FutureProvider.family<List<CategoryData>, bool>((ref,
 
     // Find category details
     final category = categories.firstWhere(
-      (c) => c.id == categoryId,
+      (c) => (c.externalId ?? c.id.toString()) == categoryId,
       orElse: () => categories.first, // Fallback (should ideally handle unknown category)
     );
 

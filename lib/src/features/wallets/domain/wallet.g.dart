@@ -14,26 +14,31 @@ extension GetWalletCollection on Isar {
 }
 
 const WalletSchema = CollectionSchema(
-  name: r'Wall',
-  id: 6002406667575772068,
+  name: r'Wallet',
+  id: 8666280453615945738,
   properties: {
     r'balance': PropertySchema(
       id: 0,
       name: r'balance',
       type: IsarType.double,
     ),
-    r'iconPath': PropertySchema(
+    r'externalId': PropertySchema(
       id: 1,
+      name: r'externalId',
+      type: IsarType.string,
+    ),
+    r'iconPath': PropertySchema(
+      id: 2,
       name: r'iconPath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'type',
       type: IsarType.string,
       enumMap: _WallettypeEnumValueMap,
@@ -59,6 +64,12 @@ int _walletEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.externalId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.iconPath.length * 3;
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.type.name.length * 3;
@@ -72,9 +83,10 @@ void _walletSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.balance);
-  writer.writeString(offsets[1], object.iconPath);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.type.name);
+  writer.writeString(offsets[1], object.externalId);
+  writer.writeString(offsets[2], object.iconPath);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.type.name);
 }
 
 Wallet _walletDeserialize(
@@ -85,10 +97,11 @@ Wallet _walletDeserialize(
 ) {
   final object = Wallet();
   object.balance = reader.readDouble(offsets[0]);
-  object.iconPath = reader.readString(offsets[1]);
+  object.externalId = reader.readStringOrNull(offsets[1]);
+  object.iconPath = reader.readString(offsets[2]);
   object.id = id;
-  object.name = reader.readString(offsets[2]);
-  object.type = _WallettypeValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+  object.name = reader.readString(offsets[3]);
+  object.type = _WallettypeValueEnumMap[reader.readStringOrNull(offsets[4])] ??
       WalletType.bank;
   return object;
 }
@@ -103,10 +116,12 @@ P _walletDeserializeProp<P>(
     case 0:
       return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (_WallettypeValueEnumMap[reader.readStringOrNull(offset)] ??
           WalletType.bank) as P;
     default:
@@ -273,6 +288,152 @@ extension WalletQueryFilter on QueryBuilder<Wallet, Wallet, QFilterCondition> {
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'externalId',
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'externalId',
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'externalId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'externalId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'externalId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'externalId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'externalId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'externalId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'externalId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'externalId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'externalId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> externalIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'externalId',
+        value: '',
       ));
     });
   }
@@ -735,6 +896,18 @@ extension WalletQuerySortBy on QueryBuilder<Wallet, Wallet, QSortBy> {
     });
   }
 
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> sortByExternalId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'externalId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> sortByExternalIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'externalId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wallet, Wallet, QAfterSortBy> sortByIconPath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'iconPath', Sort.asc);
@@ -782,6 +955,18 @@ extension WalletQuerySortThenBy on QueryBuilder<Wallet, Wallet, QSortThenBy> {
   QueryBuilder<Wallet, Wallet, QAfterSortBy> thenByBalanceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'balance', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> thenByExternalId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'externalId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> thenByExternalIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'externalId', Sort.desc);
     });
   }
 
@@ -841,6 +1026,13 @@ extension WalletQueryWhereDistinct on QueryBuilder<Wallet, Wallet, QDistinct> {
     });
   }
 
+  QueryBuilder<Wallet, Wallet, QDistinct> distinctByExternalId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'externalId', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Wallet, Wallet, QDistinct> distinctByIconPath(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -873,6 +1065,12 @@ extension WalletQueryProperty on QueryBuilder<Wallet, Wallet, QQueryProperty> {
   QueryBuilder<Wallet, double, QQueryOperations> balanceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'balance');
+    });
+  }
+
+  QueryBuilder<Wallet, String?, QQueryOperations> externalIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'externalId');
     });
   }
 

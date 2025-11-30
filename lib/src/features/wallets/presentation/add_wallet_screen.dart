@@ -279,7 +279,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                   if (name.isEmpty) return;
 
                   final newWallet = Wallet()
-                    ..id = DateTime.now().millisecondsSinceEpoch.toString() // Generate unique ID
+                    ..externalId = DateTime.now().millisecondsSinceEpoch.toString() // Generate unique ID
                     ..name = name
                     ..balance = balance
                     ..type = _selectedType

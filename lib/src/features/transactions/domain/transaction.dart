@@ -1,10 +1,12 @@
-// import 'package:isar/isar.dart';
-// part 'transaction.g.dart';
+import 'package:isar/isar.dart';
+
+part 'transaction.g.dart';
 
 enum TransactionType { income, expense, transfer }
 
+@collection
 class Transaction {
-  String? id;
+  Id id = Isar.autoIncrement; // Auto-increment ID for Isar
 
   late String title;
 
@@ -12,6 +14,7 @@ class Transaction {
 
   late DateTime date;
 
+  @Enumerated(EnumType.name)
   late TransactionType type;
 
   late String? note;
@@ -20,8 +23,11 @@ class Transaction {
   String? destinationWalletId; // For transfers
   String? categoryId;
 
-  // Helper getters
+  // Helper getters (ignored by Isar)
+  @ignore
   bool get isExpense => type == TransactionType.expense;
+  @ignore
   bool get isIncome => type == TransactionType.income;
+  @ignore
   bool get isTransfer => type == TransactionType.transfer;
 }

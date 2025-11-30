@@ -1,0 +1,76 @@
+Analyzing Ollo...                                               
+
+warning - The include file 'package:flutter_lints/flutter.yaml' in 'D:\2MainFile\Project\Ollo\analysis_options.yaml' can't be found when analyzing 'D:\2MainFile\Project\Ollo' - analysis_options.yaml:10:10 - include_file_not_found
+warning - Unused import: 'package:go_router/go_router.dart' - lib\src\app.dart:3:8 - unused_import
+   info - 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\src\app.dart:52:11 - deprecated_member_use
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\src\common_widgets\scaffold_with_nav_bar.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\common_widgets\scaffold_with_nav_bar.dart:23:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\common_widgets\scaffold_with_nav_bar.dart:31:45 - deprecated_member_use
+warning - Unused import: 'package:flutter/material.dart' - lib\src\features\categories\data\category_repository.dart:1:8 - unused_import
+warning - The annotation 'ignore' can only be used on fields or getters - lib\src\features\categories\domain\category.dart:39:4 - invalid_annotation_target
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\categories\domain\category.dart:40:40 - deprecated_member_use
+warning - The '!' will have no effect because the receiver can't be null - lib\src\features\categories\presentation\add_edit_category_screen.dart:69:25 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\src\features\categories\presentation\add_edit_category_screen.dart:70:34 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\src\features\categories\presentation\add_edit_category_screen.dart:71:33 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\src\features\categories\presentation\add_edit_category_screen.dart:72:44 - unnecessary_non_null_assertion
+  error - Undefined name 'category' - lib\src\features\categories\presentation\add_edit_category_screen.dart:114:36 - undefined_identifier
+  error - Undefined name 'category' - lib\src\features\categories\presentation\add_edit_category_screen.dart:144:10 - undefined_identifier
+  error - Undefined name 'category' - lib\src\features\categories\presentation\add_edit_category_screen.dart:146:40 - undefined_identifier
+warning - The value of 'refresh' should be used - lib\src\features\categories\presentation\add_edit_category_screen.dart:152:11 - unused_result
+warning - The value of 'refresh' should be used - lib\src\features\categories\presentation\add_edit_category_screen.dart:180:11 - unused_result
+  error - The argument type 'String?' can't be assigned to the parameter type 'String'.  - lib\src\features\categories\presentation\add_edit_category_screen.dart:368:35 - argument_type_not_assignable
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\categories\presentation\add_edit_category_screen.dart:401:39 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\categories\presentation\add_edit_category_screen.dart:401:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\categories\presentation\add_edit_category_screen.dart:414:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\categories\presentation\add_edit_category_screen.dart:431:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\categories\presentation\category_management_screen.dart:98:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\categories\presentation\category_management_screen.dart:108:43 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\common\data\isar_provider.dart:50:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\common\data\isar_provider.dart:64:31 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\common\data\isar_provider.dart:77:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\common\data\isar_provider.dart:89:30 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\common\data\isar_provider.dart:103:32 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\common\data\isar_provider.dart:114:31 - deprecated_member_use
+warning - Unused import: 'package:flutter/material.dart' - lib\src\features\dashboard\data\mock_data.dart:1:8 - unused_import
+warning - Unused import: 'package:go_router/go_router.dart' - lib\src\features\dashboard\presentation\widgets\main_account_card.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\dashboard\presentation\widgets\main_account_card.dart:88:32 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\dashboard\presentation\widgets\quick_record_section.dart:44:39 - deprecated_member_use
+warning - Unused import: '../dashboard_filter_provider.dart' - lib\src\features\dashboard\presentation\widgets\recent_transactions_list.dart:13:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\dashboard\presentation\widgets\recent_transactions_list.dart:103:54 - deprecated_member_use
+warning - The value of the local variable 'today' isn't used - lib\src\features\dashboard\presentation\widgets\recent_transactions_list.dart:160:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\dashboard\presentation\widgets\recent_transactions_list.dart:197:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\dashboard\presentation\widgets\recent_transactions_list.dart:208:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\dashboard\presentation\widgets\recent_transactions_list.dart:242:56 - deprecated_member_use
+warning - Unused import: 'package:flutter/material.dart' - lib\src\features\statistics\presentation\statistics_provider.dart:1:8 - unused_import
+warning - Duplicate import - lib\src\features\statistics\presentation\statistics_provider.dart:3:8 - duplicate_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\statistics_screen.dart:240:33 - deprecated_member_use
+warning - Unused import: '../../../../constants/app_colors.dart' - lib\src\features\statistics\presentation\widgets\daily_line_chart.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\widgets\daily_line_chart.dart:33:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\widgets\daily_line_chart.dart:80:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\widgets\daily_line_chart.dart:93:35 - deprecated_member_use
+warning - Unused import: '../../../../constants/app_colors.dart' - lib\src\features\statistics\presentation\widgets\insight_card.dart:2:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\widgets\insight_card.dart:30:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\widgets\insight_card.dart:44:32 - deprecated_member_use
+warning - Unused import: '../../../../constants/app_colors.dart' - lib\src\features\statistics\presentation\widgets\monthly_bar_chart.dart:4:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\statistics\presentation\widgets\monthly_bar_chart.dart:93:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\add_transaction_screen.dart:259:62 - deprecated_member_use
+warning - Unused import: '../../../utils/icon_helper.dart' - lib\src\features\transactions\presentation\transaction_detail_screen.dart:14:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\transaction_detail_screen.dart:118:26 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\transaction_detail_screen.dart:174:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion - lib\src\features\transactions\presentation\transaction_detail_screen.dart:284:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\widgets\add_transaction_bottom_sheet.dart:258:81 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\widgets\add_transaction_bottom_sheet.dart:318:83 - deprecated_member_use
+warning - Unused import: '../../../../constants/app_colors.dart' - lib\src\features\transactions\presentation\widgets\category_selector.dart:2:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\widgets\category_selector.dart:39:73 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\widgets\category_selector.dart:45:53 - deprecated_member_use
+warning - Unused import: '../../../../constants/app_colors.dart' - lib\src\features\transactions\presentation\widgets\num_pad.dart:2:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\transactions\presentation\widgets\num_pad.dart:86:37 - deprecated_member_use
+warning - Unused import: '../../../../constants/app_colors.dart' - lib\src\features\transactions\presentation\widgets\sub_category_selector.dart:2:8 - unused_import
+warning - Unused import: 'package:flutter/material.dart' - lib\src\features\wallets\domain\wallet_template.dart:1:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\wallets\presentation\add_wallet_screen.dart:255:65 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\wallets\presentation\add_wallet_screen.dart:320:49 - deprecated_member_use
+warning - Unused import: '../../transactions/domain/transaction.dart' - lib\src\features\wallets\presentation\wallet_detail_screen.dart:8:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\wallets\presentation\wallet_screen.dart:73:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\src\features\wallets\presentation\wallet_screen.dart:84:63 - deprecated_member_use
+warning - The value of the local variable 'shellNavigatorKey' isn't used - lib\src\routing\app_router.dart:21:9 - unused_local_variable
+

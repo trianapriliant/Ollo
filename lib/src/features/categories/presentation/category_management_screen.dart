@@ -114,7 +114,7 @@ class _CategoryList extends ConsumerWidget {
                   ),
                 ),
                 title: Text(category.name, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
-                subtitle: Text('${category.subCategories.length} sub-categories', style: AppTextStyles.bodySmall),
+                subtitle: Text('${category.subCategories?.length ?? 0} sub-categories', style: AppTextStyles.bodySmall),
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {
                   context.push('/categories/edit/${category.id}');

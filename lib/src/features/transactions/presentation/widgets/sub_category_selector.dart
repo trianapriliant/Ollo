@@ -44,13 +44,13 @@ class SubCategorySelector extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    _getIconData(subCategory.iconPath),
+                    _getIconData(subCategory.iconPath ?? 'category'),
                     size: 18,
                     color: isSelected ? Colors.white : Colors.grey[600],
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    subCategory.name,
+                    subCategory.name ?? 'Unknown',
                     style: AppTextStyles.bodySmall.copyWith(
                       color: isSelected ? Colors.white : Colors.grey[800],
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,

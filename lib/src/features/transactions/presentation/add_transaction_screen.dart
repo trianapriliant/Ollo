@@ -28,7 +28,7 @@ class CategorySelectionItem {
   CategorySelectionItem({required this.category, this.subCategory});
 
   String get name => subCategory?.name ?? category.name;
-  String get id => subCategory?.id ?? category.id;
+  String get id => (subCategory?.id ?? category.id).toString();
   String get iconPath => subCategory?.iconPath ?? category.iconPath;
 
   @override
@@ -137,7 +137,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 if (_selectedWalletId == null && wallets.isNotEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     setState(() {
-                      _selectedWalletId = wallets.first.id;
+                      final first = wallets.first;
+                      _selectedWalletId = first.externalId ?? first.id.toString();
                     });
                   });
                 }
@@ -154,8 +155,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       isExpanded: true,
                       hint: const Text("Select Wallet"),
                       items: wallets.map((wallet) {
+                        final id = wallet.externalId ?? wallet.id.toString();
                         return DropdownMenuItem(
-                          value: wallet.id,
+                          value: id,
                           child: Row(
                             children: [
                               Icon(Icons.account_balance_wallet, color: AppColors.primary, size: 20),
@@ -191,7 +193,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 final List<CategorySelectionItem> items = [];
                 for (var category in categories) {
                   items.add(CategorySelectionItem(category: category));
-                  for (var sub in category.subCategories) {
+                  for (var sub in category.subCategories ?? []) {
                     items.add(CategorySelectionItem(category: category, subCategory: sub));
                   }
                 }
@@ -201,14 +203,18 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                    if (widget.transactionToEdit != null && items.isNotEmpty) {
                      try {
                         // Try to find exact match by Category ID AND Title (for subcategory)
-                        _selectedItem = items.firstWhere((item) => 
-                          item.category.id == widget.transactionToEdit!.categoryId && 
-                          (item.subCategory?.name == widget.transactionToEdit!.title || item.subCategory == null && item.category.name == widget.transactionToEdit!.title)
-                        );
+                        _selectedItem = items.firstWhere((item) {
+                          final catId = item.category.externalId ?? item.category.id.toString();
+                          return catId == widget.transactionToEdit!.categoryId && 
+                          (item.subCategory?.name == widget.transactionToEdit!.title || item.subCategory == null && item.category.name == widget.transactionToEdit!.title);
+                        });
                      } catch (e) {
                         // Fallback to just matching category ID
                         try {
-                           _selectedItem = items.firstWhere((item) => item.category.id == widget.transactionToEdit!.categoryId && item.subCategory == null);
+                           _selectedItem = items.firstWhere((item) {
+                             final catId = item.category.externalId ?? item.category.id.toString();
+                             return catId == widget.transactionToEdit!.categoryId && item.subCategory == null;
+                           });
                         } catch (e2) {
                            if (items.isNotEmpty) _selectedItem = items.first;
                         }
@@ -351,7 +357,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..title = title
                       ..amount = amount
                       ..walletId = _selectedWalletId
-                      ..categoryId = _selectedItem!.category.id
+                      ..categoryId = _selectedItem!.category.externalId ?? _selectedItem!.category.id.toString()
                       ..note = _noteController.text;
                       // Date kept same or updated? User didn't ask to edit date, so keep it.
                     
@@ -376,7 +382,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..amount = amount
                       ..type = type
                       ..walletId = _selectedWalletId
-                      ..categoryId = _selectedItem!.category.id
+                      ..categoryId = _selectedItem!.category.externalId ?? _selectedItem!.category.id.toString()
                       ..note = _noteController.text;
 
                     await transactionRepo.addTransaction(newTransaction);
