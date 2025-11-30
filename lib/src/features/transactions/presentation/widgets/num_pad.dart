@@ -6,12 +6,16 @@ class NumPad extends StatelessWidget {
   final Function(String) onNumberTap;
   final VoidCallback onBackspaceTap;
   final VoidCallback onDoneTap;
+  final DateTime selectedDate;
+  final VoidCallback onDateTap;
 
   const NumPad({
     super.key,
     required this.onNumberTap,
     required this.onBackspaceTap,
     required this.onDoneTap,
+    required this.selectedDate,
+    required this.onDateTap,
   });
 
   @override
@@ -50,7 +54,17 @@ class NumPad extends StatelessWidget {
                   height: 55, // Match number button height
                 ),
                 const SizedBox(height: 8),
-                _buildDoneButton(height: 55 * 3 + 16), // Span 3 rows (3 * 55 + 2 * 8 = 165 + 16 = 181)
+                // Date Button
+                _buildDateButton(
+                  date: selectedDate,
+                  onTap: onDateTap,
+                  height: (55 * 3 + 16 - 8) / 2, // Half of the remaining space
+                ),
+                const SizedBox(height: 8),
+                // Done Button
+                _buildDoneButton(
+                  height: (55 * 3 + 16 - 8) / 2, // Half of the remaining space
+                ),
               ],
             ),
           ),
@@ -116,6 +130,49 @@ class NumPad extends StatelessWidget {
     );
   }
 
+  Widget _buildDateButton({required DateTime date, required VoidCallback onTap, required double height}) {
+    // Format: "Nov 30"
+    //          "10:30"
+    final month = _getMonthName(date.month);
+    final day = date.day.toString();
+    final time = "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        height: height,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.orange[50],
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "$month $day",
+              style: AppTextStyles.bodySmall.copyWith(
+                color: Colors.grey[800],
+                fontWeight: FontWeight.bold,
+                height: 1.0,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              time,
+              style: AppTextStyles.h3.copyWith(
+                height: 1.0,
+                fontSize: 18,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDoneButton({required double height}) {
     return InkWell(
       onTap: onDoneTap,
@@ -128,8 +185,16 @@ class NumPad extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.center,
-        child: const Icon(Icons.check, color: Colors.white, size: 32),
+        child: const Icon(Icons.check, color: Colors.white, size: 28),
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month - 1];
   }
 }
