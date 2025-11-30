@@ -10,6 +10,10 @@ import 'widgets/monthly_bar_chart.dart';
 import 'widgets/daily_line_chart.dart';
 import 'widgets/insight_card.dart';
 
+import 'dart:ui';
+import 'package:go_router/go_router.dart';
+import '../../subscription/presentation/premium_provider.dart';
+
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
 
@@ -24,6 +28,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   Widget build(BuildContext context) {
     final statisticsAsync = ref.watch(statisticsProvider(_isExpense));
     final currencySymbol = ref.watch(currencyProvider).symbol;
+    final isPremium = ref.watch(isPremiumProvider);
 
     final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider);
     final dailyStatsAsync = ref.watch(dailyStatisticsProvider);
@@ -42,7 +47,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 0. Key Insights (This Month)
+              // 0. Key Insights (This Month) - FREE
               if (monthlyStatsAsync.valueOrNull != null && monthlyStatsAsync.valueOrNull!.isNotEmpty) ...[
                 Builder(
                   builder: (context) {
@@ -75,41 +80,51 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 const SizedBox(height: 24),
               ],
 
-              // 1. Monthly Trends (Bar Chart)
-              Text('Monthly Trends', style: AppTextStyles.h3),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: monthlyStatsAsync.when(
-                  data: (data) => MonthlyBarChart(data: data),
-                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
-                  error: (err, _) => Text('Error: $err'),
+              // PREMIUM SECTION
+              _PremiumLock(
+                isLocked: !isPremium,
+                onUnlock: () => context.push('/paywall'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 1. Monthly Trends (Bar Chart)
+                    Text('Monthly Trends', style: AppTextStyles.h3),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: monthlyStatsAsync.when(
+                        data: (data) => MonthlyBarChart(data: data),
+                        loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                        error: (err, _) => Text('Error: $err'),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 2. Daily Trends (Line Chart)
+                    Text('Daily Trends (This Month)', style: AppTextStyles.h3),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: dailyStatsAsync.when(
+                        data: (data) => DailyLineChart(data: data),
+                        loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                        error: (err, _) => Text('Error: $err'),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
 
-              // 2. Daily Trends (Line Chart)
-              Text('Daily Trends (This Month)', style: AppTextStyles.h3),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: dailyStatsAsync.when(
-                  data: (data) => DailyLineChart(data: data),
-                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
-                  error: (err, _) => Text('Error: $err'),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // 3. Category Breakdown (Donut Chart)
+              // 3. Category Breakdown (Donut Chart) - FREE (Basic)
               Text('Category Breakdown', style: AppTextStyles.h3),
               const SizedBox(height: 16),
               
@@ -298,5 +313,72 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       case 'trending_up': return Icons.trending_up;
       default: return Icons.category;
     }
+  }
+}
+
+class _PremiumLock extends StatelessWidget {
+  final Widget child;
+  final bool isLocked;
+  final VoidCallback onUnlock;
+
+  const _PremiumLock({
+    required this.child,
+    required this.isLocked,
+    required this.onUnlock,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isLocked) return child;
+
+    return Stack(
+      children: [
+        // Blurred Child
+        ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: AbsorbPointer(child: child), // Prevent interaction
+        ),
+        // Lock Overlay
+        Positioned.fill(
+          child: Container(
+            color: Colors.white.withOpacity(0.01), // Transparent overlay to catch taps if needed, but AbsorbPointer handles it
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.lock, color: AppColors.primary, size: 32),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: onUnlock,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text('Unlock Premium Stats'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

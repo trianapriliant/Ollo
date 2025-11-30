@@ -76,6 +76,41 @@ class ProfileScreen extends ConsumerWidget {
 
                 const SizedBox(height: 32),
 
+                // Future Features Section
+                _buildSectionHeader('Future Features'),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.cloud_sync_outlined,
+                  title: 'Backup & Recovery',
+                  onTap: () => _showComingSoonDialog(context, 'Backup & Recovery', 'Securely backup your data to the cloud and restore it on any device.'),
+                ),
+                const SizedBox(height: 16),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.auto_awesome_outlined,
+                  title: 'AI Automation',
+                  onTap: () => _showComingSoonDialog(context, 'AI Automation', 'Let AI categorize your transactions and provide smart financial insights.'),
+                ),
+                const SizedBox(height: 16),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.feedback_outlined,
+                  title: 'Feedback & Roadmap',
+                  onTap: () => _showComingSoonDialog(context, 'Feedback & Roadmap', 'Vote on new features and share your thoughts with the developer.'),
+                ),
+                const SizedBox(height: 16),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.file_download_outlined,
+                  title: 'Data Export',
+                  onTap: () {
+                    // Check premium status later, for now show coming soon or redirect to paywall if implemented
+                    // For this task, we treat it as a placeholder for the "house"
+                     _showComingSoonDialog(context, 'Data Export', 'Export your financial data to CSV or Excel formats. (Premium Feature)');
+                  },
+                ),
+                const SizedBox(height: 24),
+
                 // Data Management Section
                 _buildSectionHeader('Data Management'),
                 _buildMenuItem(
@@ -108,6 +143,13 @@ class ProfileScreen extends ConsumerWidget {
                   title: 'Help & Support',
                   onTap: () {},
                 ),
+                const SizedBox(height: 16),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.chat_bubble_outline,
+                  title: 'Send Feedback',
+                  onTap: () => _showComingSoonDialog(context, 'Send Feedback', 'We would love to hear your thoughts!'),
+                ),
                 const SizedBox(height: 24),
 
                 // Account Section
@@ -125,6 +167,36 @@ class ProfileScreen extends ConsumerWidget {
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
+      ),
+    );
+  }
+
+  void _showComingSoonDialog(BuildContext context, String title, String description) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.rocket_launch, color: AppColors.primary),
+            const SizedBox(width: 8),
+            Text('Coming Soon', style: AppTextStyles.h3),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(description, style: AppTextStyles.bodyMedium),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Can\'t Wait!'),
+          ),
+        ],
       ),
     );
   }

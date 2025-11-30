@@ -20,6 +20,7 @@ import '../features/budget/presentation/budget_screen.dart';
 import '../features/savings/presentation/savings_screen.dart';
 import '../features/savings/presentation/saving_detail_screen.dart';
 import '../features/savings/domain/saving_goal.dart';
+import '../features/subscription/presentation/paywall_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -157,6 +158,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           final goal = state.extra as SavingGoal;
           return SavingDetailScreen(goal: goal);
         },
+      ),
+      GoRoute(
+        path: '/paywall',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const PaywallScreen(),
       ),
     ],
   );
