@@ -104,7 +104,7 @@ class WalletScreen extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              '${ref.watch(currencyProvider).symbol} ${wallet.balance.toStringAsFixed(2)}',
+                              ref.watch(currencyProvider).format(wallet.balance),
                               style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ],

@@ -33,7 +33,7 @@ class RecentTransactionsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final transactionsAsync = ref.watch(filteredTransactionsProvider); // Removed
-    final currencySymbol = ref.watch(currencyProvider).symbol;
+    final currency = ref.watch(currencyProvider);
     final walletsAsync = ref.watch(walletsListProvider);
     final wallets = walletsAsync.valueOrNull ?? [];
     final categoriesAsync = ref.watch(allCategoriesProvider);
@@ -82,7 +82,7 @@ class RecentTransactionsList extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDateHeader(group.date, group.dailyTotal, currencySymbol),
+                    _buildDateHeader(group.date, group.dailyTotal, currency),
                     const SizedBox(height: 12),
                     ...group.transactions.map((transaction) {
                       final walletName = wallets.firstWhere(
@@ -117,7 +117,7 @@ class RecentTransactionsList extends ConsumerWidget {
                             transaction.amount,
                             category,
                             transaction.isExpense,
-                            currencySymbol,
+                            currency,
                             transaction.note,
                             transaction.date,
                           ),
@@ -155,14 +155,14 @@ class RecentTransactionsList extends ConsumerWidget {
     return sortedGroups;
   }
 
-  Widget _buildDateHeader(DateTime date, double dailyTotal, String currencySymbol) {
+  Widget _buildDateHeader(DateTime date, double dailyTotal, Currency currency) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
     String dateLabel = DateFormat('dd MMM yyyy').format(date);
 
     final isPositive = dailyTotal >= 0;
-    final formattedTotal = '${isPositive ? "+" : ""}$currencySymbol ${dailyTotal.abs().toStringAsFixed(2)}';
+    final formattedTotal = '${isPositive ? "+" : ""}${currency.format(dailyTotal.abs())}';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -188,7 +188,7 @@ class RecentTransactionsList extends ConsumerWidget {
     double amount, 
     Category? category, 
     bool isExpense, 
-    String currencySymbol,
+    Currency currency,
     String? note,
     DateTime date,
   ) {
@@ -264,7 +264,7 @@ class RecentTransactionsList extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            '${isExpense ? "-" : "+"}$currencySymbol $amount',
+            '${isExpense ? "-" : "+"}${currency.format(amount)}',
             style: AppTextStyles.bodyLarge.copyWith(
               fontWeight: FontWeight.bold,
               color: isExpense ? Colors.red[400] : Colors.green[600],

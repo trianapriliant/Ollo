@@ -20,7 +20,7 @@ class WalletDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currencySymbol = ref.watch(currencyProvider).symbol;
+    final currency = ref.watch(currencyProvider);
     final transactionsAsync = ref.watch(transactionStreamProvider);
     final walletsAsync = ref.watch(walletListProvider);
 
@@ -142,7 +142,7 @@ class WalletDetailScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '$currencySymbol ${currentWallet.balance.toStringAsFixed(0)}',
+                    currency.format(currentWallet.balance),
                     style: AppTextStyles.amountLarge,
                   ),
                 ],

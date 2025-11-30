@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class Currency {
   final String code;
@@ -6,6 +7,15 @@ class Currency {
   final String name;
 
   const Currency({required this.code, required this.symbol, required this.name});
+
+  String format(double amount) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_US', // Ensures #,###.## format
+      symbol: symbol,
+      decimalDigits: 2,
+    );
+    return formatter.format(amount);
+  }
 }
 
 const List<Currency> availableCurrencies = [

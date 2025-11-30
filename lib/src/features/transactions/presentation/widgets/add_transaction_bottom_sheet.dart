@@ -141,6 +141,24 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
     );
   }
 
+  String _getFormattedAmount() {
+    if (_amountStr.isEmpty) return '0';
+    
+    final parts = _amountStr.split('.');
+    final integerPart = parts[0];
+    
+    // Format integer part with commas
+    final formattedInteger = NumberFormat.decimalPattern('en_US').format(int.tryParse(integerPart) ?? 0);
+    
+    if (parts.length > 1) {
+      return '$formattedInteger.${parts[1]}';
+    } else if (_amountStr.endsWith('.')) {
+      return '$formattedInteger.';
+    }
+    
+    return formattedInteger;
+  }
+
   @override
   Widget build(BuildContext context) {
     final currencySymbol = ref.watch(currencyProvider).symbol;
@@ -334,7 +352,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              _amountStr,
+                              _getFormattedAmount(),
                               style: AppTextStyles.h1.copyWith(fontSize: 48),
                             ),
                           ],

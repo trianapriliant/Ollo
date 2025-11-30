@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../settings/presentation/currency_provider.dart';
 import '../../savings/data/saving_repository.dart';
 import '../../savings/domain/saving_goal.dart';
 import '../../savings/domain/saving_log.dart';
@@ -15,6 +16,7 @@ class SavingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final savingsAsync = ref.watch(savingListProvider);
+    final currency = ref.watch(currencyProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -101,7 +103,7 @@ class SavingsScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(totalSavings),
+                              currency.format(totalSavings),
                               style: AppTextStyles.h1.copyWith(color: Colors.white, fontSize: 32),
                             ),
                             const SizedBox(height: 24),
@@ -159,7 +161,7 @@ class SavingsScreen extends ConsumerWidget {
                           separatorBuilder: (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final goal = savings[index];
-                            return _buildSavingItem(context, goal);
+                            return _buildSavingItem(context, goal, currency);
                           },
                         ),
                       const SizedBox(height: 80), // Bottom padding for FAB
@@ -186,7 +188,7 @@ class SavingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSavingItem(BuildContext context, SavingGoal goal) {
+  Widget _buildSavingItem(BuildContext context, SavingGoal goal, Currency currency) {
     final progress = (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0);
     final isCompleted = progress >= 1.0;
 
@@ -241,11 +243,11 @@ class SavingsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(goal.currentAmount),
+                      currency.format(goal.currentAmount),
                       style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'of ${NumberFormat.compact(locale: 'id_ID').format(goal.targetAmount)}',
+                      'of ${currency.format(goal.targetAmount)}',
                       style: AppTextStyles.bodySmall,
                     ),
                   ],

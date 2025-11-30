@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../settings/presentation/currency_provider.dart';
 import '../../recurring/data/recurring_repository.dart';
 import '../../recurring/domain/recurring_transaction.dart';
 import 'widgets/recurring_summary_card.dart';
@@ -15,6 +16,7 @@ class RecurringScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recurringAsync = ref.watch(recurringListProvider);
+    final currency = ref.watch(currencyProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -50,7 +52,7 @@ class RecurringScreen extends ConsumerWidget {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final tx = transactions[index];
-                      return _buildRecurringItem(context, tx, ref);
+                      return _buildRecurringItem(context, tx, ref, currency);
                     },
                   );
                 },
@@ -69,7 +71,7 @@ class RecurringScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecurringItem(BuildContext context, RecurringTransaction tx, WidgetRef ref) {
+  Widget _buildRecurringItem(BuildContext context, RecurringTransaction tx, WidgetRef ref, Currency currency) {
     return InkWell(
       onTap: () => _showAddRecurringDialog(context, ref, transaction: tx),
       borderRadius: BorderRadius.circular(16),
@@ -113,7 +115,7 @@ class RecurringScreen extends ConsumerWidget {
               ),
             ),
             Text(
-              NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(tx.amount),
+              currency.format(tx.amount),
               style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold, color: Colors.red),
             ),
           ],

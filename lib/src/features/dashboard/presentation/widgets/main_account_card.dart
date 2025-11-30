@@ -19,7 +19,7 @@ class MainAccountCard extends ConsumerWidget {
     final totals = totalsAsync.valueOrNull ?? {'income': 0.0, 'expense': 0.0};
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.accentBlue,
         borderRadius: BorderRadius.circular(24),
@@ -27,9 +27,9 @@ class MainAccountCard extends ConsumerWidget {
       child: Column(
         children: [
           Text('Total Balance', style: AppTextStyles.bodyMedium),
-          const SizedBox(height: 8),
-          Text('${currency.symbol} ${totalBalance.toStringAsFixed(2)}', style: AppTextStyles.amountLarge),
-          const SizedBox(height: 24),
+          const SizedBox(height: 4),
+          Text(currency.format(totalBalance), style: AppTextStyles.amountLarge),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -37,7 +37,7 @@ class MainAccountCard extends ConsumerWidget {
                   context,
                   label: 'Income',
                   amount: totals['income']!,
-                  currencySymbol: currency.symbol,
+                  currency: currency,
                   icon: Icons.arrow_downward,
                   color: Colors.green,
                   backgroundColor: Colors.white,
@@ -49,7 +49,7 @@ class MainAccountCard extends ConsumerWidget {
                   context,
                   label: 'Expense',
                   amount: totals['expense']!,
-                  currencySymbol: currency.symbol,
+                  currency: currency,
                   icon: Icons.arrow_upward,
                   color: Colors.red,
                   backgroundColor: Colors.white,
@@ -66,7 +66,7 @@ class MainAccountCard extends ConsumerWidget {
     BuildContext context, {
     required String label,
     required double amount,
-    required String currencySymbol,
+    required Currency currency,
     required IconData icon,
     required Color color,
     required Color backgroundColor,
@@ -96,7 +96,7 @@ class MainAccountCard extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '$currencySymbol ${amount.toStringAsFixed(2)}',
+            currency.format(amount),
             style: AppTextStyles.bodyLarge.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 14,

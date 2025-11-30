@@ -27,7 +27,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     final statisticsAsync = ref.watch(statisticsProvider(_isExpense));
-    final currencySymbol = ref.watch(currencyProvider).symbol;
+    final currency = ref.watch(currencyProvider);
     final isPremium = ref.watch(isPremiumProvider);
 
     final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider);
@@ -57,7 +57,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         Expanded(
                           child: InsightCard(
                             title: 'Income',
-                            value: '${currencySymbol} ${currentMonth.income.toStringAsFixed(0)}',
+                            value: currency.format(currentMonth.income),
                             icon: Icons.arrow_downward,
                             color: Colors.green,
                             subtitle: 'This Month',
@@ -67,7 +67,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         Expanded(
                           child: InsightCard(
                             title: 'Expense',
-                            value: '${currencySymbol} ${currentMonth.expense.toStringAsFixed(0)}',
+                            value: currency.format(currentMonth.expense),
                             icon: Icons.arrow_upward,
                             color: Colors.red,
                             subtitle: 'This Month',
@@ -210,7 +210,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                       CategoryPieChart(
                         data: data,
                         totalAmount: totalAmount,
-                        currencySymbol: currencySymbol,
+                        currency: currency,
                       ),
                       const SizedBox(height: 32),
                       ListView.separated(
@@ -220,7 +220,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         separatorBuilder: (context, index) => const SizedBox(height: 16),
                         itemBuilder: (context, index) {
                           final item = data[index];
-                          return _buildCategoryItem(item, currencySymbol);
+                          return _buildCategoryItem(item, currency);
                         },
                       ),
                     ],
@@ -240,7 +240,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     );
   }
 
-  Widget _buildCategoryItem(CategoryData item, String currencySymbol) {
+  Widget _buildCategoryItem(CategoryData item, Currency currency) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -283,7 +283,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '$currencySymbol ${item.amount.toStringAsFixed(0)}',
+                currency.format(item.amount),
                 style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
               ),
               Text(

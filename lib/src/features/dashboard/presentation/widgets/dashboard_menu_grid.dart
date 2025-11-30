@@ -66,7 +66,7 @@ class DashboardMenuGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Menu', style: AppTextStyles.h2),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -95,7 +95,7 @@ class DashboardMenuGrid extends StatelessWidget {
             ),
             child: Icon(item.icon, color: item.color, size: 24),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           SizedBox(
             width: 64,
             child: Text(

@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../domain/category_data.dart';
 
+import '../../../settings/presentation/currency_provider.dart';
+
 class CategoryPieChart extends StatefulWidget {
   final List<CategoryData> data;
   final double totalAmount;
-  final String currencySymbol;
+  final Currency currency;
 
   const CategoryPieChart({
     super.key,
     required this.data,
     required this.totalAmount,
-    required this.currencySymbol,
+    required this.currency,
   });
 
   @override
@@ -58,7 +60,7 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
                 style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
               ),
               Text(
-                '${widget.currencySymbol} ${widget.totalAmount.toStringAsFixed(0)}',
+                widget.currency.format(widget.totalAmount),
                 style: AppTextStyles.h2.copyWith(fontSize: 20),
               ),
             ],

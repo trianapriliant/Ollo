@@ -53,7 +53,7 @@ class WalletSummaryCard extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                '${currency.symbol} ${state.totalBalance.toStringAsFixed(2)}',
+                currency.format(state.totalBalance),
                 style: AppTextStyles.h1.copyWith(
                   color: Colors.white,
                   fontSize: 36,
@@ -86,7 +86,7 @@ class WalletSummaryCard extends ConsumerWidget {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    '($sign${currency.symbol} ${state.periodChange.abs().toStringAsFixed(2)}) last 30 days',
+                    '($sign${currency.format(state.periodChange.abs())}) last 30 days',
                     style: AppTextStyles.bodySmall.copyWith(
                       color: Colors.white.withOpacity(0.9),
                     ),
