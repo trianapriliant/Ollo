@@ -6,12 +6,41 @@ import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../domain/category_data.dart';
 
-final statisticsProvider = FutureProvider.family<List<CategoryData>, bool>((ref, isExpense) async {
-  final transactions = await ref.watch(transactionListProvider.future);
-  final categories = await ref.watch(categoryListProvider(isExpense ? CategoryType.expense : CategoryType.income).future);
+enum TimeRange { month, year }
 
-  // 1. Filter transactions by type (Income/Expense)
-  final filteredTransactions = transactions.where((t) => t.isExpense == isExpense).toList();
+class StatisticsFilter {
+  final bool isExpense;
+  final TimeRange timeRange;
+
+  StatisticsFilter({required this.isExpense, required this.timeRange});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StatisticsFilter &&
+          runtimeType == other.runtimeType &&
+          isExpense == other.isExpense &&
+          timeRange == other.timeRange;
+
+  @override
+  int get hashCode => isExpense.hashCode ^ timeRange.hashCode;
+}
+
+final statisticsProvider = FutureProvider.family<List<CategoryData>, StatisticsFilter>((ref, filter) async {
+  final transactions = await ref.watch(transactionListProvider.future);
+  final categories = await ref.watch(categoryListProvider(filter.isExpense ? CategoryType.expense : CategoryType.income).future);
+
+  // 1. Filter transactions by type (Income/Expense) and Time Range
+  final now = DateTime.now();
+  final filteredTransactions = transactions.where((t) {
+    if (t.isExpense != filter.isExpense) return false;
+
+    if (filter.timeRange == TimeRange.month) {
+      return t.date.year == now.year && t.date.month == now.month;
+    } else {
+      return t.date.year == now.year;
+    }
+  }).toList();
 
   if (filteredTransactions.isEmpty) return [];
 

@@ -28,44 +28,26 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          PieChart(
-            PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  setState(() {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      touchedIndex = -1;
-                      return;
-                    }
-                    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                  });
-                },
-              ),
-              borderData: FlBorderData(show: false),
-              sectionsSpace: 2,
-              centerSpaceRadius: 60,
-              sections: _showingSections(),
-            ),
+      child: PieChart(
+        PieChartData(
+          pieTouchData: PieTouchData(
+            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+              setState(() {
+                if (!event.isInterestedForInteractions ||
+                    pieTouchResponse == null ||
+                    pieTouchResponse.touchedSection == null) {
+                  touchedIndex = -1;
+                  return;
+                }
+                touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+              });
+            },
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Total',
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
-              ),
-              Text(
-                widget.currency.format(widget.totalAmount),
-                style: AppTextStyles.h2.copyWith(fontSize: 20),
-              ),
-            ],
-          ),
-        ],
+          borderData: FlBorderData(show: false),
+          sectionsSpace: 2, // Reduced spacing slightly
+          centerSpaceRadius: 65, // Reduced from 80
+          sections: _showingSections(),
+        ),
       ),
     );
   }
@@ -74,13 +56,13 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
     return List.generate(widget.data.length, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 16.0 : 12.0;
-      final radius = isTouched ? 70.0 : 60.0;
+      final radius = isTouched ? 30.0 : 25.0; // Reduced from 70/60 to 30/25 for slimmer look
       final item = widget.data[i];
 
       return PieChartSectionData(
         color: item.color,
         value: item.amount,
-        title: '${item.percentage.toStringAsFixed(0)}%',
+        title: '', // Hide title on chart
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

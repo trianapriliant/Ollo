@@ -9,6 +9,7 @@ import 'widgets/category_pie_chart.dart';
 import 'widgets/monthly_bar_chart.dart';
 import 'widgets/daily_line_chart.dart';
 import 'widgets/insight_card.dart';
+import 'widgets/daily_stacked_bar_chart.dart';
 
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
@@ -23,10 +24,11 @@ class StatisticsScreen extends ConsumerStatefulWidget {
 
 class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   bool _isExpense = true;
+  TimeRange _timeRange = TimeRange.month;
 
   @override
   Widget build(BuildContext context) {
-    final statisticsAsync = ref.watch(statisticsProvider(_isExpense));
+    final statisticsAsync = ref.watch(statisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange)));
     final currency = ref.watch(currencyProvider);
     final isPremium = ref.watch(isPremiumProvider);
 
@@ -38,120 +40,119 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Statistics', style: AppTextStyles.h2),
-        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Statistics', style: AppTextStyles.h2),
+            PopupMenuButton<TimeRange>(
+              initialValue: _timeRange,
+              onSelected: (TimeRange result) {
+                setState(() {
+                  _timeRange = result;
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: Row(
+                  children: [
+                    Text(_timeRange == TimeRange.month ? 'Month' : 'Year', style: AppTextStyles.bodyMedium),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.keyboard_arrow_down, size: 16),
+                  ],
+                ),
+              ),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<TimeRange>>[
+                const PopupMenuItem<TimeRange>(
+                  value: TimeRange.month,
+                  child: Text('Month'),
+                ),
+                const PopupMenuItem<TimeRange>(
+                  value: TimeRange.year,
+                  child: Text('Year'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 0. Key Insights (This Month) - FREE
-              if (monthlyStatsAsync.valueOrNull != null && monthlyStatsAsync.valueOrNull!.isNotEmpty) ...[
-                Builder(
-                  builder: (context) {
-                    final currentMonth = monthlyStatsAsync.valueOrNull!.last;
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: InsightCard(
-                            title: 'Income',
-                            value: currency.format(currentMonth.income),
-                            icon: Icons.arrow_downward,
-                            color: Colors.green,
-                            subtitle: 'This Month',
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: InsightCard(
-                            title: 'Expense',
-                            value: currency.format(currentMonth.expense),
-                            icon: Icons.arrow_upward,
-                            color: Colors.red,
-                            subtitle: 'This Month',
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-              ],
+              // Chart Section
+              statisticsAsync.when(
+                data: (data) {
+                  final totalAmount = data.fold(0.0, (sum, item) => sum + item.amount);
 
-              // PREMIUM SECTION
-              _PremiumLock(
-                isLocked: !isPremium,
-                onUnlock: () => context.push('/paywall'),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 1. Monthly Trends (Bar Chart)
-                    Text('Monthly Trends', style: AppTextStyles.h3),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: monthlyStatsAsync.when(
-                        data: (data) => MonthlyBarChart(data: data),
-                        loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
-                        error: (err, _) => Text('Error: $err'),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                  final now = DateTime.now();
+                  final dateStr = _timeRange == TimeRange.month 
+                      ? '${_getMonthName(now.month)} ${now.year}'
+                      : '${now.year}';
 
-                    // 2. Daily Trends (Line Chart)
-                    Text('Daily Trends (This Month)', style: AppTextStyles.h3),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 200,
+                        child: CategoryPieChart(
+                          data: data,
+                          totalAmount: totalAmount,
+                          currency: currency,
+                        ),
                       ),
-                      child: dailyStatsAsync.when(
-                        data: (data) => DailyLineChart(data: data),
-                        loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
-                        error: (err, _) => Text('Error: $err'),
+                      const SizedBox(height: 16),
+                      Text(dateStr, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                      const SizedBox(height: 8),
+                      Text(
+                        currency.format(totalAmount),
+                        style: AppTextStyles.h1.copyWith(fontSize: 32),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'saved out of ${currency.format(totalAmount * 1.2)}', // Mock budget for now
+                        style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                      ),
+                    ],
+                  );
+                },
+                loading: () => const SizedBox(height: 300, child: Center(child: CircularProgressIndicator())),
+                error: (err, stack) => Center(child: Text('Error: $err')),
               ),
-
-              // 3. Category Breakdown (Donut Chart) - FREE (Basic)
-              Text('Category Breakdown', style: AppTextStyles.h3),
-              const SizedBox(height: 16),
               
-              // Toggle Button (Income / Expense)
+              const SizedBox(height: 32),
+
+              // Toggle
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () => setState(() => _isExpense = true),
+                        onTap: () => setState(() => _isExpense = false),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: _isExpense ? AppColors.primary : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            color: !_isExpense ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: !_isExpense ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
                           ),
                           child: Text(
-                            'Expense',
+                            'Income',
                             textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyLarge.copyWith(
-                              color: _isExpense ? Colors.white : Colors.grey,
+                            style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: !_isExpense ? Colors.black : Colors.grey,
                             ),
                           ),
                         ),
@@ -159,19 +160,20 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                     ),
                     Expanded(
                       child: GestureDetector(
-                        onTap: () => setState(() => _isExpense = false),
+                        onTap: () => setState(() => _isExpense = true),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: !_isExpense ? AppColors.primary : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            color: _isExpense ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: _isExpense ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
                           ),
                           child: Text(
-                            'Income',
+                            'Expense',
                             textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyLarge.copyWith(
-                              color: !_isExpense ? Colors.white : Colors.grey,
+                            style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: _isExpense ? Colors.black : Colors.grey,
                             ),
                           ),
                         ),
@@ -180,117 +182,95 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   ],
                 ),
               ),
+
               const SizedBox(height: 24),
 
-              // Chart & List
+              // Category List
               statisticsAsync.when(
                 data: (data) {
-                  if (data.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 40),
-                        child: Column(
-                          children: [
-                            Icon(Icons.pie_chart_outline, size: 64, color: Colors.grey[300]),
-                            const SizedBox(height: 16),
-                            Text(
-                              "No data available",
-                              style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  final totalAmount = data.fold(0.0, (sum, item) => sum + item.amount);
-
-                  return Column(
-                    children: [
-                      CategoryPieChart(
-                        data: data,
-                        totalAmount: totalAmount,
-                        currency: currency,
-                      ),
-                      const SizedBox(height: 32),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: data.length,
-                        separatorBuilder: (context, index) => const SizedBox(height: 16),
-                        itemBuilder: (context, index) {
-                          final item = data[index];
-                          return _buildCategoryItem(item, currency);
-                        },
-                      ),
-                    ],
+                  if (data.isEmpty) return const SizedBox();
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: data.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final item = data[index];
+                      return _buildCategoryItem(item, currency);
+                    },
                   );
                 },
-                loading: () => const SizedBox(
-                  height: 300,
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-                error: (err, stack) => Center(child: Text('Error: $err')),
+                loading: () => const SizedBox(),
+                error: (_, __) => const SizedBox(),
               ),
+              
+              const SizedBox(height: 32),
+
+              // Daily Stacked Bar Chart
+              dailyStatsAsync.when(
+                data: (data) {
+                  if (data.isEmpty) return const SizedBox();
+                  return DailyStackedBarChart(
+                    data: data,
+                    currency: currency,
+                  );
+                },
+                loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                error: (_, __) => const SizedBox(),
+              ),
+              
               const SizedBox(height: 80),
             ],
           ),
         ),
       ),
     );
+
+  }
+
+  String _getMonthName(int month) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[month - 1];
   }
 
   Widget _buildCategoryItem(CategoryData item, Currency currency) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: item.color.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              _getIconData(item.iconPath),
-              color: item.color,
-              size: 20,
-            ),
+          Icon(
+            _getIconData(item.iconPath),
+            color: item.color,
+            size: 24,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.categoryName, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                LinearProgressIndicator(
-                  value: item.percentage / 100,
-                  backgroundColor: Colors.grey[100],
-                  color: item.color,
-                  minHeight: 6,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                Text(item.categoryName, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                currency.format(item.amount),
-                style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '${item.percentage.toStringAsFixed(1)}%',
-                style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
-              ),
-            ],
+          Expanded(
+            flex: 2,
+            child: LinearProgressIndicator(
+              value: item.percentage / 100,
+              backgroundColor: Colors.grey[100],
+              color: item.color,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            '${item.percentage.toStringAsFixed(0)}%',
+            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),
