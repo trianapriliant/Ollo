@@ -6,6 +6,7 @@ import '../../../constants/app_text_styles.dart';
 import 'currency_provider.dart';
 import 'language_provider.dart';
 
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -144,4 +145,6 @@ class SettingsScreen extends ConsumerWidget {
       },
     );
   }
+
+
 }

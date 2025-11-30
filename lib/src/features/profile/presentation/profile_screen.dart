@@ -7,6 +7,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../profile/data/user_profile_repository.dart';
 import '../../profile/domain/user_profile.dart';
+import '../../subscription/presentation/premium_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -72,6 +73,73 @@ class ProfileScreen extends ConsumerWidget {
                 TextButton(
                   onPressed: () => _showEditProfileDialog(context, ref, profile),
                   child: Text('Edit Profile', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.primary)),
+                ),
+
+                const SizedBox(height: 32),
+                
+                // Premium Status Card
+                Consumer(
+                  builder: (context, ref, _) {
+                    final isPremium = ref.watch(isPremiumProvider);
+                    return GestureDetector(
+                      onTap: () => _showPremiumDebugDialog(context, ref),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: isPremium 
+                                ? [const Color(0xFFFFD700), const Color(0xFFFFA500)] // Gold for Premium
+                                : [const Color(0xFF4A90E2), const Color(0xFF50E3C2)], // Blue/Teal for Free (Upgrade CTA)
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: (isPremium ? Colors.orange : Colors.blue).withOpacity(0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isPremium ? Icons.verified : Icons.star_border,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    isPremium ? 'Premium Member' : 'Upgrade to Premium',
+                                    style: AppTextStyles.h3.copyWith(color: Colors.white),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    isPremium ? 'You have unlimited access!' : 'Unlock all features & remove limits.',
+                                    style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.9)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.chevron_right, color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 32),
@@ -328,6 +396,32 @@ class ProfileScreen extends ConsumerWidget {
             letterSpacing: 1.0,
           ),
         ),
+      ),
+    );
+  }
+
+  void _showPremiumDebugDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Developer Mode'),
+        content: const Text('Set Premium Status manually for testing purposes.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              ref.read(isPremiumProvider.notifier).setPremium(false);
+              context.pop();
+            },
+            child: const Text('Set FREE'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(isPremiumProvider.notifier).setPremium(true);
+              context.pop();
+            },
+            child: const Text('Set PREMIUM'),
+          ),
+        ],
       ),
     );
   }
