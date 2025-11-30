@@ -29,12 +29,9 @@ class BudgetScreen extends ConsumerWidget {
         title: Text('Budgets', style: AppTextStyles.h2),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: AppColors.primary),
+            icon: const Icon(Icons.more_vert, color: Colors.black),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AddEditBudgetScreen()),
-              );
+              // Future functionality
             },
           ),
         ],
@@ -75,11 +72,22 @@ class BudgetScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 16),
                 child: _BudgetCard(budget: budget),
               )),
+              const SizedBox(height: 80), // Bottom padding for FAB
             ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddEditBudgetScreen()),
+          );
+        },
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

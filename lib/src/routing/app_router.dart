@@ -15,6 +15,11 @@ import '../features/transactions/presentation/transaction_detail_screen.dart';
 import '../features/transactions/domain/transaction.dart';
 import '../features/wallets/presentation/wallet_detail_screen.dart';
 import '../features/wallets/domain/wallet.dart';
+import '../features/recurring/presentation/recurring_screen.dart';
+import '../features/budget/presentation/budget_screen.dart';
+import '../features/savings/presentation/savings_screen.dart';
+import '../features/savings/presentation/saving_detail_screen.dart';
+import '../features/savings/domain/saving_goal.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -128,6 +133,29 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final wallet = state.extra as Wallet;
           return WalletDetailScreen(wallet: wallet);
+        },
+      ),
+      GoRoute(
+        path: '/recurring',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const RecurringScreen(),
+      ),
+      GoRoute(
+        path: '/budget',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const BudgetScreen(),
+      ),
+      GoRoute(
+        path: '/savings',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const SavingsScreen(),
+      ),
+      GoRoute(
+        path: '/saving-detail',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final goal = state.extra as SavingGoal;
+          return SavingDetailScreen(goal: goal);
         },
       ),
     ],

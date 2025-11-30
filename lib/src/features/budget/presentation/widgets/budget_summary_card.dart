@@ -31,6 +31,7 @@ class BudgetSummaryCard extends ConsumerWidget {
             final percentage = (totalSpent / totalBudget).clamp(0.0, 1.0);
 
             return Container(
+              height: 320,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -60,7 +61,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                             style: AppTextStyles.h3.copyWith(color: AppColors.primary),
                           ),
                           Text(
-                            'More Today', // Simplified text
+                            'More This Month', // Updated text
                             style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
                           ),
                         ],

@@ -23,6 +23,24 @@ class Transaction {
   String? destinationWalletId; // For transfers
   String? categoryId;
 
+
+
+  // Default constructor for Isar and existing code
+  Transaction();
+
+  // Named constructor for convenient creation
+  Transaction.create({
+    this.id = Isar.autoIncrement,
+    required this.title,
+    required this.amount,
+    required this.date,
+    required this.type,
+    this.note,
+    this.walletId,
+    this.destinationWalletId,
+    this.categoryId,
+  });
+
   // Helper getters (ignored by Isar)
   @ignore
   bool get isExpense => type == TransactionType.expense;

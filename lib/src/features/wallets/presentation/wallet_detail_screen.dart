@@ -11,6 +11,7 @@ import '../domain/wallet.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../../../common_widgets/wallet_icon.dart';
 import 'wallet_provider.dart';
+import 'add_wallet_screen.dart';
 
 class WalletDetailScreen extends ConsumerWidget {
   final Wallet wallet;
@@ -42,9 +43,46 @@ class WalletDetailScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'update_balance') {
                 _showUpdateBalanceDialog(context, ref, currentWallet);
+              } else if (value == 'edit_wallet') {
+                // Navigate to AddWalletScreen in edit mode
+                // We need to pass the wallet object. 
+                // Since AddWalletScreen is not a named route with extra param support in standard go_router setup usually (unless we add it),
+                // we might need to push it directly or register a new route.
+                // Let's assume we can push the widget directly for simplicity or use extra if registered.
+                // Checking AppRouter... actually let's just push the widget to avoid route registration hassle for now, 
+                // OR better, use the existing /add-wallet route but we need to pass extra.
+                // Let's check AppRouter to see if /add-wallet accepts extra.
+                // If not, I'll just push MaterialPageRoute for now to be safe and quick.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AddWalletScreen(walletToEdit: currentWallet)),
+                );
+              } else if (value == 'delete_wallet') {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Delete Wallet?'),
+                    content: Text('Are you sure you want to delete "${currentWallet.name}"? This action cannot be undone.'),
+                    actions: [
+                      TextButton(onPressed: () => context.pop(false), child: const Text('Cancel')),
+                      TextButton(
+                        onPressed: () => context.pop(true),
+                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirm == true) {
+                  final repository = await ref.read(walletRepositoryProvider.future);
+                  await repository.deleteWallet(currentWallet.id);
+                  if (context.mounted) {
+                    context.pop(); // Pop detail screen
+                  }
+                }
               }
             },
             itemBuilder: (BuildContext context) {
@@ -53,9 +91,29 @@ class WalletDetailScreen extends ConsumerWidget {
                   value: 'update_balance',
                   child: Row(
                     children: [
-                      Icon(Icons.edit, size: 20, color: Colors.grey),
+                      Icon(Icons.account_balance_wallet, size: 20, color: Colors.grey),
                       SizedBox(width: 8),
                       Text('Update Balance'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'edit_wallet',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit, size: 20, color: Colors.grey),
+                      SizedBox(width: 8),
+                      Text('Edit Wallet'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'delete_wallet',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, size: 20, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text('Delete Wallet', style: TextStyle(color: Colors.red)),
                     ],
                   ),
                 ),

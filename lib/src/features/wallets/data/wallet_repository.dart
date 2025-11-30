@@ -8,6 +8,7 @@ import '../../common/data/isar_provider.dart';
 abstract class WalletRepository {
   Future<void> addWallet(Wallet wallet);
   Future<void> updateWallet(Wallet wallet);
+  Future<void> deleteWallet(Id id);
   Future<List<Wallet>> getAllWallets();
   Stream<List<Wallet>> watchWallets();
   Future<Wallet?> getWallet(String id);
@@ -33,13 +34,21 @@ class IsarWalletRepository implements WalletRepository {
   }
 
   @override
+  Future<void> deleteWallet(Id id) async {
+    await isar.writeTxn(() async {
+      await isar.wallets.delete(id);
+    });
+  }
+
+  @override
   Future<Wallet?> getWallet(String id) async {
     // Try to parse as int (Isar ID)
     final intId = int.tryParse(id);
     if (intId != null) {
-      return isar.wallets.get(intId);
+      final wallet = await isar.wallets.get(intId);
+      if (wallet != null) return wallet;
     }
-    // Otherwise try to find by externalId (e.g. 'cash_default')
+    // Otherwise (or if not found by ID), try to find by externalId
     return isar.wallets.filter().externalIdEqualTo(id).findFirst();
   }
 

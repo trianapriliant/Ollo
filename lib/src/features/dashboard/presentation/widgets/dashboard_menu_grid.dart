@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../budget/presentation/budget_screen.dart';
@@ -13,28 +14,19 @@ class DashboardMenuGrid extends StatelessWidget {
         icon: Icons.pie_chart_outline,
         label: 'Budget',
         color: Colors.orange,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const BudgetScreen()),
-          );
-        },
+        onTap: () => context.push('/budget'),
       ),
       _MenuItem(
         icon: Icons.repeat,
         label: 'Recurring',
         color: Colors.blue,
-        onTap: () {
-          // TODO: Navigate to Recurring Screen
-        },
+        onTap: () => context.push('/recurring'),
       ),
       _MenuItem(
         icon: Icons.savings_outlined,
         label: 'Savings',
         color: Colors.green,
-        onTap: () {
-          // TODO: Navigate to Savings Screen
-        },
+        onTap: () => context.push('/savings'),
       ),
       _MenuItem(
         icon: Icons.receipt_long,

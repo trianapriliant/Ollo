@@ -399,6 +399,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     }
                   }
                   
+                  // Invalidate wallet list to ensure UI updates immediately
+                  ref.invalidate(walletListProvider);
+                  
                   if (context.mounted) {
                     context.pop();
                   }

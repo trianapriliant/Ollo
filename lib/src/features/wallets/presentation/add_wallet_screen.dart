@@ -11,7 +11,9 @@ import '../../../utils/icon_helper.dart';
 import '../../../common_widgets/wallet_icon.dart';
 
 class AddWalletScreen extends ConsumerStatefulWidget {
-  const AddWalletScreen({super.key});
+  final Wallet? walletToEdit;
+
+  const AddWalletScreen({super.key, this.walletToEdit});
 
   @override
   ConsumerState<AddWalletScreen> createState() => _AddWalletScreenState();
@@ -37,6 +39,12 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.walletToEdit != null) {
+      _nameController.text = widget.walletToEdit!.name;
+      _balanceController.text = widget.walletToEdit!.balance.toStringAsFixed(0);
+      _selectedType = widget.walletToEdit!.type;
+      _selectedIcon = widget.walletToEdit!.iconPath;
+    }
     _nameController.addListener(_onNameChanged);
   }
 
@@ -50,7 +58,8 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
 
   void _onNameChanged() {
     // Only auto-detect if the current icon is NOT an asset path (meaning user hasn't selected a template)
-    if (_selectedIcon.startsWith('assets/')) return;
+    // AND if we are NOT in edit mode (to avoid overriding user's existing choice)
+    if (_selectedIcon.startsWith('assets/') || widget.walletToEdit != null) return;
 
     final name = _nameController.text.toLowerCase();
     String? newIcon;
@@ -89,6 +98,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.walletToEdit != null;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -98,7 +108,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text('Add Wallet', style: AppTextStyles.h2),
+        title: Text(isEditing ? 'Edit Wallet' : 'Add Wallet', style: AppTextStyles.h2),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -226,6 +236,52 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                 ),
               ),
             ] else ...[
+              // Custom Asset Icons
+              Text('Bank & E-Wallet Logos', style: AppTextStyles.bodyMedium),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                  ),
+                  itemCount: bankTemplates.length + eWalletTemplates.length,
+                  itemBuilder: (context, index) {
+                    final allTemplates = [...bankTemplates, ...eWalletTemplates];
+                    final template = allTemplates[index];
+                    final isSelected = _selectedIcon == template.assetPath;
+                    
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIcon = template.assetPath;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                          border: isSelected ? Border.all(color: AppColors.primary, width: 2) : Border.all(color: Colors.grey[200]!),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: WalletIcon(iconPath: template.assetPath, size: 24),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              Text('Generic Icons', style: AppTextStyles.bodyMedium),
+              const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -278,15 +334,24 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
 
                   if (name.isEmpty) return;
 
-                  final newWallet = Wallet()
-                    ..externalId = DateTime.now().millisecondsSinceEpoch.toString() // Generate unique ID
-                    ..name = name
-                    ..balance = balance
-                    ..type = _selectedType
-                    ..iconPath = _selectedIcon;
-
                   final repository = await ref.read(walletRepositoryProvider.future);
-                  await repository.addWallet(newWallet);
+
+                  if (isEditing) {
+                    final updatedWallet = widget.walletToEdit!
+                      ..name = name
+                      ..balance = balance
+                      ..type = _selectedType
+                      ..iconPath = _selectedIcon;
+                    await repository.updateWallet(updatedWallet);
+                  } else {
+                    final newWallet = Wallet()
+                      ..externalId = DateTime.now().millisecondsSinceEpoch.toString()
+                      ..name = name
+                      ..balance = balance
+                      ..type = _selectedType
+                      ..iconPath = _selectedIcon;
+                    await repository.addWallet(newWallet);
+                  }
 
                   if (context.mounted) {
                     context.pop();
@@ -300,7 +365,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: Text('Save Wallet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
+                child: Text(isEditing ? 'Save Changes' : 'Save Wallet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
               ),
             ),
           ],

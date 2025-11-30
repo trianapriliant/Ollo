@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -5,13 +6,16 @@ import '../../transactions/domain/transaction.dart';
 import '../../wallets/domain/wallet.dart';
 import '../../categories/domain/category.dart';
 import '../../budget/domain/budget.dart';
-import 'package:flutter/material.dart';
+import '../../profile/domain/user_profile.dart';
+import '../../recurring/domain/recurring_transaction.dart';
+import '../../savings/domain/saving_goal.dart';
+import '../../savings/domain/saving_log.dart';
 
 final isarProvider = FutureProvider<Isar>((ref) async {
   final dir = await getApplicationDocumentsDirectory();
   
   final isar = await Isar.open(
-    [TransactionSchema, WalletSchema, CategorySchema, BudgetSchema],
+    [TransactionSchema, WalletSchema, CategorySchema, BudgetSchema, UserProfileSchema, RecurringTransactionSchema, SavingGoalSchema, SavingLogSchema],
     directory: dir.path,
   );
 
