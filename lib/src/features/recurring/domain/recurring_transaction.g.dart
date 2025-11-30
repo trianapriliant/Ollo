@@ -28,34 +28,39 @@ const RecurringTransactionSchema = CollectionSchema(
       name: r'categoryId',
       type: IsarType.string,
     ),
-    r'frequency': PropertySchema(
+    r'createBillOnly': PropertySchema(
       id: 2,
+      name: r'createBillOnly',
+      type: IsarType.bool,
+    ),
+    r'frequency': PropertySchema(
+      id: 3,
       name: r'frequency',
       type: IsarType.byte,
       enumMap: _RecurringTransactionfrequencyEnumValueMap,
     ),
     r'isActive': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'isActive',
       type: IsarType.bool,
     ),
     r'nextDueDate': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'nextDueDate',
       type: IsarType.dateTime,
     ),
     r'note': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'note',
       type: IsarType.string,
     ),
     r'startDate': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'startDate',
       type: IsarType.dateTime,
     ),
     r'walletId': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -99,12 +104,13 @@ void _recurringTransactionSerialize(
 ) {
   writer.writeDouble(offsets[0], object.amount);
   writer.writeString(offsets[1], object.categoryId);
-  writer.writeByte(offsets[2], object.frequency.index);
-  writer.writeBool(offsets[3], object.isActive);
-  writer.writeDateTime(offsets[4], object.nextDueDate);
-  writer.writeString(offsets[5], object.note);
-  writer.writeDateTime(offsets[6], object.startDate);
-  writer.writeString(offsets[7], object.walletId);
+  writer.writeBool(offsets[2], object.createBillOnly);
+  writer.writeByte(offsets[3], object.frequency.index);
+  writer.writeBool(offsets[4], object.isActive);
+  writer.writeDateTime(offsets[5], object.nextDueDate);
+  writer.writeString(offsets[6], object.note);
+  writer.writeDateTime(offsets[7], object.startDate);
+  writer.writeString(offsets[8], object.walletId);
 }
 
 RecurringTransaction _recurringTransactionDeserialize(
@@ -116,14 +122,15 @@ RecurringTransaction _recurringTransactionDeserialize(
   final object = RecurringTransaction(
     amount: reader.readDouble(offsets[0]),
     categoryId: reader.readString(offsets[1]),
+    createBillOnly: reader.readBoolOrNull(offsets[2]) ?? false,
     frequency: _RecurringTransactionfrequencyValueEnumMap[
-            reader.readByteOrNull(offsets[2])] ??
+            reader.readByteOrNull(offsets[3])] ??
         RecurringFrequency.daily,
-    isActive: reader.readBoolOrNull(offsets[3]) ?? true,
-    nextDueDate: reader.readDateTime(offsets[4]),
-    note: reader.readStringOrNull(offsets[5]),
-    startDate: reader.readDateTime(offsets[6]),
-    walletId: reader.readString(offsets[7]),
+    isActive: reader.readBoolOrNull(offsets[4]) ?? true,
+    nextDueDate: reader.readDateTime(offsets[5]),
+    note: reader.readStringOrNull(offsets[6]),
+    startDate: reader.readDateTime(offsets[7]),
+    walletId: reader.readString(offsets[8]),
   );
   object.id = id;
   return object;
@@ -141,18 +148,20 @@ P _recurringTransactionDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 3:
       return (_RecurringTransactionfrequencyValueEnumMap[
               reader.readByteOrNull(offset)] ??
           RecurringFrequency.daily) as P;
-    case 3:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 4:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
-    case 6:
       return (reader.readDateTime(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
+      return (reader.readDateTime(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -469,6 +478,16 @@ extension RecurringTransactionQueryFilter on QueryBuilder<RecurringTransaction,
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'categoryId',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, RecurringTransaction,
+      QAfterFilterCondition> createBillOnlyEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createBillOnly',
+        value: value,
       ));
     });
   }
@@ -1039,6 +1058,20 @@ extension RecurringTransactionQuerySortBy
   }
 
   QueryBuilder<RecurringTransaction, RecurringTransaction, QAfterSortBy>
+      sortByCreateBillOnly() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createBillOnly', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, RecurringTransaction, QAfterSortBy>
+      sortByCreateBillOnlyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createBillOnly', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, RecurringTransaction, QAfterSortBy>
       sortByFrequency() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frequency', Sort.asc);
@@ -1150,6 +1183,20 @@ extension RecurringTransactionQuerySortThenBy
       thenByCategoryIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, RecurringTransaction, QAfterSortBy>
+      thenByCreateBillOnly() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createBillOnly', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, RecurringTransaction, QAfterSortBy>
+      thenByCreateBillOnlyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createBillOnly', Sort.desc);
     });
   }
 
@@ -1269,6 +1316,13 @@ extension RecurringTransactionQueryWhereDistinct
   }
 
   QueryBuilder<RecurringTransaction, RecurringTransaction, QDistinct>
+      distinctByCreateBillOnly() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createBillOnly');
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, RecurringTransaction, QDistinct>
       distinctByFrequency() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'frequency');
@@ -1330,6 +1384,13 @@ extension RecurringTransactionQueryProperty on QueryBuilder<
       categoryIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'categoryId');
+    });
+  }
+
+  QueryBuilder<RecurringTransaction, bool, QQueryOperations>
+      createBillOnlyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createBillOnly');
     });
   }
 

@@ -34,5 +34,8 @@ class RecurringTransaction {
     required this.startDate,
     required this.nextDueDate,
     this.isActive = true,
+    this.createBillOnly = false,
   });
+
+  bool createBillOnly;
 }

@@ -6,16 +6,20 @@ import '../../wallets/data/wallet_repository.dart';
 import '../../wallets/domain/wallet.dart';
 import '../data/recurring_repository.dart';
 import '../domain/recurring_transaction.dart';
+import '../../bills/data/bill_repository.dart';
+import '../../bills/domain/bill.dart';
 
 class RecurringTransactionService {
   final RecurringRepository recurringRepo;
   final TransactionRepository transactionRepo;
   final WalletRepository walletRepo;
+  final BillRepository billRepo;
 
   RecurringTransactionService({
     required this.recurringRepo,
     required this.transactionRepo,
     required this.walletRepo,
+    required this.billRepo,
   });
 
   Future<void> processDueTransactions() async {
@@ -36,19 +40,37 @@ class RecurringTransactionService {
     final wallet = await walletRepo.getWallet(recurring.walletId);
     if (wallet == null) return; // Skip if wallet not found
 
-    // 2. Create Transaction
-    final newTransaction = Transaction.create(
-      title: recurring.note ?? 'Recurring Payment',
-      amount: recurring.amount,
-      type: TransactionType.expense,
-      categoryId: recurring.categoryId,
-      walletId: recurring.walletId,
-      note: 'Auto-processed recurring payment',
-      date: recurring.nextDueDate, // Use the due date as transaction date
-    );
-
-    // 3. Update Wallet Balance
-    wallet.balance -= recurring.amount;
+    // 2. Process based on type
+    if (recurring.createBillOnly) {
+      // Create Bill (Unpaid)
+      final newBill = Bill(
+        title: recurring.note ?? 'Recurring Bill',
+        amount: recurring.amount,
+        dueDate: recurring.nextDueDate,
+        categoryId: recurring.categoryId,
+        walletId: recurring.walletId,
+        note: 'Auto-generated from recurring',
+        status: BillStatus.unpaid,
+        recurringTransactionId: recurring.id,
+      );
+      await billRepo.addBill(newBill);
+    } else {
+      // Create Transaction (Auto-pay)
+      final newTransaction = Transaction.create(
+        title: recurring.note ?? 'Recurring Payment',
+        amount: recurring.amount,
+        type: TransactionType.expense,
+        categoryId: recurring.categoryId,
+        walletId: recurring.walletId,
+        note: 'Auto-processed recurring payment',
+        date: recurring.nextDueDate,
+      );
+      
+      // Update Wallet Balance
+      wallet.balance -= recurring.amount;
+      await transactionRepo.addTransaction(newTransaction);
+      await walletRepo.updateWallet(wallet);
+    }
 
     // 4. Calculate Next Due Date
     DateTime nextDue = recurring.nextDueDate;
@@ -70,8 +92,7 @@ class RecurringTransactionService {
 
     // 5. Save Changes
     // Ideally this should be a single transaction, but for now we do it sequentially
-    await transactionRepo.addTransaction(newTransaction);
-    await walletRepo.updateWallet(wallet);
+    // Transaction and Wallet updates are handled above if needed
     await recurringRepo.updateRecurringTransaction(recurring);
   }
 }
@@ -105,10 +126,12 @@ final recurringTransactionServiceFutureProvider = FutureProvider<RecurringTransa
   final recurringRepo = ref.watch(recurringRepositoryProvider);
   final transactionRepo = await ref.watch(transactionRepositoryProvider.future);
   final walletRepo = await ref.watch(walletRepositoryProvider.future);
+  final billRepo = ref.watch(billRepositoryProvider);
 
   return RecurringTransactionService(
     recurringRepo: recurringRepo,
     transactionRepo: transactionRepo,
     walletRepo: walletRepo,
+    billRepo: billRepo,
   );
 });

@@ -12,6 +12,7 @@ import 'features/common/data/isar_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localization/generated/app_localizations.dart';
 import 'features/settings/presentation/language_provider.dart';
+import 'features/recurring/application/recurring_transaction_service.dart';
 
 class OlloApp extends ConsumerStatefulWidget {
   const OlloApp({super.key});
@@ -30,6 +31,9 @@ class _OlloAppState extends ConsumerState<OlloApp> {
   Future<void> _initApp() async {
     try {
       await ref.read(isarProvider.future);
+      // Process recurring transactions and bills
+      final recurringService = await ref.read(recurringTransactionServiceFutureProvider.future);
+      await recurringService.processDueTransactions();
     } catch (e) {
       debugPrint('Error initializing app: $e');
     } finally {

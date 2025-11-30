@@ -33,7 +33,7 @@ class DashboardMenuGrid extends StatelessWidget {
         label: 'Bills',
         color: Colors.red,
         onTap: () {
-          // TODO: Navigate to Bills Screen
+          context.push('/bills');
         },
       ),
       _MenuItem(
