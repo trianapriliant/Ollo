@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../transactions/data/transaction_repository.dart';
+import '../../dashboard/presentation/transaction_provider.dart';
 import '../../transactions/domain/transaction.dart';
-import '../data/wallet_repository.dart';
+import 'wallet_provider.dart';
 
 class WalletSummaryState {
   final double totalBalance;
@@ -23,16 +23,28 @@ class WalletSummaryState {
   }
 }
 
-final walletSummaryProvider = FutureProvider.autoDispose<WalletSummaryState>((ref) async {
-  // 1. Get all wallets to calculate total balance
-  final walletRepo = await ref.watch(walletRepositoryProvider.future);
-  final wallets = await walletRepo.getAllWallets();
+final walletSummaryProvider = Provider.autoDispose<AsyncValue<WalletSummaryState>>((ref) {
+  final walletsAsync = ref.watch(walletListProvider);
+  final transactionsAsync = ref.watch(transactionListProvider);
+
+  if (walletsAsync.isLoading || transactionsAsync.isLoading) {
+    return const AsyncValue.loading();
+  }
+
+  if (walletsAsync.hasError) {
+    return AsyncValue.error(walletsAsync.error!, walletsAsync.stackTrace!);
+  }
+  if (transactionsAsync.hasError) {
+    return AsyncValue.error(transactionsAsync.error!, transactionsAsync.stackTrace!);
+  }
+
+  final wallets = walletsAsync.valueOrNull ?? [];
+  final allTransactions = transactionsAsync.valueOrNull ?? [];
+
+  // 1. Calculate total balance from wallets
   final totalBalance = wallets.fold<double>(0, (sum, wallet) => sum + wallet.balance);
 
-  // 2. Get transactions from the last 30 days to calculate trend
-  final transactionRepo = await ref.watch(transactionRepositoryProvider.future);
-  final allTransactions = await transactionRepo.getAllTransactions();
-  
+  // 2. Calculate period change (last 30 days)
   final now = DateTime.now();
   final thirtyDaysAgo = now.subtract(const Duration(days: 30));
 
@@ -49,28 +61,25 @@ final walletSummaryProvider = FutureProvider.autoDispose<WalletSummaryState>((re
     } else if (t.type == TransactionType.expense) {
       expense += t.amount;
     }
-    // Transfers are neutral for total net worth (unless across tracked/untracked, but assuming closed system for now)
   }
 
   final periodChange = income - expense;
 
   // 3. Calculate percentage change
-  // Formula: (Current Balance - Previous Balance) / |Previous Balance| * 100
-  // Previous Balance = Current Balance - Period Change
   final previousBalance = totalBalance - periodChange;
   
   double percentageChange = 0;
   if (previousBalance != 0) {
     percentageChange = (periodChange / previousBalance.abs()) * 100;
   } else if (periodChange > 0) {
-    percentageChange = 100; // From 0 to positive is 100% growth (technically infinite, but 100 is a safe UI representation)
+    percentageChange = 100;
   } else if (periodChange < 0) {
     percentageChange = -100;
   }
 
-  return WalletSummaryState(
+  return AsyncValue.data(WalletSummaryState(
     totalBalance: totalBalance,
     periodChange: periodChange,
     percentageChange: percentageChange,
-  );
+  ));
 });
