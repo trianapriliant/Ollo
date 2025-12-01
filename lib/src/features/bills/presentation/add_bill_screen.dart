@@ -30,68 +30,95 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Add Bill'),
+        title: Text('Add Bill', style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.textPrimary),
+          onPressed: () => context.pop(),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
-            TextField(
+            // Title Input
+            Text('Bill Details', style: AppTextStyles.h3),
+            const SizedBox(height: 16),
+            
+            _buildTextField(
               controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Bill Name',
-                hintText: 'e.g. Internet, Rent',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+              label: 'Bill Name',
+              hint: 'e.g. Internet, Rent',
+              icon: Icons.description_outlined,
             ),
             const SizedBox(height: 16),
 
-            // Amount
-            TextField(
+            // Amount Input
+            _buildTextField(
               controller: _amountController,
+              label: 'Amount',
+              hint: '0',
+              prefix: 'Rp ',
+              icon: Icons.attach_money,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Amount',
-                prefixText: 'Rp ',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
             // Due Date
-            ListTile(
-              title: const Text('Due Date'),
-              subtitle: Text(DateFormat('EEE, d MMM yyyy').format(_dueDate)),
-              trailing: const Icon(Icons.calendar_today),
-              tileColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            Text('Due Date', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            InkWell(
               onTap: _pickDate,
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.calendar_today, color: AppColors.primary, size: 20),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      DateFormat('EEE, d MMM yyyy').format(_dueDate),
+                      style: AppTextStyles.bodyMedium,
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.chevron_right, color: Colors.grey),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
-            // Category (Simplified for now)
-            // Ideally reuse CategorySelector but it might need specific layout
-            // For now, just a simple dropdown or similar
-            const Text('Category', style: TextStyle(fontWeight: FontWeight.bold)),
+            // Category
+            Text('Category', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: _selectedCategoryId,
                   isExpanded: true,
+                  icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
                   items: const [
                     DropdownMenuItem(value: '1', child: Text('Bills')),
                     DropdownMenuItem(value: '2', child: Text('Food')),
@@ -105,57 +132,106 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
             // Recurring Switch
-            SwitchListTile(
-              title: const Text('Repeat this bill?'),
-              subtitle: const Text('Automatically create new bills'),
-              value: _isRecurring,
-              onChanged: (val) => setState(() => _isRecurring = val),
-              tileColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            
-            if (_isRecurring) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<RecurringFrequency>(
-                    value: _frequency,
-                    isExpanded: true,
-                    items: RecurringFrequency.values.map((f) {
-                      return DropdownMenuItem(
-                        value: f,
-                        child: Text(f.name.toUpperCase()),
-                      );
-                    }).toList(),
-                    onChanged: (val) => setState(() => _frequency = val!),
-                  ),
-                ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
               ),
-            ],
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    title: Text('Repeat this bill?', style: AppTextStyles.bodyMedium),
+                    subtitle: Text('Automatically create new bills', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+                    value: _isRecurring,
+                    onChanged: (val) => setState(() => _isRecurring = val),
+                    activeColor: AppColors.primary,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  if (_isRecurring) ...[
+                    const Divider(height: 1),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Text('Frequency', style: AppTextStyles.bodyMedium),
+                          const Spacer(),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton<RecurringFrequency>(
+                              value: _frequency,
+                              items: RecurringFrequency.values.map((f) {
+                                return DropdownMenuItem(
+                                  value: f,
+                                  child: Text(
+                                    f.name.toUpperCase(),
+                                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (val) => setState(() => _frequency = val!),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 40),
+            
+            // Save Button
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 56,
               child: ElevatedButton(
                 onPressed: _saveBill,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: const Text('Save Bill'),
+                child: const Text('Save Bill', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    String? prefix,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+      ),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        style: AppTextStyles.bodyMedium,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixText: prefix,
+          prefixIcon: Icon(icon, color: AppColors.textSecondary),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          labelStyle: const TextStyle(color: AppColors.textSecondary),
         ),
       ),
     );
@@ -167,6 +243,18 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       initialDate: _dueDate,
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primary,
+              onPrimary: Colors.white,
+              onSurface: AppColors.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null) {
       setState(() => _dueDate = picked);
@@ -232,12 +320,16 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       if (mounted) {
         context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bill saved successfully')),
+          const SnackBar(
+            content: Text('Bill saved successfully'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
       );
     }
   }

@@ -40,19 +40,38 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.background,
         elevation: 0,
-        title: Text('Bills & Reminders', style: AppTextStyles.h2),
         centerTitle: false,
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Unpaid'),
-            Tab(text: 'Paid'),
-          ],
+        title: Text(
+          'Bills',
+          style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              labelColor: Colors.white,
+              unselectedLabelColor: AppColors.textSecondary,
+              indicator: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              dividerColor: Colors.transparent,
+              tabs: const [
+                Tab(text: 'Unpaid'),
+                Tab(text: 'Paid'),
+              ],
+            ),
+          ),
         ),
       ),
       body: TabBarView(
@@ -67,6 +86,8 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
           context.push('/bills/add');
         },
         backgroundColor: AppColors.primary,
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -94,9 +115,18 @@ class _UnpaidBillsList extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check_circle_outline, size: 64, color: Colors.grey[300]),
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.accentBlue.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.check_circle_outline, size: 48, color: AppColors.primary.withOpacity(0.6)),
+                ),
                 const SizedBox(height: 16),
-                Text('All bills paid!', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                Text('All caught up!', style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
+                const SizedBox(height: 8),
+                Text('No unpaid bills at the moment.', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
               ],
             ),
           );
@@ -136,7 +166,14 @@ class _PaidBillsList extends ConsumerWidget {
         final bills = snapshot.data ?? [];
         if (bills.isEmpty) {
           return Center(
-            child: Text('No paid bills history', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.history, size: 48, color: Colors.grey[300]),
+                const SizedBox(height: 16),
+                Text('No history yet', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+              ],
+            ),
           );
         }
 
@@ -174,103 +211,124 @@ class _BillItem extends ConsumerWidget {
     final isOverdue = !isPaid && dueDate.isBefore(today);
     final isDueToday = !isPaid && dueDate.isAtSameMomentAs(today);
     
-    Color statusColor = Colors.grey;
+    Color statusColor = AppColors.textSecondary;
     String statusText = '';
+    IconData statusIcon = Icons.calendar_today_outlined;
     
     if (isPaid) {
       statusColor = Colors.green;
-      statusText = 'Paid on ${DateFormat('MMM d').format(bill.paidAt!)}';
+      statusText = 'Paid ${DateFormat('MMM d').format(bill.paidAt!)}';
+      statusIcon = Icons.check_circle_outline;
     } else if (isOverdue) {
       statusColor = Colors.red;
       statusText = 'Overdue';
+      statusIcon = Icons.warning_amber_rounded;
     } else if (isDueToday) {
       statusColor = Colors.orange;
       statusText = 'Due Today';
+      statusIcon = Icons.access_time;
     } else {
       final daysLeft = dueDate.difference(today).inDays;
       statusColor = AppColors.primary;
       statusText = 'Due in $daysLeft days';
+      statusIcon = Icons.schedule;
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: isOverdue ? Border.all(color: Colors.red.withOpacity(0.5)) : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.1),
+          width: 1,
+        ),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isPaid ? Icons.check : Icons.receipt_long,
-              color: statusColor,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {
+            // TODO: Show bill details
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                Text(
-                  bill.title,
-                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  statusText,
-                  style: AppTextStyles.bodySmall.copyWith(color: statusColor),
-                ),
-                if (!isPaid) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    DateFormat('MMM d, y').format(bill.dueDate),
-                    style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isPaid ? Colors.green.withOpacity(0.1) : AppColors.accentBlue.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ],
+                  child: Icon(
+                    isPaid ? Icons.check : Icons.receipt_long_outlined,
+                    color: isPaid ? Colors.green : AppColors.primary,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        bill.title,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(statusIcon, size: 14, color: statusColor),
+                          const SizedBox(width: 4),
+                          Text(
+                            statusText,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: statusColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      currency.format(bill.amount),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    if (!isPaid) ...[
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 32,
+                        child: TextButton(
+                          onPressed: () => _showPayDialog(context, ref, bill),
+                          style: TextButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text('Pay', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                currency.format(bill.amount),
-                style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-              ),
-              if (!isPaid)
-                const SizedBox(height: 8),
-              if (!isPaid)
-                SizedBox(
-                  height: 32,
-                  child: ElevatedButton(
-                    onPressed: () => _showPayDialog(context, ref, bill),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: const Text('Pay'),
-                  ),
-                ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -293,9 +351,6 @@ class _PayBillDialog extends ConsumerStatefulWidget {
 }
 
 class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
-  // TODO: Fetch wallets
-  // For now, we'll just implement the logic assuming we can get the default wallet
-  
   bool _isLoading = false;
 
   @override
@@ -303,32 +358,55 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
     final currency = ref.watch(currencyProvider);
     
     return AlertDialog(
-      title: const Text('Pay Bill'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      backgroundColor: Colors.white,
+      title: Text('Pay Bill', style: AppTextStyles.h3),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Pay ${widget.bill.title}?'),
-          const SizedBox(height: 8),
-          Text(
-            currency.format(widget.bill.amount),
-            style: AppTextStyles.h2,
+          Text('Pay ${widget.bill.title}?', style: AppTextStyles.bodyMedium),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Amount', style: TextStyle(color: AppColors.textSecondary)),
+                Text(
+                  currency.format(widget.bill.amount),
+                  style: AppTextStyles.h3.copyWith(color: AppColors.primary),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
-          const Text('This will create an expense transaction and deduct from your wallet.', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const Text(
+            'This will create an expense transaction and deduct from your wallet.',
+            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+          ),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _processPayment,
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
           child: _isLoading 
             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-            : const Text('Confirm Payment', style: TextStyle(color: Colors.white)),
+            : const Text('Confirm Payment'),
         ),
       ],
     );
@@ -342,8 +420,6 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       final transactionRepo = await ref.read(transactionRepositoryProvider.future);
       final walletRepo = await ref.read(walletRepositoryProvider.future);
       
-      // 1. Get Wallet (Use bill's walletId or default)
-      // For simplicity, getting the first wallet if not specified
       final wallets = await walletRepo.getAllWallets();
       if (wallets.isEmpty) {
         throw Exception('No wallet found');
@@ -354,14 +430,7 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       
       if (wallet == null) throw Exception('Wallet not found');
       
-      // Check balance
-      if (wallet.balance < widget.bill.amount) {
-        // Warning handled by UI logic or just proceed with negative balance?
-        // User asked for "Insight: Danger". We can show a warning dialog here.
-        // For now, let's proceed but maybe show a snackbar warning.
-      }
-      
-      // 2. Create Transaction
+      // Create Transaction
       final newTransaction = Transaction.create(
         title: 'Bill: ${widget.bill.title}',
         amount: widget.bill.amount,
@@ -372,14 +441,14 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
         date: DateTime.now(),
       );
       
-      // 3. Update Wallet
+      // Update Wallet
       wallet.balance -= widget.bill.amount;
       
-      // 4. Update Bill
+      // Update Bill
       widget.bill.status = BillStatus.paid;
       widget.bill.paidAt = DateTime.now();
       
-      // 5. Save all
+      // Save all
       await transactionRepo.addTransaction(newTransaction);
       await walletRepo.updateWallet(wallet);
       await billRepo.updateBill(widget.bill);
@@ -387,13 +456,17 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bill paid successfully!')),
+          const SnackBar(
+            content: Text('Bill paid successfully!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
