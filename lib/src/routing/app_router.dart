@@ -23,6 +23,12 @@ import '../features/savings/domain/saving_goal.dart';
 import '../features/subscription/presentation/paywall_screen.dart';
 import '../features/bills/presentation/bills_screen.dart';
 import '../features/bills/presentation/add_bill_screen.dart';
+import '../features/wishlist/presentation/wishlist_screen.dart';
+import '../features/wishlist/presentation/add_wishlist_screen.dart';
+import '../features/debts/presentation/debts_screen.dart';
+import '../features/debts/presentation/add_debt_screen.dart';
+import '../features/debts/presentation/debt_detail_screen.dart';
+import '../features/debts/domain/debt.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -174,6 +180,35 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'add',
             builder: (context, state) => const AddBillScreen(),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/wishlist',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const WishlistScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            builder: (context, state) => const AddWishlistScreen(),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/debts',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const DebtsScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            builder: (context, state) => const AddDebtScreen(),
+          ),
+          GoRoute(
+            path: 'detail',
+            builder: (context, state) {
+              final debt = state.extra as Debt;
+              return DebtDetailScreen(debt: debt);
+            },
           ),
         ],
       ),

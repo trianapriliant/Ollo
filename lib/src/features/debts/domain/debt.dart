@@ -35,6 +35,9 @@ class Debt {
   // Link to wallet for initial transaction
   String? walletId;
 
+  // History of payments/installments
+  List<DebtHistory> history = [];
+
   Debt({
     required this.personName,
     required this.amount,
@@ -45,8 +48,22 @@ class Debt {
     this.note,
     this.walletId,
     this.createdAt,
+    this.history = const [],
   });
 
   double get remainingAmount => amount - paidAmount;
   bool get isPaid => remainingAmount <= 0;
+}
+
+@embedded
+class DebtHistory {
+  DateTime? date;
+  double? amount;
+  String? note;
+
+  DebtHistory({
+    this.date,
+    this.amount,
+    this.note,
+  });
 }

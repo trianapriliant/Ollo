@@ -32,45 +32,51 @@ const DebtSchema = CollectionSchema(
       name: r'dueDate',
       type: IsarType.dateTime,
     ),
-    r'isPaid': PropertySchema(
+    r'history': PropertySchema(
       id: 3,
+      name: r'history',
+      type: IsarType.objectList,
+      target: r'DebtHistory',
+    ),
+    r'isPaid': PropertySchema(
+      id: 4,
       name: r'isPaid',
       type: IsarType.bool,
     ),
     r'note': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'note',
       type: IsarType.string,
     ),
     r'paidAmount': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'paidAmount',
       type: IsarType.double,
     ),
     r'personName': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'personName',
       type: IsarType.string,
     ),
     r'remainingAmount': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'remainingAmount',
       type: IsarType.double,
     ),
     r'status': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'status',
       type: IsarType.byte,
       enumMap: _DebtstatusEnumValueMap,
     ),
     r'type': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'type',
       type: IsarType.byte,
       enumMap: _DebttypeEnumValueMap,
     ),
     r'walletId': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -82,7 +88,7 @@ const DebtSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'DebtHistory': DebtHistorySchema},
   getId: _debtGetId,
   getLinks: _debtGetLinks,
   attach: _debtAttach,
@@ -95,6 +101,14 @@ int _debtEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.history.length * 3;
+  {
+    final offsets = allOffsets[DebtHistory]!;
+    for (var i = 0; i < object.history.length; i++) {
+      final value = object.history[i];
+      bytesCount += DebtHistorySchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   {
     final value = object.note;
     if (value != null) {
@@ -120,14 +134,20 @@ void _debtSerialize(
   writer.writeDouble(offsets[0], object.amount);
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeDateTime(offsets[2], object.dueDate);
-  writer.writeBool(offsets[3], object.isPaid);
-  writer.writeString(offsets[4], object.note);
-  writer.writeDouble(offsets[5], object.paidAmount);
-  writer.writeString(offsets[6], object.personName);
-  writer.writeDouble(offsets[7], object.remainingAmount);
-  writer.writeByte(offsets[8], object.status.index);
-  writer.writeByte(offsets[9], object.type.index);
-  writer.writeString(offsets[10], object.walletId);
+  writer.writeObjectList<DebtHistory>(
+    offsets[3],
+    allOffsets,
+    DebtHistorySchema.serialize,
+    object.history,
+  );
+  writer.writeBool(offsets[4], object.isPaid);
+  writer.writeString(offsets[5], object.note);
+  writer.writeDouble(offsets[6], object.paidAmount);
+  writer.writeString(offsets[7], object.personName);
+  writer.writeDouble(offsets[8], object.remainingAmount);
+  writer.writeByte(offsets[9], object.status.index);
+  writer.writeByte(offsets[10], object.type.index);
+  writer.writeString(offsets[11], object.walletId);
 }
 
 Debt _debtDeserialize(
@@ -140,14 +160,21 @@ Debt _debtDeserialize(
     amount: reader.readDouble(offsets[0]),
     createdAt: reader.readDateTimeOrNull(offsets[1]),
     dueDate: reader.readDateTime(offsets[2]),
-    note: reader.readStringOrNull(offsets[4]),
-    paidAmount: reader.readDoubleOrNull(offsets[5]) ?? 0,
-    personName: reader.readString(offsets[6]),
-    status: _DebtstatusValueEnumMap[reader.readByteOrNull(offsets[8])] ??
+    history: reader.readObjectList<DebtHistory>(
+          offsets[3],
+          DebtHistorySchema.deserialize,
+          allOffsets,
+          DebtHistory(),
+        ) ??
+        const [],
+    note: reader.readStringOrNull(offsets[5]),
+    paidAmount: reader.readDoubleOrNull(offsets[6]) ?? 0,
+    personName: reader.readString(offsets[7]),
+    status: _DebtstatusValueEnumMap[reader.readByteOrNull(offsets[9])] ??
         DebtStatus.active,
-    type: _DebttypeValueEnumMap[reader.readByteOrNull(offsets[9])] ??
+    type: _DebttypeValueEnumMap[reader.readByteOrNull(offsets[10])] ??
         DebtType.lending,
-    walletId: reader.readStringOrNull(offsets[10]),
+    walletId: reader.readStringOrNull(offsets[11]),
   );
   object.id = id;
   return object;
@@ -167,22 +194,30 @@ P _debtDeserializeProp<P>(
     case 2:
       return (reader.readDateTime(offset)) as P;
     case 3:
-      return (reader.readBool(offset)) as P;
+      return (reader.readObjectList<DebtHistory>(
+            offset,
+            DebtHistorySchema.deserialize,
+            allOffsets,
+            DebtHistory(),
+          ) ??
+          const []) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 5:
-      return (reader.readDoubleOrNull(offset) ?? 0) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readDoubleOrNull(offset) ?? 0) as P;
     case 7:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readDouble(offset)) as P;
+    case 9:
       return (_DebtstatusValueEnumMap[reader.readByteOrNull(offset)] ??
           DebtStatus.active) as P;
-    case 9:
+    case 10:
       return (_DebttypeValueEnumMap[reader.readByteOrNull(offset)] ??
           DebtType.lending) as P;
-    case 10:
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -477,6 +512,90 @@ extension DebtQueryFilter on QueryBuilder<Debt, Debt, QFilterCondition> {
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'history',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'history',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'history',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'history',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'history',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'history',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -1190,7 +1309,14 @@ extension DebtQueryFilter on QueryBuilder<Debt, Debt, QFilterCondition> {
   }
 }
 
-extension DebtQueryObject on QueryBuilder<Debt, Debt, QFilterCondition> {}
+extension DebtQueryObject on QueryBuilder<Debt, Debt, QFilterCondition> {
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> historyElement(
+      FilterQuery<DebtHistory> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'history');
+    });
+  }
+}
 
 extension DebtQueryLinks on QueryBuilder<Debt, Debt, QFilterCondition> {}
 
@@ -1570,6 +1696,12 @@ extension DebtQueryProperty on QueryBuilder<Debt, Debt, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Debt, List<DebtHistory>, QQueryOperations> historyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'history');
+    });
+  }
+
   QueryBuilder<Debt, bool, QQueryOperations> isPaidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isPaid');
@@ -1618,3 +1750,398 @@ extension DebtQueryProperty on QueryBuilder<Debt, Debt, QQueryProperty> {
     });
   }
 }
+
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const DebtHistorySchema = Schema(
+  name: r'DebtHistory',
+  id: 7176147781881484436,
+  properties: {
+    r'amount': PropertySchema(
+      id: 0,
+      name: r'amount',
+      type: IsarType.double,
+    ),
+    r'date': PropertySchema(
+      id: 1,
+      name: r'date',
+      type: IsarType.dateTime,
+    ),
+    r'note': PropertySchema(
+      id: 2,
+      name: r'note',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _debtHistoryEstimateSize,
+  serialize: _debtHistorySerialize,
+  deserialize: _debtHistoryDeserialize,
+  deserializeProp: _debtHistoryDeserializeProp,
+);
+
+int _debtHistoryEstimateSize(
+  DebtHistory object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.note;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _debtHistorySerialize(
+  DebtHistory object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeDouble(offsets[0], object.amount);
+  writer.writeDateTime(offsets[1], object.date);
+  writer.writeString(offsets[2], object.note);
+}
+
+DebtHistory _debtHistoryDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = DebtHistory(
+    amount: reader.readDoubleOrNull(offsets[0]),
+    date: reader.readDateTimeOrNull(offsets[1]),
+    note: reader.readStringOrNull(offsets[2]),
+  );
+  return object;
+}
+
+P _debtHistoryDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 1:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension DebtHistoryQueryFilter
+    on QueryBuilder<DebtHistory, DebtHistory, QFilterCondition> {
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> amountIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'amount',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      amountIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'amount',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> amountEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'amount',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      amountGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'amount',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> amountLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'amount',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> amountBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'amount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> dateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'date',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      dateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'date',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> dateEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'date',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> dateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'date',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> dateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'date',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> dateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'date',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'note',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      noteIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'note',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'note',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'note',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'note',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition> noteIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'note',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      noteIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'note',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension DebtHistoryQueryObject
+    on QueryBuilder<DebtHistory, DebtHistory, QFilterCondition> {}

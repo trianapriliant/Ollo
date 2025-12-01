@@ -273,73 +273,91 @@ class _DebtList extends ConsumerWidget {
           );
         }
 
-        return ListView.builder(
+        return ListView.separated(
           padding: const EdgeInsets.all(20),
           itemCount: debts.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 16),
           itemBuilder: (context, index) {
             final debt = debts[index];
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: (debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue)).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+            final isOverdue = !debt.isPaid && debt.dueDate.isBefore(DateTime.now());
+            
+            return GestureDetector(
+              onTap: () => context.push('/debts/detail', extra: debt),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                    child: Icon(
-                      debt.isPaid ? Icons.check : (type == DebtType.borrowing ? Icons.arrow_downward : Icons.arrow_upward),
-                      color: debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue),
+                  ],
+                  border: isOverdue ? Border.all(color: Colors.red.withOpacity(0.3), width: 1) : null,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: (debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue)).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        debt.isPaid ? Icons.check_circle : (type == DebtType.borrowing ? Icons.arrow_downward : Icons.arrow_upward),
+                        color: debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue),
+                        size: 24,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            debt.personName,
+                            style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(
+                                isOverdue ? Icons.error_outline : Icons.calendar_today_outlined,
+                                size: 14,
+                                color: isOverdue ? Colors.red : Colors.grey,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                debt.isPaid ? 'Paid' : (isOverdue ? 'Overdue' : 'Due ${DateFormat('d MMM').format(debt.dueDate)}'),
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: debt.isPaid ? Colors.green : (isOverdue ? Colors.red : Colors.grey),
+                                  fontWeight: isOverdue ? FontWeight.bold : FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          debt.personName,
-                          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                          currency.format(debt.amount),
+                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          debt.isPaid ? 'Paid' : 'Due ${DateFormat('d MMM').format(debt.dueDate)}',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: debt.isPaid ? Colors.green : (debt.dueDate.isBefore(DateTime.now()) ? Colors.red : Colors.grey),
+                        if (!debt.isPaid && debt.paidAmount > 0)
+                          Text(
+                            '${currency.format(debt.remainingAmount)} left',
+                            style: AppTextStyles.bodySmall.copyWith(color: AppColors.primary),
                           ),
-                        ),
                       ],
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        currency.format(debt.amount),
-                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      if (!debt.isPaid && debt.paidAmount > 0)
-                        Text(
-                          '${currency.format(debt.remainingAmount)} left',
-                          style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
-                        ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

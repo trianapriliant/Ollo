@@ -41,7 +41,7 @@ class DashboardMenuGrid extends StatelessWidget {
         label: 'Debts',
         color: Colors.purple,
         onTap: () {
-          // TODO: Navigate to Debts Screen
+          context.push('/debts');
         },
       ),
       _MenuItem(
@@ -49,7 +49,7 @@ class DashboardMenuGrid extends StatelessWidget {
         label: 'Wishlist',
         color: Colors.pink,
         onTap: () {
-          // TODO: Navigate to Wishlist Screen
+          context.push('/wishlist');
         },
       ),
       _MenuItem(

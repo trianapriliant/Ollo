@@ -11,12 +11,15 @@ import '../../recurring/domain/recurring_transaction.dart';
 import '../../savings/domain/saving_goal.dart';
 import '../../savings/domain/saving_log.dart';
 import '../../bills/domain/bill.dart';
+import '../../bills/domain/bill.dart';
+import '../../wishlist/domain/wishlist.dart';
+import '../../debts/domain/debt.dart';
 
 final isarProvider = FutureProvider<Isar>((ref) async {
   final dir = await getApplicationDocumentsDirectory();
   
   final isar = await Isar.open(
-    [TransactionSchema, WalletSchema, CategorySchema, BudgetSchema, UserProfileSchema, RecurringTransactionSchema, SavingGoalSchema, SavingLogSchema, BillSchema],
+    [TransactionSchema, WalletSchema, CategorySchema, BudgetSchema, UserProfileSchema, RecurringTransactionSchema, SavingGoalSchema, SavingLogSchema, BillSchema, WishlistSchema, DebtSchema],
     directory: dir.path,
   );
 
