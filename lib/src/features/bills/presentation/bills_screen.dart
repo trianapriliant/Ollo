@@ -10,6 +10,7 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../data/bill_repository.dart';
 import '../domain/bill.dart';
+import 'widgets/bill_summary_card.dart';
 
 class BillsScreen extends ConsumerStatefulWidget {
   const BillsScreen({super.key});
@@ -47,10 +48,15 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
           'Bills',
           style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: BillSummaryCard(),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -72,13 +78,16 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
               ],
             ),
           ),
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _UnpaidBillsList(currency: currency),
-          _PaidBillsList(currency: currency),
+          const SizedBox(height: 16),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _UnpaidBillsList(currency: currency),
+                _PaidBillsList(currency: currency),
+              ],
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

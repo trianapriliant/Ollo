@@ -21,6 +21,7 @@ class AddWishlistScreen extends ConsumerStatefulWidget {
 class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
   final _titleController = TextEditingController();
   final _priceController = TextEditingController();
+  final _linkController = TextEditingController();
   DateTime? _targetDate;
   String? _imagePath;
   final _picker = ImagePicker();
@@ -137,6 +138,17 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+
+            // Product Link
+            Text('Product Link (Optional)', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            _buildTextField(
+              controller: _linkController,
+              hint: 'e.g. https://shopee.co.id/...',
+              icon: Icons.link,
+              keyboardType: TextInputType.url,
+            ),
 
             const SizedBox(height: 40),
 
@@ -252,6 +264,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
         price: price,
         targetDate: _targetDate,
         imagePath: _imagePath,
+        linkUrl: _linkController.text.isEmpty ? null : _linkController.text,
         createdAt: DateTime.now(),
       );
       
