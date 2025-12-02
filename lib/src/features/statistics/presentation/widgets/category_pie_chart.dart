@@ -26,46 +26,65 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 250,
-      child: PieChart(
-        PieChartData(
-          pieTouchData: PieTouchData(
-            touchCallback: (FlTouchEvent event, pieTouchResponse) {
-              setState(() {
-                if (!event.isInterestedForInteractions ||
-                    pieTouchResponse == null ||
-                    pieTouchResponse.touchedSection == null) {
-                  touchedIndex = -1;
-                  return;
-                }
-                touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-              });
-            },
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        PieChart(
+          PieChartData(
+            pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                setState(() {
+                  if (!event.isInterestedForInteractions ||
+                      pieTouchResponse == null ||
+                      pieTouchResponse.touchedSection == null) {
+                    touchedIndex = -1;
+                    return;
+                  }
+                  touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                });
+              },
+            ),
+            borderData: FlBorderData(show: false),
+            sectionsSpace: 2,
+            centerSpaceRadius: 70,
+            sections: _showingSections(),
           ),
-          borderData: FlBorderData(show: false),
-          sectionsSpace: 2, // Reduced spacing slightly
-          centerSpaceRadius: 65, // Reduced from 80
-          sections: _showingSections(),
         ),
-      ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              touchedIndex == -1 ? 'Total' : widget.data[touchedIndex].categoryName,
+              style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.currency.format(
+                touchedIndex == -1 ? widget.totalAmount : widget.data[touchedIndex].amount,
+              ),
+              style: AppTextStyles.h3.copyWith(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   List<PieChartSectionData> _showingSections() {
     return List.generate(widget.data.length, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 16.0 : 12.0;
-      final radius = isTouched ? 30.0 : 25.0; // Reduced from 70/60 to 30/25 for slimmer look
+      final radius = isTouched ? 35.0 : 30.0;
       final item = widget.data[i];
 
       return PieChartSectionData(
         color: item.color,
         value: item.amount,
-        title: '', // Hide title on chart
+        title: '',
         radius: radius,
-        titleStyle: TextStyle(
-          fontSize: fontSize,
+        titleStyle: const TextStyle(
+          fontSize: 12,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),

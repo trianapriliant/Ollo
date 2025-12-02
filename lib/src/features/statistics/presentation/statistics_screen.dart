@@ -25,61 +25,25 @@ class StatisticsScreen extends ConsumerStatefulWidget {
 class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   bool _isExpense = true;
   TimeRange _timeRange = TimeRange.month;
+  DateTime _selectedDate = DateTime.now();
 
   @override
+  @override
   Widget build(BuildContext context) {
-    final statisticsAsync = ref.watch(statisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange)));
+    final statisticsAsync = ref.watch(statisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
+    final insightAsync = ref.watch(insightProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
     final currency = ref.watch(currencyProvider);
-    final isPremium = ref.watch(isPremiumProvider);
 
-    final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider);
-    final dailyStatsAsync = ref.watch(dailyStatisticsProvider);
+    final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider(_selectedDate));
+    final dailyStatsAsync = ref.watch(dailyStatisticsProvider(_selectedDate));
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Statistics', style: AppTextStyles.h2),
-            PopupMenuButton<TimeRange>(
-              initialValue: _timeRange,
-              onSelected: (TimeRange result) {
-                setState(() {
-                  _timeRange = result;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: Row(
-                  children: [
-                    Text(_timeRange == TimeRange.month ? 'Month' : 'Year', style: AppTextStyles.bodyMedium),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.keyboard_arrow_down, size: 16),
-                  ],
-                ),
-              ),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<TimeRange>>[
-                const PopupMenuItem<TimeRange>(
-                  value: TimeRange.month,
-                  child: Text('Month'),
-                ),
-                const PopupMenuItem<TimeRange>(
-                  value: TimeRange.year,
-                  child: Text('Year'),
-                ),
-              ],
-            ),
-          ],
-        ),
-        centerTitle: false,
+        title: Text('Statistics', style: AppTextStyles.h2),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -87,113 +51,61 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Chart Section
+              // 1. Date Navigation & Toggle
+              _buildDateHeader(),
+              const SizedBox(height: 12),
+
+              // 2. Insight Card
+              insightAsync.when(
+                data: (insight) {
+                  if (insight == null) return const SizedBox();
+                  return InsightCard(
+                    message: insight.message,
+                    isGood: insight.isGood,
+                    percentage: insight.percentageChange,
+                  );
+                },
+                loading: () => const SizedBox(),
+                error: (_, __) => const SizedBox(),
+              ),
+              const SizedBox(height: 12),
+
+              // 3. Income/Expense Toggle
+              _buildTypeToggle(),
+              const SizedBox(height: 16),
+
+              // 4. Pie Chart Section
               statisticsAsync.when(
                 data: (data) {
                   final totalAmount = data.fold(0.0, (sum, item) => sum + item.amount);
-
-                  final now = DateTime.now();
-                  final dateStr = _timeRange == TimeRange.month 
-                      ? '${_getMonthName(now.month)} ${now.year}'
-                      : '${now.year}';
-
                   return Column(
                     children: [
                       SizedBox(
-                        height: 200,
+                        height: 250,
                         child: CategoryPieChart(
                           data: data,
                           totalAmount: totalAmount,
                           currency: currency,
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Text(dateStr, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
-                      const SizedBox(height: 8),
-                      Text(
-                        currency.format(totalAmount),
-                        style: AppTextStyles.h1.copyWith(fontSize: 32),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'saved out of ${currency.format(totalAmount * 1.2)}', // Mock budget for now
-                        style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
-                      ),
                     ],
                   );
                 },
-                loading: () => const SizedBox(height: 300, child: Center(child: CircularProgressIndicator())),
+                loading: () => const SizedBox(height: 250, child: Center(child: CircularProgressIndicator())),
                 error: (err, stack) => Center(child: Text('Error: $err')),
               ),
               
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
 
-              // Toggle
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _isExpense = false),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            color: !_isExpense ? Colors.white : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: !_isExpense ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
-                          ),
-                          child: Text(
-                            'Income',
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: !_isExpense ? Colors.black : Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _isExpense = true),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            color: _isExpense ? Colors.white : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: _isExpense ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
-                          ),
-                          child: Text(
-                            'Expense',
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: _isExpense ? Colors.black : Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Category List
+              // 5. Category List
               statisticsAsync.when(
                 data: (data) {
-                  if (data.isEmpty) return const SizedBox();
+                  if (data.isEmpty) return const Center(child: Text('No data for this period'));
                   return ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: data.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 16),
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final item = data[index];
                       return _buildCategoryItem(item, currency);
@@ -204,28 +116,181 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 error: (_, __) => const SizedBox(),
               ),
               
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
 
-              // Daily Stacked Bar Chart
-              dailyStatsAsync.when(
-                data: (data) {
-                  if (data.isEmpty) return const SizedBox();
-                  return DailyStackedBarChart(
-                    data: data,
-                    currency: currency,
-                  );
-                },
-                loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
-                error: (_, __) => const SizedBox(),
-              ),
-              
+              // 6. Trend Chart Section
+              if (_timeRange == TimeRange.month)
+                dailyStatsAsync.when(
+                  data: (data) {
+                    if (data.isEmpty) return const SizedBox();
+                    return DailyStackedBarChart(
+                      data: data,
+                      currency: currency,
+                    );
+                  },
+                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                  error: (_, __) => const SizedBox(),
+                )
+              else
+                monthlyStatsAsync.when(
+                  data: (data) {
+                    if (data.isEmpty) return const SizedBox();
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Monthly Overview', style: AppTextStyles.h3),
+                        const SizedBox(height: 16),
+                        MonthlyBarChart(data: data),
+                      ],
+                    );
+                  },
+                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                  error: (_, __) => const SizedBox(),
+                ),
+
               const SizedBox(height: 80),
             ],
           ),
         ),
       ),
     );
+  }
 
+  Widget _buildDateHeader() {
+    return Column(
+      children: [
+        // Toggle Month/Year
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildToggleBtn('Monthly', TimeRange.month),
+              _buildToggleBtn('Yearly', TimeRange.year),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        // Date Scroller
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.chevron_left),
+              onPressed: () => _changeDate(-1),
+            ),
+            Text(
+              _formatDate(_selectedDate),
+              style: AppTextStyles.h3,
+            ),
+            IconButton(
+              icon: const Icon(Icons.chevron_right),
+              onPressed: () => _changeDate(1),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToggleBtn(String label, TimeRange range) {
+    final isSelected = _timeRange == range;
+    return GestureDetector(
+      onTap: () => setState(() => _timeRange = range),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.bodySmall.copyWith(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? Colors.black : Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeToggle() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _isExpense = false),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: !_isExpense ? Colors.green.withOpacity(0.1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                  border: !_isExpense ? Border.all(color: Colors.green.withOpacity(0.5)) : null,
+                ),
+                child: Text(
+                  'Income',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: !_isExpense ? Colors.green : Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _isExpense = true),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: _isExpense ? Colors.red.withOpacity(0.1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                  border: _isExpense ? Border.all(color: Colors.red.withOpacity(0.5)) : null,
+                ),
+                child: Text(
+                  'Expense',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: _isExpense ? Colors.red : Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _changeDate(int offset) {
+    setState(() {
+      if (_timeRange == TimeRange.month) {
+        _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + offset, 1);
+      } else {
+        _selectedDate = DateTime(_selectedDate.year + offset, 1, 1);
+      }
+    });
+  }
+
+  String _formatDate(DateTime date) {
+    if (_timeRange == TimeRange.month) {
+      return '${_getMonthName(date.month)} ${date.year}';
+    } else {
+      return '${date.year}';
+    }
   }
 
   String _getMonthName(int month) {
@@ -291,6 +356,16 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       case 'store': return Icons.store;
       case 'card_giftcard': return Icons.card_giftcard;
       case 'trending_up': return Icons.trending_up;
+      
+      // System Categories
+      case 'debt': return Icons.handshake;
+      case 'debts': return Icons.handshake;
+      case 'wishlist': return Icons.favorite;
+      case 'bill': return Icons.receipt_long;
+      case 'bills': return Icons.receipt_long;
+      case 'saving': return Icons.savings;
+      case 'savings': return Icons.savings;
+      
       default: return Icons.category;
     }
   }
