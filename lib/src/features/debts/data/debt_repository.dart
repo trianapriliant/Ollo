@@ -43,4 +43,10 @@ class DebtRepository {
   Stream<List<Debt>> watchDebtsByType(DebtType type) {
     return _isar.debts.filter().typeEqualTo(type).sortByDueDate().watch(fireImmediately: true);
   }
+  Future<Debt?> getDebtByTransactionId(int transactionId) async {
+    return await _isar.debts
+        .filter()
+        .transactionIdEqualTo(transactionId)
+        .findFirst();
+  }
 }

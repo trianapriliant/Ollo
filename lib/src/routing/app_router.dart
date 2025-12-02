@@ -25,6 +25,7 @@ import '../features/bills/presentation/bills_screen.dart';
 import '../features/bills/presentation/add_bill_screen.dart';
 import '../features/bills/domain/bill.dart';
 import '../features/wishlist/presentation/wishlist_screen.dart';
+import '../features/wishlist/domain/wishlist.dart';
 import '../features/wishlist/presentation/add_wishlist_screen.dart';
 import '../features/debts/presentation/debts_screen.dart';
 import '../features/debts/presentation/add_debt_screen.dart';
@@ -200,6 +201,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: 'add',
             builder: (context, state) => const AddWishlistScreen(),
           ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final wishlist = state.extra as Wishlist;
+              return AddWishlistScreen(wishlistToEdit: wishlist);
+            },
+          ),
         ],
       ),
       GoRoute(
@@ -210,6 +218,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'add',
             builder: (context, state) => const AddDebtScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final debt = state.extra as Debt;
+              return AddDebtScreen(debtToEdit: debt);
+            },
           ),
           GoRoute(
             path: 'detail',

@@ -12,7 +12,9 @@ import '../data/wishlist_repository.dart';
 import '../domain/wishlist.dart';
 
 class AddWishlistScreen extends ConsumerStatefulWidget {
-  const AddWishlistScreen({super.key});
+  final Wishlist? wishlistToEdit;
+
+  const AddWishlistScreen({super.key, this.wishlistToEdit});
 
   @override
   ConsumerState<AddWishlistScreen> createState() => _AddWishlistScreenState();
@@ -27,11 +29,24 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
   final _picker = ImagePicker();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.wishlistToEdit != null) {
+      final w = widget.wishlistToEdit!;
+      _titleController.text = w.title;
+      _priceController.text = w.price.toStringAsFixed(0);
+      _linkController.text = w.linkUrl ?? '';
+      _targetDate = w.targetDate;
+      _imagePath = w.imagePath;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Add Wishlist', style: AppTextStyles.h2),
+        title: Text(widget.wishlistToEdit != null ? 'Edit Wishlist' : 'Add Wishlist', style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -39,6 +54,13 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          if (widget.wishlistToEdit != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              onPressed: _confirmDelete,
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -164,7 +186,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: const Text('Save to Wishlist', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text(widget.wishlistToEdit != null ? 'Update Wishlist' : 'Save to Wishlist', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -259,31 +281,73 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
 
     try {
       final wishlistRepo = ref.read(wishlistRepositoryProvider);
-      final newWishlist = Wishlist(
-        title: title,
-        price: price,
-        targetDate: _targetDate,
-        imagePath: _imagePath,
-        linkUrl: _linkController.text.isEmpty ? null : _linkController.text,
-        createdAt: DateTime.now(),
-      );
-      
-      await wishlistRepo.addWishlist(newWishlist);
+
+      if (widget.wishlistToEdit != null) {
+        // UPDATE
+        final wishlist = widget.wishlistToEdit!;
+        wishlist.title = title;
+        wishlist.price = price;
+        wishlist.targetDate = _targetDate;
+        wishlist.imagePath = _imagePath;
+        wishlist.linkUrl = _linkController.text.isEmpty ? null : _linkController.text;
+        
+        await wishlistRepo.updateWishlist(wishlist);
+        
+        if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wishlist updated successfully')));
+        }
+      } else {
+        // CREATE
+        final newWishlist = Wishlist(
+          title: title,
+          price: price,
+          targetDate: _targetDate,
+          imagePath: _imagePath,
+          linkUrl: _linkController.text.isEmpty ? null : _linkController.text,
+          createdAt: DateTime.now(),
+        );
+        
+        await wishlistRepo.addWishlist(newWishlist);
+        
+        if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item added to wishlist!')));
+        }
+      }
 
       if (mounted) {
         context.pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Item added to wishlist!'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
       );
+    }
+  }
+  
+  Future<void> _confirmDelete() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Wishlist?'),
+        content: const Text('This action cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    
+    if (confirm == true && widget.wishlistToEdit != null) {
+      try {
+        final wishlistRepo = ref.read(wishlistRepositoryProvider);
+        await wishlistRepo.deleteWishlist(widget.wishlistToEdit!.id);
+        if (mounted) {
+          context.pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wishlist deleted')));
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 }

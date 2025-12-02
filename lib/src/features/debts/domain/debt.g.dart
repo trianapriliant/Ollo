@@ -69,14 +69,19 @@ const DebtSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _DebtstatusEnumValueMap,
     ),
-    r'type': PropertySchema(
+    r'transactionId': PropertySchema(
       id: 10,
+      name: r'transactionId',
+      type: IsarType.long,
+    ),
+    r'type': PropertySchema(
+      id: 11,
       name: r'type',
       type: IsarType.byte,
       enumMap: _DebttypeEnumValueMap,
     ),
     r'walletId': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -146,8 +151,9 @@ void _debtSerialize(
   writer.writeString(offsets[7], object.personName);
   writer.writeDouble(offsets[8], object.remainingAmount);
   writer.writeByte(offsets[9], object.status.index);
-  writer.writeByte(offsets[10], object.type.index);
-  writer.writeString(offsets[11], object.walletId);
+  writer.writeLong(offsets[10], object.transactionId);
+  writer.writeByte(offsets[11], object.type.index);
+  writer.writeString(offsets[12], object.walletId);
 }
 
 Debt _debtDeserialize(
@@ -172,11 +178,12 @@ Debt _debtDeserialize(
     personName: reader.readString(offsets[7]),
     status: _DebtstatusValueEnumMap[reader.readByteOrNull(offsets[9])] ??
         DebtStatus.active,
-    type: _DebttypeValueEnumMap[reader.readByteOrNull(offsets[10])] ??
+    type: _DebttypeValueEnumMap[reader.readByteOrNull(offsets[11])] ??
         DebtType.lending,
-    walletId: reader.readStringOrNull(offsets[11]),
+    walletId: reader.readStringOrNull(offsets[12]),
   );
   object.id = id;
+  object.transactionId = reader.readLongOrNull(offsets[10]);
   return object;
 }
 
@@ -215,9 +222,11 @@ P _debtDeserializeProp<P>(
       return (_DebtstatusValueEnumMap[reader.readByteOrNull(offset)] ??
           DebtStatus.active) as P;
     case 10:
+      return (reader.readLongOrNull(offset)) as P;
+    case 11:
       return (_DebttypeValueEnumMap[reader.readByteOrNull(offset)] ??
           DebtType.lending) as P;
-    case 11:
+    case 12:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1111,6 +1120,75 @@ extension DebtQueryFilter on QueryBuilder<Debt, Debt, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> transactionIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> transactionIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> transactionIdEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> transactionIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> transactionIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterFilterCondition> transactionIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'transactionId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Debt, Debt, QAfterFilterCondition> typeEqualTo(DebtType value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1429,6 +1507,18 @@ extension DebtQuerySortBy on QueryBuilder<Debt, Debt, QSortBy> {
     });
   }
 
+  QueryBuilder<Debt, Debt, QAfterSortBy> sortByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterSortBy> sortByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Debt, Debt, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -1575,6 +1665,18 @@ extension DebtQuerySortThenBy on QueryBuilder<Debt, Debt, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Debt, Debt, QAfterSortBy> thenByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Debt, Debt, QAfterSortBy> thenByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Debt, Debt, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -1657,6 +1759,12 @@ extension DebtQueryWhereDistinct on QueryBuilder<Debt, Debt, QDistinct> {
     });
   }
 
+  QueryBuilder<Debt, Debt, QDistinct> distinctByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'transactionId');
+    });
+  }
+
   QueryBuilder<Debt, Debt, QDistinct> distinctByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type');
@@ -1735,6 +1843,12 @@ extension DebtQueryProperty on QueryBuilder<Debt, Debt, QQueryProperty> {
   QueryBuilder<Debt, DebtStatus, QQueryOperations> statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');
+    });
+  }
+
+  QueryBuilder<Debt, int?, QQueryOperations> transactionIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'transactionId');
     });
   }
 

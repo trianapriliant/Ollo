@@ -11,7 +11,9 @@ import '../data/debt_repository.dart';
 import '../domain/debt.dart';
 
 class AddDebtScreen extends ConsumerStatefulWidget {
-  const AddDebtScreen({super.key});
+  final Debt? debtToEdit;
+
+  const AddDebtScreen({super.key, this.debtToEdit});
 
   @override
   ConsumerState<AddDebtScreen> createState() => _AddDebtScreenState();
@@ -29,6 +31,20 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.debtToEdit != null) {
+      final d = widget.debtToEdit!;
+      _nameController.text = d.personName;
+      _amountController.text = d.amount.toStringAsFixed(0);
+      _noteController.text = d.note ?? '';
+      _type = d.type;
+      _dueDate = d.dueDate;
+      _selectedWalletId = d.walletId;
+    }
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _amountController.dispose();
@@ -43,13 +59,20 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Add Debt/Loan', style: AppTextStyles.h2),
+        title: Text(widget.debtToEdit != null ? 'Edit Debt/Loan' : 'Add Debt/Loan', style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          if (widget.debtToEdit != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              onPressed: _confirmDelete,
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -244,7 +267,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                   ),
                   child: _isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Save Debt', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.debtToEdit != null ? 'Update Debt' : 'Save Debt', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -263,53 +286,79 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
       final amount = double.parse(_amountController.text);
       final debtRepo = ref.read(debtRepositoryProvider);
       
-      final debt = Debt(
-        personName: _nameController.text,
-        amount: amount,
-        type: _type,
-        dueDate: _dueDate,
-        note: _noteController.text.isEmpty ? null : _noteController.text,
-        walletId: _selectedWalletId,
-      );
-
-      await debtRepo.addDebt(debt);
-
-      // If wallet selected, create transaction
-      if (_selectedWalletId != null) {
-        final walletRepo = await ref.read(walletRepositoryProvider.future);
-        final transactionRepo = await ref.read(transactionRepositoryProvider.future);
+      if (widget.debtToEdit != null) {
+        // UPDATE
+        final debt = widget.debtToEdit!;
+        debt.personName = _nameController.text;
+        debt.amount = amount;
+        debt.type = _type;
+        debt.dueDate = _dueDate;
+        debt.note = _noteController.text.isEmpty ? null : _noteController.text;
+        debt.walletId = _selectedWalletId;
         
-        final wallet = await walletRepo.getWallet(_selectedWalletId!);
-        if (wallet != null) {
-          // If I borrow, I get money (Income). If I lend, I lose money (Expense).
-          final isIncome = _type == DebtType.borrowing;
+        await debtRepo.updateDebt(debt);
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debt updated successfully')));
+        }
+      } else {
+        // CREATE
+        final debt = Debt(
+          personName: _nameController.text,
+          amount: amount,
+          type: _type,
+          dueDate: _dueDate,
+          note: _noteController.text.isEmpty ? null : _noteController.text,
+          walletId: _selectedWalletId,
+        );
+
+        // If wallet selected, create transaction
+        if (_selectedWalletId != null) {
+          final walletRepo = await ref.read(walletRepositoryProvider.future);
+          final transactionRepo = await ref.read(transactionRepositoryProvider.future);
           
-          final transaction = Transaction.create(
-            title: isIncome ? 'Borrowed from ${_nameController.text}' : 'Lent to ${_nameController.text}',
-            amount: amount,
-            type: isIncome ? TransactionType.income : TransactionType.expense,
-            categoryId: 'debt', // Ideally should be a real category ID
-            walletId: _selectedWalletId!,
-            note: 'Debt created',
-            date: DateTime.now(),
-          );
+          final wallet = await walletRepo.getWallet(_selectedWalletId!);
+          if (wallet != null) {
+            // If I borrow, I get money (Income). If I lend, I lose money (Expense).
+            final isIncome = _type == DebtType.borrowing;
+            
+            final transaction = Transaction.create(
+              title: isIncome ? 'Borrowed from ${_nameController.text}' : 'Lent to ${_nameController.text}',
+              amount: amount,
+              type: TransactionType.system, // Changed to system
+              categoryId: 'debt', 
+              walletId: _selectedWalletId!,
+              note: 'Debt created',
+              date: DateTime.now(),
+            );
 
-          if (isIncome) {
-            wallet.balance += amount;
-          } else {
-            wallet.balance -= amount;
+            if (isIncome) {
+              wallet.balance += amount;
+            } else {
+              wallet.balance -= amount;
+            }
+
+            await transactionRepo.addTransaction(transaction);
+            await walletRepo.updateWallet(wallet);
+            
+            // Link transaction to debt AND UPDATE DEBT
+            debt.transactionId = transaction.id;
+            await debtRepo.updateDebt(debt); // Persist the link
           }
-
-          await transactionRepo.addTransaction(transaction);
-          await walletRepo.updateWallet(wallet);
+        }
+        
+        // If wallet was NOT selected, we already added the debt above.
+        // But if wallet WAS selected, we updated the debt with transactionId.
+        // Wait, we added debt BEFORE creating transaction.
+        // So the updateDebt above is correct.
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debt saved successfully')));
         }
       }
 
       if (mounted) {
         context.pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Debt saved successfully')),
-        );
       }
     } catch (e) {
       if (mounted) {
@@ -319,6 +368,33 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Debt?'),
+        content: const Text('This action cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    
+    if (confirm == true && widget.debtToEdit != null) {
+      try {
+        final debtRepo = ref.read(debtRepositoryProvider);
+        await debtRepo.deleteDebt(widget.debtToEdit!.id);
+        if (mounted) {
+          context.pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debt deleted')));
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 }

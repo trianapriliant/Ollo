@@ -342,29 +342,65 @@ class _DebtList extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          currency.format(debt.amount),
-                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        if (!debt.isPaid && debt.paidAmount > 0)
-                          Text(
-                            '${currency.format(debt.remainingAmount)} left',
-                            style: AppTextStyles.bodySmall.copyWith(color: AppColors.primary),
-                          ),
-                      ],
+            // Action Section
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit_outlined, color: AppColors.primary, size: 20),
+                      onPressed: () => context.push('/debts/edit', extra: debt),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 12),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.grey, size: 20),
+                      onPressed: () => _confirmDelete(context, ref, debt), // Need to extract _confirmDelete to be usable here or move logic
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ],
                 ),
-              ),
-            );
+                if (!debt.isPaid && debt.paidAmount > 0)
+                  Text(
+                    '${currency.format(debt.remainingAmount)} left',
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.primary),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
           },
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('Error: $err')),
     );
+  }
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, Debt debt) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Debt?'),
+        content: const Text('This will remove the debt record.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await ref.read(debtRepositoryProvider).deleteDebt(debt.id);
+    }
   }
 }

@@ -15,6 +15,40 @@ class TransactionListItem extends StatelessWidget {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     final dateFormat = DateFormat('dd MMM yyyy');
 
+    final isSystem = transaction.type == TransactionType.system;
+    final isWishlist = isSystem && transaction.title.toLowerCase().contains('wishlist');
+    final isBill = isSystem && transaction.title.toLowerCase().contains('bill');
+    final isDebt = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('lent') || transaction.title.toLowerCase().contains('debt') || transaction.title.toLowerCase().contains('received payment'));
+
+    IconData iconData;
+    Color iconColor;
+    Color backgroundColor;
+
+    if (isSystem) {
+      if (isBill) {
+        iconData = Icons.receipt_long_rounded;
+        iconColor = Colors.orange;
+        backgroundColor = Colors.orange.withOpacity(0.1);
+      } else if (isDebt) {
+        iconData = Icons.handshake_rounded;
+        iconColor = Colors.purple;
+        backgroundColor = Colors.purple.withOpacity(0.1);
+      } else {
+        iconData = Icons.favorite_rounded;
+        iconColor = Colors.pinkAccent;
+        backgroundColor = Colors.pinkAccent.withOpacity(0.1);
+      }
+    } else {
+      iconData = transaction.isExpense ? Icons.arrow_downward : Icons.arrow_upward;
+      iconColor = transaction.isExpense ? Colors.red : Colors.green;
+      backgroundColor = transaction.isExpense ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1);
+    }
+
+    // Determine if it's an expense or income for display purposes
+    // System defaults to expense, but Debt can be income
+    final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
+    final isExpenseDisplay = (transaction.isExpense || isSystem) && !isDebtIncome;
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -22,21 +56,22 @@ class TransactionListItem extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: CircleAvatar(
-          backgroundColor: transaction.isExpense ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
-          child: Icon(
-            transaction.isExpense ? Icons.arrow_downward : Icons.arrow_upward,
-            color: transaction.isExpense ? Colors.red : Colors.green,
-          ),
+          backgroundColor: backgroundColor,
+          child: Icon(iconData, color: iconColor),
         ),
         title: Text(transaction.title, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
-        subtitle: Text(dateFormat.format(transaction.date), style: AppTextStyles.bodySmall),
+        subtitle: Text(
+          isBill ? 'Bill Payment' : (isDebt ? 'Debt Transaction' : (isWishlist ? 'Wishlist Purchase' : dateFormat.format(transaction.date))), 
+          style: AppTextStyles.bodySmall
+        ),
         trailing: Text(
           currencyFormat.format(transaction.amount),
           style: AppTextStyles.bodyLarge.copyWith(
-            color: transaction.isExpense ? Colors.red : Colors.green,
+            color: isExpenseDisplay ? Colors.red : Colors.green,
             fontWeight: FontWeight.bold,
           ),
         ),
+        onTap: () => context.push('/transaction-detail', extra: transaction),
       ),
     );
   }

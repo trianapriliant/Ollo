@@ -47,6 +47,12 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
         centerTitle: true,
         actions: [
           IconButton(
+            icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
+            onPressed: () {
+              context.push('/debts/edit', extra: _debt);
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.delete_outline, color: Colors.red),
             onPressed: _confirmDelete,
           ),
@@ -286,6 +292,30 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
               Text('Add Payment', style: AppTextStyles.h2),
               const SizedBox(height: 24),
               
+              // Percentage Shortcuts
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (final percent in [0.25, 0.5, 1.0])
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ActionChip(
+                          label: Text(percent == 1.0 ? 'Full' : '${(percent * 100).toInt()}%'),
+                          backgroundColor: AppColors.primary.withOpacity(0.1),
+                          labelStyle: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                          onPressed: () {
+                            final remaining = _debt.remainingAmount;
+                            final amount = remaining * percent;
+                            amountController.text = amount.toStringAsFixed(0);
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
               TextField(
                 controller: amountController,
                 keyboardType: TextInputType.number,

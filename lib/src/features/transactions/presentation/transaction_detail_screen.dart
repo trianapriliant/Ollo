@@ -13,6 +13,8 @@ import '../../wallets/data/wallet_repository.dart';
 import '../../wallets/domain/wallet.dart';
 import '../../../utils/icon_helper.dart';
 import '../../bills/data/bill_repository.dart';
+import '../../wishlist/data/wishlist_repository.dart';
+import '../../debts/data/debt_repository.dart';
 
 final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
   final repo = await ref.watch(walletRepositoryProvider.future);
@@ -270,11 +272,31 @@ class TransactionDetailScreen extends ConsumerWidget {
                     }
                   } else if (transaction.title.toLowerCase().contains('wishlist')) {
                     // Try to find associated Wishlist
-                    // We need to import wishlist repository first
-                    // For now, just show message or implement if wishlist edit is ready
-                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Editing Wishlist transaction is coming soon')),
-                      );
+                    final wishlistRepo = ref.read(wishlistRepositoryProvider);
+                    final wishlist = await wishlistRepo.getWishlistByTransactionId(transaction.id);
+                    
+                    if (context.mounted) {
+                      if (wishlist != null) {
+                        context.push('/wishlist/edit', extra: wishlist);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Wishlist data not found')),
+                        );
+                      }
+                    }
+                  } else if (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('lent')) {
+                     // Try to find associated Debt
+                     final debtRepo = ref.read(debtRepositoryProvider);
+                     final debt = await debtRepo.getDebtByTransactionId(transaction.id);
+                     
+                     if (context.mounted) {
+                       if (debt != null) {
+                         context.push('/debts/edit', extra: debt);
+                       } else {
+                         // Fallback if not found (maybe created before we started linking)
+                         context.push('/add-transaction', extra: transaction);
+                       }
+                     }
                   } else {
                      // Fallback for other system types
                      context.push('/add-transaction', extra: transaction); 

@@ -34,6 +34,9 @@ class Debt {
   
   // Link to wallet for initial transaction
   String? walletId;
+  
+  // Link to the initial transaction record
+  int? transactionId;
 
   // History of payments/installments
   List<DebtHistory> history = [];
