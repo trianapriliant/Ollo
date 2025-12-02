@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 part 'transaction.g.dart';
 
-enum TransactionType { income, expense, transfer }
+enum TransactionType { income, expense, transfer, system }
 
 @collection
 class Transaction {
@@ -48,4 +48,6 @@ class Transaction {
   bool get isIncome => type == TransactionType.income;
   @ignore
   bool get isTransfer => type == TransactionType.transfer;
+  @ignore
+  bool get isSystem => type == TransactionType.system;
 }

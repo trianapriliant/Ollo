@@ -178,11 +178,13 @@ const _TransactiontypeEnumValueMap = {
   r'income': r'income',
   r'expense': r'expense',
   r'transfer': r'transfer',
+  r'system': r'system',
 };
 const _TransactiontypeValueEnumMap = {
   r'income': TransactionType.income,
   r'expense': TransactionType.expense,
   r'transfer': TransactionType.transfer,
+  r'system': TransactionType.system,
 };
 
 Id _transactionGetId(Transaction object) {

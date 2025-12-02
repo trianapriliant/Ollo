@@ -98,10 +98,10 @@ class TransactionDetailScreen extends ConsumerWidget {
       icon = Icons.swap_horiz;
       label = 'Transfer';
       prefix = '';
-    } else if (isExpense) {
+    } else if (isExpense || transaction.type == TransactionType.system) {
       color = Colors.red;
       icon = Icons.arrow_upward;
-      label = 'Pengeluaran';
+      label = transaction.type == TransactionType.system ? 'System (Wishlist)' : 'Pengeluaran';
       prefix = '-';
     } else {
       color = Colors.green;
@@ -272,6 +272,9 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   String _getCategoryName(AsyncValue<List<Category>> categoryAsync, String? categoryId) {
+    if (transaction.type == TransactionType.system) {
+      return 'System';
+    }
     if (categoryId == null) return '-';
     return categoryAsync.when(
       data: (categories) {
@@ -295,7 +298,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     return walletsAsync.when(
       data: (wallets) {
         final wallet = wallets.firstWhere(
-          (w) => (w.externalId ?? w.id.toString()) == walletId, 
+          (w) => w.id.toString() == walletId || w.externalId == walletId, 
           orElse: () => Wallet()..name = 'Unknown'
         );
         return wallet.name;

@@ -86,7 +86,7 @@ class RecentTransactionsList extends ConsumerWidget {
                     const SizedBox(height: 12),
                     ...group.transactions.map((transaction) {
                       final walletName = wallets.firstWhere(
-                        (w) => (w.externalId ?? w.id.toString()) == transaction.walletId, 
+                        (w) => w.id.toString() == transaction.walletId || w.externalId == transaction.walletId, 
                         orElse: () => Wallet()..name = 'Unknown'
                       ).name;
                       
@@ -105,6 +105,9 @@ class RecentTransactionsList extends ConsumerWidget {
                          );
                       }
 
+                      final isSystem = transaction.type == TransactionType.system;
+                      final isExpense = transaction.isExpense || isSystem;
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: GestureDetector(
@@ -116,10 +119,11 @@ class RecentTransactionsList extends ConsumerWidget {
                             walletName,
                             transaction.amount,
                             category,
-                            transaction.isExpense,
+                            isExpense,
                             currency,
                             transaction.note,
                             transaction.date,
+                            isSystem: isSystem,
                           ),
                         ),
                       );
@@ -142,7 +146,7 @@ class RecentTransactionsList extends ConsumerWidget {
       }
       groups[dateKey]!.transactions.add(transaction);
       
-      if (transaction.isExpense) {
+      if (transaction.isExpense || transaction.type == TransactionType.system) {
         groups[dateKey]!.dailyTotal -= transaction.amount;
       } else {
         groups[dateKey]!.dailyTotal += transaction.amount;
@@ -190,13 +194,25 @@ class RecentTransactionsList extends ConsumerWidget {
     bool isExpense, 
     Currency currency,
     String? note,
-    DateTime date,
-  ) {
-    final iconData = category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline;
-    final iconColor = category?.color ?? AppColors.primary;
-    final backgroundColor = category?.color.withOpacity(0.1) ?? AppColors.accentBlue;
+    DateTime date, {
+    bool isSystem = false,
+  }) {
+    final iconData = isSystem 
+        ? Icons.favorite_rounded 
+        : (category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline);
+        
+    final iconColor = isSystem 
+        ? Colors.pinkAccent 
+        : (category?.color ?? AppColors.primary);
+        
+    final backgroundColor = isSystem 
+        ? Colors.pinkAccent.withOpacity(0.1) 
+        : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue);
+        
     final timeStr = DateFormat('HH:mm').format(date);
-    final noteStr = note != null && note.isNotEmpty ? ' - $note' : '';
+    final noteStr = isSystem 
+        ? ' - Wishlist Purchase' 
+        : (note != null && note.isNotEmpty ? ' - $note' : '');
 
     return Container(
       padding: const EdgeInsets.all(16),

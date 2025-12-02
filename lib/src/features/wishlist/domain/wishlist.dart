@@ -12,6 +12,7 @@ class Wishlist {
   DateTime? targetDate;
   String? imagePath;
   String? linkUrl;
+  int? transactionId;
   
   bool isCompleted;
   DateTime? createdAt;
@@ -23,6 +24,7 @@ class Wishlist {
     this.targetDate,
     this.imagePath,
     this.linkUrl,
+    this.transactionId,
     this.isCompleted = false,
     this.createdAt,
   });

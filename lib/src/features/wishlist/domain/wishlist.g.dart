@@ -51,6 +51,11 @@ const WishlistSchema = CollectionSchema(
       id: 6,
       name: r'title',
       type: IsarType.string,
+    ),
+    r'transactionId': PropertySchema(
+      id: 7,
+      name: r'transactionId',
+      type: IsarType.long,
     )
   },
   estimateSize: _wishlistEstimateSize,
@@ -102,6 +107,7 @@ void _wishlistSerialize(
   writer.writeDouble(offsets[4], object.price);
   writer.writeDateTime(offsets[5], object.targetDate);
   writer.writeString(offsets[6], object.title);
+  writer.writeLong(offsets[7], object.transactionId);
 }
 
 Wishlist _wishlistDeserialize(
@@ -119,6 +125,7 @@ Wishlist _wishlistDeserialize(
     price: reader.readDouble(offsets[4]),
     targetDate: reader.readDateTimeOrNull(offsets[5]),
     title: reader.readString(offsets[6]),
+    transactionId: reader.readLongOrNull(offsets[7]),
   );
   return object;
 }
@@ -144,6 +151,8 @@ P _wishlistDeserializeProp<P>(
       return (reader.readDateTimeOrNull(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -923,6 +932,78 @@ extension WishlistQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition>
+      transactionIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition>
+      transactionIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> transactionIdEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition>
+      transactionIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> transactionIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> transactionIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'transactionId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension WishlistQueryObject
@@ -1013,6 +1094,18 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
     });
   }
 }
@@ -1114,6 +1207,18 @@ extension WishlistQuerySortThenBy
       return query.addSortBy(r'title', Sort.desc);
     });
   }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
 }
 
 extension WishlistQueryWhereDistinct
@@ -1160,6 +1265,12 @@ extension WishlistQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'transactionId');
     });
   }
 }
@@ -1211,6 +1322,12 @@ extension WishlistQueryProperty
   QueryBuilder<Wishlist, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<Wishlist, int?, QQueryOperations> transactionIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'transactionId');
     });
   }
 }
