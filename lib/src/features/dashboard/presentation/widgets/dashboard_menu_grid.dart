@@ -53,6 +53,12 @@ class DashboardMenuGrid extends StatelessWidget {
         },
       ),
       _MenuItem(
+        icon: Icons.credit_card,
+        label: 'Cards',
+        color: Colors.indigo,
+        onTap: () => context.push('/cards'),
+      ),
+      _MenuItem(
         icon: Icons.subscriptions_outlined,
         label: 'Subs',
         color: Colors.teal,

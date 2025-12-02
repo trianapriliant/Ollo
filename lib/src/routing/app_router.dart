@@ -18,6 +18,9 @@ import '../features/wallets/domain/wallet.dart';
 import '../features/recurring/presentation/recurring_screen.dart';
 import '../features/recurring/presentation/add_edit_recurring_screen.dart';
 import '../features/recurring/domain/recurring_transaction.dart';
+import '../features/cards/presentation/cards_screen.dart';
+import '../features/cards/presentation/add_edit_card_screen.dart';
+import '../features/cards/domain/card.dart';
 import '../features/budget/presentation/budget_screen.dart';
 import '../features/savings/presentation/savings_screen.dart';
 import '../features/savings/presentation/saving_detail_screen.dart';
@@ -163,6 +166,24 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) {
               final tx = state.extra as RecurringTransaction;
               return AddEditRecurringScreen(transaction: tx);
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/cards',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const CardsScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            builder: (context, state) => const AddEditCardScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final card = state.extra as BankCard;
+              return AddEditCardScreen(card: card);
             },
           ),
         ],
