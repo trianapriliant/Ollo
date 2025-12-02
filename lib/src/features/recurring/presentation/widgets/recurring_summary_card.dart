@@ -26,124 +26,122 @@ class RecurringSummaryCard extends ConsumerWidget {
             final monthlyCommitment = snapshot.data ?? 0.0;
             final nextBill = _getNextBill(transactions);
 
-            return Container(
-              height: 320,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.3),
-                    blurRadius: 15,
-                    offset: const Offset(0, 8),
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Monthly Commitment',
-                            style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(monthlyCommitment),
-                            style: AppTextStyles.h2.copyWith(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.repeat, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  if (nextBill != null) ...[
-                    Text(
-                      'Upcoming Bill',
-                      style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white.withOpacity(0.1)),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.calendar_today, size: 20, color: AppColors.primary),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${nextBill.note ?? "Unknown"}',
-                                  style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  _formatNextDue(nextBill.nextDueDate),
-                                  style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.9)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            NumberFormat.compactCurrency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0).format(nextBill.amount),
-                            style: AppTextStyles.h3.copyWith(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ] else ...[
-                     Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'No upcoming bills',
-                          style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.7)),
-                        ),
-                      ),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.3),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
                     ),
                   ],
-                  const Spacer(),
-                ],
-              ),
-            );
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Monthly Commitment',
+                              style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(monthlyCommitment),
+                              style: AppTextStyles.h2.copyWith(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.repeat, color: Colors.white, size: 20),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (nextBill != null) ...[
+                      Text(
+                        'Upcoming Bill',
+                        style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white.withOpacity(0.1)),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.calendar_today, size: 16, color: AppColors.primary),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${nextBill.note ?? "Unknown"}',
+                                    style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    _formatNextDue(nextBill.nextDueDate),
+                                    style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.9), fontSize: 11),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              NumberFormat.compactCurrency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0).format(nextBill.amount),
+                              style: AppTextStyles.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ] else ...[
+                       Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'No upcoming bills',
+                            style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.7)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              );
           },
         );
       },

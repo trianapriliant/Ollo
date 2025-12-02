@@ -8,7 +8,6 @@ import '../../settings/presentation/currency_provider.dart';
 import '../../recurring/data/recurring_repository.dart';
 import '../../recurring/domain/recurring_transaction.dart';
 import 'widgets/recurring_summary_card.dart';
-import 'widgets/add_recurring_bottom_sheet.dart';
 
 class RecurringScreen extends ConsumerWidget {
   const RecurringScreen({super.key});
@@ -125,11 +124,10 @@ class RecurringScreen extends ConsumerWidget {
   }
 
   void _showAddRecurringDialog(BuildContext context, WidgetRef ref, {RecurringTransaction? transaction}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => AddRecurringBottomSheet(transaction: transaction),
-    );
+    if (transaction != null) {
+      context.push('/recurring/edit', extra: transaction);
+    } else {
+      context.push('/recurring/add');
+    }
   }
 }
