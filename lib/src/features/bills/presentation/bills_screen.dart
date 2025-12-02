@@ -10,6 +10,7 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../data/bill_repository.dart';
 import '../domain/bill.dart';
+import '../../wallets/domain/wallet.dart';
 import 'widgets/bill_summary_card.dart';
 
 class BillsScreen extends ConsumerStatefulWidget {
@@ -257,7 +258,7 @@ class _BillItem extends ConsumerWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            // TODO: Show bill details
+            context.push('/bills/edit', extra: bill);
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -361,6 +362,47 @@ class _PayBillDialog extends ConsumerStatefulWidget {
 
 class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
   bool _isLoading = false;
+  Wallet? _selectedWallet;
+  List<Wallet> _wallets = [];
+  bool _isLoadingWallets = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWallets();
+  }
+
+  Future<void> _loadWallets() async {
+    try {
+      final repo = await ref.read(walletRepositoryProvider.future);
+      final wallets = await repo.getAllWallets();
+      if (mounted) {
+        setState(() {
+          _wallets = wallets;
+          _isLoadingWallets = false;
+          
+          // Initialize selected wallet
+          if (_wallets.isNotEmpty) {
+            if (widget.bill.walletId != null) {
+              try {
+                _selectedWallet = _wallets.firstWhere(
+                  (w) => w.id.toString() == widget.bill.walletId || w.externalId == widget.bill.walletId
+                );
+              } catch (_) {
+                _selectedWallet = _wallets.first;
+              }
+            } else {
+              _selectedWallet = _wallets.first;
+            }
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoadingWallets = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -374,8 +416,50 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Pay ${widget.bill.title}?', style: AppTextStyles.bodyMedium),
-          const SizedBox(height: 12),
+          Text('Pay "${widget.bill.title}"?', style: AppTextStyles.bodyMedium),
+          const SizedBox(height: 16),
+          
+          // Wallet Selection
+          Text('Pay from:', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+          const SizedBox(height: 8),
+          if (_isLoadingWallets)
+            const LinearProgressIndicator()
+          else if (_wallets.isEmpty)
+            const Text('No wallets found', style: TextStyle(color: Colors.red))
+          else
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<Wallet>(
+                  value: _selectedWallet,
+                  isExpanded: true,
+                  items: _wallets.map((wallet) {
+                    return DropdownMenuItem(
+                      value: wallet,
+                      child: Row(
+                        children: [
+                          Icon(Icons.account_balance_wallet, size: 16, color: AppColors.primary),
+                          const SizedBox(width: 8),
+                          Expanded(child: Text(wallet.name, style: AppTextStyles.bodyMedium)),
+                          Text(currency.format(wallet.balance), style: AppTextStyles.bodySmall),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (Wallet? value) {
+                    setState(() {
+                      _selectedWallet = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+
+          const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -395,7 +479,7 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
           ),
           const SizedBox(height: 16),
           const Text(
-            'This will create an expense transaction and deduct from your wallet.',
+            'This will create a System transaction and deduct from your wallet.',
             style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
           ),
         ],
@@ -406,7 +490,7 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
           child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
         ),
         ElevatedButton(
-          onPressed: _isLoading ? null : _processPayment,
+          onPressed: _isLoading || _selectedWallet == null ? null : _processPayment,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
@@ -422,6 +506,8 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
   }
 
   Future<void> _processPayment() async {
+    if (_selectedWallet == null) return;
+    
     setState(() => _isLoading = true);
     
     try {
@@ -429,23 +515,14 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       final transactionRepo = await ref.read(transactionRepositoryProvider.future);
       final walletRepo = await ref.read(walletRepositoryProvider.future);
       
-      final wallets = await walletRepo.getAllWallets();
-      if (wallets.isEmpty) {
-        throw Exception('No wallet found');
-      }
+      final wallet = _selectedWallet!;
       
-      final walletId = widget.bill.walletId ?? wallets.first.id.toString();
-      final wallet = await walletRepo.getWallet(walletId);
-      
-      if (wallet == null) throw Exception('Wallet not found');
-      
-      // Create Transaction
+      // Create Transaction (System Type)
       final newTransaction = Transaction.create(
         title: 'Bill: ${widget.bill.title}',
         amount: widget.bill.amount,
-        type: TransactionType.expense,
-        categoryId: widget.bill.categoryId,
-        walletId: walletId,
+        type: TransactionType.system, // System type for Bills
+        walletId: wallet.id.toString(),
         note: 'Bill Payment',
         date: DateTime.now(),
       );
@@ -453,12 +530,16 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       // Update Wallet
       wallet.balance -= widget.bill.amount;
       
+      // Save Transaction first to get ID (Isar updates the object)
+      await transactionRepo.addTransaction(newTransaction);
+      
       // Update Bill
       widget.bill.status = BillStatus.paid;
       widget.bill.paidAt = DateTime.now();
+      widget.bill.transactionId = newTransaction.id; // Link transaction
+      widget.bill.walletId = wallet.id.toString(); // Update wallet used
       
-      // Save all
-      await transactionRepo.addTransaction(newTransaction);
+      // Save updates
       await walletRepo.updateWallet(wallet);
       await billRepo.updateBill(widget.bill);
       

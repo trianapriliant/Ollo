@@ -12,6 +12,7 @@ import '../../categories/domain/category.dart';
 import '../../wallets/data/wallet_repository.dart';
 import '../../wallets/domain/wallet.dart';
 import '../../../utils/icon_helper.dart';
+import '../../bills/data/bill_repository.dart';
 
 final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
   final repo = await ref.watch(walletRepositoryProvider.future);
@@ -250,8 +251,38 @@ class TransactionDetailScreen extends ConsumerWidget {
           Expanded(
             flex: 2,
             child: ElevatedButton.icon(
-              onPressed: () {
-                context.push('/add-transaction', extra: transaction); 
+              onPressed: () async {
+                if (transaction.type == TransactionType.system) {
+                  // Handle System Transactions (Bills, Wishlist)
+                  if (transaction.title.toLowerCase().contains('bill')) {
+                    // Try to find associated Bill
+                    final billRepo = ref.read(billRepositoryProvider);
+                    final bill = await billRepo.getBillByTransactionId(transaction.id);
+                    
+                    if (context.mounted) {
+                      if (bill != null) {
+                        context.push('/bills/edit', extra: bill);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Bill data not found')),
+                        );
+                      }
+                    }
+                  } else if (transaction.title.toLowerCase().contains('wishlist')) {
+                    // Try to find associated Wishlist
+                    // We need to import wishlist repository first
+                    // For now, just show message or implement if wishlist edit is ready
+                     ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Editing Wishlist transaction is coming soon')),
+                      );
+                  } else {
+                     // Fallback for other system types
+                     context.push('/add-transaction', extra: transaction); 
+                  }
+                } else {
+                  // Normal Transaction
+                  context.push('/add-transaction', extra: transaction); 
+                }
               },
               icon: const Icon(Icons.edit_outlined),
               label: const Text('Edit'),

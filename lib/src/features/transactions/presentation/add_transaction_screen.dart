@@ -66,10 +66,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     final type = widget.type;
-    final primaryColor = type == TransactionType.expense ? Colors.red[400]! : Colors.green[600]!;
+    final isExpense = type == TransactionType.expense || type == TransactionType.system;
+    final primaryColor = isExpense ? Colors.red[400]! : Colors.green[600]!;
     
     final walletsAsync = ref.watch(walletListProvider);
-    final categoriesAsync = ref.watch(categoryListProvider(type == TransactionType.expense ? CategoryType.expense : CategoryType.income));
+    final categoriesAsync = ref.watch(categoryListProvider(isExpense ? CategoryType.expense : CategoryType.income));
 
     return Scaffold(
       backgroundColor: AppColors.background,

@@ -170,7 +170,12 @@ class _SystemCategoryList extends StatelessWidget {
         'color': Colors.pinkAccent,
         'description': 'Automated transactions from Wishlist purchases',
       },
-      // Future: Bills, Debts
+      {
+        'name': 'Bills',
+        'icon': Icons.receipt_long_rounded,
+        'color': Colors.orange,
+        'description': 'Automated transactions from Bill payments',
+      },
     ];
 
     return ListView.separated(

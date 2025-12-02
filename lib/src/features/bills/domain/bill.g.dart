@@ -58,8 +58,13 @@ const BillSchema = CollectionSchema(
       name: r'title',
       type: IsarType.string,
     ),
-    r'walletId': PropertySchema(
+    r'transactionId': PropertySchema(
       id: 8,
+      name: r'transactionId',
+      type: IsarType.long,
+    ),
+    r'walletId': PropertySchema(
+      id: 9,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -115,7 +120,8 @@ void _billSerialize(
   writer.writeLong(offsets[5], object.recurringTransactionId);
   writer.writeByte(offsets[6], object.status.index);
   writer.writeString(offsets[7], object.title);
-  writer.writeString(offsets[8], object.walletId);
+  writer.writeLong(offsets[8], object.transactionId);
+  writer.writeString(offsets[9], object.walletId);
 }
 
 Bill _billDeserialize(
@@ -134,7 +140,8 @@ Bill _billDeserialize(
     status: _BillstatusValueEnumMap[reader.readByteOrNull(offsets[6])] ??
         BillStatus.unpaid,
     title: reader.readString(offsets[7]),
-    walletId: reader.readStringOrNull(offsets[8]),
+    transactionId: reader.readLongOrNull(offsets[8]),
+    walletId: reader.readStringOrNull(offsets[9]),
   );
   object.id = id;
   return object;
@@ -165,6 +172,8 @@ P _billDeserializeProp<P>(
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readLongOrNull(offset)) as P;
+    case 9:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1034,6 +1043,75 @@ extension BillQueryFilter on QueryBuilder<Bill, Bill, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> transactionIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> transactionIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> transactionIdEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> transactionIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> transactionIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> transactionIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'transactionId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Bill, Bill, QAfterFilterCondition> walletIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1281,6 +1359,18 @@ extension BillQuerySortBy on QueryBuilder<Bill, Bill, QSortBy> {
     });
   }
 
+  QueryBuilder<Bill, Bill, QAfterSortBy> sortByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterSortBy> sortByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Bill, Bill, QAfterSortBy> sortByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
@@ -1403,6 +1493,18 @@ extension BillQuerySortThenBy on QueryBuilder<Bill, Bill, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Bill, Bill, QAfterSortBy> thenByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterSortBy> thenByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Bill, Bill, QAfterSortBy> thenByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
@@ -1468,6 +1570,12 @@ extension BillQueryWhereDistinct on QueryBuilder<Bill, Bill, QDistinct> {
     });
   }
 
+  QueryBuilder<Bill, Bill, QDistinct> distinctByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'transactionId');
+    });
+  }
+
   QueryBuilder<Bill, Bill, QDistinct> distinctByWalletId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1528,6 +1636,12 @@ extension BillQueryProperty on QueryBuilder<Bill, Bill, QQueryProperty> {
   QueryBuilder<Bill, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<Bill, int?, QQueryOperations> transactionIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'transactionId');
     });
   }
 

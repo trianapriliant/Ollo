@@ -26,6 +26,9 @@ class Bill {
   
   // Link to recurring template if auto-generated
   int? recurringTransactionId;
+  
+  // Link to payment transaction
+  int? transactionId;
 
   Bill({
     required this.title,
@@ -37,5 +40,6 @@ class Bill {
     this.status = BillStatus.unpaid,
     this.paidAt,
     this.recurringTransactionId,
+    this.transactionId,
   });
 }

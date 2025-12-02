@@ -197,21 +197,30 @@ class RecentTransactionsList extends ConsumerWidget {
     DateTime date, {
     bool isSystem = false,
   }) {
+    // Determine if it's a Wishlist or Bill transaction based on title
+    final isWishlist = isSystem && title.toLowerCase().contains('wishlist');
+    final isBill = isSystem && title.toLowerCase().contains('bill');
+
     final iconData = isSystem 
-        ? Icons.favorite_rounded 
+        ? (isBill ? Icons.receipt_long_rounded : Icons.favorite_rounded)
         : (category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline);
         
     final iconColor = isSystem 
-        ? Colors.pinkAccent 
+        ? (isBill ? Colors.orange : Colors.pinkAccent)
         : (category?.color ?? AppColors.primary);
         
     final backgroundColor = isSystem 
-        ? Colors.pinkAccent.withOpacity(0.1) 
+        ? (isBill ? Colors.orange.withOpacity(0.1) : Colors.pinkAccent.withOpacity(0.1))
         : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue);
         
     final timeStr = DateFormat('HH:mm').format(date);
+    
+    String systemNote = '';
+    if (isWishlist) systemNote = ' - Wishlist Purchase';
+    if (isBill) systemNote = ' - Bill Payment';
+    
     final noteStr = isSystem 
-        ? ' - Wishlist Purchase' 
+        ? systemNote
         : (note != null && note.isNotEmpty ? ' - $note' : '');
 
     return Container(

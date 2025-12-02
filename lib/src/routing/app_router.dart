@@ -23,6 +23,7 @@ import '../features/savings/domain/saving_goal.dart';
 import '../features/subscription/presentation/paywall_screen.dart';
 import '../features/bills/presentation/bills_screen.dart';
 import '../features/bills/presentation/add_bill_screen.dart';
+import '../features/bills/domain/bill.dart';
 import '../features/wishlist/presentation/wishlist_screen.dart';
 import '../features/wishlist/presentation/add_wishlist_screen.dart';
 import '../features/debts/presentation/debts_screen.dart';
@@ -180,6 +181,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'add',
             builder: (context, state) => const AddBillScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final bill = state.extra as Bill;
+              return AddBillScreen(billToEdit: bill);
+            },
           ),
         ],
       ),

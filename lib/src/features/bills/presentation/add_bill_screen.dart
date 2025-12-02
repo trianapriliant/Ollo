@@ -9,9 +9,14 @@ import '../../recurring/domain/recurring_transaction.dart';
 import '../../transactions/presentation/widgets/category_selector.dart';
 import '../data/bill_repository.dart';
 import '../domain/bill.dart';
+import '../../../utils/icon_helper.dart';
+import '../../categories/data/category_repository.dart';
+import '../../categories/domain/category.dart';
 
 class AddBillScreen extends ConsumerStatefulWidget {
-  const AddBillScreen({super.key});
+  final Bill? billToEdit;
+  
+  const AddBillScreen({super.key, this.billToEdit});
 
   @override
   ConsumerState<AddBillScreen> createState() => _AddBillScreenState();
@@ -21,16 +26,31 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime _dueDate = DateTime.now();
-  String _selectedCategoryId = '1'; // Default
+  String? _selectedCategoryId;
   bool _isRecurring = false;
   RecurringFrequency _frequency = RecurringFrequency.monthly;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.billToEdit != null) {
+      final b = widget.billToEdit!;
+      _titleController.text = b.title;
+      _amountController.text = b.amount.toString();
+      _dueDate = b.dueDate;
+      _selectedCategoryId = b.categoryId;
+      // Recurring logic for edit is complex, maybe disable for now or fetch linked recurring
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final categoriesAsync = ref.watch(categoryListProvider(CategoryType.expense));
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Add Bill', style: AppTextStyles.h2),
+        title: Text(widget.billToEdit != null ? 'Edit Bill' : 'Add Bill', style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -38,6 +58,13 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          if (widget.billToEdit != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              onPressed: _confirmDelete,
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -106,84 +133,108 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             // Category
             Text('Category', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _selectedCategoryId,
-                  isExpanded: true,
-                  icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  items: const [
-                    DropdownMenuItem(value: '1', child: Text('Bills')),
-                    DropdownMenuItem(value: '2', child: Text('Food')),
-                    DropdownMenuItem(value: '3', child: Text('Transport')),
-                    DropdownMenuItem(value: '4', child: Text('Shopping')),
-                    DropdownMenuItem(value: '5', child: Text('Entertainment')),
-                    DropdownMenuItem(value: '6', child: Text('Health')),
-                    DropdownMenuItem(value: '7', child: Text('Education')),
-                  ],
-                  onChanged: (val) => setState(() => _selectedCategoryId = val!),
-                ),
-              ),
+            categoriesAsync.when(
+              data: (categories) {
+                if (categories.isEmpty) return const Text('No categories found');
+                
+                // Auto-select first if null
+                if (_selectedCategoryId == null && categories.isNotEmpty) {
+                   // Try to find 'Bills' category or default to first
+                   try {
+                     final billsCat = categories.firstWhere((c) => c.name.toLowerCase() == 'bills');
+                     _selectedCategoryId = billsCat.externalId ?? billsCat.id.toString();
+                   } catch (_) {
+                     final first = categories.first;
+                     _selectedCategoryId = first.externalId ?? first.id.toString();
+                   }
+                }
+
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedCategoryId,
+                      isExpanded: true,
+                      icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                      items: categories.map((cat) {
+                        return DropdownMenuItem(
+                          value: cat.externalId ?? cat.id.toString(),
+                          child: Row(
+                            children: [
+                              Icon(IconHelper.getIcon(cat.iconPath), color: cat.color, size: 20),
+                              const SizedBox(width: 12),
+                              Text(cat.name),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (val) => setState(() => _selectedCategoryId = val),
+                    ),
+                  ),
+                );
+              },
+              loading: () => const LinearProgressIndicator(),
+              error: (err, stack) => Text('Error: $err'),
             ),
             const SizedBox(height: 24),
 
-            // Recurring Switch
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
-              ),
-              child: Column(
-                children: [
-                  SwitchListTile(
-                    title: Text('Repeat this bill?', style: AppTextStyles.bodyMedium),
-                    subtitle: Text('Automatically create new bills', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
-                    value: _isRecurring,
-                    onChanged: (val) => setState(() => _isRecurring = val),
-                    activeColor: AppColors.primary,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  if (_isRecurring) ...[
-                    const Divider(height: 1),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          Text('Frequency', style: AppTextStyles.bodyMedium),
-                          const Spacer(),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton<RecurringFrequency>(
-                              value: _frequency,
-                              items: RecurringFrequency.values.map((f) {
-                                return DropdownMenuItem(
-                                  value: f,
-                                  child: Text(
-                                    f.name.toUpperCase(),
-                                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (val) => setState(() => _frequency = val!),
-                            ),
-                          ),
-                        ],
-                      ),
+            // Recurring Switch (Only for new bills for now)
+            if (widget.billToEdit == null) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                ),
+                child: Column(
+                  children: [
+                    SwitchListTile(
+                      title: Text('Repeat this bill?', style: AppTextStyles.bodyMedium),
+                      subtitle: Text('Automatically create new bills', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+                      value: _isRecurring,
+                      onChanged: (val) => setState(() => _isRecurring = val),
+                      activeColor: AppColors.primary,
+                      contentPadding: EdgeInsets.zero,
                     ),
+                    if (_isRecurring) ...[
+                      const Divider(height: 1),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          children: [
+                            Text('Frequency', style: AppTextStyles.bodyMedium),
+                            const Spacer(),
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton<RecurringFrequency>(
+                                value: _frequency,
+                                items: RecurringFrequency.values.map((f) {
+                                  return DropdownMenuItem(
+                                    value: f,
+                                    child: Text(
+                                      f.name.toUpperCase(),
+                                      style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (val) => setState(() => _frequency = val!),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-
-            const SizedBox(height: 40),
+              const SizedBox(height: 40),
+            ],
             
             // Save Button
             SizedBox(
@@ -197,7 +248,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: const Text('Save Bill', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text(widget.billToEdit != null ? 'Update Bill' : 'Save Bill', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -272,65 +323,108 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       );
       return;
     }
+    
+    if (_selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
 
     try {
-      if (_isRecurring) {
-        // Create Recurring Transaction Template
-        final recurringRepo = ref.read(recurringRepositoryProvider);
-        final newRecurring = RecurringTransaction(
-          amount: amount,
-          categoryId: _selectedCategoryId,
-          walletId: '1', // Default wallet for now
-          note: title,
-          frequency: _frequency,
-          startDate: _dueDate,
-          nextDueDate: _dueDate,
-          createBillOnly: true, // IMPORTANT: This makes it generate Bills, not Transactions
-        );
-        await recurringRepo.addRecurringTransaction(newRecurring);
-        
-        // Also create the first bill immediately if due today or past
-        // Actually, the service processes "due" transactions. 
-        // We can let the service handle it, or manually create the first one.
-        // Let's manually create the first one to be sure.
-        final billRepo = ref.read(billRepositoryProvider);
-        final newBill = Bill(
-          title: title,
-          amount: amount,
-          dueDate: _dueDate,
-          categoryId: _selectedCategoryId,
-          status: BillStatus.unpaid,
-          recurringTransactionId: newRecurring.id,
-        );
-        await billRepo.addBill(newBill);
+      final billRepo = ref.read(billRepositoryProvider);
 
+      if (widget.billToEdit != null) {
+        // UPDATE
+        final bill = widget.billToEdit!;
+        bill.title = title;
+        bill.amount = amount;
+        bill.dueDate = _dueDate;
+        bill.categoryId = _selectedCategoryId!;
+        
+        await billRepo.updateBill(bill);
+        
+        if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bill updated successfully')));
+        }
       } else {
-        // One-time Bill
-        final billRepo = ref.read(billRepositoryProvider);
-        final newBill = Bill(
-          title: title,
-          amount: amount,
-          dueDate: _dueDate,
-          categoryId: _selectedCategoryId,
-          status: BillStatus.unpaid,
-        );
-        await billRepo.addBill(newBill);
+        // CREATE
+        if (_isRecurring) {
+          // Create Recurring Transaction Template
+          final recurringRepo = ref.read(recurringRepositoryProvider);
+          final newRecurring = RecurringTransaction(
+            amount: amount,
+            categoryId: _selectedCategoryId!,
+            walletId: '1', // Default wallet for now
+            note: title,
+            frequency: _frequency,
+            startDate: _dueDate,
+            nextDueDate: _dueDate,
+            createBillOnly: true, 
+          );
+          await recurringRepo.addRecurringTransaction(newRecurring);
+          
+          final newBill = Bill(
+            title: title,
+            amount: amount,
+            dueDate: _dueDate,
+            categoryId: _selectedCategoryId!,
+            status: BillStatus.unpaid,
+            recurringTransactionId: newRecurring.id,
+          );
+          await billRepo.addBill(newBill);
+
+        } else {
+          // One-time Bill
+          final newBill = Bill(
+            title: title,
+            amount: amount,
+            dueDate: _dueDate,
+            categoryId: _selectedCategoryId!,
+            status: BillStatus.unpaid,
+          );
+          await billRepo.addBill(newBill);
+        }
+        
+        if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bill saved successfully')));
+        }
       }
 
       if (mounted) {
         context.pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Bill saved successfully'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
       );
+    }
+  }
+  
+  Future<void> _confirmDelete() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Bill?'),
+        content: const Text('This action cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    
+    if (confirm == true && widget.billToEdit != null) {
+      try {
+        final billRepo = ref.read(billRepositoryProvider);
+        await billRepo.deleteBill(widget.billToEdit!.id);
+        if (mounted) {
+          context.pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bill deleted')));
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 }

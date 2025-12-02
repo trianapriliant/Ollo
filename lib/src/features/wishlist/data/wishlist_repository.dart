@@ -39,4 +39,10 @@ class WishlistRepository {
   Future<List<Wishlist>> getAllWishlists() async {
     return await _isar.wishlists.where().sortByCreatedAtDesc().findAll();
   }
+  Future<Wishlist?> getWishlistByTransactionId(int transactionId) async {
+    return await _isar.wishlists
+        .filter()
+        .transactionIdEqualTo(transactionId)
+        .findFirst();
+  }
 }

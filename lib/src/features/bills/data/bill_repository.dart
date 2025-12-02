@@ -57,6 +57,12 @@ class BillRepository {
         .sortByDueDate()
         .watch(fireImmediately: true);
   }
+  Future<Bill?> getBillByTransactionId(int transactionId) async {
+    return await isar.bills
+        .filter()
+        .transactionIdEqualTo(transactionId)
+        .findFirst();
+  }
 }
 
 final billRepositoryProvider = Provider<BillRepository>((ref) {
