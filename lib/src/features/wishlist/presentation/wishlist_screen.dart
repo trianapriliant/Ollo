@@ -7,6 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../settings/presentation/currency_provider.dart';
+import '../../transactions/data/transaction_repository.dart';
+import '../../transactions/domain/transaction.dart';
+import '../../wallets/data/wallet_repository.dart';
+import '../../wallets/domain/wallet.dart';
 import '../data/wishlist_repository.dart';
 import '../domain/wishlist.dart';
 import 'widgets/wishlist_summary_card.dart';
@@ -291,7 +295,7 @@ class _WishlistCard extends ConsumerWidget {
                 ),
                 if (!isAchieved)
                   ElevatedButton(
-                    onPressed: () => _markAsAchieved(context, ref, item),
+                    onPressed: () => _showBuyDialog(context, ref, item),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -313,11 +317,27 @@ class _WishlistCard extends ConsumerWidget {
   }
 
   Future<void> _launchURL(BuildContext context, String urlString) async {
-    final Uri url = Uri.parse(urlString);
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    if (urlString.isEmpty) return;
+
+    // Ensure URL has a scheme
+    String finalUrl = urlString;
+    if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
+      finalUrl = 'https://$urlString';
+    }
+
+    final Uri url = Uri.parse(finalUrl);
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not launch $finalUrl')),
+          );
+        }
+      }
+    } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not launch $urlString')),
+          SnackBar(content: Text('Error launching URL: $e')),
         );
       }
     }
@@ -344,17 +364,146 @@ class _WishlistCard extends ConsumerWidget {
     }
   }
 
-  Future<void> _markAsAchieved(BuildContext context, WidgetRef ref, Wishlist item) async {
-    final updatedItem = item..isCompleted = true;
-    await ref.read(wishlistRepositoryProvider).updateWishlist(updatedItem);
-    if (context.mounted) {
+  Future<void> _showBuyDialog(BuildContext context, WidgetRef ref, Wishlist item) async {
+    final walletRepo = await ref.read(walletRepositoryProvider.future);
+    final wallets = await walletRepo.getAllWallets();
+
+    if (context.mounted && wallets.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Dream achieved! Congratulations! 🎉'),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-        ),
+        const SnackBar(content: Text('No wallets found. Please create a wallet first.')),
       );
+      return;
+    }
+
+    Wallet? selectedWallet = wallets.first;
+    final currency = ref.read(currencyProvider);
+
+    if (!context.mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text('Buy Item', style: AppTextStyles.h3),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Purchase "${item.title}"?', style: AppTextStyles.bodyMedium),
+              const SizedBox(height: 16),
+              Text('Select Wallet:', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<Wallet>(
+                    value: selectedWallet,
+                    isExpanded: true,
+                    items: wallets.map((wallet) {
+                      return DropdownMenuItem(
+                        value: wallet,
+                        child: Row(
+                          children: [
+                            Text(wallet.name),
+                            const Spacer(),
+                            Text(
+                              currency.format(wallet.balance),
+                              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => selectedWallet = value);
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Amount:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    currency.format(item.price),
+                    style: AppTextStyles.h3.copyWith(color: AppColors.primary),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => _processPurchase(context, ref, item, selectedWallet!),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text('Confirm Purchase'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _processPurchase(
+    BuildContext context,
+    WidgetRef ref,
+    Wishlist item,
+    Wallet wallet,
+  ) async {
+    try {
+      // 1. Create Transaction
+      final transactionRepo = await ref.read(transactionRepositoryProvider.future);
+      final newTransaction = Transaction.create(
+        title: 'Wishlist: ${item.title}',
+        amount: item.price,
+        type: TransactionType.expense,
+        walletId: wallet.id.toString(),
+        note: 'Wishlist Purchase',
+        date: DateTime.now(),
+      );
+      await transactionRepo.addTransaction(newTransaction);
+
+      // 2. Update Wallet Balance
+      final walletRepo = await ref.read(walletRepositoryProvider.future);
+      wallet.balance -= item.price;
+      await walletRepo.updateWallet(wallet);
+
+      // 3. Mark Wishlist as Achieved
+      final wishlistRepo = ref.read(wishlistRepositoryProvider);
+      final updatedItem = item..isCompleted = true;
+      await wishlistRepo.updateWishlist(updatedItem);
+
+      if (context.mounted) {
+        Navigator.pop(context); // Close Dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Purchase successful! Dream achieved! 🎉'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
     }
   }
 }

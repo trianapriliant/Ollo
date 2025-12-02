@@ -32,18 +32,23 @@ const WishlistSchema = CollectionSchema(
       name: r'isCompleted',
       type: IsarType.bool,
     ),
-    r'price': PropertySchema(
+    r'linkUrl': PropertySchema(
       id: 3,
+      name: r'linkUrl',
+      type: IsarType.string,
+    ),
+    r'price': PropertySchema(
+      id: 4,
       name: r'price',
       type: IsarType.double,
     ),
     r'targetDate': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'targetDate',
       type: IsarType.dateTime,
     ),
     r'title': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'title',
       type: IsarType.string,
     )
@@ -74,6 +79,12 @@ int _wishlistEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.linkUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
@@ -87,9 +98,10 @@ void _wishlistSerialize(
   writer.writeDateTime(offsets[0], object.createdAt);
   writer.writeString(offsets[1], object.imagePath);
   writer.writeBool(offsets[2], object.isCompleted);
-  writer.writeDouble(offsets[3], object.price);
-  writer.writeDateTime(offsets[4], object.targetDate);
-  writer.writeString(offsets[5], object.title);
+  writer.writeString(offsets[3], object.linkUrl);
+  writer.writeDouble(offsets[4], object.price);
+  writer.writeDateTime(offsets[5], object.targetDate);
+  writer.writeString(offsets[6], object.title);
 }
 
 Wishlist _wishlistDeserialize(
@@ -103,9 +115,10 @@ Wishlist _wishlistDeserialize(
     id: id,
     imagePath: reader.readStringOrNull(offsets[1]),
     isCompleted: reader.readBoolOrNull(offsets[2]) ?? false,
-    price: reader.readDouble(offsets[3]),
-    targetDate: reader.readDateTimeOrNull(offsets[4]),
-    title: reader.readString(offsets[5]),
+    linkUrl: reader.readStringOrNull(offsets[3]),
+    price: reader.readDouble(offsets[4]),
+    targetDate: reader.readDateTimeOrNull(offsets[5]),
+    title: reader.readString(offsets[6]),
   );
   return object;
 }
@@ -124,10 +137,12 @@ P _wishlistDeserializeProp<P>(
     case 2:
       return (reader.readBoolOrNull(offset) ?? false) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 5:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -501,6 +516,152 @@ extension WishlistQueryFilter
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'linkUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'linkUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'linkUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'linkUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'linkUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'linkUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'linkUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'linkUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'linkUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'linkUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'linkUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> linkUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'linkUrl',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -807,6 +968,18 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByLinkUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'linkUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByLinkUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'linkUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.asc);
@@ -894,6 +1067,18 @@ extension WishlistQuerySortThenBy
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByLinkUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'linkUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByLinkUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'linkUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.asc);
@@ -952,6 +1137,13 @@ extension WishlistQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByLinkUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'linkUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'price');
@@ -995,6 +1187,12 @@ extension WishlistQueryProperty
   QueryBuilder<Wishlist, bool, QQueryOperations> isCompletedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isCompleted');
+    });
+  }
+
+  QueryBuilder<Wishlist, String?, QQueryOperations> linkUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'linkUrl');
     });
   }
 
