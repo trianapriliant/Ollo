@@ -19,6 +19,7 @@ import '../features/recurring/presentation/recurring_screen.dart';
 import '../features/budget/presentation/budget_screen.dart';
 import '../features/savings/presentation/savings_screen.dart';
 import '../features/savings/presentation/saving_detail_screen.dart';
+import '../features/savings/presentation/add_edit_saving_screen.dart';
 import '../features/savings/domain/saving_goal.dart';
 import '../features/subscription/presentation/paywall_screen.dart';
 import '../features/bills/presentation/bills_screen.dart';
@@ -160,6 +161,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/savings',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const SavingsScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            builder: (context, state) => const AddEditSavingScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final goal = state.extra as SavingGoal;
+              return AddEditSavingScreen(goal: goal);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/saving-detail',

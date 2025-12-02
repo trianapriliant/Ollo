@@ -188,110 +188,139 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             // Category Selection
             Text('Category', style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
-            categoriesAsync.when(
-              data: (categories) {
-                // Flatten categories into selection items
-                final List<CategorySelectionItem> items = [];
-                for (var category in categories) {
-                  items.add(CategorySelectionItem(category: category));
-                  for (var sub in category.subCategories ?? []) {
-                    items.add(CategorySelectionItem(category: category, subCategory: sub));
-                  }
-                }
-
-                // Auto-select item if none selected
-                if (_selectedItem == null) {
-                   if (widget.transactionToEdit != null && items.isNotEmpty) {
-                     try {
-                        // Try to find exact match by Category ID AND Title (for subcategory)
-                        _selectedItem = items.firstWhere((item) {
-                          final catId = item.category.externalId ?? item.category.id.toString();
-                          return catId == widget.transactionToEdit!.categoryId && 
-                          (item.subCategory?.name == widget.transactionToEdit!.title || item.subCategory == null && item.category.name == widget.transactionToEdit!.title);
-                        });
-                     } catch (e) {
-                        // Fallback to just matching category ID
-                        try {
-                           _selectedItem = items.firstWhere((item) {
-                             final catId = item.category.externalId ?? item.category.id.toString();
-                             return catId == widget.transactionToEdit!.categoryId && item.subCategory == null;
-                           });
-                        } catch (e2) {
-                           if (items.isNotEmpty) _selectedItem = items.first;
-                        }
-                     }
-                   } else if (items.isNotEmpty) {
-                      _selectedItem = items.first;
-                   }
-                   
-                   // Trigger rebuild to show selection
-                   if (_selectedItem != null) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        setState(() {
-                           // Also pre-fill title if it's empty and we just selected a default
-                           if (_titleController.text.isEmpty) {
-                             _titleController.text = _selectedItem!.name;
-                           }
-                        });
-                      });
-                   }
-                }
-
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<CategorySelectionItem>(
-                      value: _selectedItem,
-                      isExpanded: true,
-                      hint: const Text("Select Category"),
-                      items: items.map((item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Row(
-                            children: [
-                              if (item.subCategory != null) const SizedBox(width: 24), // Indent subcategories
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: item.category.color.withOpacity(0.2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  _getIconData(item.iconPath),
-                                  color: item.category.color,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                item.name, 
-                                style: item.subCategory != null 
-                                  ? AppTextStyles.bodyMedium 
-                                  : AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedItem = value;
-                          if (value != null) {
-                            _titleController.text = value.name;
-                          }
-                        });
-                      },
+            if (type == TransactionType.system)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.2), // Default system color
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.settings, color: Colors.blue, size: 20),
                     ),
-                  ),
-                );
-              },
-              loading: () => const CircularProgressIndicator(),
-              error: (err, stack) => Text('Error loading categories: $err'),
-            ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM',
+                        style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[700]),
+                      ),
+                    ),
+                    const Icon(Icons.lock, color: Colors.grey, size: 20),
+                  ],
+                ),
+              )
+            else
+              categoriesAsync.when(
+                data: (categories) {
+                  // Flatten categories into selection items
+                  final List<CategorySelectionItem> items = [];
+                  for (var category in categories) {
+                    items.add(CategorySelectionItem(category: category));
+                    for (var sub in category.subCategories ?? []) {
+                      items.add(CategorySelectionItem(category: category, subCategory: sub));
+                    }
+                  }
+
+                  // Auto-select item if none selected
+                  if (_selectedItem == null) {
+                     if (widget.transactionToEdit != null && items.isNotEmpty) {
+                       try {
+                          // Try to find exact match by Category ID AND Title (for subcategory)
+                          _selectedItem = items.firstWhere((item) {
+                            final catId = item.category.externalId ?? item.category.id.toString();
+                            return catId == widget.transactionToEdit!.categoryId && 
+                            (item.subCategory?.name == widget.transactionToEdit!.title || item.subCategory == null && item.category.name == widget.transactionToEdit!.title);
+                          });
+                       } catch (e) {
+                          // Fallback to just matching category ID
+                          try {
+                             _selectedItem = items.firstWhere((item) {
+                               final catId = item.category.externalId ?? item.category.id.toString();
+                               return catId == widget.transactionToEdit!.categoryId && item.subCategory == null;
+                             });
+                          } catch (e2) {
+                             if (items.isNotEmpty) _selectedItem = items.first;
+                          }
+                       }
+                     } else if (items.isNotEmpty) {
+                        _selectedItem = items.first;
+                     }
+                     
+                     // Trigger rebuild to show selection
+                     if (_selectedItem != null) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                             // Also pre-fill title if it's empty and we just selected a default
+                             if (_titleController.text.isEmpty) {
+                               _titleController.text = _selectedItem!.name;
+                             }
+                          });
+                        });
+                     }
+                  }
+
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<CategorySelectionItem>(
+                        value: _selectedItem,
+                        isExpanded: true,
+                        hint: const Text("Select Category"),
+                        items: items.map((item) {
+                          return DropdownMenuItem(
+                            value: item,
+                            child: Row(
+                              children: [
+                                if (item.subCategory != null) const SizedBox(width: 24), // Indent subcategories
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: item.category.color.withOpacity(0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    _getIconData(item.iconPath),
+                                    color: item.category.color,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  item.name, 
+                                  style: item.subCategory != null 
+                                    ? AppTextStyles.bodyMedium 
+                                    : AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedItem = value;
+                            if (value != null) {
+                              _titleController.text = value.name;
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (err, stack) => Text('Error loading categories: $err'),
+              ),
             
             const SizedBox(height: 24),
             
@@ -327,7 +356,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a wallet")));
                     return;
                   }
-                  if (_selectedItem == null) {
+                  if (_selectedItem == null && type != TransactionType.system) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a category")));
                     return;
                   }

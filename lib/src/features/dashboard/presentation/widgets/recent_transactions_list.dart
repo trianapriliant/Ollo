@@ -110,8 +110,11 @@ class RecentTransactionsList extends ConsumerWidget {
                       // Check if it's a Debt Income (Borrowed or Received Payment)
                       final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
                       
-                      // System defaults to expense, UNLESS it's a debt income
-                      final isExpense = (transaction.isExpense || isSystem) && !isDebtIncome;
+                      // Check if it's a Savings Withdraw (Income to Wallet)
+                      final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
+                      
+                      // System defaults to expense, UNLESS it's a debt income OR savings withdraw
+                      final isExpense = (transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw;
 
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
@@ -153,8 +156,9 @@ class RecentTransactionsList extends ConsumerWidget {
       
       final isSystem = transaction.type == TransactionType.system;
       final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
+      final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
       
-      if ((transaction.isExpense || isSystem) && !isDebtIncome) {
+      if ((transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw) {
         groups[dateKey]!.dailyTotal -= transaction.amount;
       } else {
         groups[dateKey]!.dailyTotal += transaction.amount;
@@ -205,21 +209,22 @@ class RecentTransactionsList extends ConsumerWidget {
     DateTime date, {
     bool isSystem = false,
   }) {
-    // Determine if it's a Wishlist, Bill, or Debt transaction based on title
+    // Determine if it's a Wishlist, Bill, Debt, or Savings transaction based on title
     final isWishlist = isSystem && title.toLowerCase().contains('wishlist');
     final isBill = isSystem && title.toLowerCase().contains('bill');
     final isDebt = isSystem && (title.toLowerCase().contains('borrowed') || title.toLowerCase().contains('lent') || title.toLowerCase().contains('debt') || title.toLowerCase().contains('received payment'));
+    final isSavings = isSystem && (title.toLowerCase().contains('deposit to') || title.toLowerCase().contains('withdraw from') || title.toLowerCase().contains('savings'));
 
     final iconData = isSystem 
-        ? (isBill ? Icons.receipt_long_rounded : (isDebt ? Icons.handshake_rounded : Icons.favorite_rounded))
+        ? (isBill ? Icons.receipt_long_rounded : (isDebt ? Icons.handshake_rounded : (isSavings ? Icons.savings_rounded : Icons.favorite_rounded)))
         : (category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline);
         
     final iconColor = isSystem 
-        ? (isBill ? Colors.orange : (isDebt ? Colors.purple : Colors.pinkAccent))
+        ? (isBill ? Colors.orange : (isDebt ? Colors.purple : (isSavings ? Colors.blue : Colors.pinkAccent)))
         : (category?.color ?? AppColors.primary);
         
     final backgroundColor = isSystem 
-        ? (isBill ? Colors.orange.withOpacity(0.1) : (isDebt ? Colors.purple.withOpacity(0.1) : Colors.pinkAccent.withOpacity(0.1)))
+        ? (isBill ? Colors.orange.withOpacity(0.1) : (isDebt ? Colors.purple.withOpacity(0.1) : (isSavings ? Colors.blue.withOpacity(0.1) : Colors.pinkAccent.withOpacity(0.1))))
         : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue);
         
     final timeStr = DateFormat('HH:mm').format(date);
@@ -228,6 +233,7 @@ class RecentTransactionsList extends ConsumerWidget {
     if (isWishlist) systemNote = ' - Wishlist Purchase';
     if (isBill) systemNote = ' - Bill Payment';
     if (isDebt) systemNote = ' - Debt Transaction';
+    if (isSavings) systemNote = ' - Savings Transaction';
     
     final noteStr = isSystem 
         ? systemNote

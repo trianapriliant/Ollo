@@ -177,10 +177,7 @@ class SavingsScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AddEditSavingScreen()),
-          );
+          context.push('/savings/add');
         },
         backgroundColor: AppColors.primary,
         child: const Icon(Icons.add, color: Colors.white),

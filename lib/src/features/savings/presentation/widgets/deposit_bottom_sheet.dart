@@ -8,6 +8,8 @@ import '../../../wallets/domain/wallet.dart';
 import '../../data/saving_repository.dart';
 import '../../domain/saving_goal.dart';
 import '../../domain/saving_log.dart';
+import '../../../transactions/data/transaction_repository.dart';
+import '../../../transactions/domain/transaction.dart';
 
 class DepositBottomSheet extends ConsumerStatefulWidget {
   final SavingGoal goal;
@@ -158,6 +160,7 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
       final amount = double.parse(_amountController.text);
       final walletRepo = ref.read(walletRepositoryProvider).value!;
       final savingRepo = ref.read(savingRepositoryProvider);
+      final transactionRepo = await ref.read(transactionRepositoryProvider.future);
 
       // 1. Get Wallet
       final wallet = await walletRepo.getWallet(_selectedWalletId!);
@@ -196,6 +199,18 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
         date: DateTime.now(),
       );
       await savingRepo.addLog(log);
+
+      // 6. Create System Transaction
+      final transaction = Transaction.create(
+        title: widget.isDeposit ? 'Deposit to ${widget.goal.name}' : 'Withdraw from ${widget.goal.name}',
+        amount: amount,
+        type: TransactionType.system,
+        categoryId: 'savings',
+        walletId: _selectedWalletId!,
+        note: 'Savings Transaction',
+        date: DateTime.now(),
+      );
+      await transactionRepo.addTransaction(transaction);
 
       if (mounted) context.pop();
     }

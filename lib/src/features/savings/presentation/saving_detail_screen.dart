@@ -34,7 +34,7 @@ class SavingDetailScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.black),
             onPressed: () {
-              // TODO: Navigate to Edit Screen
+              context.push('/savings/edit', extra: currentGoal);
             },
           ),
         ],

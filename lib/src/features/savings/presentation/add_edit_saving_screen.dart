@@ -27,7 +27,7 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
     super.initState();
     final goal = widget.goal;
     _nameController = TextEditingController(text: goal?.name ?? '');
-    _targetController = TextEditingController(text: goal?.targetAmount.toString() ?? '');
+    _targetController = TextEditingController(text: goal?.targetAmount.toStringAsFixed(0) ?? '');
     _type = goal?.type ?? SavingType.standard;
   }
 
@@ -43,80 +43,165 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
     final isEditing = widget.goal != null;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.close, color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: Text(isEditing ? 'Edit Bucket' : 'New Bucket', style: AppTextStyles.h2),
+        centerTitle: true,
+        actions: [
+          if (isEditing)
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              onPressed: _confirmDelete,
+            ),
+        ],
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: Column(
           children: [
-            // Name Input
-            TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Bucket Name (e.g. Emergency Fund)',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                prefixIcon: const Icon(Icons.label_outline),
-              ),
-              validator: (val) => val == null || val.isEmpty ? 'Please enter a name' : null,
-            ),
-            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Target Amount Input (Big)
+                    Text('Target Amount', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _targetController,
+                      keyboardType: TextInputType.number,
+                      style: AppTextStyles.h1.copyWith(fontSize: 40, color: AppColors.primary),
+                      decoration: InputDecoration(
+                        prefixText: 'Rp ',
+                        prefixStyle: AppTextStyles.h1.copyWith(fontSize: 40, color: AppColors.primary),
+                        border: InputBorder.none,
+                        hintText: '0',
+                        hintStyle: AppTextStyles.h1.copyWith(fontSize: 40, color: Colors.grey[300]),
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) return 'Please enter a target';
+                        final amount = double.tryParse(val);
+                        if (amount == null || amount <= 0) return 'Invalid amount';
+                        return null;
+                      },
+                    ),
+                    const Divider(height: 32, thickness: 1),
 
-            // Target Amount Input
-            TextFormField(
-              controller: _targetController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Target Amount',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                prefixIcon: const Icon(Icons.flag_outlined),
-                prefixText: 'Rp ',
-              ),
-              validator: (val) => val == null || val.isEmpty ? 'Please enter a target' : null,
-            ),
-            const SizedBox(height: 16),
+                    // Name Input
+                    Text('Bucket Name', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _nameController,
+                      style: AppTextStyles.bodyLarge,
+                      decoration: InputDecoration(
+                        hintText: 'e.g. Emergency Fund, New Laptop',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: Colors.grey[200]!),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: Colors.grey[200]!),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[50],
+                        prefixIcon: const Icon(Icons.label_outline, color: Colors.grey),
+                      ),
+                      validator: (val) => val == null || val.isEmpty ? 'Please enter a name' : null,
+                    ),
+                    const SizedBox(height: 24),
 
-            // Type Dropdown
-            DropdownButtonFormField<SavingType>(
-              value: _type,
-              decoration: InputDecoration(
-                labelText: 'Bucket Type',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                prefixIcon: const Icon(Icons.category_outlined),
-              ),
-              items: SavingType.values.map((t) {
-                return DropdownMenuItem(
-                  value: t,
-                  child: Text(t.name.toUpperCase()),
-                );
-              }).toList(),
-              onChanged: (val) {
-                if (val != null) setState(() => _type = val);
-              },
-            ),
-            const SizedBox(height: 32),
+                    // Type Selector
+                    Text('Bucket Type', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey[200]!),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<SavingType>(
+                          value: _type,
+                          isExpanded: true,
+                          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                          items: SavingType.values.map((t) {
+                            IconData icon;
+                            Color color;
+                            String label;
+                            
+                            switch (t) {
+                              case SavingType.emergency:
+                                icon = Icons.warning_amber_rounded;
+                                color = Colors.red;
+                                label = 'Emergency Fund';
+                                break;
+                              case SavingType.deposito:
+                                icon = Icons.lock_clock_outlined;
+                                color = Colors.purple;
+                                label = 'Locked / Deposito';
+                                break;
+                              case SavingType.standard:
+                              default:
+                                icon = Icons.savings_outlined;
+                                color = Colors.blue;
+                                label = 'Standard Goal';
+                            }
 
-            // Save Button
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: _saveGoal,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            return DropdownMenuItem(
+                              value: t,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: color.withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(icon, color: color, size: 20),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(label, style: AppTextStyles.bodyMedium),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) setState(() => _type = val);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  'Save Bucket',
-                  style: AppTextStyles.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            
+            // Save Button
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _saveGoal,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    isEditing ? 'Update Bucket' : 'Create Bucket',
+                    style: AppTextStyles.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -145,7 +230,44 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
         await ref.read(savingRepositoryProvider).addSavingGoal(newGoal);
       }
       
-      if (mounted) context.pop();
+      if (mounted) {
+        context.pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(widget.goal != null ? 'Bucket updated!' : 'Bucket created!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Bucket?'),
+        content: const Text('This will delete the saving goal and its history. Wallet balances will NOT be reverted automatically.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && widget.goal != null) {
+      await ref.read(savingRepositoryProvider).deleteSavingGoal(widget.goal!.id);
+      if (mounted) {
+        context.pop(); // Close dialog
+        context.pop(); // Close screen
+        // If we came from detail screen, we might need to pop again or handle it. 
+        // Usually DetailScreen listens to stream and pops if item deleted, or we pop manually.
+        // Let's assume DetailScreen handles it or we pop to list.
+      }
     }
   }
 }

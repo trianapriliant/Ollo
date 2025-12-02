@@ -19,6 +19,7 @@ class TransactionListItem extends StatelessWidget {
     final isWishlist = isSystem && transaction.title.toLowerCase().contains('wishlist');
     final isBill = isSystem && transaction.title.toLowerCase().contains('bill');
     final isDebt = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('lent') || transaction.title.toLowerCase().contains('debt') || transaction.title.toLowerCase().contains('received payment'));
+    final isSavings = isSystem && (transaction.title.toLowerCase().contains('deposit to') || transaction.title.toLowerCase().contains('withdraw from') || transaction.title.toLowerCase().contains('savings'));
 
     IconData iconData;
     Color iconColor;
@@ -33,6 +34,10 @@ class TransactionListItem extends StatelessWidget {
         iconData = Icons.handshake_rounded;
         iconColor = Colors.purple;
         backgroundColor = Colors.purple.withOpacity(0.1);
+      } else if (isSavings) {
+        iconData = Icons.savings_rounded;
+        iconColor = Colors.blue;
+        backgroundColor = Colors.blue.withOpacity(0.1);
       } else {
         iconData = Icons.favorite_rounded;
         iconColor = Colors.pinkAccent;
@@ -47,7 +52,8 @@ class TransactionListItem extends StatelessWidget {
     // Determine if it's an expense or income for display purposes
     // System defaults to expense, but Debt can be income
     final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
-    final isExpenseDisplay = (transaction.isExpense || isSystem) && !isDebtIncome;
+    final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
+    final isExpenseDisplay = (transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -61,7 +67,7 @@ class TransactionListItem extends StatelessWidget {
         ),
         title: Text(transaction.title, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
         subtitle: Text(
-          isBill ? 'Bill Payment' : (isDebt ? 'Debt Transaction' : (isWishlist ? 'Wishlist Purchase' : dateFormat.format(transaction.date))), 
+          isBill ? 'Bill Payment' : (isDebt ? 'Debt Transaction' : (isSavings ? 'Savings Transaction' : (isWishlist ? 'Wishlist Purchase' : dateFormat.format(transaction.date)))), 
           style: AppTextStyles.bodySmall
         ),
         trailing: Text(
