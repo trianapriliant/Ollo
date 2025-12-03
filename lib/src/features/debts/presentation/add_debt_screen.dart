@@ -325,7 +325,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
             final transaction = Transaction.create(
               title: isIncome ? 'Borrowed from ${_nameController.text}' : 'Lent to ${_nameController.text}',
               amount: amount,
-              type: TransactionType.system, // Changed to system
+              type: isIncome ? TransactionType.income : TransactionType.expense, // Correctly categorize as Income/Expense
               categoryId: 'debt', 
               walletId: _selectedWalletId!,
               note: 'Debt created',

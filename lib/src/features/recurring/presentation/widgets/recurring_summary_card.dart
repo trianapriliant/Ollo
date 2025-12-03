@@ -16,9 +16,7 @@ class RecurringSummaryCard extends ConsumerWidget {
 
     return recurringAsync.when(
       data: (transactions) {
-        if (transactions.isEmpty) {
-          return _buildEmptyState();
-        }
+
 
         return FutureBuilder<double>(
           future: repo.calculateMonthlyCommitment(),
@@ -27,7 +25,7 @@ class RecurringSummaryCard extends ConsumerWidget {
             final nextBill = _getNextBill(transactions);
 
               return Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(30),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
@@ -150,32 +148,7 @@ class RecurringSummaryCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-      ),
-      child: Column(
-        children: [
-          const Icon(Icons.repeat, size: 48, color: Colors.grey),
-          const SizedBox(height: 12),
-          Text(
-            'No Recurring Bills',
-            style: AppTextStyles.h3.copyWith(color: Colors.grey[800]),
-          ),
-          Text(
-            'Add subscriptions or bills to track them here.',
-            style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+
 
   RecurringTransaction? _getNextBill(List<RecurringTransaction> transactions) {
     if (transactions.isEmpty) return null;

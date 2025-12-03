@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../common/data/isar_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
@@ -123,6 +124,9 @@ final recurringTransactionServiceProvider = Provider<RecurringTransactionService
 });
 
 final recurringTransactionServiceFutureProvider = FutureProvider<RecurringTransactionService>((ref) async {
+  // Ensure Isar is initialized before accessing synchronous repositories
+  await ref.watch(isarProvider.future);
+
   final recurringRepo = ref.watch(recurringRepositoryProvider);
   final transactionRepo = await ref.watch(transactionRepositoryProvider.future);
   final walletRepo = await ref.watch(walletRepositoryProvider.future);

@@ -68,10 +68,10 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
           // Tab Bar
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            height: 40,
+            height: 50,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -84,7 +84,7 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
               controller: _tabController,
               indicator: BoxDecoration(
                 color: AppColors.primary,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(12),
               ),
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey,
