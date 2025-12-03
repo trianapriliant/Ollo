@@ -32,8 +32,7 @@ class DailyStackedBarChart extends StatelessWidget {
     for (var item in data) {
       if (item.income > maxY) maxY = item.income;
       if (item.expense > maxY) maxY = item.expense;
-      final savings = item.income - item.expense;
-      if (savings > maxY) maxY = savings;
+      if (item.savings > maxY) maxY = item.savings;
     }
     
     // Add some buffer
@@ -147,7 +146,7 @@ class DailyStackedBarChart extends StatelessWidget {
                         color = const Color(0xFFF87171);
                       } else {
                         label = 'Savings';
-                        value = dayData.income - dayData.expense;
+                        value = dayData.savings;
                         color = const Color(0xFF60A5FA);
                       }
 
@@ -195,8 +194,6 @@ class DailyStackedBarChart extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 barGroups: data.map((item) {
-                  final savings = item.income - item.expense;
-                  
                   return BarChartGroupData(
                     x: item.day,
                     barsSpace: 4, // Space between bars in a group
@@ -217,7 +214,7 @@ class DailyStackedBarChart extends StatelessWidget {
                       ),
                       // Savings Bar
                       BarChartRodData(
-                        toY: savings > 0 ? savings : 0,
+                        toY: item.savings,
                         width: 8,
                         color: const Color(0xFF60A5FA), // Blue
                         borderRadius: BorderRadius.circular(4),

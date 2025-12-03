@@ -141,7 +141,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                       if (day.day <= daysToCount) {
                         totalIncome += day.income;
                         totalExpense += day.expense;
-                        totalSavings += (day.income - day.expense);
+                        totalSavings += day.savings;
                       }
                     }
                     

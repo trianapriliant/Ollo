@@ -5,6 +5,8 @@ import '../../dashboard/presentation/transaction_provider.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../domain/category_data.dart';
+import '../../savings/data/saving_repository.dart';
+import '../../savings/domain/saving_log.dart';
 
 enum TimeRange { month, year }
 
@@ -217,12 +219,15 @@ class DailyData {
   final int day;
   final double income;
   final double expense;
+  final double savings;
 
-  DailyData({required this.day, required this.income, required this.expense});
+  DailyData({required this.day, required this.income, required this.expense, required this.savings});
 }
 
 final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>((ref, date) async {
   final transactions = await ref.watch(transactionListProvider.future);
+  final savingRepo = ref.watch(savingRepositoryProvider);
+  final savingLogs = await savingRepo.getAllLogs();
   
   final monthStart = DateTime(date.year, date.month, 1);
   final monthEnd = DateTime(date.year, date.month + 1, 0);
@@ -230,17 +235,25 @@ final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>
 
   final List<DailyData> data = [];
 
-  // Filter for selected month
+  // Filter transactions for selected month
   final monthTransactions = transactions.where((t) {
     return t.date.isAfter(monthStart.subtract(const Duration(seconds: 1))) &&
            t.date.isBefore(monthEnd.add(const Duration(seconds: 1)));
   }).toList();
 
+  // Filter saving logs for selected month
+  final monthSavingLogs = savingLogs.where((l) {
+    return l.date.isAfter(monthStart.subtract(const Duration(seconds: 1))) &&
+           l.date.isBefore(monthEnd.add(const Duration(seconds: 1)));
+  }).toList();
+
   for (int day = 1; day <= daysInMonth; day++) {
     final dayTransactions = monthTransactions.where((t) => t.date.day == day);
+    final daySavingLogs = monthSavingLogs.where((l) => l.date.day == day);
     
     double income = 0;
     double expense = 0;
+    double savings = 0;
 
     for (var t in dayTransactions) {
       if (t.isExpense) {
@@ -249,8 +262,16 @@ final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>
         income += t.amount;
       }
     }
+
+    for (var l in daySavingLogs) {
+      if (l.type == SavingLogType.deposit) {
+        savings += l.amount;
+      } else if (l.type == SavingLogType.withdraw) {
+        savings -= l.amount;
+      }
+    }
     
-    data.add(DailyData(day: day, income: income, expense: expense));
+    data.add(DailyData(day: day, income: income, expense: expense, savings: savings));
   }
 
   return data;
