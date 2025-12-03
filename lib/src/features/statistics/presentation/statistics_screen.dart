@@ -123,9 +123,38 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 dailyStatsAsync.when(
                   data: (data) {
                     if (data.isEmpty) return const SizedBox();
+                    
+                    // Calculate Averages
+                    double totalIncome = 0;
+                    double totalExpense = 0;
+                    double totalSavings = 0;
+                    
+                    final now = DateTime.now();
+                    final isCurrentMonth = _selectedDate.year == now.year && _selectedDate.month == now.month;
+                    
+                    // If current month, use days passed so far. Otherwise use total days in month (data.length).
+                    int daysToCount = isCurrentMonth ? now.day : data.length;
+                    if (daysToCount == 0) daysToCount = 1; // Prevent division by zero
+
+                    for (var day in data) {
+                      // Only include data up to the count day if it's current month (optional, but safer)
+                      if (day.day <= daysToCount) {
+                        totalIncome += day.income;
+                        totalExpense += day.expense;
+                        totalSavings += (day.income - day.expense);
+                      }
+                    }
+                    
+                    final avgIncome = totalIncome / daysToCount;
+                    final avgExpense = totalExpense / daysToCount;
+                    final avgSavings = totalSavings / daysToCount;
+
                     return DailyStackedBarChart(
                       data: data,
                       currency: currency,
+                      avgIncome: avgIncome,
+                      avgExpense: avgExpense,
+                      avgSavings: avgSavings,
                     );
                   },
                   loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),

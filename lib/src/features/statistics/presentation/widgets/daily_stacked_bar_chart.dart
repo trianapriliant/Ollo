@@ -8,11 +8,17 @@ import '../statistics_provider.dart';
 class DailyStackedBarChart extends StatelessWidget {
   final List<DailyData> data;
   final Currency currency;
+  final double avgIncome;
+  final double avgExpense;
+  final double avgSavings;
 
   const DailyStackedBarChart({
     super.key,
     required this.data,
     required this.currency,
+    required this.avgIncome,
+    required this.avgExpense,
+    required this.avgSavings,
   });
 
   @override
@@ -34,10 +40,37 @@ class DailyStackedBarChart extends StatelessWidget {
     maxY = maxY * 1.2;
     if (maxY == 0) maxY = 100;
 
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Daily Overview', style: AppTextStyles.h3),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Daily Overview', style: AppTextStyles.h3),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Avg Inc: ${currency.format(avgIncome)}',
+                    style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF4ADE80), fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Avg Exp: ${currency.format(avgExpense)}',
+                    style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFF87171), fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Avg Sav: ${currency.format(avgSavings)}',
+                    style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF60A5FA), fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 16),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -49,6 +82,49 @@ class DailyStackedBarChart extends StatelessWidget {
               BarChartData(
                 alignment: BarChartAlignment.center,
                 maxY: maxY,
+                extraLinesData: ExtraLinesData(
+                  horizontalLines: [
+                    HorizontalLine(
+                      y: avgIncome,
+                      color: const Color(0xFF4ADE80).withOpacity(0.8),
+                      strokeWidth: 1,
+                      dashArray: [5, 5],
+                      label: HorizontalLineLabel(
+                        show: true,
+                        alignment: Alignment.topRight,
+                        padding: const EdgeInsets.only(right: 5, bottom: 5),
+                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF4ADE80), fontSize: 10),
+                        labelResolver: (line) => 'Avg Inc: ${currency.format(line.y)}',
+                      ),
+                    ),
+                    HorizontalLine(
+                      y: avgExpense,
+                      color: const Color(0xFFF87171).withOpacity(0.8),
+                      strokeWidth: 1,
+                      dashArray: [5, 5],
+                      label: HorizontalLineLabel(
+                        show: true,
+                        alignment: Alignment.topRight,
+                        padding: const EdgeInsets.only(right: 5, bottom: 20), // Stagger labels
+                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFF87171), fontSize: 10),
+                        labelResolver: (line) => 'Avg Exp: ${currency.format(line.y)}',
+                      ),
+                    ),
+                    HorizontalLine(
+                      y: avgSavings,
+                      color: const Color(0xFF60A5FA).withOpacity(0.8),
+                      strokeWidth: 1,
+                      dashArray: [5, 5],
+                      label: HorizontalLineLabel(
+                        show: true,
+                        alignment: Alignment.topRight,
+                        padding: const EdgeInsets.only(right: 5, bottom: 35), // Stagger labels
+                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF60A5FA), fontSize: 10),
+                        labelResolver: (line) => 'Avg Sav: ${currency.format(line.y)}',
+                      ),
+                    ),
+                  ],
+                ),
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
