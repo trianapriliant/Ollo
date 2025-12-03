@@ -20,8 +20,13 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
   late TextEditingController _nameController;
   late TextEditingController _numberController;
   late TextEditingController _holderController;
+  late TextEditingController _labelController;
+  late TextEditingController _branchController;
   
   late CardType _type;
+  late CardCategory _category;
+  late CardAccountType _accountType;
+  late bool _isPinned;
   late int _color;
 
   final List<int> _colors = [
@@ -42,7 +47,13 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
     _nameController = TextEditingController(text: c?.name ?? '');
     _numberController = TextEditingController(text: c?.number ?? '');
     _holderController = TextEditingController(text: c?.holderName ?? '');
+    _labelController = TextEditingController(text: c?.label ?? '');
+    _branchController = TextEditingController(text: c?.branch ?? '');
+    
     _type = c?.type ?? CardType.bank;
+    _category = c?.category ?? CardCategory.main;
+    _accountType = c?.accountType ?? CardAccountType.personal;
+    _isPinned = c?.isPinned ?? false;
     _color = c?.color ?? _colors[0];
   }
 
@@ -51,6 +62,8 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
     _nameController.dispose();
     _numberController.dispose();
     _holderController.dispose();
+    _labelController.dispose();
+    _branchController.dispose();
     super.dispose();
   }
 
@@ -108,13 +121,42 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          _nameController.text.isEmpty ? 'Bank Name' : _nameController.text,
-                          style: AppTextStyles.h3.copyWith(color: Colors.white),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _nameController.text.isEmpty ? 'Bank Name' : _nameController.text,
+                                style: AppTextStyles.h3.copyWith(color: Colors.white),
+                              ),
+                              if (_labelController.text.isNotEmpty)
+                                Text(
+                                  _labelController.text,
+                                  style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
+                                ),
+                            ],
+                          ),
                         ),
-                        Icon(
-                          _type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet,
-                          color: Colors.white.withOpacity(0.8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Icon(
+                              _type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                _accountType.name.toUpperCase(),
+                                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -124,9 +166,16 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                       style: AppTextStyles.h2.copyWith(color: Colors.white, letterSpacing: 1.5),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      _holderController.text.isEmpty ? 'HOLDER NAME' : _holderController.text.toUpperCase(),
-                      style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _holderController.text.isEmpty ? 'HOLDER NAME' : _holderController.text.toUpperCase(),
+                          style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
+                        ),
+                        if (_isPinned)
+                          const Icon(Icons.push_pin, color: Colors.white, size: 16),
+                      ],
                     ),
                   ],
                 ),
@@ -190,25 +239,117 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Type Dropdown
-              DropdownButtonFormField<CardType>(
-                value: _type,
+              // New Fields
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildTextField(
+                      controller: _labelController,
+                      label: 'Label (Optional)',
+                      hint: 'e.g. Main Savings',
+                      icon: Icons.label_outline,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildTextField(
+                      controller: _branchController,
+                      label: 'Branch (Optional)',
+                      hint: 'e.g. KCP Sudirman',
+                      icon: Icons.location_on_outlined,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Type & Account Type
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<CardType>(
+                      value: _type,
+                      decoration: InputDecoration(
+                        labelText: 'Provider',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(_type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet),
+                      ),
+                      items: CardType.values.map((t) {
+                        return DropdownMenuItem(
+                          value: t,
+                          child: Text(t.name.toUpperCase()),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        if (val != null) setState(() => _type = val);
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DropdownButtonFormField<CardAccountType>(
+                      value: _accountType,
+                      decoration: InputDecoration(
+                        labelText: 'Type',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(_accountType == CardAccountType.personal ? Icons.person : Icons.work),
+                      ),
+                      items: CardAccountType.values.map((t) {
+                        return DropdownMenuItem(
+                          value: t,
+                          child: Text(t.name.toUpperCase()),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        if (val != null) setState(() => _accountType = val);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Category Dropdown
+              DropdownButtonFormField<CardCategory>(
+                value: _category,
                 decoration: InputDecoration(
-                  labelText: 'Type',
+                  labelText: 'Category',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                   filled: true,
                   fillColor: Colors.white,
-                  prefixIcon: Icon(_type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet),
+                  prefixIcon: const Icon(Icons.category_outlined),
                 ),
-                items: CardType.values.map((t) {
+                items: CardCategory.values.map((t) {
                   return DropdownMenuItem(
                     value: t,
                     child: Text(t.name.toUpperCase()),
                   );
                 }).toList(),
                 onChanged: (val) {
-                  if (val != null) setState(() => _type = val);
+                  if (val != null) setState(() => _category = val);
                 },
+              ),
+              const SizedBox(height: 16),
+
+              // Pinned Switch
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: SwitchListTile(
+                  title: const Text('Pin to Top'),
+                  secondary: const Icon(Icons.push_pin_outlined),
+                  value: _isPinned,
+                  onChanged: (val) => setState(() => _isPinned = val),
+                  activeColor: AppColors.primary,
+                ),
               ),
 
               const SizedBox(height: 48),
@@ -276,6 +417,12 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
         updated.holderName = _holderController.text;
         updated.color = _color;
         updated.type = _type;
+        updated.category = _category;
+        updated.accountType = _accountType;
+        updated.label = _labelController.text.isEmpty ? null : _labelController.text;
+        updated.branch = _branchController.text.isEmpty ? null : _branchController.text;
+        updated.isPinned = _isPinned;
+        
         await repo.updateCard(updated);
       } else {
         final newCard = BankCard(
@@ -284,6 +431,11 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
           holderName: _holderController.text,
           color: _color,
           type: _type,
+          category: _category,
+          accountType: _accountType,
+          label: _labelController.text.isEmpty ? null : _labelController.text,
+          branch: _branchController.text.isEmpty ? null : _branchController.text,
+          isPinned: _isPinned,
         );
         await repo.addCard(newCard);
       }

@@ -8,6 +8,19 @@ enum CardType {
   other,
 }
 
+enum CardCategory {
+  main,
+  backup,
+  freelance,
+  business,
+  other,
+}
+
+enum CardAccountType {
+  personal,
+  business,
+}
+
 @collection
 class BankCard {
   Id id = Isar.autoIncrement;
@@ -19,7 +32,18 @@ class BankCard {
   int color = 0xFF2196F3; // Default blue
 
   @enumerated
-  late CardType type;
+  late CardType type; // Provider type (Bank/E-Wallet)
+
+  @enumerated
+  CardCategory category = CardCategory.main;
+
+  @enumerated
+  CardAccountType accountType = CardAccountType.personal;
+
+  String? label; // e.g. "Tabungan Nikah"
+  String? branch; // e.g. "KCP Sudirman"
+  bool isPinned = false;
+  String? qrCodePath;
 
   double? balance; // Optional for future use
 
@@ -30,5 +54,11 @@ class BankCard {
     required this.type,
     this.color = 0xFF2196F3,
     this.balance,
+    this.category = CardCategory.main,
+    this.accountType = CardAccountType.personal,
+    this.label,
+    this.branch,
+    this.isPinned = false,
+    this.qrCodePath,
   });
 }

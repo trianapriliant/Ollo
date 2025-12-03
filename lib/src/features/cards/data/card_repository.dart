@@ -20,7 +20,7 @@ class CardRepository {
   CardRepository(this._isar);
 
   Stream<List<BankCard>> watchCards() {
-    return _isar.bankCards.where().watch(fireImmediately: true);
+    return _isar.bankCards.where().sortByIsPinnedDesc().thenByName().watch(fireImmediately: true);
   }
 
   Future<void> addCard(BankCard card) async {
@@ -38,6 +38,16 @@ class CardRepository {
   Future<void> deleteCard(Id id) async {
     await _isar.writeTxn(() async {
       await _isar.bankCards.delete(id);
+    });
+  }
+
+  Future<void> togglePin(Id id) async {
+    await _isar.writeTxn(() async {
+      final card = await _isar.bankCards.get(id);
+      if (card != null) {
+        card.isPinned = !card.isPinned;
+        await _isar.bankCards.put(card);
+      }
     });
   }
 }
