@@ -36,11 +36,12 @@ class CategorySelectionItem {
     if (identical(this, other)) return true;
     return other is CategorySelectionItem &&
         other.category.id == category.id &&
-        other.subCategory?.id == subCategory?.id;
+        other.subCategory?.id == subCategory?.id &&
+        (other.subCategory == null) == (subCategory == null);
   }
 
   @override
-  int get hashCode => Object.hash(category.id, subCategory?.id);
+  int get hashCode => Object.hash(category.id, subCategory?.id, subCategory == null);
 }
 
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
@@ -134,14 +135,15 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               data: (wallets) {
                 if (wallets.isEmpty) return const Text("No wallets found. Please create one.");
                 
+                // Validate selected wallet exists
+                if (_selectedWalletId != null && !wallets.any((w) => (w.externalId ?? w.id.toString()) == _selectedWalletId)) {
+                   _selectedWalletId = null; // Reset if not found
+                }
+                
                 // Auto-select first wallet if none selected
                 if (_selectedWalletId == null && wallets.isNotEmpty) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    setState(() {
-                      final first = wallets.first;
-                      _selectedWalletId = first.externalId ?? first.id.toString();
-                    });
-                  });
+                    final first = wallets.first;
+                    _selectedWalletId = first.externalId ?? first.id.toString();
                 }
 
                 return Container(
@@ -221,6 +223,41 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 data: (categories) {
                   // Flatten categories into selection items
                   final List<CategorySelectionItem> items = [];
+                  
+                  // Add System Categories (Virtual)
+                  if (type == TransactionType.expense) {
+                    items.add(CategorySelectionItem(
+                      category: Category(
+                        externalId: 'bills',
+                        name: 'Bills',
+                        iconPath: 'receipt_long',
+                        type: CategoryType.expense,
+                        colorValue: Colors.orange.value,
+                        subCategories: [],
+                      )..id = -100, // Unique Virtual ID
+                    ));
+                    items.add(CategorySelectionItem(
+                      category: Category(
+                        externalId: 'wishlist',
+                        name: 'Wishlist',
+                        iconPath: 'favorite',
+                        type: CategoryType.expense,
+                        colorValue: Colors.pink.value,
+                        subCategories: [],
+                      )..id = -101, // Unique Virtual ID
+                    ));
+                    items.add(CategorySelectionItem(
+                      category: Category(
+                        externalId: 'debt',
+                        name: 'Debt',
+                        iconPath: 'handshake',
+                        type: CategoryType.expense,
+                        colorValue: Colors.purple.value,
+                        subCategories: [],
+                      )..id = -102, // Unique Virtual ID
+                    ));
+                  }
+
                   for (var category in categories) {
                     items.add(CategorySelectionItem(category: category));
                     for (var sub in category.subCategories ?? []) {
@@ -463,6 +500,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       case 'medical_services': return Icons.medical_services;
       case 'school': return Icons.school;
       case 'receipt': return Icons.receipt;
+      case 'receipt_long': return Icons.receipt_long; // For Bills
+      case 'favorite': return Icons.favorite; // For Wishlist
+      case 'handshake': return Icons.handshake; // For Debt
       case 'attach_money': return Icons.attach_money;
       case 'store': return Icons.store;
       case 'card_giftcard': return Icons.card_giftcard;

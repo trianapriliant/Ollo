@@ -503,8 +503,9 @@ class _WishlistCard extends ConsumerWidget {
       final newTransaction = Transaction.create(
         title: 'Wishlist: ${item.title}',
         amount: item.price,
-        type: TransactionType.system, // Use System type
+        type: TransactionType.expense, // Change to Expense so it shows in stats
         walletId: wallet.id.toString(),
+        categoryId: 'wishlist', // Force category to 'wishlist'
         note: 'Wishlist Purchase',
         date: DateTime.now(),
       );

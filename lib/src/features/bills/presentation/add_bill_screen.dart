@@ -29,6 +29,19 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
   String? _selectedCategoryId;
   bool _isRecurring = false;
   RecurringFrequency _frequency = RecurringFrequency.monthly;
+  String _selectedBillType = 'Internet';
+
+  final List<Map<String, dynamic>> _billTypes = [
+    {'name': 'Internet', 'icon': Icons.wifi, 'color': Colors.blue},
+    {'name': 'Electricity', 'icon': Icons.bolt, 'color': Colors.orange},
+    {'name': 'Water', 'icon': Icons.water_drop, 'color': Colors.cyan},
+    {'name': 'Rent', 'icon': Icons.home, 'color': Colors.indigo},
+    {'name': 'Phone', 'icon': Icons.phone_iphone, 'color': Colors.green},
+    {'name': 'Subscription', 'icon': Icons.subscriptions, 'color': Colors.red},
+    {'name': 'Insurance', 'icon': Icons.shield, 'color': Colors.purple},
+    {'name': 'Credit Card', 'icon': Icons.credit_card, 'color': Colors.teal},
+    {'name': 'Other', 'icon': Icons.receipt_long, 'color': Colors.grey},
+  ];
 
   @override
   void initState() {
@@ -130,57 +143,52 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Category
-            Text('Category', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            // Bill Type Selector
+            Text('Bill Type', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            categoriesAsync.when(
-              data: (categories) {
-                if (categories.isEmpty) return const Text('No categories found');
-                
-                // Auto-select first if null
-                if (_selectedCategoryId == null && categories.isNotEmpty) {
-                   // Try to find 'Bills' category or default to first
-                   try {
-                     final billsCat = categories.firstWhere((c) => c.name.toLowerCase() == 'bills');
-                     _selectedCategoryId = billsCat.externalId ?? billsCat.id.toString();
-                   } catch (_) {
-                     final first = categories.first;
-                     _selectedCategoryId = first.externalId ?? first.id.toString();
-                   }
-                }
-
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.withOpacity(0.1)),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedCategoryId,
-                      isExpanded: true,
-                      icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
-                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                      items: categories.map((cat) {
-                        return DropdownMenuItem(
-                          value: cat.externalId ?? cat.id.toString(),
-                          child: Row(
-                            children: [
-                              Icon(IconHelper.getIcon(cat.iconPath), color: cat.color, size: 20),
-                              const SizedBox(width: 12),
-                              Text(cat.name),
-                            ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedBillType,
+                  isExpanded: true,
+                  icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                  items: _billTypes.map((type) {
+                    return DropdownMenuItem(
+                      value: type['name'] as String,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: (type['color'] as Color).withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(type['icon'] as IconData, color: type['color'] as Color, size: 20),
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (val) => setState(() => _selectedCategoryId = val),
-                    ),
-                  ),
-                );
-              },
-              loading: () => const LinearProgressIndicator(),
-              error: (err, stack) => Text('Error: $err'),
+                          const SizedBox(width: 12),
+                          Text(type['name'] as String),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedBillType = val!;
+                      // Auto-fill title if empty or matches previous type
+                      if (_titleController.text.isEmpty || _billTypes.any((t) => t['name'] == _titleController.text)) {
+                        _titleController.text = val;
+                      }
+                    });
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 24),
 
@@ -324,12 +332,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       return;
     }
     
-    if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
-      return;
-    }
+
 
     try {
       final billRepo = ref.read(billRepositoryProvider);
@@ -340,7 +343,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         bill.title = title;
         bill.amount = amount;
         bill.dueDate = _dueDate;
-        bill.categoryId = _selectedCategoryId!;
+        bill.categoryId = 'bills'; // Force 'bills' category
         
         await billRepo.updateBill(bill);
         
@@ -354,7 +357,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
           final recurringRepo = ref.read(recurringRepositoryProvider);
           final newRecurring = RecurringTransaction(
             amount: amount,
-            categoryId: _selectedCategoryId!,
+            categoryId: 'bills', // Force 'bills' category
             walletId: '1', // Default wallet for now
             note: title,
             frequency: _frequency,
@@ -368,7 +371,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             title: title,
             amount: amount,
             dueDate: _dueDate,
-            categoryId: _selectedCategoryId!,
+            categoryId: 'bills', // Force 'bills' category
             status: BillStatus.unpaid,
             recurringTransactionId: newRecurring.id,
           );
@@ -380,7 +383,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             title: title,
             amount: amount,
             dueDate: _dueDate,
-            categoryId: _selectedCategoryId!,
+            categoryId: 'bills', // Force 'bills' category
             status: BillStatus.unpaid,
           );
           await billRepo.addBill(newBill);

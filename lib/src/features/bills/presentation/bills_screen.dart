@@ -521,8 +521,9 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       final newTransaction = Transaction.create(
         title: 'Bill: ${widget.bill.title}',
         amount: widget.bill.amount,
-        type: TransactionType.system, // System type for Bills
+        type: TransactionType.expense, // Change to Expense so it shows in stats
         walletId: wallet.id.toString(),
+        categoryId: 'bills', // Force category to 'bills' for System - Bills grouping
         note: 'Bill Payment',
         date: DateTime.now(),
       );

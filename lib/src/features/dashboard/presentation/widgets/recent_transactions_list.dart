@@ -94,15 +94,41 @@ class RecentTransactionsList extends ConsumerWidget {
                       Category? category;
                       
                       if (transaction.categoryId != null) {
-                         category = categories.firstWhere(
-                           (c) => (c.externalId ?? c.id.toString()) == transaction.categoryId, 
-                           orElse: () => Category(
-                             name: 'Unknown', 
-                             iconPath: 'help', 
+                         if (transaction.categoryId == 'bills') {
+                           category = Category(
+                             externalId: 'bills', 
+                             name: 'Bills', 
+                             iconPath: 'receipt_long', 
                              type: CategoryType.expense, 
-                             colorValue: Colors.grey.value
-                           )
-                         );
+                             colorValue: Colors.orange.value
+                           );
+                         } else if (transaction.categoryId == 'wishlist') {
+                           category = Category(
+                             externalId: 'wishlist', 
+                             name: 'Wishlist', 
+                             iconPath: 'favorite', 
+                             type: CategoryType.expense, 
+                             colorValue: Colors.pink.value
+                           );
+                         } else if (transaction.categoryId == 'debt') {
+                           category = Category(
+                             externalId: 'debt', 
+                             name: 'Debt', 
+                             iconPath: 'handshake', 
+                             type: CategoryType.expense, 
+                             colorValue: Colors.purple.value
+                           );
+                         } else {
+                           category = categories.firstWhere(
+                             (c) => (c.externalId ?? c.id.toString()) == transaction.categoryId, 
+                             orElse: () => Category(
+                               name: 'Unknown', 
+                               iconPath: 'help', 
+                               type: CategoryType.expense, 
+                               colorValue: Colors.grey.value
+                             )
+                           );
+                         }
                       }
 
                       final isSystem = transaction.type == TransactionType.system;
@@ -209,23 +235,41 @@ class RecentTransactionsList extends ConsumerWidget {
     DateTime date, {
     bool isSystem = false,
   }) {
-    // Determine if it's a Wishlist, Bill, Debt, or Savings transaction based on title
-    final isWishlist = isSystem && title.toLowerCase().contains('wishlist');
-    final isBill = isSystem && title.toLowerCase().contains('bill');
-    final isDebt = isSystem && (title.toLowerCase().contains('borrowed') || title.toLowerCase().contains('lent') || title.toLowerCase().contains('debt') || title.toLowerCase().contains('received payment'));
+    // Determine if it's a Wishlist, Bill, Debt, or Savings transaction based on Category ID or Title
+    final isWishlist = (category?.externalId == 'wishlist') || (isSystem && title.toLowerCase().contains('wishlist'));
+    final isBill = (category?.externalId == 'bills') || (isSystem && title.toLowerCase().contains('bill'));
+    final isDebt = (category?.externalId == 'debt') || (isSystem && (title.toLowerCase().contains('borrowed') || title.toLowerCase().contains('lent') || title.toLowerCase().contains('debt') || title.toLowerCase().contains('received payment')));
     final isSavings = isSystem && (title.toLowerCase().contains('deposit to') || title.toLowerCase().contains('withdraw from') || title.toLowerCase().contains('savings'));
 
-    final iconData = isSystem 
-        ? (isBill ? Icons.receipt_long_rounded : (isDebt ? Icons.handshake_rounded : (isSavings ? Icons.savings_rounded : Icons.favorite_rounded)))
-        : (category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline);
+    final iconData = isBill 
+        ? Icons.receipt_long_rounded
+        : (isWishlist 
+            ? Icons.favorite_rounded
+            : (isDebt 
+                ? Icons.handshake_rounded
+                : (isSavings 
+                    ? Icons.savings_rounded
+                    : (category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline))));
         
-    final iconColor = isSystem 
-        ? (isBill ? Colors.orange : (isDebt ? Colors.purple : (isSavings ? Colors.blue : Colors.pinkAccent)))
-        : (category?.color ?? AppColors.primary);
+    final iconColor = isBill 
+        ? Colors.orange
+        : (isWishlist 
+            ? Colors.pinkAccent
+            : (isDebt 
+                ? Colors.purple
+                : (isSavings 
+                    ? Colors.blue
+                    : (category?.color ?? AppColors.primary))));
         
-    final backgroundColor = isSystem 
-        ? (isBill ? Colors.orange.withOpacity(0.1) : (isDebt ? Colors.purple.withOpacity(0.1) : (isSavings ? Colors.blue.withOpacity(0.1) : Colors.pinkAccent.withOpacity(0.1))))
-        : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue);
+    final backgroundColor = isBill 
+        ? Colors.orange.withOpacity(0.1)
+        : (isWishlist 
+            ? Colors.pinkAccent.withOpacity(0.1)
+            : (isDebt 
+                ? Colors.purple.withOpacity(0.1)
+                : (isSavings 
+                    ? Colors.blue.withOpacity(0.1)
+                    : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue))));
         
     final timeStr = DateFormat('HH:mm').format(date);
     
