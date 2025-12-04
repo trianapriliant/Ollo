@@ -209,14 +209,21 @@ class ProfileScreen extends ConsumerWidget {
                   context,
                   icon: Icons.help_outline,
                   title: 'Help & Support',
-                  onTap: () {},
+                  onTap: () => context.push('/help-support'),
                 ),
                 const SizedBox(height: 16),
                 _buildMenuItem(
                   context,
                   icon: Icons.chat_bubble_outline,
                   title: 'Send Feedback',
-                  onTap: () => _showComingSoonDialog(context, 'Send Feedback', 'We would love to hear your thoughts!'),
+                  onTap: () => context.push('/send-feedback'),
+                ),
+                const SizedBox(height: 16),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.info_outline,
+                  title: 'About Ollo',
+                  onTap: () => context.push('/about-ollo'),
                 ),
                 const SizedBox(height: 24),
 

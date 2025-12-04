@@ -40,6 +40,9 @@ import '../features/debts/domain/debt.dart';
 import '../features/smart_notes/presentation/smart_notes_screen.dart';
 import '../features/smart_notes/presentation/add_edit_smart_note_screen.dart';
 import '../features/smart_notes/domain/smart_note.dart';
+import '../features/profile/presentation/about_ollo_screen.dart';
+import '../features/profile/presentation/send_feedback_screen.dart';
+import '../features/profile/presentation/help_support_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -305,6 +308,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/help-support',
+        builder: (context, state) => const HelpSupportScreen(),
+      ),
+      GoRoute(
+        path: '/send-feedback',
+        builder: (context, state) => const SendFeedbackScreen(),
+      ),
+      GoRoute(
+        path: '/about-ollo',
+        builder: (context, state) => const AboutOlloScreen(),
       ),
     ],
   );
