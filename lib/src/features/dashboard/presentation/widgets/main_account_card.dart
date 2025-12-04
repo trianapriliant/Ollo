@@ -19,40 +19,65 @@ class MainAccountCard extends ConsumerWidget {
     final totals = totalsAsync.valueOrNull ?? {'income': 0.0, 'expense': 0.0};
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20), // Reduced from 24
       decoration: BoxDecoration(
-        color: AppColors.accentBlue,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF4A90E2), // Blue
+            const Color(0xFF50E3C2).withOpacity(0.8), // Teal
+          ],
+        ),
         borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4A90E2).withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          Text('Total Balance', style: AppTextStyles.bodyMedium),
-          const SizedBox(height: 4),
-          Text(currency.format(totalBalance), style: AppTextStyles.amountLarge),
-          const SizedBox(height: 16),
+          Text(
+            'Total Balance',
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: Colors.white.withOpacity(0.8),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 2), // Reduced from 4
+          Text(
+            currency.format(totalBalance),
+            style: AppTextStyles.h1.copyWith(
+              color: Colors.white,
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16), // Reduced from 20
           Row(
             children: [
               Expanded(
-                child: _buildSummaryItem(
+                child: _buildGlassSummaryItem(
                   context,
                   label: 'Income',
                   amount: totals['income']!,
                   currency: currency,
-                  icon: Icons.arrow_downward,
-                  color: Colors.green,
-                  backgroundColor: Colors.white,
+                  icon: Icons.arrow_downward_rounded,
+                  iconColor: Colors.white,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
-                child: _buildSummaryItem(
+                child: _buildGlassSummaryItem(
                   context,
                   label: 'Expense',
                   amount: totals['expense']!,
                   currency: currency,
-                  icon: Icons.arrow_upward,
-                  color: Colors.red,
-                  backgroundColor: Colors.white,
+                  icon: Icons.arrow_upward_rounded,
+                  iconColor: Colors.white,
                 ),
               ),
             ],
@@ -62,20 +87,23 @@ class MainAccountCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryItem(
+  Widget _buildGlassSummaryItem(
     BuildContext context, {
     required String label,
     required double amount,
     required Currency currency,
     required IconData icon,
-    required Color color,
-    required Color backgroundColor,
+    required Color iconColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12), // Reduced from 16
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12), // Smaller corner radius as requested
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,23 +111,30 @@ class MainAccountCard extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: Colors.white.withOpacity(0.2),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 16, color: color),
+                child: Icon(icon, size: 16, color: iconColor),
               ),
               const SizedBox(width: 8),
-              Text(label, style: AppTextStyles.bodySmall),
+              Text(
+                label,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 8), // Reduced from 12
           Text(
             currency.format(amount),
             style: AppTextStyles.bodyLarge.copyWith(
+              color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: 16,
             ),
             overflow: TextOverflow.ellipsis,
           ),
