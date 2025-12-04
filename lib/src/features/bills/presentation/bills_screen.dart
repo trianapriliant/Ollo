@@ -44,7 +44,7 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        centerTitle: false,
+        centerTitle: true,
         title: Text(
           'Bills',
           style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),

@@ -59,12 +59,10 @@ class DashboardMenuGrid extends StatelessWidget {
         onTap: () => context.push('/cards'),
       ),
       _MenuItem(
-        icon: Icons.subscriptions_outlined,
-        label: 'Subs',
+        icon: Icons.checklist,
+        label: 'Notes',
         color: Colors.teal,
-        onTap: () {
-          // TODO: Navigate to Subscriptions Screen
-        },
+        onTap: () => context.push('/smart-notes'),
       ),
     ];
 

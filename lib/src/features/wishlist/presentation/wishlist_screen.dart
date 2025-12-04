@@ -48,7 +48,7 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text('Wishlist', style: AppTextStyles.h2),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Column(
         children: [

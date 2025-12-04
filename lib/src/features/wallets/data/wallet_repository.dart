@@ -67,3 +67,5 @@ final walletRepositoryProvider = FutureProvider<WalletRepository>((ref) async {
   final isar = await ref.watch(isarProvider.future);
   return IsarWalletRepository(isar);
 });
+
+

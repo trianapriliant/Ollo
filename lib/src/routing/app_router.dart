@@ -37,6 +37,9 @@ import '../features/debts/presentation/debts_screen.dart';
 import '../features/debts/presentation/add_debt_screen.dart';
 import '../features/debts/presentation/debt_detail_screen.dart';
 import '../features/debts/domain/debt.dart';
+import '../features/smart_notes/presentation/smart_notes_screen.dart';
+import '../features/smart_notes/presentation/add_edit_smart_note_screen.dart';
+import '../features/smart_notes/domain/smart_note.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -256,6 +259,24 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) {
               final wishlist = state.extra as Wishlist;
               return AddWishlistScreen(wishlistToEdit: wishlist);
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/smart-notes',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const SmartNotesScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            builder: (context, state) => const AddEditSmartNoteScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final note = state.extra as SmartNote;
+              return AddEditSmartNoteScreen(note: note);
             },
           ),
         ],
