@@ -9,6 +9,11 @@ final debtRepositoryProvider = Provider<DebtRepository>((ref) {
   return DebtRepository(isar);
 });
 
+final debtListProvider = StreamProvider<List<Debt>>((ref) {
+  final repository = ref.watch(debtRepositoryProvider);
+  return repository.watchDebts();
+});
+
 class DebtRepository {
   final Isar _isar;
 

@@ -5,12 +5,16 @@ import '../../../../constants/app_text_styles.dart';
 import '../../../settings/presentation/currency_provider.dart';
 import '../wallet_summary_provider.dart';
 
+import '../../../debts/data/debt_repository.dart';
+import '../../../debts/domain/debt.dart';
+
 class WalletSummaryCard extends ConsumerWidget {
   const WalletSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final summaryAsync = ref.watch(walletSummaryProvider);
+    final debtsAsync = ref.watch(debtListProvider);
     final currency = ref.watch(currencyProvider);
 
     return Container(
@@ -38,9 +42,26 @@ class WalletSummaryCard extends ConsumerWidget {
         data: (state) {
           final isPositive = state.periodChange >= 0;
           final sign = isPositive ? '+' : '';
-          final color = isPositive ? Colors.white : Colors.white; // Keep white for contrast on gradient
           final badgeColor = isPositive ? Colors.white.withOpacity(0.2) : Colors.red.withOpacity(0.2);
           final icon = isPositive ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded;
+
+          // Calculate Nett Balance & Total Active Debt
+          double nettBalance = state.totalBalance;
+          double totalDebt = 0;
+          
+          debtsAsync.whenData((debts) {
+            for (final debt in debts) {
+              if (debt.status == DebtStatus.active) {
+                final remaining = debt.amount - debt.paidAmount;
+                if (debt.type == DebtType.lending) {
+                  nettBalance += remaining; // Piutang (Receivable) adds to wealth
+                } else {
+                  nettBalance -= remaining; // Hutang (Payable) subtracts from wealth
+                  totalDebt += remaining; // Track total debt
+                }
+              }
+            }
+          });
 
           return Column(
             children: [
@@ -51,7 +72,7 @@ class WalletSummaryCard extends ConsumerWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4), // Reduced from 8
               Text(
                 currency.format(state.totalBalance),
                 style: AppTextStyles.h1.copyWith(
@@ -60,29 +81,41 @@ class WalletSummaryCard extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
+              
+              // Nett Balance & Debt Display
+              const SizedBox(height: 8), // Reduced from 12
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: badgeColor,
-                      borderRadius: BorderRadius.circular(20),
+                  // Nett Balance
+                  _buildGlassBadge(
+                    context,
+                    label: 'Nett: ${currency.format(nettBalance)}',
+                    color: Colors.white,
+                  ),
+                  
+                  // Active Debt (if any)
+                  if (totalDebt > 0) ...[
+                    const SizedBox(width: 8),
+                    _buildGlassBadge(
+                      context,
+                      label: 'Debt: ${currency.format(totalDebt)}',
+                      color: Colors.white,
                     ),
-                    child: Row(
-                      children: [
-                        Icon(icon, color: Colors.white, size: 16),
-                        const SizedBox(width: 4),
-                        Text(
-                          '$sign${state.percentageChange.toStringAsFixed(1)}%',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                  ],
+                ],
+              ),
+
+              const SizedBox(height: 16), // Reduced from 20
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildGlassBadge(
+                    context,
+                    label: '$sign${state.percentageChange.toStringAsFixed(1)}%',
+                    icon: icon,
+                    color: Colors.white,
+                    isBold: true,
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -105,6 +138,43 @@ class WalletSummaryCard extends ConsumerWidget {
             style: AppTextStyles.bodySmall.copyWith(color: Colors.white),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGlassBadge(
+    BuildContext context, {
+    required String label,
+    IconData? icon,
+    required Color color,
+    bool isBold = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, color: color, size: 14),
+            const SizedBox(width: 6),
+          ],
+          Text(
+            label,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: color,
+              fontWeight: isBold ? FontWeight.w700 : FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
