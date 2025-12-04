@@ -41,5 +41,7 @@ enum WalletType {
   bank,
   ewallet,
   cash,
+  creditCard,
+  exchange,
   other,
 }

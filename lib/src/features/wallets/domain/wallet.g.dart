@@ -133,12 +133,16 @@ const _WallettypeEnumValueMap = {
   r'bank': r'bank',
   r'ewallet': r'ewallet',
   r'cash': r'cash',
+  r'creditCard': r'creditCard',
+  r'exchange': r'exchange',
   r'other': r'other',
 };
 const _WallettypeValueEnumMap = {
   r'bank': WalletType.bank,
   r'ewallet': WalletType.ewallet,
   r'cash': WalletType.cash,
+  r'creditCard': WalletType.creditCard,
+  r'exchange': WalletType.exchange,
   r'other': WalletType.other,
 };
 
