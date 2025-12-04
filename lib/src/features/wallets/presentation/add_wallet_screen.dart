@@ -26,14 +26,58 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
   String _selectedIcon = 'account_balance_wallet'; // Default icon
 
   final List<String> _availableIcons = [
-    'account_balance_wallet', 'account_balance', 'credit_card', 'payments',
-    'attach_money', 'savings', 'shopping_bag', 'shopping_cart',
-    'store', 'local_mall', 'redeem', 'card_giftcard',
-    'directions_car', 'directions_bus', 'flight', 'train',
-    'home', 'apartment', 'school', 'work',
-    'fastfood', 'restaurant', 'local_cafe', 'local_bar',
-    'medical_services', 'local_hospital', 'fitness_center', 'pool',
-    'movie', 'sports_esports', 'music_note', 'camera_alt',
+    // Finance
+    'account_balance_wallet', 'account_balance', 'credit_card', 'payments', 'savings', 
+    'monetization_on', 'wallet', 'currency_exchange', 'account_box', 'attach_money',
+    'trending_up', 'pie_chart', 'currency_bitcoin', 'receipt',
+    
+    // Shopping
+    'shopping_bag', 'shopping_cart', 'store', 'local_mall', 'redeem', 
+    'card_giftcard', 'sell', 'checkroom', 'local_grocery_store',
+    
+    // Transport
+    'directions_car', 'directions_bus', 'flight', 'train', 'local_taxi', 
+    'two_wheeler', 'directions_boat', 'local_gas_station', 'commute',
+    
+    // Home & Living
+    'home', 'apartment', 'cottage', 'weekend', 'chair', 'bed', 'kitchen',
+    'water_drop', 'wifi', 'bolt', 'build', 'lock', 'key',
+    
+    // Food & Drink
+    'fastfood', 'restaurant', 'local_cafe', 'local_bar', 'bakery_dining', 
+    'lunch_dining', 'dinner_dining', 'icecream', 'coffee', 'cake', 'liquor',
+    
+    // Health & Wellness
+    'medical_services', 'local_hospital', 'local_pharmacy', 'fitness_center', 
+    'pool', 'spa', 'monitor_heart',
+    
+    // Entertainment
+    'movie', 'sports_esports', 'music_note', 'camera_alt', 'live_tv', 
+    'theater_comedy', 'sports_soccer', 'sports_basketball', 'sports_tennis', 
+    'sports_golf', 'sports_football', 'sports_volleyball', 'pool', 'kitesurfing', 'surfing',
+    'palette', 'brush', 'piano', 'mic', 'headphones', 'gamepad',
+    
+    // Nature & Outdoors
+    'forest', 'terrain', 'landscape', 'beach_access', 'park', 'wb_sunny', 
+    'nightlight', 'local_florist', 'grass', 'hiking',
+    
+    // Family & People
+    'person', 'people', 'groups', 'child_friendly', 'baby_changing_station', 
+    'family_restroom', 'face', 'mood',
+    
+    // Activity & Fitness
+    'directions_run', 'directions_walk', 'directions_bike', 'fitness_center', 
+    'self_improvement',
+    
+    // Work & Education
+    'work', 'school', 'menu_book', 'computer', 'business_center', 
+    'science', 'calculate', 'architecture', 'construction', 'engineering',
+    
+    // Tech
+    'smartphone', 'laptop', 'watch', 'router',
+    
+    // Others
+    'pets', 'child_care', 'card_travel', 'explore', 'favorite', 'star', 'delete',
   ];
 
   @override
@@ -96,6 +140,36 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
     });
   }
 
+  Future<void> _saveWallet() async {
+    final name = _nameController.text;
+    final balance = double.tryParse(_balanceController.text) ?? 0.0;
+
+    if (name.isEmpty) return;
+
+    final repository = await ref.read(walletRepositoryProvider.future);
+
+    if (widget.walletToEdit != null) {
+      final updatedWallet = widget.walletToEdit!
+        ..name = name
+        ..balance = balance
+        ..type = _selectedType
+        ..iconPath = _selectedIcon;
+      await repository.updateWallet(updatedWallet);
+    } else {
+      final newWallet = Wallet()
+        ..externalId = DateTime.now().millisecondsSinceEpoch.toString()
+        ..name = name
+        ..balance = balance
+        ..type = _selectedType
+        ..iconPath = _selectedIcon;
+      await repository.addWallet(newWallet);
+    }
+
+    if (mounted) {
+      context.pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.walletToEdit != null;
@@ -109,6 +183,28 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(isEditing ? 'Edit Wallet' : 'Add Wallet', style: AppTextStyles.h2),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: TextButton(
+              onPressed: _saveWallet,
+              style: TextButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                'Save',
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -323,51 +419,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                 ),
               ),
             ],
-            
             const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  final name = _nameController.text;
-                  final balance = double.tryParse(_balanceController.text) ?? 0.0;
-
-                  if (name.isEmpty) return;
-
-                  final repository = await ref.read(walletRepositoryProvider.future);
-
-                  if (isEditing) {
-                    final updatedWallet = widget.walletToEdit!
-                      ..name = name
-                      ..balance = balance
-                      ..type = _selectedType
-                      ..iconPath = _selectedIcon;
-                    await repository.updateWallet(updatedWallet);
-                  } else {
-                    final newWallet = Wallet()
-                      ..externalId = DateTime.now().millisecondsSinceEpoch.toString()
-                      ..name = name
-                      ..balance = balance
-                      ..type = _selectedType
-                      ..iconPath = _selectedIcon;
-                    await repository.addWallet(newWallet);
-                  }
-
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: Text(isEditing ? 'Save Changes' : 'Save Wallet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
-              ),
-            ),
           ],
         ),
       ),
