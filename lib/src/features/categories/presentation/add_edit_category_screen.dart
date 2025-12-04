@@ -55,11 +55,10 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
     
     Category? category;
     try {
-      // Check externalId or id.toString()
-      category = expenses.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+      category = expenses.firstWhere((c) => c.id.toString() == widget.categoryId || c.externalId == widget.categoryId);
     } catch (_) {
       try {
-        category = incomes.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+        category = incomes.firstWhere((c) => c.id.toString() == widget.categoryId || c.externalId == widget.categoryId);
       } catch (_) {}
     }
 
@@ -109,10 +108,10 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
       final incomes = await repository.getCategories(CategoryType.income);
       Category? existing;
       try {
-        existing = expenses.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+        existing = expenses.firstWhere((c) => c.id.toString() == widget.categoryId || c.externalId == widget.categoryId);
       } catch (_) {
         try {
-          existing = incomes.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+          existing = incomes.firstWhere((c) => c.id.toString() == widget.categoryId || c.externalId == widget.categoryId);
         } catch (_) {}
       }
       
@@ -145,10 +144,10 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
      final incomes = await repository.getCategories(CategoryType.income);
      Category? existing;
      try {
-       existing = expenses.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+       existing = expenses.firstWhere((c) => c.id.toString() == widget.categoryId || c.externalId == widget.categoryId);
      } catch (_) {
        try {
-         existing = incomes.firstWhere((c) => (c.externalId ?? c.id.toString()) == widget.categoryId);
+         existing = incomes.firstWhere((c) => c.id.toString() == widget.categoryId || c.externalId == widget.categoryId);
        } catch (_) {}
      }
      

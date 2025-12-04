@@ -96,38 +96,7 @@ class _CategoryList extends ConsumerWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final category = categories[index];
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: category.color.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    _getIconData(category.iconPath),
-                    color: category.color,
-                  ),
-                ),
-                title: Text(category.name, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
-                subtitle: Text('${category.subCategories?.length ?? 0} sub-categories', style: AppTextStyles.bodySmall),
-                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-                onTap: () {
-                  context.push('/categories/edit/${category.id}');
-                },
-              ),
-            );
+            return _CategoryCard(category: category);
           },
         );
       },
@@ -135,10 +104,121 @@ class _CategoryList extends ConsumerWidget {
       error: (err, stack) => Center(child: Text('Error: $err')),
     );
   }
+}
+
+class _CategoryCard extends StatelessWidget {
+  final Category category;
+
+  const _CategoryCard({required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    final subCategories = category.subCategories ?? [];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+          leading: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: category.color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              _getIconData(category.iconPath),
+              color: category.color,
+            ),
+          ),
+          title: Text(
+            category.name,
+            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            '${subCategories.length} sub-categories',
+            style: AppTextStyles.bodySmall,
+          ),
+          children: [
+            const Divider(),
+            if (subCategories.isNotEmpty) ...[
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: subCategories.length,
+                itemBuilder: (context, index) {
+                  final sub = subCategories[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.subdirectory_arrow_right, size: 16, color: Colors.grey[400]),
+                        const SizedBox(width: 12),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            _getIconData(sub.iconPath ?? 'category'),
+                            size: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(sub.name ?? 'Unnamed', style: AppTextStyles.bodyMedium),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      // Navigate to edit category (which handles sub-categories)
+                      context.pushNamed(
+                        'edit_category',
+                        pathParameters: {'id': category.id.toString()},
+                      );
+                    },
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text('Edit Category'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: const BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   IconData _getIconData(String iconPath) {
-    // Reuse the icon mapping logic or move it to a shared utility
-    // For now, simple mapping
     switch (iconPath) {
       case 'fastfood': return Icons.fastfood;
       case 'directions_bus': return Icons.directions_bus;
@@ -152,6 +232,7 @@ class _CategoryList extends ConsumerWidget {
       case 'store': return Icons.store;
       case 'card_giftcard': return Icons.card_giftcard;
       case 'trending_up': return Icons.trending_up;
+      // Add more as needed
       default: return Icons.category;
     }
   }

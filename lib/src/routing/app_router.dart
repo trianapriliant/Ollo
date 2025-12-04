@@ -135,6 +135,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: 'edit/:id',
+            name: 'edit_category',
             builder: (context, state) {
               final id = state.pathParameters['id'];
               return AddEditCategoryScreen(categoryId: id);
