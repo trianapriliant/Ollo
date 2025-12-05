@@ -180,6 +180,23 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
                   );
                 },
               ),
+              
+              if (widget.budget != null) ...[
+                const SizedBox(height: 48),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton.icon(
+                    onPressed: _deleteBudget,
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    label: const Text('Delete Budget', style: TextStyle(color: Colors.red)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.red.withOpacity(0.05),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -211,5 +228,29 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
         ),
       ),
     );
+  }
+
+  void _deleteBudget() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Budget?'),
+        content: const Text('Are you sure you want to delete this budget?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && widget.budget != null) {
+      await ref.read(budgetRepositoryProvider).deleteBudget(widget.budget!.id);
+      if (mounted) {
+        context.pop();
+      }
+    }
   }
 }

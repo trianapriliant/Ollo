@@ -72,7 +72,17 @@ class BudgetScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 ...budgets.map((budget) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: _BudgetCard(budget: budget),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => AddEditBudgetScreen(budget: budget),
+                        ),
+                      );
+                    },
+                    child: _BudgetCard(budget: budget),
+                  ),
                 )),
               ],
               const SizedBox(height: 80), // Bottom padding for FAB
