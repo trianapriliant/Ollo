@@ -22,6 +22,7 @@ class WalletScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
         title: Text('My Wallets', style: AppTextStyles.h2),
         actions: [
           IconButton(

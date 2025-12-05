@@ -165,12 +165,46 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 monthlyStatsAsync.when(
                   data: (data) {
                     if (data.isEmpty) return const SizedBox();
+                    
+                    // Calculate Averages
+                    double totalIncome = 0;
+                    double totalExpense = 0;
+
+                    for (var month in data) {
+                      totalIncome += month.income;
+                      totalExpense += month.expense;
+                    }
+                    
+                    final now = DateTime.now();
+                    int divisor;
+                    
+                    if (_selectedDate.year == now.year) {
+                      // For current year, divide by months passed so far
+                      divisor = now.month;
+                    } else if (_selectedDate.year < now.year) {
+                      // For past years, divide by 12
+                      divisor = 12;
+                    } else {
+                      // Future years (shouldn't happen with data, but safe fallback)
+                      divisor = 1;
+                    }
+                    
+                    // Avoid division by zero
+                    if (divisor == 0) divisor = 1;
+
+                    final avgIncome = totalIncome / divisor;
+                    final avgExpense = totalExpense / divisor;
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Monthly Overview', style: AppTextStyles.h3),
                         const SizedBox(height: 16),
-                        MonthlyBarChart(data: data),
+                        MonthlyBarChart(
+                          data: data,
+                          avgIncome: avgIncome,
+                          avgExpense: avgExpense,
+                        ),
                       ],
                     );
                   },

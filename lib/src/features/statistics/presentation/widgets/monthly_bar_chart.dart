@@ -7,8 +7,15 @@ import '../statistics_provider.dart';
 
 class MonthlyBarChart extends StatelessWidget {
   final List<MonthlyData> data;
+  final double avgIncome;
+  final double avgExpense;
 
-  const MonthlyBarChart({super.key, required this.data});
+  const MonthlyBarChart({
+    super.key, 
+    required this.data,
+    this.avgIncome = 0,
+    this.avgExpense = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +25,11 @@ class MonthlyBarChart extends StatelessWidget {
       if (item.income > maxY) maxY = item.income;
       if (item.expense > maxY) maxY = item.expense;
     }
+    
+    // Check if averages are higher than max data point
+    if (avgIncome > maxY) maxY = avgIncome;
+    if (avgExpense > maxY) maxY = avgExpense;
+
     // Add some buffer
     maxY = maxY * 1.2;
     if (maxY == 0) maxY = 100;
@@ -96,6 +108,46 @@ class MonthlyBarChart extends StatelessWidget {
             },
           ),
           borderData: FlBorderData(show: false),
+          extraLinesData: ExtraLinesData(
+            horizontalLines: [
+              if (avgIncome > 0)
+                HorizontalLine(
+                  y: avgIncome,
+                  color: Colors.green.withOpacity(0.5),
+                  strokeWidth: 2,
+                  dashArray: [5, 5],
+                  label: HorizontalLineLabel(
+                    show: true,
+                    alignment: Alignment.topRight,
+                    padding: const EdgeInsets.only(right: 5, bottom: 5),
+                    style: TextStyle(
+                      color: Colors.green.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                    labelResolver: (line) => 'Avg Income',
+                  ),
+                ),
+              if (avgExpense > 0)
+                HorizontalLine(
+                  y: avgExpense,
+                  color: Colors.red.withOpacity(0.5),
+                  strokeWidth: 2,
+                  dashArray: [5, 5],
+                  label: HorizontalLineLabel(
+                    show: true,
+                    alignment: Alignment.topRight,
+                    padding: const EdgeInsets.only(right: 5, bottom: 5),
+                    style: TextStyle(
+                      color: Colors.red.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                    labelResolver: (line) => 'Avg Expense',
+                  ),
+                ),
+            ],
+          ),
           barGroups: data.asMap().entries.map((entry) {
             final index = entry.key;
             final item = entry.value;

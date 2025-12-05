@@ -49,6 +49,30 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
           'Bills',
           style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            onSelected: (value) {
+              if (value == 'home') {
+                context.go('/home');
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'home',
+                  child: Row(
+                    children: [
+                      Icon(Icons.home, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text('Home'),
+                    ],
+                  ),
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

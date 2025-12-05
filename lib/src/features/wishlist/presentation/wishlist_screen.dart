@@ -49,6 +49,30 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         elevation: 0,
         title: Text('Wishlist', style: AppTextStyles.h2),
         centerTitle: true,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            onSelected: (value) {
+              if (value == 'home') {
+                context.go('/home');
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'home',
+                  child: Row(
+                    children: [
+                      Icon(Icons.home, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text('Home'),
+                    ],
+                  ),
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
