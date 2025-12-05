@@ -14,6 +14,7 @@ import 'widgets/daily_stacked_bar_chart.dart';
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
 import '../../subscription/presentation/premium_provider.dart';
+import '../../../utils/icon_helper.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
@@ -327,6 +328,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     return months[month - 1];
   }
 
+
   Widget _buildCategoryItem(CategoryData item, Currency currency) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -337,7 +339,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       child: Row(
         children: [
           Icon(
-            _getIconData(item.iconPath),
+            IconHelper.getIcon(item.iconPath),
             color: item.color,
             size: 24,
           ),
@@ -369,34 +371,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
         ],
       ),
     );
-  }
-
-  IconData _getIconData(String iconPath) {
-    // Duplicate logic from AddTransactionScreen, ideally should be in a shared utility
-    switch (iconPath) {
-      case 'fastfood': return Icons.fastfood;
-      case 'directions_bus': return Icons.directions_bus;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'movie': return Icons.movie;
-      case 'medical_services': return Icons.medical_services;
-      case 'school': return Icons.school;
-      case 'receipt': return Icons.receipt;
-      case 'attach_money': return Icons.attach_money;
-      case 'store': return Icons.store;
-      case 'card_giftcard': return Icons.card_giftcard;
-      case 'trending_up': return Icons.trending_up;
-      
-      // System Categories
-      case 'debt': return Icons.handshake;
-      case 'debts': return Icons.handshake;
-      case 'wishlist': return Icons.favorite;
-      case 'bill': return Icons.receipt_long;
-      case 'bills': return Icons.receipt_long;
-      case 'saving': return Icons.savings;
-      case 'savings': return Icons.savings;
-      
-      default: return Icons.category;
-    }
   }
 }
 
