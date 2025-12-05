@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../common_widgets/scaffold_with_nav_bar.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/statistics/presentation/statistics_screen.dart';
+import '../features/statistics/presentation/category_transactions_screen.dart';
+import '../features/statistics/presentation/statistics_provider.dart'; // For TimeRange enum
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/wallets/presentation/add_wallet_screen.dart';
 import '../features/wallets/presentation/wallet_screen.dart';
@@ -70,6 +72,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/statistics',
                 builder: (context, state) => const StatisticsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'category-details',
+                    builder: (context, state) {
+                      final extra = state.extra as Map<String, dynamic>;
+                      return CategoryTransactionsScreen(
+                        categoryId: extra['categoryId'],
+                        categoryName: extra['categoryName'],
+                        filterDate: extra['filterDate'],
+                        filterTimeRange: extra['filterTimeRange'],
+                        isExpense: extra['isExpense'],
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

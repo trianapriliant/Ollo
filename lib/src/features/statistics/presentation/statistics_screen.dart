@@ -330,45 +330,59 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
 
   Widget _buildCategoryItem(CategoryData item, Currency currency) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            IconHelper.getIcon(item.iconPath),
-            color: item.color,
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item.categoryName, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            flex: 2,
-            child: LinearProgressIndicator(
-              value: item.percentage / 100,
-              backgroundColor: Colors.grey[100],
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          '/statistics/category-details',
+          extra: {
+            'categoryId': item.categoryId,
+            'categoryName': item.categoryName,
+            'filterDate': _selectedDate,
+            'filterTimeRange': _timeRange,
+            'isExpense': _isExpense,
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              IconHelper.getIcon(item.iconPath),
               color: item.color,
-              minHeight: 8,
-              borderRadius: BorderRadius.circular(4),
+              size: 24,
             ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            '${item.percentage.toStringAsFixed(0)}%',
-            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.categoryName, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 2,
+              child: LinearProgressIndicator(
+                value: item.percentage / 100,
+                backgroundColor: Colors.grey[100],
+                color: item.color,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '${item.percentage.toStringAsFixed(0)}%',
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
