@@ -351,7 +351,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
         ..iconPath = _selectedIcon;
       await repo.addWallet(updatedWallet);
     } else {
-      final newWallet = Wallet(
+      final newWallet = Wallet.create(
         name: name,
         balance: balance,
         colorValue: _selectedColor.value,

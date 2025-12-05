@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ollo/src/utils/icon_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -161,41 +162,190 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
     }
   }
 
-  void _addSubCategory() {
-    showDialog(
+  static const Map<String, List<String>> iconGroups = {
+    'Food & Drink': [
+      'fastfood', 'restaurant', 'lunch_dining', 'local_cafe', 'local_bar', 'local_pizza', 'bakery_dining', 'icecream'
+    ],
+    'Transport': [
+      'directions_bus', 'directions_car', 'local_gas_station', 'directions_bike', 'train', 'flight', 'local_taxi', 'directions_boat'
+    ],
+    'Shopping': [
+      'shopping_bag', 'shopping_cart', 'checkroom', 'local_grocery_store', 'store', 'card_giftcard', 'receipt'
+    ],
+    'Entertainment': [
+      'movie', 'sports_esports', 'fitness_center', 'pool', 'music_note', 'theater_comedy', 'casino'
+    ],
+    'Health': [
+      'medical_services', 'local_hospital', 'local_pharmacy', 'healing', 'spa'
+    ],
+    'Education & Work': [
+      'school', 'work', 'menu_book', 'science', 'computer', 'business_center'
+    ],
+    'Home & Utilities': [
+      'home', 'lightbulb', 'water_drop', 'wifi', 'build', 'cleaning_services', 'kitchen'
+    ],
+    'Finance': [
+      'attach_money', 'savings', 'account_balance', 'credit_card', 'trending_up', 'trending_down'
+    ],
+    'Other': [
+      'category', 'more_horiz', 'star', 'favorite', 'pets', 'child_care', 'celebration'
+    ],
+  };
+
+  void _showSubCategoryEditor({SubCategory? subCategory, int? index}) {
+    final isEditing = subCategory != null;
+    final nameController = TextEditingController(text: isEditing ? subCategory.name : '');
+    String selectedIcon = isEditing ? (subCategory.iconPath ?? 'category') : 'category';
+
+    showModalBottomSheet(
       context: context,
-      builder: (context) {
-        final controller = TextEditingController();
-        return AlertDialog(
-          title: const Text('New Sub-Category'),
-          content: TextField(
-            controller: controller,
-            decoration: const InputDecoration(hintText: 'Name'),
-            autofocus: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
-            TextButton(
-              onPressed: () {
-                if (controller.text.isNotEmpty) {
-                  setState(() {
-                    _subCategories.add(SubCategory(
-                      id: const Uuid().v4(),
-                      name: controller.text,
-                      iconPath: 'category', // Default icon for now
-                    ));
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Add'),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-          ],
-        );
-      },
+            child: Column(
+              children: [
+                // Handle bar
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 12, bottom: 8),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                // Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        isEditing ? 'Edit Sub-Category' : 'New Sub-Category',
+                        style: AppTextStyles.h3,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if (nameController.text.isNotEmpty) {
+                            setState(() {
+                              if (isEditing) {
+                                _subCategories[index!] = SubCategory(
+                                  id: subCategory.id,
+                                  name: nameController.text,
+                                  iconPath: selectedIcon,
+                                );
+                              } else {
+                                _subCategories.add(SubCategory(
+                                  id: const Uuid().v4(),
+                                  name: nameController.text,
+                                  iconPath: selectedIcon,
+                                ));
+                              }
+                            });
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Text('Save', style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Name Input
+                        Text('Name', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              hintText: 'e.g. Breakfast',
+                              border: InputBorder.none,
+                            ),
+                            autofocus: !isEditing,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Icon Picker
+                        Text('Icon', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 16),
+                        ...iconGroups.entries.map((entry) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Text(
+                                  entry.key,
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Wrap(
+                                spacing: 12,
+                                runSpacing: 12,
+                                children: entry.value.map((icon) {
+                                  final isSelected = selectedIcon == icon;
+                                  return GestureDetector(
+                                    onTap: () => setModalState(() => selectedIcon = icon),
+                                    child: Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: isSelected ? AppColors.primary : Colors.grey[200]!,
+                                          width: isSelected ? 2 : 1,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        IconHelper.getIcon(icon),
+                                        color: isSelected ? AppColors.primary : Colors.grey[600],
+                                        size: 24,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          );
+                        }).toList(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -324,7 +474,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
                 children: [
                   Text('Sub-Categories', style: AppTextStyles.h3),
                   IconButton(
-                    onPressed: _addSubCategory,
+                    onPressed: () => _showSubCategoryEditor(),
                     icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
                   ),
                 ],
@@ -344,15 +494,35 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
                     final sub = _subCategories[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.subdirectory_arrow_right, size: 20, color: Colors.grey),
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          IconHelper.getIcon(sub.iconPath ?? 'category'),
+                          size: 16,
+                          color: Colors.grey[700],
+                        ),
+                      ),
                       title: Text(sub.name ?? 'Unknown'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.close, size: 18, color: Colors.grey),
-                        onPressed: () {
-                          setState(() {
-                            _subCategories.removeAt(index);
-                          });
-                        },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit_outlined, size: 18, color: Colors.blue),
+                            onPressed: () => _showSubCategoryEditor(subCategory: sub, index: index),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                            onPressed: () {
+                              setState(() {
+                                _subCategories.removeAt(index);
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     );
                   },
@@ -413,36 +583,12 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
           border: isSelected ? Border.all(color: AppColors.primary, width: 2) : Border.all(color: Colors.grey[300]!),
         ),
         child: Icon(
-          _getIconData(iconPath),
+          IconHelper.getIcon(iconPath),
           color: isSelected ? AppColors.primary : Colors.grey,
         ),
       ),
     );
   }
 
-  IconData _getIconData(String iconPath) {
-    switch (iconPath) {
-      case 'fastfood': return Icons.fastfood;
-      case 'restaurant': return Icons.restaurant;
-      case 'lunch_dining': return Icons.lunch_dining;
-      case 'local_cafe': return Icons.local_cafe;
-      case 'directions_bus': return Icons.directions_bus;
-      case 'directions_car': return Icons.directions_car;
-      case 'local_gas_station': return Icons.local_gas_station;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'shopping_cart': return Icons.shopping_cart;
-      case 'checkroom': return Icons.checkroom;
-      case 'movie': return Icons.movie;
-      case 'sports_esports': return Icons.sports_esports;
-      case 'fitness_center': return Icons.fitness_center;
-      case 'medical_services': return Icons.medical_services;
-      case 'school': return Icons.school;
-      case 'work': return Icons.work;
-      case 'home': return Icons.home;
-      case 'receipt': return Icons.receipt;
-      case 'attach_money': return Icons.attach_money;
-      case 'savings': return Icons.savings;
-      default: return Icons.category;
-    }
-  }
+  // Removed local _getIconData in favor of IconHelper.getIcon
 }

@@ -15,20 +15,19 @@ class BudgetSummaryCard extends ConsumerWidget {
 
     return budgetsAsync.when(
       data: (budgets) {
-        if (budgets.isEmpty) return const SizedBox.shrink();
-        
-        // Calculate totals
-        // This is a bit heavy for build, ideally move to a provider
+        // Always calculate totals, even if empty
         return FutureBuilder<Map<String, double>>(
           future: _calculateTotals(ref, budgets),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-            
-            final data = snapshot.data!;
+            // Show loading or default 0s if waiting
+            final data = snapshot.data ?? {'totalBudget': 0.0, 'totalSpent': 0.0};
             final totalBudget = data['totalBudget']!;
             final totalSpent = data['totalSpent']!;
             final remaining = totalBudget - totalSpent;
-            final percentage = (totalSpent / totalBudget).clamp(0.0, 1.0);
+            // Avoid division by zero
+            final percentage = totalBudget > 0 
+                ? (totalSpent / totalBudget).clamp(0.0, 1.0) 
+                : 0.0;
 
             return Container(
               height: 320,
@@ -61,7 +60,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                             style: AppTextStyles.h3.copyWith(color: AppColors.primary),
                           ),
                           Text(
-                            'More This Month', // Updated text
+                            'More This Month',
                             style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
                           ),
                         ],
@@ -132,7 +131,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 20), // Adjust based on semi-circle
+                            padding: const EdgeInsets.only(top: 20),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -171,7 +170,7 @@ class BudgetSummaryCard extends ConsumerWidget {
           },
         );
       },
-      loading: () => const SizedBox.shrink(),
+      loading: () => const SizedBox.shrink(), // Keep loading hidden or show skeleton
       error: (_, __) => const SizedBox.shrink(),
     );
   }

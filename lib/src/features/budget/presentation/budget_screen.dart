@@ -9,6 +9,7 @@ import 'add_edit_budget_screen.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import 'widgets/budget_summary_card.dart';
+import '../../../utils/icon_helper.dart';
 
 class BudgetScreen extends ConsumerWidget {
   const BudgetScreen({super.key});
@@ -39,40 +40,41 @@ class BudgetScreen extends ConsumerWidget {
       ),
       body: budgetsAsync.when(
         data: (budgets) {
-          if (budgets.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.pie_chart_outline, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text('No budgets yet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey)),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const AddEditBudgetScreen()),
-                      );
-                    },
-                    child: const Text('Create Budget'),
-                  ),
-                ],
-              ),
-            );
-          }
-
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
               const BudgetSummaryCard(),
               const SizedBox(height: 24),
-              Text('Your Budgets', style: AppTextStyles.h2),
-              const SizedBox(height: 16),
-              ...budgets.map((budget) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: _BudgetCard(budget: budget),
-              )),
+              if (budgets.isEmpty) ...[
+                const SizedBox(height: 48),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.pie_chart_outline, size: 64, color: Colors.grey[300]),
+                      const SizedBox(height: 16),
+                      Text('No budgets yet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey)),
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const AddEditBudgetScreen()),
+                          );
+                        },
+                        child: const Text('Create Budget'),
+                      ),
+                    ],
+                  ),
+                ),
+              ] else ...[
+                Text('Your Budgets', style: AppTextStyles.h2),
+                const SizedBox(height: 16),
+                ...budgets.map((budget) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _BudgetCard(budget: budget),
+                )),
+              ],
               const SizedBox(height: 80), // Bottom padding for FAB
             ],
           );
@@ -158,7 +160,7 @@ class _BudgetCard extends ConsumerWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  _getIconData(category?.iconPath ?? 'category'),
+                                  IconHelper.getIcon(category?.iconPath ?? 'category'),
                                   color: category?.color ?? Colors.grey,
                                   size: 20,
                                 ),
@@ -225,30 +227,5 @@ class _BudgetCard extends ConsumerWidget {
     }
   }
 
-  IconData _getIconData(String iconPath) {
-    // Simple mapping, should be in a shared helper
-    switch (iconPath) {
-      case 'fastfood': return Icons.fastfood;
-      case 'restaurant': return Icons.restaurant;
-      case 'lunch_dining': return Icons.lunch_dining;
-      case 'local_cafe': return Icons.local_cafe;
-      case 'directions_bus': return Icons.directions_bus;
-      case 'directions_car': return Icons.directions_car;
-      case 'local_gas_station': return Icons.local_gas_station;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'shopping_cart': return Icons.shopping_cart;
-      case 'checkroom': return Icons.checkroom;
-      case 'movie': return Icons.movie;
-      case 'sports_esports': return Icons.sports_esports;
-      case 'fitness_center': return Icons.fitness_center;
-      case 'medical_services': return Icons.medical_services;
-      case 'school': return Icons.school;
-      case 'work': return Icons.work;
-      case 'home': return Icons.home;
-      case 'receipt': return Icons.receipt;
-      case 'attach_money': return Icons.attach_money;
-      case 'savings': return Icons.savings;
-      default: return Icons.category;
-    }
-  }
+
 }

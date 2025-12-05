@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ollo/src/utils/icon_helper.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/app_colors.dart';
@@ -321,23 +322,22 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                               children: [
                                 if (item.subCategory != null) const SizedBox(width: 24), // Indent subcategories
                                 Container(
-                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: item.category.color.withOpacity(0.2),
+                                    color: item.category.color.withOpacity(0.1),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
-                                    _getIconData(item.iconPath),
+                                    IconHelper.getIcon(item.subCategory?.iconPath ?? item.category.iconPath),
                                     color: item.category.color,
-                                    size: 20,
+                                    size: 18,
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  item.name, 
-                                  style: item.subCategory != null 
-                                    ? AppTextStyles.bodyMedium 
-                                    : AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)
+                                  item.name,
+                                  style: item.subCategory != null
+                                      ? AppTextStyles.bodyMedium 
+                                      : AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -425,6 +425,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..amount = amount
                       ..walletId = _selectedWalletId
                       ..categoryId = _selectedItem!.category.externalId ?? _selectedItem!.category.id.toString()
+                      ..subCategoryId = _selectedItem!.subCategory?.id
+                      ..subCategoryName = _selectedItem!.subCategory?.name
+                      ..subCategoryIcon = _selectedItem!.subCategory?.iconPath
                       ..note = _noteController.text;
                       // Date kept same or updated? User didn't ask to edit date, so keep it.
                     
@@ -450,6 +453,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..type = type
                       ..walletId = _selectedWalletId
                       ..categoryId = _selectedItem!.category.externalId ?? _selectedItem!.category.id.toString()
+                      ..subCategoryId = _selectedItem!.subCategory?.id
+                      ..subCategoryName = _selectedItem!.subCategory?.name
+                      ..subCategoryIcon = _selectedItem!.subCategory?.iconPath
                       ..note = _noteController.text;
 
                     await transactionRepo.addTransaction(newTransaction);
@@ -490,24 +496,5 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     );
   }
 
-  IconData _getIconData(String iconPath) {
-    // Simple mapping for demo purposes
-    switch (iconPath) {
-      case 'fastfood': return Icons.fastfood;
-      case 'directions_bus': return Icons.directions_bus;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'movie': return Icons.movie;
-      case 'medical_services': return Icons.medical_services;
-      case 'school': return Icons.school;
-      case 'receipt': return Icons.receipt;
-      case 'receipt_long': return Icons.receipt_long; // For Bills
-      case 'favorite': return Icons.favorite; // For Wishlist
-      case 'handshake': return Icons.handshake; // For Debt
-      case 'attach_money': return Icons.attach_money;
-      case 'store': return Icons.store;
-      case 'card_giftcard': return Icons.card_giftcard;
-      case 'trending_up': return Icons.trending_up;
-      default: return Icons.category;
-    }
-  }
+  // Removed local _getIconData in favor of IconHelper.getIcon
 }

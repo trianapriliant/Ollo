@@ -22,23 +22,28 @@ const WalletSchema = CollectionSchema(
       name: r'balance',
       type: IsarType.double,
     ),
-    r'externalId': PropertySchema(
+    r'colorValue': PropertySchema(
       id: 1,
+      name: r'colorValue',
+      type: IsarType.long,
+    ),
+    r'externalId': PropertySchema(
+      id: 2,
       name: r'externalId',
       type: IsarType.string,
     ),
     r'iconPath': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'iconPath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'type',
       type: IsarType.string,
       enumMap: _WallettypeEnumValueMap,
@@ -83,10 +88,11 @@ void _walletSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.balance);
-  writer.writeString(offsets[1], object.externalId);
-  writer.writeString(offsets[2], object.iconPath);
-  writer.writeString(offsets[3], object.name);
-  writer.writeString(offsets[4], object.type.name);
+  writer.writeLong(offsets[1], object.colorValue);
+  writer.writeString(offsets[2], object.externalId);
+  writer.writeString(offsets[3], object.iconPath);
+  writer.writeString(offsets[4], object.name);
+  writer.writeString(offsets[5], object.type.name);
 }
 
 Wallet _walletDeserialize(
@@ -97,11 +103,12 @@ Wallet _walletDeserialize(
 ) {
   final object = Wallet();
   object.balance = reader.readDouble(offsets[0]);
-  object.externalId = reader.readStringOrNull(offsets[1]);
-  object.iconPath = reader.readString(offsets[2]);
+  object.colorValue = reader.readLong(offsets[1]);
+  object.externalId = reader.readStringOrNull(offsets[2]);
+  object.iconPath = reader.readString(offsets[3]);
   object.id = id;
-  object.name = reader.readString(offsets[3]);
-  object.type = _WallettypeValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+  object.name = reader.readString(offsets[4]);
+  object.type = _WallettypeValueEnumMap[reader.readStringOrNull(offsets[5])] ??
       WalletType.bank;
   return object;
 }
@@ -116,12 +123,14 @@ P _walletDeserializeProp<P>(
     case 0:
       return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (_WallettypeValueEnumMap[reader.readStringOrNull(offset)] ??
           WalletType.bank) as P;
     default:
@@ -292,6 +301,59 @@ extension WalletQueryFilter on QueryBuilder<Wallet, Wallet, QFilterCondition> {
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> colorValueEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'colorValue',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> colorValueGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'colorValue',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> colorValueLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'colorValue',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterFilterCondition> colorValueBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'colorValue',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -900,6 +962,18 @@ extension WalletQuerySortBy on QueryBuilder<Wallet, Wallet, QSortBy> {
     });
   }
 
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> sortByColorValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'colorValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> sortByColorValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'colorValue', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wallet, Wallet, QAfterSortBy> sortByExternalId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'externalId', Sort.asc);
@@ -959,6 +1033,18 @@ extension WalletQuerySortThenBy on QueryBuilder<Wallet, Wallet, QSortThenBy> {
   QueryBuilder<Wallet, Wallet, QAfterSortBy> thenByBalanceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'balance', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> thenByColorValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'colorValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wallet, Wallet, QAfterSortBy> thenByColorValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'colorValue', Sort.desc);
     });
   }
 
@@ -1030,6 +1116,12 @@ extension WalletQueryWhereDistinct on QueryBuilder<Wallet, Wallet, QDistinct> {
     });
   }
 
+  QueryBuilder<Wallet, Wallet, QDistinct> distinctByColorValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'colorValue');
+    });
+  }
+
   QueryBuilder<Wallet, Wallet, QDistinct> distinctByExternalId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1069,6 +1161,12 @@ extension WalletQueryProperty on QueryBuilder<Wallet, Wallet, QQueryProperty> {
   QueryBuilder<Wallet, double, QQueryOperations> balanceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'balance');
+    });
+  }
+
+  QueryBuilder<Wallet, int, QQueryOperations> colorValueProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'colorValue');
     });
   }
 

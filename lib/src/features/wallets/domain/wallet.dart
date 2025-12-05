@@ -33,8 +33,21 @@ class Wallet {
 
   late String iconPath;
 
+  int colorValue = 0xFF2196F3; // Default blue
+
   @Enumerated(EnumType.name)
   late WalletType type;
+
+  Wallet();
+
+  Wallet.create({
+    this.externalId,
+    required this.name,
+    required this.balance,
+    required this.iconPath,
+    this.colorValue = 0xFF2196F3,
+    this.type = WalletType.other,
+  });
 }
 
 enum WalletType {

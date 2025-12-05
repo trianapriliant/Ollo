@@ -39,7 +39,14 @@ class Transaction {
     this.walletId,
     this.destinationWalletId,
     this.categoryId,
+    this.subCategoryId,
+    this.subCategoryName,
+    this.subCategoryIcon,
   });
+
+  String? subCategoryId;
+  String? subCategoryName;
+  String? subCategoryIcon;
 
   // Helper getters (ignored by Isar)
   @ignore

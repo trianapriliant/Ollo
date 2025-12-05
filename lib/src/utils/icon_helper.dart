@@ -38,6 +38,7 @@ class IconHelper {
       
       // Home & Living
       case 'home': return Icons.home;
+      case 'house': return Icons.home; // Added mapping for 'house'
       case 'apartment': return Icons.apartment;
       case 'cottage': return Icons.cottage;
       case 'weekend': return Icons.weekend;
@@ -158,6 +159,18 @@ class IconHelper {
       case 'pie_chart': return Icons.pie_chart;
       case 'currency_bitcoin': return Icons.currency_bitcoin;
       case 'help': return Icons.help_outline;
+      
+      case 'local_pizza': return Icons.local_pizza;
+      case 'cleaning_services': return Icons.cleaning_services;
+      case 'celebration': return Icons.celebration;
+      case 'more_horiz': return Icons.more_horiz;
+      case 'lightbulb': return Icons.lightbulb;
+      case 'healing': return Icons.healing;
+      case 'theater_comedy': return Icons.theater_comedy;
+      case 'casino': return Icons.casino;
+      case 'receipt_long': return Icons.receipt_long;
+      case 'handshake': return Icons.handshake;
+      case 'category': return Icons.category;
       
       default: return Icons.help_outline;
     }

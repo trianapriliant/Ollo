@@ -3,6 +3,8 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../categories/domain/category.dart';
 
+import '../../../../utils/icon_helper.dart';
+
 class CategorySelector extends StatelessWidget {
   final List<Category> categories;
   final Category? selectedCategory;
@@ -50,7 +52,7 @@ class CategorySelector extends StatelessWidget {
                         : null,
                   ),
                   child: Icon(
-                    _getIconData(category.iconPath),
+                    IconHelper.getIcon(category.iconPath),
                     color: isSelected ? Colors.white : category.color,
                     size: 24,
                   ),
@@ -69,22 +71,5 @@ class CategorySelector extends StatelessWidget {
         },
       ),
     );
-  }
-
-  IconData _getIconData(String iconPath) {
-    switch (iconPath) {
-      case 'fastfood': return Icons.fastfood;
-      case 'directions_bus': return Icons.directions_bus;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'movie': return Icons.movie;
-      case 'medical_services': return Icons.medical_services;
-      case 'school': return Icons.school;
-      case 'receipt': return Icons.receipt;
-      case 'attach_money': return Icons.attach_money;
-      case 'store': return Icons.store;
-      case 'card_giftcard': return Icons.card_giftcard;
-      case 'trending_up': return Icons.trending_up;
-      default: return Icons.category;
-    }
   }
 }

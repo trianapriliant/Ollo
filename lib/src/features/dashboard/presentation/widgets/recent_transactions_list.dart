@@ -11,7 +11,7 @@ import '../../../transactions/domain/transaction.dart';
 import '../../../categories/data/category_repository.dart';
 import '../../../categories/domain/category.dart';
 import '../dashboard_filter_provider.dart';
-import '../../../../utils/icon_helper.dart';
+import 'package:ollo/src/utils/icon_helper.dart';
 
 final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
   final repo = await ref.watch(walletRepositoryProvider.future);
@@ -29,6 +29,27 @@ class RecentTransactionsList extends ConsumerWidget {
   final List<Transaction> transactions;
   
   const RecentTransactionsList({super.key, required this.transactions});
+
+  String? _getSubCategoryIcon(Transaction transaction, Category? category) {
+    final subId = transaction.subCategoryId;
+    
+    // 1. Try to find fresh icon from Category (Source of Truth)
+    if (subId != null && category != null) {
+      final subs = category.subCategories;
+      if (subs != null) {
+        for (final s in subs) {
+          if (s.id == subId) {
+            return s.iconPath;
+          }
+        }
+      }
+    }
+
+    // 2. Fallback to stored icon (Snapshot)
+    if (transaction.subCategoryIcon != null) return transaction.subCategoryIcon;
+    
+    return null;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,6 +174,7 @@ class RecentTransactionsList extends ConsumerWidget {
                             walletName,
                             transaction.amount,
                             category,
+                            _getSubCategoryIcon(transaction, category), // Pass sub-category icon
                             isExpense,
                             currency,
                             transaction.note,
@@ -229,6 +251,7 @@ class RecentTransactionsList extends ConsumerWidget {
     String walletName, 
     double amount, 
     Category? category, 
+    String? subCategoryIcon, // New parameter
     bool isExpense, 
     Currency currency,
     String? note,
@@ -241,6 +264,8 @@ class RecentTransactionsList extends ConsumerWidget {
     final isDebt = (category?.externalId == 'debt') || (isSystem && (title.toLowerCase().contains('borrowed') || title.toLowerCase().contains('lent') || title.toLowerCase().contains('debt') || title.toLowerCase().contains('received payment')));
     final isSavings = isSystem && (title.toLowerCase().contains('deposit to') || title.toLowerCase().contains('withdraw from') || title.toLowerCase().contains('savings'));
 
+    final iconPath = subCategoryIcon ?? category?.iconPath;
+
     final iconData = isBill 
         ? Icons.receipt_long_rounded
         : (isWishlist 
@@ -249,7 +274,7 @@ class RecentTransactionsList extends ConsumerWidget {
                 ? Icons.handshake_rounded
                 : (isSavings 
                     ? Icons.savings_rounded
-                    : (category != null ? IconHelper.getIcon(category.iconPath) : Icons.help_outline))));
+                    : (iconPath != null ? IconHelper.getIcon(iconPath) : Icons.help_outline))));
         
     final iconColor = isBill 
         ? Colors.orange
