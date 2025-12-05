@@ -31,5 +31,8 @@ class SmartNote {
     required this.createdAt,
     this.deadline,
     this.notes,
+    this.transactionId,
   });
+
+  int? transactionId; // ID of the created transaction
 }

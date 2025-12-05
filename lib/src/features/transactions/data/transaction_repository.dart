@@ -6,7 +6,7 @@ import 'package:isar/isar.dart';
 import '../../common/data/isar_provider.dart';
 
 abstract class TransactionRepository {
-  Future<void> addTransaction(Transaction transaction);
+  Future<int> addTransaction(Transaction transaction);
   Future<void> updateTransaction(Transaction transaction);
   Future<void> deleteTransaction(Id id);
   Future<List<Transaction>> getAllTransactions();
@@ -19,9 +19,9 @@ class IsarTransactionRepository implements TransactionRepository {
   IsarTransactionRepository(this.isar);
 
   @override
-  Future<void> addTransaction(Transaction transaction) async {
-    await isar.writeTxn(() async {
-      await isar.transactions.put(transaction);
+  Future<int> addTransaction(Transaction transaction) async {
+    return await isar.writeTxn(() async {
+      return await isar.transactions.put(transaction);
     });
   }
 

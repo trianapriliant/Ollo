@@ -160,6 +160,14 @@ class RecentTransactionsList extends ConsumerWidget {
                              type: CategoryType.expense, 
                              colorValue: Colors.purple.value
                            );
+                         } else if (['notes', 'note', 'Smart Notes', 'Smart Note', 'smart notes', 'smart note'].contains(transaction.categoryId)) {
+                           category = Category(
+                             externalId: 'notes', 
+                             name: 'Smart Notes', 
+                             iconPath: 'edit_note', 
+                             type: CategoryType.expense, 
+                             colorValue: Colors.teal.value
+                           );
                          } else {
                            category = categories.firstWhere(
                              (c) => (c.externalId ?? c.id.toString()) == transaction.categoryId, 

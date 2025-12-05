@@ -26,6 +26,8 @@ class TransactionListItem extends ConsumerWidget {
     final isWishlist = (transaction.categoryId == 'wishlist') || (isSystem && transaction.title.toLowerCase().contains('wishlist'));
     final isDebt = (transaction.categoryId == 'debt') || (isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('lent') || transaction.title.toLowerCase().contains('debt') || transaction.title.toLowerCase().contains('received payment')));
     
+    final isNote = (transaction.categoryId == 'notes') || (transaction.categoryId == 'note') || (transaction.categoryId == 'Smart Notes') || (transaction.categoryId == 'Smart Note') || (isSystem && transaction.title.toLowerCase().contains('note'));
+    
     final isSavings = isSystem && (transaction.title.toLowerCase().contains('deposit to') || transaction.title.toLowerCase().contains('withdraw from') || transaction.title.toLowerCase().contains('savings'));
 
     IconData? iconData;
@@ -44,8 +46,12 @@ class TransactionListItem extends ConsumerWidget {
       iconData = Icons.handshake_rounded;
       iconColor = Colors.purple;
       backgroundColor = Colors.purple.withOpacity(0.1);
+    } else if (isNote) {
+      iconData = Icons.edit_note_rounded;
+      iconColor = Colors.teal;
+      backgroundColor = Colors.teal.withOpacity(0.1);
     } else if (isSystem) {
-       if (isSavings) {
+      if (isSavings) {
         iconData = Icons.savings_rounded;
         iconColor = Colors.blue;
         backgroundColor = Colors.blue.withOpacity(0.1);

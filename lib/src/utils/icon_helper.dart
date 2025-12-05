@@ -24,6 +24,9 @@ class IconHelper {
       case 'sell': return Icons.sell;
       case 'checkroom': return Icons.checkroom;
       case 'local_grocery_store': return Icons.local_grocery_store;
+      case 'groceries': return Icons.local_grocery_store;
+      case 'food': return Icons.fastfood;
+      case 'transport': return Icons.directions_car;
       
       // Transport & Travel
       case 'directions_car': return Icons.directions_car;
@@ -171,6 +174,22 @@ class IconHelper {
       case 'receipt_long': return Icons.receipt_long;
       case 'handshake': return Icons.handshake;
       case 'category': return Icons.category;
+      
+      // System Category Aliases
+      case 'debt': return Icons.handshake;
+      case 'debts': return Icons.handshake;
+      case 'bill': return Icons.receipt_long;
+      case 'bills': return Icons.receipt_long;
+      case 'wishlist': return Icons.favorite;
+      case 'saving': return Icons.savings;
+      case 'savings': return Icons.savings;
+      case 'note': return Icons.edit_note;
+      case 'notes': return Icons.edit_note;
+      case 'smart note': return Icons.edit_note;
+      case 'smart notes': return Icons.edit_note;
+      case 'Smart Note': return Icons.edit_note;
+      case 'Smart Notes': return Icons.edit_note;
+      case 'edit_note': return Icons.edit_note;
       
       default: return Icons.help_outline;
     }

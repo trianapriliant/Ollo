@@ -257,47 +257,74 @@ class SmartNotesScreen extends ConsumerWidget {
   Future<void> _handleCheck(BuildContext context, WidgetRef ref, SmartNote note, bool? value) async {
     if (value == null) return;
 
-    if (value && !note.isCompleted && note.amount != null && note.amount! > 0 && note.walletId != null) {
-      // Ask to create transaction
-      final confirm = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Create Transaction?'),
-          content: Text('Do you want to record "Rp ${NumberFormat.decimalPattern('id').format(note.amount)}" as an expense?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('No, just mark done'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Yes, record expense', style: TextStyle(color: Colors.teal)),
-            ),
-          ],
-        ),
-      );
+    int? transactionId;
 
-      if (confirm == true) {
-        // Create Transaction
-        final transaction = Transaction.create(
-          title: 'Smart Note: ${note.title}',
-          amount: note.amount!,
-          type: TransactionType.expense,
-          categoryId: note.categoryId ?? 'groceries', // Default or from note
-          date: DateTime.now(),
-          note: note.notes,
-          walletId: note.walletId,
+    // Case 1: Checking (Marking as Done)
+    if (value && !note.isCompleted) {
+      // Only ask to create transaction if it has amount and wallet
+      if (note.amount != null && note.amount! > 0 && note.walletId != null) {
+        // Ask to create transaction
+        final confirm = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Create Transaction?'),
+            content: Text('Do you want to record "Rp ${NumberFormat.decimalPattern('id').format(note.amount)}" as an expense?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('No, just mark done'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Yes, record expense', style: TextStyle(color: Colors.teal)),
+              ),
+            ],
+          ),
         );
-        
+
+        // If dismissed (clicked outside), do nothing
+        if (confirm == null) return;
+
+        if (confirm == true) {
+          // Create Transaction
+          final transaction = Transaction.create(
+            title: 'Smart Note: ${note.title}',
+            amount: note.amount!,
+            type: TransactionType.expense,
+            categoryId: note.categoryId ?? 'notes', // Default or from note
+            date: DateTime.now(),
+            note: note.notes,
+            walletId: note.walletId,
+          );
+          
+          final repo = await ref.read(transactionRepositoryProvider.future);
+          // Capture the ID of the created transaction
+          transactionId = await repo.addTransaction(transaction);
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Transaction recorded!')),
+          );
+        }
+      }
+    } 
+    // Case 2: Unchecking (Marking as Not Done)
+    else if (!value && note.isCompleted) {
+      // If there is an associated transaction, delete it
+      if (note.transactionId != null) {
         final repo = await ref.read(transactionRepositoryProvider.future);
-        await repo.addTransaction(transaction);
+        await repo.deleteTransaction(note.transactionId!);
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Transaction recorded!')),
+          const SnackBar(content: Text('Associated transaction removed')),
         );
       }
     }
 
-    await ref.read(smartNoteRepositoryProvider).toggleComplete(note.id, isCompleted: value);
+    // Update the note status and link/unlink transaction
+    await ref.read(smartNoteRepositoryProvider).toggleComplete(
+      note.id, 
+      isCompleted: value,
+      transactionId: transactionId,
+    );
   }
 }

@@ -52,8 +52,13 @@ const SmartNoteSchema = CollectionSchema(
       name: r'title',
       type: IsarType.string,
     ),
-    r'walletId': PropertySchema(
+    r'transactionId': PropertySchema(
       id: 7,
+      name: r'transactionId',
+      type: IsarType.long,
+    ),
+    r'walletId': PropertySchema(
+      id: 8,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -113,7 +118,8 @@ void _smartNoteSerialize(
   writer.writeBool(offsets[4], object.isCompleted);
   writer.writeString(offsets[5], object.notes);
   writer.writeString(offsets[6], object.title);
-  writer.writeString(offsets[7], object.walletId);
+  writer.writeLong(offsets[7], object.transactionId);
+  writer.writeString(offsets[8], object.walletId);
 }
 
 SmartNote _smartNoteDeserialize(
@@ -130,7 +136,8 @@ SmartNote _smartNoteDeserialize(
     isCompleted: reader.readBoolOrNull(offsets[4]) ?? false,
     notes: reader.readStringOrNull(offsets[5]),
     title: reader.readString(offsets[6]),
-    walletId: reader.readStringOrNull(offsets[7]),
+    transactionId: reader.readLongOrNull(offsets[7]),
+    walletId: reader.readStringOrNull(offsets[8]),
   );
   object.id = id;
   return object;
@@ -158,6 +165,8 @@ P _smartNoteDeserializeProp<P>(
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
+      return (reader.readLongOrNull(offset)) as P;
+    case 8:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -947,6 +956,80 @@ extension SmartNoteQueryFilter
     });
   }
 
+  QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition>
+      transactionIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition>
+      transactionIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition>
+      transactionIdEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition>
+      transactionIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition>
+      transactionIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition>
+      transactionIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'transactionId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<SmartNote, SmartNote, QAfterFilterCondition> walletIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1187,6 +1270,18 @@ extension SmartNoteQuerySortBy on QueryBuilder<SmartNote, SmartNote, QSortBy> {
     });
   }
 
+  QueryBuilder<SmartNote, SmartNote, QAfterSortBy> sortByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterSortBy> sortByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<SmartNote, SmartNote, QAfterSortBy> sortByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
@@ -1298,6 +1393,18 @@ extension SmartNoteQuerySortThenBy
     });
   }
 
+  QueryBuilder<SmartNote, SmartNote, QAfterSortBy> thenByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SmartNote, SmartNote, QAfterSortBy> thenByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<SmartNote, SmartNote, QAfterSortBy> thenByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
@@ -1358,6 +1465,12 @@ extension SmartNoteQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SmartNote, SmartNote, QDistinct> distinctByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'transactionId');
+    });
+  }
+
   QueryBuilder<SmartNote, SmartNote, QDistinct> distinctByWalletId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1413,6 +1526,12 @@ extension SmartNoteQueryProperty
   QueryBuilder<SmartNote, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<SmartNote, int?, QQueryOperations> transactionIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'transactionId');
     });
   }
 

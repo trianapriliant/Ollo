@@ -325,6 +325,13 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   String _getCategoryName(AsyncValue<List<Category>> categoryAsync, String? categoryId) {
+    // Handle System Categories explicitly
+    if (categoryId == 'notes' || categoryId == 'note') return 'Smart Notes';
+    if (categoryId == 'bills' || categoryId == 'bill') return 'Bills';
+    if (categoryId == 'wishlist') return 'Wishlist';
+    if (categoryId == 'debt' || categoryId == 'debts') return 'Debts';
+    if (categoryId == 'saving' || categoryId == 'savings') return 'Savings';
+
     if (transaction.type == TransactionType.system) {
       return 'System';
     }

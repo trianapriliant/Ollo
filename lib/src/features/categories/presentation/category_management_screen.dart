@@ -269,6 +269,12 @@ class _SystemCategoryList extends StatelessWidget {
         'color': Colors.blue,
         'description': 'Automated transactions from Savings deposits/withdrawals',
       },
+      {
+        'name': 'Notes',
+        'icon': Icons.edit_note_rounded,
+        'color': Colors.teal,
+        'description': 'Automated transactions from Smart Notes',
+      },
     ];
 
     return ListView.separated(
