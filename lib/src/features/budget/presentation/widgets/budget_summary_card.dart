@@ -6,12 +6,16 @@ import '../../../../constants/app_text_styles.dart';
 import '../../data/budget_repository.dart';
 import '../../domain/budget.dart';
 
+import '../../../dashboard/presentation/transaction_provider.dart';
+
 class BudgetSummaryCard extends ConsumerWidget {
   const BudgetSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final budgetsAsync = ref.watch(budgetListProvider);
+    // Watch transactions to trigger rebuild when they change
+    ref.watch(transactionListProvider);
 
     return budgetsAsync.when(
       data: (budgets) {

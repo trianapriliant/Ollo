@@ -6,6 +6,8 @@ import '../../../budget/data/budget_repository.dart';
 import '../../../budget/domain/budget.dart';
 import '../dashboard_filter_provider.dart';
 
+import '../transaction_provider.dart';
+
 class DashboardBudgetCard extends ConsumerWidget {
   const DashboardBudgetCard({super.key});
 
@@ -13,6 +15,8 @@ class DashboardBudgetCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final budgetsAsync = ref.watch(budgetListProvider);
     final filterState = ref.watch(dashboardFilterProvider);
+    // Watch transactions to trigger rebuild when they change
+    ref.watch(transactionListProvider);
 
     return budgetsAsync.when(
       data: (budgets) {
