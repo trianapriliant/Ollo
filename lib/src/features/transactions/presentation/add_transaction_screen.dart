@@ -8,9 +8,11 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../wallets/data/wallet_repository.dart';
 import '../../wallets/presentation/wallet_provider.dart';
+import '../../wallets/domain/wallet.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../../settings/presentation/currency_provider.dart';
+import '../../../common_widgets/modern_wallet_selector.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final TransactionType type;
@@ -147,42 +149,20 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     _selectedWalletId = first.externalId ?? first.id.toString();
                 }
 
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedWalletId,
-                      isExpanded: true,
-                      hint: const Text("Select Wallet"),
-                      items: wallets.map((wallet) {
-                        final id = wallet.externalId ?? wallet.id.toString();
-                        return DropdownMenuItem(
-                          value: id,
-                          child: Row(
-                            children: [
-                              Icon(Icons.account_balance_wallet, color: AppColors.primary, size: 20),
-                              const SizedBox(width: 12),
-                              Text(wallet.name, style: AppTextStyles.bodyLarge),
-                              const Spacer(),
-                              Text('${ref.watch(currencyProvider).symbol} ${wallet.balance}', style: AppTextStyles.bodyMedium),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedWalletId = value;
-                        });
-                      },
-                    ),
-                  ),
+                final selectedWallet = _selectedWalletId != null 
+                    ? wallets.firstWhere((w) => (w.externalId ?? w.id.toString()) == _selectedWalletId, orElse: () => Wallet()..name = 'Unknown')
+                    : null;
+
+                return ModernWalletSelector(
+                  selectedWalletId: _selectedWalletId,
+                  onWalletSelected: (val) {
+                    setState(() {
+                      _selectedWalletId = val;
+                    });
+                  },
                 );
               },
-              loading: () => const CircularProgressIndicator(),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Text('Error loading wallets: $err'),
             ),
 

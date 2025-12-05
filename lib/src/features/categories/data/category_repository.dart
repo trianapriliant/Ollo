@@ -53,3 +53,8 @@ final categoryListProvider = FutureProvider.family<List<Category>, CategoryType>
   final repository = await ref.watch(categoryRepositoryProvider.future);
   return repository.getCategories(type);
 });
+
+final allCategoriesStreamProvider = StreamProvider<List<Category>>((ref) async* {
+  final isar = await ref.watch(isarProvider.future);
+  yield* isar.categorys.where().watch(fireImmediately: true);
+});

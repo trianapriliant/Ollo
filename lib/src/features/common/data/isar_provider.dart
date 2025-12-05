@@ -27,31 +27,36 @@ final isarProvider = FutureProvider<Isar>((ref) async {
 
   // Seed initial data if empty
   if (await isar.wallets.count() == 0) {
-    await _seedWallets(isar);
+    await seedWallets(isar);
   }
   
   if (await isar.categorys.count() == 0) {
-    await _seedCategories(isar);
+    await seedCategories(isar);
   }
 
   return isar;
 });
 
-Future<void> _seedWallets(Isar isar) async {
-  final cashWallet = Wallet()
-    ..externalId = 'cash_default'
-    ..name = 'Cash'
-    ..balance = 0.0
-    ..iconPath = 'money'
-    ..type = WalletType.cash;
-
+Future<void> seedWallets(Isar isar) async {
   await isar.writeTxn(() async {
-    await isar.wallets.put(cashWallet);
+    await isar.wallets.put(defaultWallet);
   });
 }
 
-Future<void> _seedCategories(Isar isar) async {
-  final categories = [
+Future<void> seedCategories(Isar isar) async {
+  await isar.writeTxn(() async {
+    await isar.categorys.putAll(defaultCategories);
+  });
+}
+
+final defaultWallet = Wallet()
+  ..externalId = 'cash_default'
+  ..name = 'Cash'
+  ..balance = 0.0
+  ..iconPath = 'money'
+  ..type = WalletType.cash;
+
+final defaultCategories = [
     // Expenses
     Category(
       externalId: 'food',
@@ -178,7 +183,7 @@ Future<void> _seedCategories(Isar isar) async {
     Category(
       externalId: 'financial',
       name: 'Financial',
-      iconPath: 'account_balance',
+      iconPath: 'attach_money', // Updated to attach_money
       type: CategoryType.expense,
       colorValue: Colors.blueGrey.value,
       subCategories: [
@@ -267,29 +272,4 @@ Future<void> _seedCategories(Isar isar) async {
         SubCategory(id: 'selling', name: 'Selling', iconPath: 'storefront'),
       ],
     ),
-  ];
-
-  await isar.writeTxn(() async {
-    await isar.categorys.putAll(categories);
-  });
-
-  // 2. Force update specific categories to ensure correct icons
-  final categoriesToFix = {
-    'housing': 'house',
-    'personal': 'person',
-    'financial': 'attach_money', // Changed to attach_money for "Money" icon
-    'family': 'family_restroom',
-  };
-
-  for (var entry in categoriesToFix.entries) {
-    final existing = await isar.categorys.filter().externalIdEqualTo(entry.key).findFirst();
-    if (existing != null) {
-      // Always update, regardless of current value
-      existing.iconPath = entry.value;
-      await isar.writeTxn(() async {
-        await isar.categorys.put(existing);
-      });
-      debugPrint('Force updated icon for category: ${entry.key} -> ${entry.value}');
-    }
-  }
-}
+];

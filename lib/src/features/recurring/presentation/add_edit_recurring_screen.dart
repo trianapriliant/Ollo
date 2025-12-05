@@ -8,6 +8,7 @@ import '../../wallets/data/wallet_repository.dart';
 import '../../wallets/domain/wallet.dart';
 import '../../recurring/data/recurring_repository.dart';
 import '../../recurring/domain/recurring_transaction.dart';
+import '../../../common_widgets/modern_wallet_selector.dart';
 
 class AddEditRecurringScreen extends ConsumerStatefulWidget {
   final RecurringTransaction? transaction;
@@ -219,37 +220,11 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                     });
                   }
 
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedWalletId,
-                        isExpanded: true,
-                        hint: const Text("Select Wallet"),
-                        items: wallets.map((w) {
-                          final id = w.externalId ?? w.id.toString();
-                          return DropdownMenuItem<String>(
-                            value: id,
-                            child: Row(
-                              children: [
-                                Icon(Icons.account_balance_wallet, color: AppColors.primary, size: 20),
-                                const SizedBox(width: 12),
-                                Text(w.name, style: AppTextStyles.bodyLarge),
-                                const Spacer(),
-                                Text('Rp ${w.balance.toStringAsFixed(0)}', style: AppTextStyles.bodySmall),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          if (val != null) setState(() => _selectedWalletId = val);
-                        },
-                      ),
-                    ),
+                  return ModernWalletSelector(
+                    selectedWalletId: _selectedWalletId,
+                    onWalletSelected: (val) {
+                      setState(() => _selectedWalletId = val);
+                    },
                   );
                 },
               ),

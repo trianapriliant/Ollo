@@ -9,6 +9,7 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../data/debt_repository.dart';
 import '../domain/debt.dart';
+import '../../../common_widgets/modern_wallet_selector.dart';
 
 class AddDebtScreen extends ConsumerStatefulWidget {
   final Debt? debtToEdit;
@@ -208,35 +209,10 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
               Text('Select a wallet to automatically record this transaction.', style: TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 8),
               if (walletRepo != null)
-                FutureBuilder(
-                  future: walletRepo.getAllWallets(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return const SizedBox();
-                    final wallets = snapshot.data!;
-                    
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedWalletId,
-                          hint: const Text('Select Wallet'),
-                          isExpanded: true,
-                          items: [
-                            const DropdownMenuItem<String>(value: null, child: Text('None (Just record debt)')),
-                            ...wallets.map((w) => DropdownMenuItem(
-                              value: w.id.toString(),
-                              child: Text(w.name),
-                            )),
-                          ],
-                          onChanged: (val) => setState(() => _selectedWalletId = val),
-                        ),
-                      ),
-                    );
-                  },
+              if (walletRepo != null)
+                ModernWalletSelector(
+                  selectedWalletId: _selectedWalletId,
+                  onWalletSelected: (val) => setState(() => _selectedWalletId = val),
                 ),
               const SizedBox(height: 16),
 

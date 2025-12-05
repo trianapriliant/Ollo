@@ -18,12 +18,7 @@ final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
   return repo.getAllWallets();
 });
 
-final allCategoriesProvider = FutureProvider<List<Category>>((ref) async {
-  final repo = await ref.watch(categoryRepositoryProvider.future);
-  final expenseCategories = await repo.getCategories(CategoryType.expense);
-  final incomeCategories = await repo.getCategories(CategoryType.income);
-  return [...expenseCategories, ...incomeCategories];
-});
+
 
 class RecentTransactionsList extends ConsumerWidget {
   final List<Transaction> transactions;
@@ -78,7 +73,7 @@ class RecentTransactionsList extends ConsumerWidget {
     final currency = ref.watch(currencyProvider);
     final walletsAsync = ref.watch(walletsListProvider);
     final wallets = walletsAsync.valueOrNull ?? [];
-    final categoriesAsync = ref.watch(allCategoriesProvider);
+    final categoriesAsync = ref.watch(allCategoriesStreamProvider);
     final categories = categoriesAsync.valueOrNull ?? [];
 
     // Directly use the passed transactions list

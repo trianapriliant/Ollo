@@ -16,6 +16,7 @@ import '../../domain/transaction.dart';
 import 'category_selector.dart';
 import 'sub_category_selector.dart';
 import 'num_pad.dart';
+import '../../../../common_widgets/modern_wallet_selector.dart';
 
 class AddTransactionBottomSheet extends ConsumerStatefulWidget {
   const AddTransactionBottomSheet({super.key});
@@ -238,6 +239,11 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                             padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: walletsAsync.when(
                               data: (wallets) {
+                                final validDestinations = wallets.where((w) {
+                                    final id = w.externalId ?? w.id.toString();
+                                    return id != _selectedWalletId;
+                                  }).toList();
+                                  
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -245,38 +251,9 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                                       padding: const EdgeInsets.only(bottom: 8.0, left: 4),
                                       child: Text("To", style: AppTextStyles.bodySmall),
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(color: AppColors.primary.withOpacity(0.1)),
-                                      ),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton<String>(
-                                          value: _selectedDestinationWalletId,
-                                          isExpanded: true,
-                                          hint: const Text("Select Destination"),
-                                          icon: const Icon(Icons.keyboard_arrow_down),
-                                          items: wallets.where((w) {
-                                            final id = w.externalId ?? w.id.toString();
-                                            return id != _selectedWalletId;
-                                          }).map((w) {
-                                            final id = w.externalId ?? w.id.toString();
-                                            return DropdownMenuItem(
-                                              value: id,
-                                              child: Row(
-                                                children: [
-                                                  const Icon(Icons.account_balance_wallet, size: 20, color: Colors.green),
-                                                  const SizedBox(width: 12),
-                                                  Text(w.name, style: AppTextStyles.bodyMedium),
-                                                ],
-                                              ),
-                                            );
-                                          }).toList(),
-                                          onChanged: (val) => setState(() => _selectedDestinationWalletId = val),
-                                        ),
-                                      ),
+                                    ModernWalletSelector(
+                                      selectedWalletId: _selectedDestinationWalletId,
+                                      onWalletSelected: (val) => setState(() => _selectedDestinationWalletId = val),
                                     ),
                                   ],
                                 );
@@ -398,7 +375,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Wallet Selector (Flex 1)
+                        // Wallet Selector (Flex 1)
                       Expanded(
                         flex: 1,
                         child: walletsAsync.when(
@@ -416,55 +393,23 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                             }
 
                             return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                               height: 48,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.grey[300]!),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
                               ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: _selectedWalletId,
-                                  isExpanded: true,
-                                  icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: AppColors.primary),
-                                  style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
-                                  items: wallets.map((w) {
-                                    final id = w.externalId ?? w.id.toString();
-                                    return DropdownMenuItem(
-                                      value: id,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.account_balance_wallet, size: 16, color: AppColors.primary.withOpacity(0.7)),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              w.name, 
-                                              overflow: TextOverflow.ellipsis,
-                                              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _selectedWalletId = val;
-                                      if (_selectedType == TransactionType.transfer && 
-                                          _selectedDestinationWalletId == val) {
-                                        _selectedDestinationWalletId = null;
-                                      }
-                                    });
-                                  },
-                                ),
+                              child: ModernWalletSelector(
+                                selectedWalletId: _selectedWalletId,
+                                isCompact: true,
+                                onWalletSelected: (val) {
+                                  setState(() {
+                                    _selectedWalletId = val;
+                                    if (_selectedType == TransactionType.transfer && 
+                                        _selectedDestinationWalletId == val) {
+                                      _selectedDestinationWalletId = null;
+                                    }
+                                  });
+                                },
                               ),
                             );
                           },

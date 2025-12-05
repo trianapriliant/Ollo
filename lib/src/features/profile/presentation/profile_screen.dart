@@ -8,6 +8,18 @@ import '../../../constants/app_text_styles.dart';
 import '../../profile/data/user_profile_repository.dart';
 import '../../profile/domain/user_profile.dart';
 import '../../subscription/presentation/premium_provider.dart';
+import '../../common/data/isar_provider.dart';
+import '../../transactions/domain/transaction.dart';
+import '../../wallets/domain/wallet.dart';
+import '../../recurring/domain/recurring_transaction.dart';
+import '../../bills/domain/bill.dart';
+import '../../debts/domain/debt.dart';
+import '../../wishlist/domain/wishlist.dart';
+import '../../smart_notes/domain/smart_note.dart';
+import '../../budget/domain/budget.dart';
+import '../../savings/domain/saving_goal.dart';
+import '../../savings/domain/saving_log.dart';
+import '../../categories/domain/category.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -231,6 +243,14 @@ class ProfileScreen extends ConsumerWidget {
                 _buildSectionHeader('Account'),
                 _buildMenuItem(
                   context,
+                  icon: Icons.delete_forever,
+                  title: 'Delete Data',
+                  onTap: () => _showDeleteDataDialog(context, ref),
+                  isDestructive: true,
+                ),
+                const SizedBox(height: 16),
+                _buildMenuItem(
+                  context,
                   icon: Icons.logout,
                   title: 'Logout',
                   onTap: () {},
@@ -405,6 +425,120 @@ class ProfileScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _showDeleteDataDialog(BuildContext parentContext, WidgetRef ref) {
+    final controller = TextEditingController();
+    
+    showDialog(
+      context: parentContext,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (builderContext, setState) {
+          final isMatch = controller.text == 'Delete Data';
+          
+          return AlertDialog(
+            title: const Text('Delete All Data?'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'This action will permanently delete ALL your transactions, wallets, budgets, and notes. This cannot be undone.\n\nTo confirm, please type "Delete Data" below:',
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Delete Data',
+                  ),
+                  onChanged: (_) => setState(() {}),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(builderContext),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: isMatch 
+                    ? () async {
+                        Navigator.pop(builderContext); // Close confirmation dialog
+                        await _performDeleteData(parentContext, ref); // Use stable parent context
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.red.withOpacity(0.3),
+                  disabledForegroundColor: Colors.white.withOpacity(0.5),
+                ),
+                child: const Text('Delete Data'),
+              ),
+            ],
+          );
+        }
+      ),
+    );
+  }
+
+  Future<void> _performDeleteData(BuildContext context, WidgetRef ref) async {
+    try {
+      // Show loading
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      final isar = await ref.read(isarProvider.future);
+      
+      await isar.writeTxn(() async {
+        await isar.transactions.clear();
+        await isar.recurringTransactions.clear();
+        await isar.bills.clear();
+        await isar.debts.clear();
+        await isar.wishlists.clear();
+        await isar.smartNotes.clear();
+        await isar.budgets.clear();
+        await isar.savingGoals.clear();
+        await isar.savingLogs.clear();
+        
+        // Clear Wallets and Categories (Factory Reset)
+        await isar.wallets.clear();
+        await isar.categorys.clear();
+        
+        // Re-seed default data immediately in the same transaction
+        await isar.wallets.put(defaultWallet);
+        await isar.categorys.putAll(defaultCategories);
+        
+        // Keep UserProfile
+      });
+      
+      // No need to call seedWallets/seedCategories separately anymore
+
+      // Close loading
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop(); 
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All data deleted successfully. Please restart the app.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop(); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete data: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 
   void _showPremiumDebugDialog(BuildContext context, WidgetRef ref) {
