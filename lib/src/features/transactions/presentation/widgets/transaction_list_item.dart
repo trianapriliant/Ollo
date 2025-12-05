@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../domain/transaction.dart';
+import '../../../../utils/icon_helper.dart';
+import '../../categories/data/category_repository.dart';
+import '../../categories/domain/category.dart';
 
-class TransactionListItem extends StatelessWidget {
+class TransactionListItem extends ConsumerWidget {
   final Transaction transaction;
 
   const TransactionListItem({super.key, required this.transaction});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     final dateFormat = DateFormat('dd MMM yyyy');
 
@@ -24,9 +28,9 @@ class TransactionListItem extends StatelessWidget {
     
     final isSavings = isSystem && (transaction.title.toLowerCase().contains('deposit to') || transaction.title.toLowerCase().contains('withdraw from') || transaction.title.toLowerCase().contains('savings'));
 
-    IconData iconData;
-    Color iconColor;
-    Color backgroundColor;
+    IconData? iconData;
+    Color? iconColor;
+    Color? backgroundColor;
 
     if (isBill) {
       iconData = Icons.receipt_long_rounded;
@@ -52,9 +56,66 @@ class TransactionListItem extends StatelessWidget {
         backgroundColor = Colors.grey.withOpacity(0.1);
       }
     } else {
-      iconData = transaction.isExpense ? Icons.arrow_downward : Icons.arrow_upward;
-      iconColor = transaction.isExpense ? Colors.red : Colors.green;
-      backgroundColor = transaction.isExpense ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1);
+      // ---------------------------------------------------------
+      // ICON RESOLUTION LOGIC
+      // ---------------------------------------------------------
+      
+      // 0. Prepare Fallbacks
+      final defaultIcon = transaction.isExpense ? Icons.arrow_downward : Icons.arrow_upward;
+      final defaultColor = transaction.isExpense ? Colors.red : Colors.green;
+      
+      // 1. Fresh Lookup
+      // We need to fetch the category list to find the current icon
+      final categoryType = transaction.isExpense ? CategoryType.expense : CategoryType.income;
+      final categoriesAsync = ref.watch(categoryListProvider(categoryType));
+      final categories = categoriesAsync.valueOrNull;
+
+      if (categories != null) {
+        try {
+          // Find Main Category
+          final mainCategory = categories.firstWhere(
+            (c) => (c.externalId ?? c.id.toString()) == transaction.categoryId
+          );
+          
+          iconColor = mainCategory.color;
+          backgroundColor = iconColor!.withOpacity(0.1);
+
+          // Find Sub Category
+          if (transaction.subCategoryId != null) {
+            final sub = mainCategory.subCategories?.firstWhere(
+              (s) => s.id == transaction.subCategoryId, 
+              orElse: () => SubCategory() // Return empty if not found
+            );
+            
+            if (sub != null && sub.id != null) {
+              // Found active sub-category
+              iconData = IconHelper.getIcon(sub.iconPath ?? mainCategory.iconPath);
+            }
+          }
+          
+          // If no sub-category icon found yet, use Main Category Icon
+          if (iconData == null) {
+            iconData = IconHelper.getIcon(mainCategory.iconPath);
+          }
+          
+        } catch (e) {
+          // Category not found in fresh list (deleted?)
+          // Proceed to Snapshot Fallback
+        }
+      }
+
+      // 2. Snapshot Fallback
+      if (iconData == null && transaction.subCategoryIcon != null) {
+         iconData = IconHelper.getIcon(transaction.subCategoryIcon!);
+         // We might not have color if category is gone, so use default
+         iconColor ??= defaultColor;
+         backgroundColor ??= iconColor!.withOpacity(0.1);
+      }
+
+      // 3. Generic/Default Fallback
+      iconData ??= defaultIcon;
+      iconColor ??= defaultColor;
+      backgroundColor ??= iconColor!.withOpacity(0.1);
     }
 
     // Determine if it's an expense or income for display purposes

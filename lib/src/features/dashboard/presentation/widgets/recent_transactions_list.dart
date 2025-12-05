@@ -51,6 +51,27 @@ class RecentTransactionsList extends ConsumerWidget {
     return null;
   }
 
+  String? _getSubCategoryName(Transaction transaction, Category? category) {
+    final subId = transaction.subCategoryId;
+    
+    // 1. Try to find fresh name from Category (Source of Truth)
+    if (subId != null && category != null) {
+      final subs = category.subCategories;
+      if (subs != null) {
+        for (final s in subs) {
+          if (s.id == subId) {
+            return s.name;
+          }
+        }
+      }
+    }
+
+    // 2. Fallback to stored name (Snapshot)
+    if (transaction.subCategoryName != null) return transaction.subCategoryName;
+    
+    return null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final transactionsAsync = ref.watch(filteredTransactionsProvider); // Removed
@@ -175,6 +196,7 @@ class RecentTransactionsList extends ConsumerWidget {
                             transaction.amount,
                             category,
                             _getSubCategoryIcon(transaction, category), // Pass sub-category icon
+                            _getSubCategoryName(transaction, category), // Pass sub-category name
                             isExpense,
                             currency,
                             transaction.note,
@@ -251,7 +273,8 @@ class RecentTransactionsList extends ConsumerWidget {
     String walletName, 
     double amount, 
     Category? category, 
-    String? subCategoryIcon, // New parameter
+    String? subCategoryIcon, 
+    String? subCategoryName, // New parameter
     bool isExpense, 
     Currency currency,
     String? note,

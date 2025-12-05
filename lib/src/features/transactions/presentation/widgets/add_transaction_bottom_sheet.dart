@@ -101,6 +101,9 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
       ..walletId = _selectedWalletId
       ..destinationWalletId = _selectedDestinationWalletId
       ..categoryId = _selectedCategory?.externalId ?? _selectedCategory?.id.toString()
+      ..subCategoryId = _selectedSubCategory?.id
+      ..subCategoryName = _selectedSubCategory?.name
+      ..subCategoryIcon = _selectedSubCategory?.iconPath
       ..note = _noteController.text;
 
     // 2. Save Transaction

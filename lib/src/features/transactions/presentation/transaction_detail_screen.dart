@@ -331,16 +331,35 @@ class TransactionDetailScreen extends ConsumerWidget {
     if (categoryId == null) return '-';
     return categoryAsync.when(
       data: (categories) {
-        final category = categories.firstWhere(
-          (c) => (c.externalId ?? c.id.toString()) == categoryId, 
-          orElse: () => Category(
-            name: 'Unknown', 
-            iconPath: 'help', 
-            type: CategoryType.expense, 
-            colorValue: Colors.grey.value
-          )
-        );
-        return category.name;
+        try {
+          final category = categories.firstWhere(
+            (c) => (c.externalId ?? c.id.toString()) == categoryId
+          );
+          
+          if (transaction.subCategoryId != null) {
+             final sub = category.subCategories?.firstWhere(
+               (s) => s.id == transaction.subCategoryId, 
+               orElse: () => SubCategory()
+             );
+             if (sub != null && sub.name != null) {
+                return '${category.name} - ${sub.name}';
+             }
+          }
+          
+          // Fallback to snapshot if fresh lookup of subcategory failed but we have it stored
+          if (transaction.subCategoryName != null) {
+             return '${category.name} - ${transaction.subCategoryName}';
+          }
+
+          return category.name;
+        } catch (e) {
+          // Category not found (deleted?)
+          // Try snapshot
+          if (transaction.subCategoryName != null) {
+            return transaction.subCategoryName!;
+          }
+          return 'Unknown';
+        }
       },
       loading: () => 'Loading...',
       error: (_, __) => 'Error',
