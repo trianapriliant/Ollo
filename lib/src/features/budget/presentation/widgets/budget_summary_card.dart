@@ -30,7 +30,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                 : 0.0;
 
             return Container(
-              height: 320,
+              // Removed fixed height: 320
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -44,6 +44,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                 ],
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min, // Wrap content
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,53 +92,53 @@ class BudgetSummaryCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12), // Reduced from 24
                   SizedBox(
-                    height: 150,
+                    height: 100, // Reduced from 150
                     child: Stack(
+                      alignment: Alignment.bottomCenter,
                       children: [
                         PieChart(
                           PieChartData(
                             startDegreeOffset: 180,
                             borderData: FlBorderData(show: false),
                             sectionsSpace: 0,
-                            centerSpaceRadius: 40,
+                            centerSpaceRadius: 35, // Slightly reduced from 40 to fit better
                             sections: [
                               PieChartSectionData(
                                 color: AppColors.primary,
                                 value: percentage * 100,
                                 title: '',
-                                radius: 20,
+                                radius: 15, // Reduced from 20
                                 showTitle: false,
                               ),
                               PieChartSectionData(
                                 color: AppColors.primary.withOpacity(0.1),
                                 value: (1 - percentage) * 100,
                                 title: '',
-                                radius: 20,
+                                radius: 15, // Reduced from 20
                                 showTitle: false,
                               ),
-                              // Invisible section to make it a semi-circle
                               PieChartSectionData(
                                 color: Colors.transparent,
                                 value: 100,
                                 title: '',
-                                radius: 20,
+                                radius: 15, // Reduced from 20
                                 showTitle: false,
                               ),
                             ],
                           ),
                         ),
                         Align(
-                          alignment: Alignment.center,
+                          alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(bottom: 10), // Adjusted padding
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   '${(percentage * 100).toStringAsFixed(0)}%',
-                                  style: AppTextStyles.h1,
+                                  style: AppTextStyles.h1.copyWith(fontSize: 28), // Slightly smaller font
                                 ),
                                 Text(
                                   'Used',
@@ -150,7 +151,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 0), // Reduced from 8
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
