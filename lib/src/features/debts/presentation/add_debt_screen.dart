@@ -9,6 +9,7 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../data/debt_repository.dart';
 import '../domain/debt.dart';
+import '../../wallets/presentation/wallet_provider.dart';
 import '../../../common_widgets/modern_wallet_selector.dart';
 
 class AddDebtScreen extends ConsumerStatefulWidget {
@@ -203,17 +204,41 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Wallet (Optional)
-              Text('Wallet (Optional)', style: AppTextStyles.bodySmall),
-              const SizedBox(height: 4),
-              Text('Select a wallet to automatically record this transaction.', style: TextStyle(fontSize: 12, color: Colors.grey)),
+              // Wallet (Required for Transaction)
               const SizedBox(height: 8),
-              if (walletRepo != null)
-              if (walletRepo != null)
-                ModernWalletSelector(
-                  selectedWalletId: _selectedWalletId,
-                  onWalletSelected: (val) => setState(() => _selectedWalletId = val),
-                ),
+              Consumer(
+                builder: (context, ref, child) {
+                   final walletsAsync = ref.watch(walletListProvider);
+                   return walletsAsync.when(
+                     data: (wallets) {
+                       if (wallets.isNotEmpty && _selectedWalletId == null) {
+                         // Auto-select first wallet
+                         WidgetsBinding.instance.addPostFrameCallback((_) {
+                           if (mounted && _selectedWalletId == null) {
+                              setState(() {
+                                _selectedWalletId = wallets.first.externalId ?? wallets.first.id.toString();
+                              });
+                           }
+                         });
+                       }
+                       
+                       return Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Text('Wallet', style: AppTextStyles.bodySmall),
+                           const SizedBox(height: 8),
+                           ModernWalletSelector(
+                              selectedWalletId: _selectedWalletId,
+                              onWalletSelected: (val) => setState(() => _selectedWalletId = val),
+                           ),
+                         ],
+                       );
+                     },
+                     loading: () => const LinearProgressIndicator(),
+                     error: (err, _) => Text('Error loading wallets: $err'),
+                   );
+                },
+              ),
               const SizedBox(height: 16),
 
               // Note

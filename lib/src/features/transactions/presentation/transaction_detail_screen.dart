@@ -368,7 +368,10 @@ class TransactionDetailScreen extends ConsumerWidget {
     if (categoryId == 'debt' || categoryId == 'debts') return 'Debts';
     if (categoryId == 'saving' || categoryId == 'savings') return 'Savings';
 
-    if (transaction.type == TransactionType.system || transaction.type == TransactionType.reimbursement) {
+    if (transaction.type == TransactionType.reimbursement) {
+      return 'Reimburse';
+    }
+    if (transaction.type == TransactionType.system) {
       return 'System';
     }
     if (categoryId == null) return '-';

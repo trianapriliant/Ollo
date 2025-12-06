@@ -236,10 +236,13 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
             const SizedBox(height: 24),
 
+
             // Category Selection
             Text('Category', style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
-            if (type == TransactionType.system || type == TransactionType.transfer)
+            if (type == TransactionType.system || 
+                type == TransactionType.transfer ||
+                (widget.transactionToEdit != null && ['debt', 'debts', 'saving', 'savings'].contains(widget.transactionToEdit!.categoryId)))
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -251,12 +254,30 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: type == TransactionType.transfer ? Colors.indigo.withOpacity(0.2) : Colors.blue.withOpacity(0.2), // Default system color
+                        color: type == TransactionType.transfer 
+                            ? Colors.indigo.withOpacity(0.2) 
+                            : (widget.transactionToEdit?.categoryId == 'debt' || widget.transactionToEdit?.categoryId == 'debts'
+                                ? Colors.purple.withOpacity(0.2)
+                                : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
+                                    ? Colors.blue.withOpacity(0.2)
+                                    : Colors.blue.withOpacity(0.2))),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        type == TransactionType.transfer ? Icons.swap_horiz : Icons.settings, 
-                        color: type == TransactionType.transfer ? Colors.indigo : Colors.blue, 
+                        type == TransactionType.transfer 
+                            ? Icons.swap_horiz 
+                            : (widget.transactionToEdit?.categoryId == 'debt' || widget.transactionToEdit?.categoryId == 'debts'
+                                ? Icons.handshake
+                                : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
+                                    ? Icons.savings
+                                    : Icons.settings)),
+                        color: type == TransactionType.transfer 
+                            ? Colors.indigo 
+                            : (widget.transactionToEdit?.categoryId == 'debt' || widget.transactionToEdit?.categoryId == 'debts'
+                                ? Colors.purple
+                                : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
+                                    ? Colors.blue
+                                    : Colors.blue)),
                         size: 20
                       ),
                     ),
@@ -265,7 +286,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       child: Text(
                         type == TransactionType.transfer 
                           ? 'TRANSFER' 
-                          : (widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM'),
+                          : (widget.transactionToEdit?.categoryId == 'debt' || widget.transactionToEdit?.categoryId == 'debts'
+                              ? 'DEBT'
+                              : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
+                                  ? 'SAVINGS'
+                                  : (widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM'))),
                         style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[700]),
                       ),
                     ),
@@ -451,7 +476,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a destination wallet")));
                      return;
                   }
-                  if (_selectedItem == null && type != TransactionType.system && type != TransactionType.transfer) {
+                  if (_selectedItem == null && 
+                      type != TransactionType.system && 
+                      type != TransactionType.transfer && 
+                      !(widget.transactionToEdit != null && 
+                          ['debt', 'debts', 'saving', 'savings'].contains(widget.transactionToEdit!.categoryId))) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a category")));
                     return;
                   }
