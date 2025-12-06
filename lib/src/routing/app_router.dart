@@ -47,15 +47,23 @@ import '../features/smart_notes/domain/smart_note.dart';
 import '../features/profile/presentation/about_ollo_screen.dart';
 import '../features/profile/presentation/send_feedback_screen.dart';
 import '../features/profile/presentation/help_support_screen.dart';
+import '../features/profile/presentation/help_support_screen.dart';
+import '../features/onboarding/data/onboarding_repository.dart';
+import '../features/onboarding/presentation/onboarding_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
   final shellNavigatorKey = GlobalKey<NavigatorState>();
+  final onboardingRepo = ref.watch(onboardingRepositoryProvider);
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
-    initialLocation: '/home',
+    initialLocation: onboardingRepo.isOnboardingComplete() ? '/home' : '/onboarding',
     routes: [
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ScaffoldWithNavBar(navigationShell: navigationShell);

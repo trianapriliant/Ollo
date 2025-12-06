@@ -4,13 +4,21 @@ import 'src/app.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
+import 'package:shared_preferences/shared_preferences.dart';
+import 'src/features/onboarding/data/onboarding_repository.dart';
+
+Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
+  final sharedPreferences = await SharedPreferences.getInstance();
+  
   runApp(
-    const ProviderScope(
-      child: OlloApp(),
+    ProviderScope(
+      overrides: [
+        onboardingRepositoryProvider.overrideWithValue(OnboardingRepository(sharedPreferences)),
+      ],
+      child: const OlloApp(),
     ),
   );
 }
