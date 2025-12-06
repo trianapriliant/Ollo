@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IconHelper {
   static IconData getIcon(String iconName) {
-    switch (iconName) {
+    switch (iconName.toLowerCase().trim()) {
       // Finance & Wallet
       case 'account_balance_wallet': return Icons.account_balance_wallet;
       case 'account_balance': return Icons.account_balance;
@@ -191,6 +191,74 @@ class IconHelper {
       case 'Smart Notes': return Icons.edit_note;
       case 'edit_note': return Icons.edit_note;
       
+      
+      // Specific Sub-categories (User Requested) & Seed Data Matches
+      case 'delivery': return Icons.delivery_dining;
+      case 'delivery_dining': return Icons.delivery_dining; // Match seed: delivery_dining
+      
+      case 'parking': return Icons.local_parking;
+      case 'local_parking': return Icons.local_parking; // Match seed: local_parking
+      
+      case 'maintenance': return Icons.build;
+      case 'car_repair': return Icons.car_repair; // Match seed: car_repair
+      case 'plumbing': return Icons.plumbing; // Match seed: plumbing
+      
+      case 'insurance': return Icons.security; 
+      case 'security': return Icons.security; // Match seed: security
+      case 'health_and_safety': return Icons.health_and_safety; // Match seed: health_and_safety
+      case 'shield': return Icons.shield; // Match seed: shield
+      
+      case 'toll': return Icons.toll; 
+      
+      case 'electronics': return Icons.devices; 
+      case 'devices': return Icons.devices; // Match seed: devices
+      case 'developer_board': return Icons.developer_board; // Match seed: software
+      
+      case 'software': return Icons.terminal; 
+      
+      case 'events': return Icons.event; 
+      case 'event_seat': return Icons.event_seat; // Match seed: event_seat
+      
+      case 'haircut': return Icons.content_cut;
+      case 'content_cut': return Icons.content_cut; // Match seed: content_cut
+      
+      case 'courses': return Icons.school; 
+      case 'cast_for_education': return Icons.cast_for_education; // Match seed: cast_for_education
+      
+      case 'supplies': return Icons.backpack;
+      case 'backpack': return Icons.backpack; // Match seed: backpack
+      
+      case 'fines': return Icons.local_police; 
+      case 'gavel': return Icons.gavel; // Match seed: gavel
+      
+      case 'toys': return Icons.toys;
+      
+      case 'monthly': return Icons.calendar_month;
+      case 'calendar_today': return Icons.calendar_today; // Match seed: calendar_today
+      
+      case 'weekly': return Icons.calendar_view_week;
+      case 'date_range': return Icons.date_range; // Match seed: date_range
+      
+      case 'overtime': return Icons.more_time;
+      case 'access_time': return Icons.access_time; // Match seed: access_time
+      
+      case 'services': return Icons.design_services;
+      case 'design_services': return Icons.design_services; // Match seed: design_services
+      
+      case 'stocks': return Icons.show_chart;
+      case 'show_chart': return Icons.show_chart; // Match seed: show_chart
+      
+      case 'real estate': return Icons.real_estate_agent;
+      case 'real_estate': return Icons.real_estate_agent;
+      case 'real_estate_agent': return Icons.real_estate_agent; // Match seed: real_estate_agent
+      case 'domain': return Icons.domain; // Match seed: domain
+      
+      case 'selling': return Icons.storefront;
+      case 'storefront': return Icons.storefront; // Match seed: storefront
+      
+      case 'undo': return Icons.undo; // Refunds
+      case 'casino': return Icons.casino; // Lottery
+
       default: return Icons.help_outline;
     }
   }
