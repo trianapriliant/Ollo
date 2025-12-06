@@ -20,6 +20,7 @@ import '../../budget/domain/budget.dart';
 import '../../savings/domain/saving_goal.dart';
 import '../../savings/domain/saving_log.dart';
 import '../../categories/domain/category.dart';
+import '../../onboarding/data/onboarding_repository.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -35,6 +36,28 @@ class ProfileScreen extends ConsumerWidget {
         elevation: 0,
         title: Text('Profile', style: AppTextStyles.h2),
         centerTitle: true,
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'developer') {
+                _showDeveloperLoginDialog(context, ref);
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'developer',
+                child: Row(
+                  children: [
+                    Icon(Icons.terminal, size: 18, color: Colors.grey),
+                    SizedBox(width: 8),
+                    Text('Developer Options'),
+                  ],
+                ),
+              ),
+            ],
+            icon: const Icon(Icons.more_vert, color: AppColors.textPrimary),
+          ),
+        ],
       ),
       body: profileAsync.when(
         data: (profile) => SingleChildScrollView(
@@ -561,6 +584,78 @@ class ProfileScreen extends ConsumerWidget {
               context.pop();
             },
             child: const Text('Set PREMIUM'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeveloperLoginDialog(BuildContext context, WidgetRef ref) {
+    final passwordController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Developer Access'),
+        content: TextField(
+          controller: passwordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            labelText: 'Password',
+            hintText: 'Enter developer password',
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (passwordController.text == '304021') {
+                Navigator.pop(context); // Close login dialog
+                _showDeveloperOptionsDialog(context, ref);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Incorrect password')),
+                );
+              }
+            },
+            child: const Text('Enter'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeveloperOptionsDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Developer Options'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.restart_alt, color: Colors.orange),
+              title: const Text('Reset Onboarding'),
+              subtitle: const Text('Clear onboarding status and return to intro screen.'),
+              onTap: () async {
+                Navigator.pop(context); // Close dialog
+                await ref.read(onboardingRepositoryProvider).resetOnboarding();
+                if (context.mounted) {
+                   context.go('/onboarding');
+                }
+              },
+            ),
+             // Add more options here later if needed (e.g. Splash Screen test)
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
           ),
         ],
       ),

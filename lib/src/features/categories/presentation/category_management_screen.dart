@@ -243,7 +243,20 @@ class _SystemCategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Static list of system categories
+    // Static list of system categories
     final systemCategories = [
+      {
+        'name': 'Transfer',
+        'icon': Icons.swap_horiz_rounded,
+        'color': Colors.indigo,
+        'description': 'Fund transfers between wallets',
+      },
+      {
+        'name': 'Recurring',
+        'icon': Icons.update_rounded,
+        'color': Colors.blueGrey,
+        'description': 'Automated recurring transactions',
+      },
       {
         'name': 'Wishlist',
         'icon': Icons.favorite_rounded,

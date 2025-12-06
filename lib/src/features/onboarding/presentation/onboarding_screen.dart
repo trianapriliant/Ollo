@@ -81,6 +81,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 32),
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -168,39 +169,64 @@ class _OnboardingPage extends StatelessWidget {
           Expanded(
             flex: 6,
             child: Center(
-              child: Image.asset(
-                data.imagePath,
-                fit: BoxFit.contain,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4.0), // Slight margin from screen edges if needed, or remove if full bleed desired. 
+              // Using horizontal:0 based on "width: double.infinity" in HelpSupport, but help support has padding 24. 
+              // _OnboardingPage already has padding 24. So double.infinity is fine.
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                color: Colors.white, // Background in case image has transparency
+                image: DecorationImage(
+                  image: AssetImage(data.imagePath),
+                  fit: BoxFit.cover,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
+            ),
             ),
           ),
           const SizedBox(height: 32),
-          Text(
-            data.subtitle,
-            style: GoogleFonts.outfit(
-              color: Colors.amber, 
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            data.title,
-            style: GoogleFonts.outfit(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            data.description,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              color: Colors.grey[600],
-              height: 1.5,
+          Expanded(
+            flex: 4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  data.subtitle,
+                  style: GoogleFonts.outfit(
+                    color: Colors.amber, 
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  data.title,
+                  style: GoogleFonts.outfit(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  data.description,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                    height: 1.5,
+                  ),
+                ),
+              ],
             ),
           ),
 

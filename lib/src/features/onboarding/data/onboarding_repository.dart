@@ -14,6 +14,10 @@ class OnboardingRepository {
   Future<void> completeOnboarding() async {
     await _prefs.setBool(_onboardingCompleteKey, true);
   }
+
+  Future<void> resetOnboarding() async {
+    await _prefs.remove(_onboardingCompleteKey);
+  }
 }
 
 final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {

@@ -14,6 +14,9 @@ class IconHelper {
       case 'money': return Icons.wallet; // Mapped 'money' to Wallet icon as requested
       case 'cash': return Icons.wallet; // Mapped 'cash' to Wallet icon as requested, just in case
       case 'currency_exchange': return Icons.currency_exchange;
+      case 'transfer': return Icons.swap_horiz; // Added Transfer icon
+      case 'send_money': return Icons.send;
+      case 'compare_arrows': return Icons.compare_arrows;
       case 'account_box': return Icons.account_box;
       
       // Shopping & Retail

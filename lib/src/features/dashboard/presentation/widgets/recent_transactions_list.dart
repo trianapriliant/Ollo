@@ -288,7 +288,8 @@ class RecentTransactionsList extends ConsumerWidget {
     final isWishlist = (category?.externalId == 'wishlist') || (isSystem && title.toLowerCase().contains('wishlist'));
     final isBill = (category?.externalId == 'bills') || (isSystem && title.toLowerCase().contains('bill'));
     final isDebt = (category?.externalId == 'debt') || (isSystem && (title.toLowerCase().contains('borrowed') || title.toLowerCase().contains('lent') || title.toLowerCase().contains('debt') || title.toLowerCase().contains('received payment')));
-    final isSavings = isSystem && (title.toLowerCase().contains('deposit to') || title.toLowerCase().contains('withdraw from') || title.toLowerCase().contains('savings'));
+    final isSavings = (isSystem && (title.toLowerCase().contains('deposit to') || title.toLowerCase().contains('withdraw from') || title.toLowerCase().contains('savings'))) || title.toLowerCase().contains('savings');
+    final isTransfer = title.toLowerCase().contains('transfer');
 
     final iconPath = subCategoryIcon ?? category?.iconPath;
 
@@ -300,7 +301,9 @@ class RecentTransactionsList extends ConsumerWidget {
                 ? Icons.handshake_rounded
                 : (isSavings 
                     ? Icons.savings_rounded
-                    : (iconPath != null ? IconHelper.getIcon(iconPath) : Icons.help_outline))));
+                    : (isTransfer 
+                        ? Icons.swap_horiz
+                        : (iconPath != null ? IconHelper.getIcon(iconPath) : Icons.help_outline)))));
         
     final iconColor = isBill 
         ? Colors.orange
@@ -310,7 +313,9 @@ class RecentTransactionsList extends ConsumerWidget {
                 ? Colors.purple
                 : (isSavings 
                     ? Colors.blue
-                    : (category?.color ?? AppColors.primary))));
+                    : (isTransfer 
+                        ? Colors.indigo 
+                        : (category?.color ?? AppColors.primary)))));
         
     final backgroundColor = isBill 
         ? Colors.orange.withOpacity(0.1)
@@ -320,7 +325,9 @@ class RecentTransactionsList extends ConsumerWidget {
                 ? Colors.purple.withOpacity(0.1)
                 : (isSavings 
                     ? Colors.blue.withOpacity(0.1)
-                    : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue))));
+                    : (isTransfer 
+                        ? Colors.indigo.withOpacity(0.1)
+                        : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue)))));
         
     final timeStr = DateFormat('HH:mm').format(date);
     
@@ -329,6 +336,7 @@ class RecentTransactionsList extends ConsumerWidget {
     if (isBill) systemNote = ' - Bill Payment';
     if (isDebt) systemNote = ' - Debt Transaction';
     if (isSavings) systemNote = ' - Savings Transaction';
+    if (isTransfer) systemNote = ' - Transfer';
     
     final noteStr = isSystem 
         ? systemNote

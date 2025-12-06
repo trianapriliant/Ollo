@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../dashboard/presentation/transaction_provider.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../domain/category_data.dart';
 import '../../savings/data/saving_repository.dart';
 import '../../savings/domain/saving_log.dart';
+import '../../transactions/domain/transaction.dart';
 
 enum TimeRange { month, year }
 
@@ -37,7 +37,17 @@ final statisticsProvider = FutureProvider.family<List<CategoryData>, StatisticsF
 
   // 1. Filter transactions by type (Income/Expense) and Time Range
   final filteredTransactions = transactions.where((t) {
-    if (t.isExpense != filter.isExpense) return false;
+    // STRICT FILTER w/ SAVINGS EXCLUSION (Option B):
+    // Income: Only Income type
+    // Expense: Expense type OR (System type AND NOT 'savings' category)
+    // Transfer: Excluded
+    if (filter.isExpense) {
+      if (t.type == TransactionType.expense) return true;
+      if (t.type == TransactionType.system && t.categoryId != 'savings') return true;
+      return false;
+    } else {
+      if (t.type != TransactionType.income) return false;
+    }
 
     if (filter.timeRange == TimeRange.month) {
       return t.date.year == filter.date.year && t.date.month == filter.date.month;
@@ -69,12 +79,10 @@ final statisticsProvider = FutureProvider.family<List<CategoryData>, StatisticsF
     final percentage = (amount / totalAmount) * 100;
 
     // Find category details
-    // Find category details
     final category = categories.firstWhere(
       (c) => (c.externalId ?? c.id.toString()) == categoryId,
       orElse: () {
         // Fallback for system or unknown categories
-        // Try to generate a category based on the ID or use a generic "System" one
         return Category(
           externalId: categoryId,
           name: _formatCategoryName(categoryId),
@@ -136,10 +144,17 @@ final insightProvider = FutureProvider.family<InsightData?, StatisticsFilter>((r
 
   double calculateTotal(DateTime start, DateTime end) {
     return transactions
-        .where((t) => 
-            t.isExpense == filter.isExpense && 
-            t.date.isAfter(start.subtract(const Duration(seconds: 1))) && 
-            t.date.isBefore(end.add(const Duration(seconds: 1))))
+        .where((t) {
+             // STRICT FILTER w/ SAVINGS EXCLUSION
+            if (filter.isExpense) {
+               bool isValidExpense = t.type == TransactionType.expense || (t.type == TransactionType.system && t.categoryId != 'savings');
+               if (!isValidExpense) return false;
+            } else {
+               if (t.type != TransactionType.income) return false;
+            }
+            return t.date.isAfter(start.subtract(const Duration(seconds: 1))) && 
+                   t.date.isBefore(end.add(const Duration(seconds: 1)));
+        })
         .fold(0.0, (sum, t) => sum + t.amount);
   }
 
@@ -202,11 +217,14 @@ final monthlyStatisticsProvider = FutureProvider.family<List<MonthlyData>, DateT
     double expense = 0;
 
     for (var t in monthTransactions) {
-      if (t.isExpense) {
+      if (t.type == TransactionType.expense) {
         expense += t.amount;
-      } else {
+      } else if (t.type == TransactionType.system && t.categoryId != 'savings') {
+        expense += t.amount; // Include System bills/debt, exclude Savings
+      } else if (t.type == TransactionType.income) {
         income += t.amount;
       }
+      // Explicitly ignore transfer
     }
 
     data.add(MonthlyData(month: monthStart, income: income, expense: expense));
@@ -256,11 +274,14 @@ final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>
     double savings = 0;
 
     for (var t in dayTransactions) {
-      if (t.isExpense) {
+      if (t.type == TransactionType.expense) {
         expense += t.amount;
-      } else {
+      } else if (t.type == TransactionType.system && t.categoryId != 'savings') {
+        expense += t.amount; // Include System bills/debt, exclude Savings
+      } else if (t.type == TransactionType.income) {
         income += t.amount;
       }
+       // Explicitly ignore transfer 
     }
 
     for (var l in daySavingLogs) {

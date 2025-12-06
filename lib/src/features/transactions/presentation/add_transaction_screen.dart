@@ -53,6 +53,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   final _titleController = TextEditingController();
   
   String? _selectedWalletId;
+  String? _selectedDestinationWalletId;
   CategorySelectionItem? _selectedItem;
 
   @override
@@ -64,6 +65,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       _noteController.text = t.note ?? '';
       _titleController.text = t.title;
       _selectedWalletId = t.walletId;
+      _selectedDestinationWalletId = t.destinationWalletId;
     }
   }
 
@@ -71,7 +73,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   Widget build(BuildContext context) {
     final type = widget.type;
     final isExpense = type == TransactionType.expense || type == TransactionType.system;
-    final primaryColor = isExpense ? Colors.red[400]! : Colors.green[600]!;
+    final isTransfer = type == TransactionType.transfer;
+    final primaryColor = isExpense ? Colors.red[400]! : (isTransfer ? Colors.indigo : Colors.green[600]!);
     
     final walletsAsync = ref.watch(walletListProvider);
     final categoriesAsync = ref.watch(categoryListProvider(isExpense ? CategoryType.expense : CategoryType.income));
@@ -118,7 +121,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                hintText: 'Enter title (e.g. Breakfast)',
+                hintText: isTransfer ? 'Enter description' : 'Enter title (e.g. Breakfast)',
                 hintStyle: AppTextStyles.bodyMedium,
                 filled: true,
                 fillColor: Colors.white,
@@ -132,15 +135,13 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             const SizedBox(height: 24),
             
             // Wallet Selection
-            Text('Wallet', style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 8),
             walletsAsync.when(
               data: (wallets) {
                 if (wallets.isEmpty) return const Text("No wallets found. Please create one.");
                 
-                // Validate selected wallet exists
+                // Validate selected wallet (Source)
                 if (_selectedWalletId != null && !wallets.any((w) => (w.externalId ?? w.id.toString()) == _selectedWalletId)) {
-                   _selectedWalletId = null; // Reset if not found
+                   _selectedWalletId = null; 
                 }
                 
                 // Auto-select first wallet if none selected
@@ -149,17 +150,84 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     _selectedWalletId = first.externalId ?? first.id.toString();
                 }
 
-                final selectedWallet = _selectedWalletId != null 
-                    ? wallets.firstWhere((w) => (w.externalId ?? w.id.toString()) == _selectedWalletId, orElse: () => Wallet()..name = 'Unknown')
-                    : null;
+                if (isTransfer) {
+                   // Validate Destination Wallet
+                   final availableWallets = wallets.where((w) => (w.externalId ?? w.id.toString()) != _selectedWalletId).toList();
+                  
+                   // Auto-select first available if none selected or if selected is same as source
+                   if (_selectedDestinationWalletId == null || _selectedDestinationWalletId == _selectedWalletId) {
+                      if (availableWallets.isNotEmpty) {
+                        _selectedDestinationWalletId = availableWallets.first.externalId ?? availableWallets.first.id.toString();
+                      } else {
+                        _selectedDestinationWalletId = null;
+                      }
+                   } else if (!wallets.any((w) => (w.externalId ?? w.id.toString()) == _selectedDestinationWalletId)) {
+                      _selectedDestinationWalletId = null;
+                   }
 
-                return ModernWalletSelector(
-                  selectedWalletId: _selectedWalletId,
-                  onWalletSelected: (val) {
-                    setState(() {
-                      _selectedWalletId = val;
-                    });
-                  },
+                   return Row(
+                     children: [
+                       Expanded(
+                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             Text('From', style: AppTextStyles.bodyMedium),
+                             const SizedBox(height: 8),
+                             ModernWalletSelector(
+                               selectedWalletId: _selectedWalletId,
+                               onWalletSelected: (val) {
+                                 setState(() {
+                                   _selectedWalletId = val;
+                                   // Reset destination if it becomes same as source (though ModernWalletSelector might not show it immediately without re-filtering, but logic handles it on rebuild)
+                                   if (_selectedDestinationWalletId == val) {
+                                      _selectedDestinationWalletId = null; // Will auto-select next available on rebuild
+                                   }
+                                 });
+                               },
+                             ),
+                           ],
+                         ),
+                       ),
+                       const SizedBox(width: 16),
+                       Expanded(
+                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             Text('To', style: AppTextStyles.bodyMedium),
+                             const SizedBox(height: 8),
+                             if (wallets.length < 2) 
+                               const Padding(padding: EdgeInsets.only(top: 12), child: Text("Need 2+ wallets", style: TextStyle(color: Colors.red, fontSize: 12)))
+                             else
+                               ModernWalletSelector(
+                                 selectedWalletId: _selectedDestinationWalletId,
+                                 onWalletSelected: (val) {
+                                   setState(() {
+                                     _selectedDestinationWalletId = val;
+                                   });
+                                 },
+                               ),
+                           ],
+                         ),
+                       ),
+                     ],
+                   );
+                }
+
+                // Normal (Non-Transfer) Layout
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Wallet', style: AppTextStyles.bodyMedium),
+                     const SizedBox(height: 8),
+                    ModernWalletSelector(
+                      selectedWalletId: _selectedWalletId,
+                      onWalletSelected: (val) {
+                        setState(() {
+                          _selectedWalletId = val;
+                        });
+                      },
+                    ),
+                  ],
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -171,7 +239,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             // Category Selection
             Text('Category', style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
-            if (type == TransactionType.system)
+            if (type == TransactionType.system || type == TransactionType.transfer)
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -183,15 +251,21 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.2), // Default system color
+                        color: type == TransactionType.transfer ? Colors.indigo.withOpacity(0.2) : Colors.blue.withOpacity(0.2), // Default system color
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.settings, color: Colors.blue, size: 20),
+                      child: Icon(
+                        type == TransactionType.transfer ? Icons.swap_horiz : Icons.settings, 
+                        color: type == TransactionType.transfer ? Colors.indigo : Colors.blue, 
+                        size: 20
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM',
+                        type == TransactionType.transfer 
+                          ? 'TRANSFER' 
+                          : (widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM'),
                         style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[700]),
                       ),
                     ),
@@ -373,12 +447,18 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a wallet")));
                     return;
                   }
-                  if (_selectedItem == null && type != TransactionType.system) {
+                  if (isTransfer && _selectedDestinationWalletId == null) {
+                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a destination wallet")));
+                     return;
+                  }
+                  if (_selectedItem == null && type != TransactionType.system && type != TransactionType.transfer) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a category")));
                     return;
                   }
 
-                  final title = _titleController.text.isNotEmpty ? _titleController.text : _selectedItem!.name;
+                  final title = _titleController.text.isNotEmpty 
+                      ? _titleController.text 
+                      : (_selectedItem?.name ?? (type == TransactionType.transfer ? 'Transfer' : 'System Transaction'));
 
                   // 2. Save Transaction
                   final transactionRepo = await ref.read(transactionRepositoryProvider.future);
@@ -391,12 +471,24 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     // Revert old balance
                     final oldWallet = await walletRepo.getWallet(oldTransaction.walletId!);
                     if (oldWallet != null) {
-                      if (oldTransaction.isExpense) {
+                      if (oldTransaction.type == TransactionType.expense) {
                         oldWallet.balance += oldTransaction.amount;
-                      } else {
+                      } else if (oldTransaction.type == TransactionType.income) {
                         oldWallet.balance -= oldTransaction.amount;
+                      } else if (oldTransaction.type == TransactionType.transfer) {
+                         // Revert transfer: Add back to source
+                         oldWallet.balance += oldTransaction.amount;
                       }
                       await walletRepo.addWallet(oldWallet);
+                    }
+                    
+                    // Revert old destination balance if transfer
+                    if (oldTransaction.type == TransactionType.transfer && oldTransaction.destinationWalletId != null) {
+                        final oldDestWallet = await walletRepo.getWallet(oldTransaction.destinationWalletId!);
+                        if (oldDestWallet != null) {
+                           oldDestWallet.balance -= oldTransaction.amount; // Remove what was added to dest
+                           await walletRepo.addWallet(oldDestWallet);
+                        }
                     }
 
                     // Update transaction object
@@ -404,10 +496,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..title = title
                       ..amount = amount
                       ..walletId = _selectedWalletId
-                      ..categoryId = _selectedItem!.category.externalId ?? _selectedItem!.category.id.toString()
-                      ..subCategoryId = _selectedItem!.subCategory?.id
-                      ..subCategoryName = _selectedItem!.subCategory?.name
-                      ..subCategoryIcon = _selectedItem!.subCategory?.iconPath
+                      ..destinationWalletId = isTransfer ? _selectedDestinationWalletId : null
+                      ..categoryId = _selectedItem?.category.externalId ?? _selectedItem?.category.id.toString() ?? oldTransaction.categoryId
+                      ..subCategoryId = _selectedItem?.subCategory?.id ?? oldTransaction.subCategoryId
+                      ..subCategoryName = _selectedItem?.subCategory?.name ?? oldTransaction.subCategoryName
+                      ..subCategoryIcon = _selectedItem?.subCategory?.iconPath ?? oldTransaction.subCategoryIcon
                       ..note = _noteController.text;
                       // Date kept same or updated? User didn't ask to edit date, so keep it.
                     
@@ -418,10 +511,20 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     if (newWallet != null) {
                       if (type == TransactionType.expense) {
                         newWallet.balance -= amount;
-                      } else {
+                      } else if (type == TransactionType.income) {
                         newWallet.balance += amount;
+                      } else if (type == TransactionType.transfer) {
+                        newWallet.balance -= amount; // Deduct from source
                       }
                       await walletRepo.addWallet(newWallet);
+                    }
+                    
+                    if (type == TransactionType.transfer && _selectedDestinationWalletId != null) {
+                       final newDestWallet = await walletRepo.getWallet(_selectedDestinationWalletId!);
+                       if (newDestWallet != null) {
+                          newDestWallet.balance += amount; // Add to destination
+                          await walletRepo.addWallet(newDestWallet);
+                       }
                     }
 
                   } else {
@@ -432,10 +535,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       ..amount = amount
                       ..type = type
                       ..walletId = _selectedWalletId
-                      ..categoryId = _selectedItem!.category.externalId ?? _selectedItem!.category.id.toString()
-                      ..subCategoryId = _selectedItem!.subCategory?.id
-                      ..subCategoryName = _selectedItem!.subCategory?.name
-                      ..subCategoryIcon = _selectedItem!.subCategory?.iconPath
+                      ..destinationWalletId = isTransfer ? _selectedDestinationWalletId : null
+                      ..categoryId = _selectedItem?.category.externalId ?? _selectedItem?.category.id.toString()
+                      ..subCategoryId = _selectedItem?.subCategory?.id
+                      ..subCategoryName = _selectedItem?.subCategory?.name
+                      ..subCategoryIcon = _selectedItem?.subCategory?.iconPath
                       ..note = _noteController.text;
 
                     await transactionRepo.addTransaction(newTransaction);
@@ -445,10 +549,20 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     if (wallet != null) {
                       if (type == TransactionType.expense) {
                         wallet.balance -= amount;
-                      } else {
-                        wallet.balance += amount;
+                      } else if (type == TransactionType.income) {
+                         wallet.balance += amount;
+                      } else if (type == TransactionType.transfer) {
+                        wallet.balance -= amount; // Deduct from source
                       }
                       await walletRepo.addWallet(wallet);
+                    }
+                    
+                    if (type == TransactionType.transfer && _selectedDestinationWalletId != null) {
+                       final destWallet = await walletRepo.getWallet(_selectedDestinationWalletId!);
+                       if (destWallet != null) {
+                          destWallet.balance += amount; // Add to destination
+                          await walletRepo.addWallet(destWallet);
+                       }
                     }
                   }
                   
@@ -475,6 +589,4 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       ),
     );
   }
-
-  // Removed local _getIconData in favor of IconHelper.getIcon
 }
