@@ -545,27 +545,23 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
       final newTransaction = Transaction.create(
         title: 'Bill: ${widget.bill.title}',
         amount: widget.bill.amount,
-        type: TransactionType.expense, // Change to Expense so it shows in stats
-        walletId: wallet.id.toString(),
-        categoryId: 'bills', // Force category to 'bills' for System - Bills grouping
+        type: TransactionType.expense,
+        walletId: wallet.externalId ?? wallet.id.toString(), // Fix: Use externalId if available
+        categoryId: 'bills',
         note: 'Bill Payment',
         date: DateTime.now(),
       );
       
-      // Update Wallet
-      wallet.balance -= widget.bill.amount;
-      
-      // Save Transaction first to get ID (Isar updates the object)
-      await transactionRepo.addTransaction(newTransaction);
+      // Save Transaction (Auto updates wallet balance)
+      final tid = await transactionRepo.addTransaction(newTransaction);
       
       // Update Bill
       widget.bill.status = BillStatus.paid;
       widget.bill.paidAt = DateTime.now();
-      widget.bill.transactionId = newTransaction.id; // Link transaction
-      widget.bill.walletId = wallet.id.toString(); // Update wallet used
+      widget.bill.transactionId = tid; // Link transaction
+      widget.bill.walletId = wallet.externalId ?? wallet.id.toString(); // Update wallet used with correct ID
       
       // Save updates
-      await walletRepo.updateWallet(wallet);
       await billRepo.updateBill(widget.bill);
       
       if (mounted) {

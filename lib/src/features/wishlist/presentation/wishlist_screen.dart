@@ -527,24 +527,20 @@ class _WishlistCard extends ConsumerWidget {
       final newTransaction = Transaction.create(
         title: 'Wishlist: ${item.title}',
         amount: item.price,
-        type: TransactionType.expense, // Change to Expense so it shows in stats
-        walletId: wallet.id.toString(),
-        categoryId: 'wishlist', // Force category to 'wishlist'
+        type: TransactionType.expense,
+        walletId: wallet.externalId ?? wallet.id.toString(), // Fix: Use externalId if available
+        categoryId: 'wishlist',
         note: 'Wishlist Purchase',
         date: DateTime.now(),
       );
-      await transactionRepo.addTransaction(newTransaction);
+      // This automatically updates the wallet balance now
+      final tid = await transactionRepo.addTransaction(newTransaction);
 
-      // 2. Update Wallet Balance
-      final walletRepo = await ref.read(walletRepositoryProvider.future);
-      wallet.balance -= item.price;
-      await walletRepo.updateWallet(wallet);
-
-      // 3. Mark Wishlist as Achieved & Link Transaction
+      // 2. Mark Wishlist as Achieved & Link Transaction
       final wishlistRepo = ref.read(wishlistRepositoryProvider);
       final updatedItem = item
         ..isCompleted = true
-        ..transactionId = newTransaction.id; // Link Transaction
+        ..transactionId = tid; // Use ID from repo
       await wishlistRepo.updateWishlist(updatedItem);
 
       if (context.mounted) {

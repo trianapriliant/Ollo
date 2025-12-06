@@ -420,19 +420,13 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
             amount: amount,
             type: isExpense ? TransactionType.expense : TransactionType.income,
             categoryId: 'debt',
-            walletId: walletId,
+            walletId: wallet.externalId ?? wallet.id.toString(), // Fix: Use correct ID
             note: note,
             date: DateTime.now(),
           );
 
-          if (isExpense) {
-            wallet.balance -= amount;
-          } else {
-            wallet.balance += amount;
-          }
-
+          // TransactionRepo handles balance update automatically
           await transactionRepo.addTransaction(transaction);
-          await walletRepo.updateWallet(wallet);
         }
       }
 
