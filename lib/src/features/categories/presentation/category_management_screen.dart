@@ -5,6 +5,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../data/category_repository.dart';
 import '../domain/category.dart';
+import '../../../utils/icon_helper.dart';
 
 class CategoryManagementScreen extends ConsumerStatefulWidget {
   const CategoryManagementScreen({super.key});
@@ -139,7 +140,7 @@ class _CategoryCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              _getIconData(category.iconPath),
+              IconHelper.getIcon(category.iconPath),
               color: category.color,
             ),
           ),
@@ -161,26 +162,41 @@ class _CategoryCard extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final sub = subCategories[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.subdirectory_arrow_right, size: 16, color: Colors.grey[400]),
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            shape: BoxShape.circle,
-                          ),
+                    padding: const EdgeInsets.only(left: 12, right: 8, bottom: 8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.03), // Subtle background
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
                           child: Icon(
-                            _getIconData(sub.iconPath ?? 'category'),
-                            size: 14,
-                            color: Colors.grey[700],
+                            IconHelper.getIcon(sub.iconPath ?? 'category'),
+                            size: 16,
+                            color: category.color.withOpacity(0.8), // Inherit parent color theme
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(sub.name ?? 'Unnamed', style: AppTextStyles.bodyMedium),
-                      ],
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            sub.name ?? 'Unnamed', 
+                            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -218,24 +234,7 @@ class _CategoryCard extends StatelessWidget {
     );
   }
 
-  IconData _getIconData(String iconPath) {
-    switch (iconPath) {
-      case 'fastfood': return Icons.fastfood;
-      case 'directions_bus': return Icons.directions_bus;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'movie': return Icons.movie;
-      case 'medical_services': return Icons.medical_services;
-      case 'school': return Icons.school;
-      case 'receipt': return Icons.receipt;
-      case 'more_horiz': return Icons.more_horiz;
-      case 'attach_money': return Icons.attach_money;
-      case 'store': return Icons.store;
-      case 'card_giftcard': return Icons.card_giftcard;
-      case 'trending_up': return Icons.trending_up;
-      // Add more as needed
-      default: return Icons.category;
-    }
-  }
+  // Removed _getIconData method as it's replaced by IconHelper
 }
 
 class _SystemCategoryList extends StatelessWidget {
