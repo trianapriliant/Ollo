@@ -21,6 +21,7 @@ import '../../savings/domain/saving_goal.dart';
 import '../../savings/domain/saving_log.dart';
 import '../../categories/domain/category.dart';
 import '../../onboarding/data/onboarding_repository.dart';
+import 'splash_preview_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -649,7 +650,19 @@ class ProfileScreen extends ConsumerWidget {
                 }
               },
             ),
-             // Add more options here later if needed (e.g. Splash Screen test)
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.preview, color: AppColors.primary),
+              title: const Text('Preview Splash Screen'),
+              subtitle: const Text('View the startup splash screen animation.'),
+              onTap: () {
+                Navigator.pop(context); // Close dialog
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (_) => const SplashPreviewScreen()),
+                );
+              },
+            ),
           ],
         ),
         actions: [
