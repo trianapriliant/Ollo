@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import '../../common/data/isar_provider.dart';
+import '../../transactions/domain/transaction.dart';
+import '../../wallets/domain/wallet.dart';
 import '../domain/smart_note.dart';
 
 final smartNoteRepositoryProvider = Provider<SmartNoteRepository>((ref) {
@@ -38,7 +40,32 @@ class SmartNoteRepository {
 
   Future<void> deleteNote(Id id) async {
     await _isar.writeTxn(() async {
-      await _isar.smartNotes.delete(id);
+      final note = await _isar.smartNotes.get(id);
+      if (note != null) {
+        if (note.transactionId != null) {
+           // Delete associated transaction and update wallet
+           final tid = note.transactionId!;
+           final transaction = await _isar.transactions.get(tid);
+           
+           if (transaction != null) {
+             // Revert Wallet Balance
+             if (transaction.walletId != null) {
+               final wallet = await _isar.wallets.filter().idEqualTo(int.tryParse(transaction.walletId!) ?? -1).or().externalIdEqualTo(transaction.walletId!).findFirst();
+               
+               if (wallet != null) {
+                 if (transaction.type == TransactionType.income) {
+                    wallet.balance -= transaction.amount;
+                 } else {
+                    wallet.balance += transaction.amount;
+                 }
+                 await _isar.wallets.put(wallet);
+               }
+             }
+             await _isar.transactions.delete(tid);
+           }
+        }
+        await _isar.smartNotes.delete(id);
+      }
     });
   }
 

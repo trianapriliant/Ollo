@@ -43,6 +43,7 @@ import '../features/debts/presentation/debt_detail_screen.dart';
 import '../features/debts/domain/debt.dart';
 import '../features/smart_notes/presentation/smart_notes_screen.dart';
 import '../features/smart_notes/presentation/add_edit_smart_note_screen.dart';
+import '../features/smart_notes/presentation/smart_note_detail_screen.dart';
 import '../features/smart_notes/domain/smart_note.dart';
 import '../features/profile/presentation/about_ollo_screen.dart';
 import '../features/profile/presentation/send_feedback_screen.dart';
@@ -320,6 +321,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) {
               final note = state.extra as SmartNote;
               return AddEditSmartNoteScreen(note: note);
+            },
+          ),
+          GoRoute(
+            path: 'detail',
+            builder: (context, state) {
+              final note = state.extra as SmartNote;
+              return SmartNoteDetailScreen(note: note);
             },
           ),
         ],

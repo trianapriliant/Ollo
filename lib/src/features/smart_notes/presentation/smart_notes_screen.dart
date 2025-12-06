@@ -23,332 +23,392 @@ class SmartNotesScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Smart Notes', style: AppTextStyles.h2),
+        title: Text('My Bundles', style: AppTextStyles.h2),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            onSelected: (value) {
-              if (value == 'home') {
-                context.go('/home');
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem<String>(
-                  value: 'home',
-                  child: Row(
-                    children: [
-                      Icon(Icons.home, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text('Home'),
-                    ],
-                  ),
-                ),
-              ];
-            },
-          ),
-        ],
       ),
       body: notesAsync.when(
         data: (notes) {
           final activeNotes = notes.where((n) => !n.isCompleted).toList();
           final completedNotes = notes.where((n) => n.isCompleted).toList();
           
-          final totalPlanned = activeNotes.fold(0.0, (sum, n) => sum + (n.amount ?? 0));
-
-          return SingleChildScrollView(
+          return ListView(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Summary Card
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(30),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.teal, Colors.teal.shade700],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.teal.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total Planned',
-                        style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(totalPlanned),
-                        style: AppTextStyles.h1.copyWith(color: Colors.white),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '${activeNotes.length} items to buy',
-                        style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.9)),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Active Items
-                Text('Shopping List', style: AppTextStyles.h3),
+            children: [
+              if (activeNotes.isEmpty && completedNotes.isEmpty)
+                _buildEmptyState('Create your first bundle!', Icons.shopping_basket_outlined),
+                
+              if (activeNotes.isNotEmpty) ...[
+                Text('Active', style: AppTextStyles.h3),
                 const SizedBox(height: 12),
-                if (activeNotes.isEmpty)
-                  _buildEmptyState('No items yet', Icons.checklist),
-                ...activeNotes.map((note) => _buildNoteItem(context, ref, note)),
-
-                if (completedNotes.isNotEmpty) ...[
-                  const SizedBox(height: 24),
-                  Text('Completed', style: AppTextStyles.h3.copyWith(color: Colors.grey)),
-                  const SizedBox(height: 12),
-                  ...completedNotes.map((note) => _buildNoteItem(context, ref, note)),
-                ],
+                ...activeNotes.map((note) => _SmartNoteCard(note: note)),
               ],
-            ),
+
+              if (completedNotes.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                Text('History', style: AppTextStyles.h3.copyWith(color: Colors.grey)),
+                const SizedBox(height: 12),
+                ...completedNotes.map((note) => _SmartNoteCard(note: note)),
+              ],
+            ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/smart-notes/add'),
         backgroundColor: Colors.teal,
-        child: const Icon(Icons.add, color: Colors.white),
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: const Text('New Bundle', style: TextStyle(color: Colors.white)),
       ),
-    );
-  }
-
-  Widget _buildNoteItem(BuildContext context, WidgetRef ref, SmartNote note) {
-    final isCompleted = note.isCompleted;
-    
-    return Dismissible(
-      key: Key(note.id.toString()),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        color: Colors.red,
-        child: const Icon(Icons.delete, color: Colors.white),
-      ),
-      confirmDismiss: (direction) async {
-        return await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text('Delete Item?'),
-            content: const Text('Are you sure you want to delete this item?'),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-              TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
-            ],
-          ),
-        );
-      },
-      onDismissed: (_) {
-        ref.read(smartNoteRepositoryProvider).deleteNote(note.id);
-      },
-      child: InkWell(
-        onTap: () => context.push('/smart-notes/edit', extra: note),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Checkbox(
-                value: isCompleted,
-                activeColor: Colors.teal,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                onChanged: (val) => _handleCheck(context, ref, note, val),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      note.title,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        decoration: isCompleted ? TextDecoration.lineThrough : null,
-                        color: isCompleted ? Colors.grey : Colors.black,
-                      ),
-                    ),
-                    if (note.amount != null || note.walletId != null)
-                      const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        if (note.amount != null)
-                          Text(
-                            NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(note.amount),
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isCompleted ? Colors.grey : Colors.teal,
-                            ),
-                          ),
-                        if (note.amount != null && note.walletId != null)
-                          Text(' • ', style: TextStyle(color: Colors.grey[400])),
-                        if (note.walletId != null)
-                          _buildWalletBadge(ref, note.walletId!),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWalletBadge(WidgetRef ref, String walletId) {
-    final walletsAsync = ref.watch(walletListProvider);
-    return walletsAsync.when(
-      data: (wallets) {
-        final wallet = wallets.firstWhere(
-          (w) => (w.externalId ?? w.id.toString()) == walletId,
-          orElse: () => wallets.first, // Fallback
-        );
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.account_balance_wallet, size: 12, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                wallet.name,
-                style: AppTextStyles.bodySmall.copyWith(fontSize: 10, color: Colors.grey[700]),
-              ),
-            ],
-          ),
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
   Widget _buildEmptyState(String message, IconData icon) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-      ),
+    return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 48, color: Colors.grey[300]),
-          const SizedBox(height: 12),
+          const SizedBox(height: 100),
+          Icon(icon, size: 64, color: Colors.grey[300]),
+          const SizedBox(height: 16),
           Text(message, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
         ],
       ),
     );
   }
+}
 
-  Future<void> _handleCheck(BuildContext context, WidgetRef ref, SmartNote note, bool? value) async {
-    if (value == null) return;
+class _SmartNoteCard extends ConsumerStatefulWidget {
+  final SmartNote note;
 
-    int? transactionId;
+  const _SmartNoteCard({required this.note});
 
-    // Case 1: Checking (Marking as Done)
-    if (value && !note.isCompleted) {
-      // Only ask to create transaction if it has amount and wallet
-      if (note.amount != null && note.amount! > 0 && note.walletId != null) {
-        // Ask to create transaction
-        final confirm = await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text('Create Transaction?'),
-            content: Text('Do you want to record "Rp ${NumberFormat.decimalPattern('id').format(note.amount)}" as an expense?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('No, just mark done'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Yes, record expense', style: TextStyle(color: Colors.teal)),
-              ),
-            ],
+  @override
+  ConsumerState<_SmartNoteCard> createState() => _SmartNoteCardState();
+}
+
+class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
+  late SmartNote _note;
+
+  @override
+  void initState() {
+    super.initState();
+    _note = widget.note;
+  }
+  
+  // Update local state when widget.note changes (e.g. from stream update)
+  @override
+  void didUpdateWidget(_SmartNoteCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.note.id != widget.note.id || oldWidget.note.items?.length != widget.note.items?.length) {
+       _note = widget.note;
+    }
+  }
+
+  double get _totalChecked {
+    if (_note.items == null) return 0;
+    return _note.items!
+        .where((i) => i.isDone)
+        .fold(0, (sum, i) => sum + (i.amount ?? 0));
+  }
+  
+  double get _totalAmount {
+     if (_note.items == null) return 0;
+     return _note.items!.fold(0, (sum, i) => sum + (i.amount ?? 0));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isCompleted = _note.isCompleted;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+           BoxShadow(
+             color: Colors.black.withOpacity(0.04),
+             blurRadius: 16,
+             offset: const Offset(0, 4),
+           ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isCompleted ? Colors.grey[100] : Colors.teal.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    isCompleted ? Icons.check_circle_outline : Icons.shopping_basket,
+                    color: isCompleted ? Colors.grey : Colors.teal,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _note.title,
+                        style: AppTextStyles.h3.copyWith(
+                          decoration: isCompleted ? TextDecoration.lineThrough : null,
+                          color: isCompleted ? Colors.grey : Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                       '${DateFormat('d MMM yyyy').format(_note.createdAt)}  •  ${_note.items?.length ?? 0} Items',
+                        style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_horiz, color: Colors.grey),
+                  onSelected: (val) {
+                    if (val == 'edit') {
+                      context.push('/smart-notes/edit', extra: _note);
+                    } else if (val == 'delete') {
+                      _deleteNote();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                    const PopupMenuItem(value: 'delete', child: Text('Delete', style: TextStyle(color: Colors.red))),
+                  ],
+                ),
+              ],
+            ),
           ),
-        );
-
-        // If dismissed (clicked outside), do nothing
-        if (confirm == null) return;
-
-        if (confirm == true) {
-          // Create Transaction
-          final transaction = Transaction.create(
-            title: 'Smart Note: ${note.title}',
-            amount: note.amount!,
-            type: TransactionType.expense,
-            categoryId: note.categoryId ?? 'notes', // Default or from note
-            date: DateTime.now(),
-            note: note.notes,
-            walletId: note.walletId,
-          );
           
-          final repo = await ref.read(transactionRepositoryProvider.future);
-          // Capture the ID of the created transaction
-          transactionId = await repo.addTransaction(transaction);
+          const Divider(height: 1),
           
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Transaction recorded!')),
-          );
-        }
-      }
-    } 
-    // Case 2: Unchecking (Marking as Not Done)
-    else if (!value && note.isCompleted) {
-      // If there is an associated transaction, delete it
-      if (note.transactionId != null) {
-        final repo = await ref.read(transactionRepositoryProvider.future);
-        await repo.deleteTransaction(note.transactionId!);
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Associated transaction removed')),
+          // Items List
+          if (_note.items != null && _note.items!.isNotEmpty)
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _note.items!.length,
+              separatorBuilder: (_,__) => Divider(height: 1, indent: 64, color: Colors.grey[100]),
+              itemBuilder: (context, index) {
+                final item = _note.items![index];
+                return CheckboxListTile(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  activeColor: Colors.teal,
+                  enabled: !isCompleted,
+                  title: Text(
+                    item.name,
+                    style: TextStyle(
+                      decoration: item.isDone ? TextDecoration.lineThrough : null,
+                      color: item.isDone ? Colors.grey : Colors.black87,
+                      fontSize: 15,
+                    ),
+                  ),
+                  subtitle: item.amount != null
+                    ? Text(NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(item.amount), style: TextStyle(fontSize: 12, color: Colors.grey[600]))
+                    : null,
+                  value: item.isDone,
+                  onChanged: (val) {
+                    setState(() {
+                      item.isDone = val ?? false;
+                    });
+                     // Save immediately
+                    ref.read(smartNoteRepositoryProvider).updateNote(_note);
+                  },
+                );
+              },
+            )
+          else 
+            const Padding(
+               padding: EdgeInsets.all(24),
+               child: Text('No items in this bundle', style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)),
+            ),
+
+          const Divider(height: 1),
+
+          // Footer Action
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            ),
+            child: Row(
+              children: [
+                if (_note.walletId != null)
+                   _buildWalletInfo(ref, _note.walletId!),
+                const Spacer(),
+                if (!isCompleted)
+                  ElevatedButton(
+                    onPressed: _totalChecked > 0 ? _processTransaction : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      disabledBackgroundColor: Colors.teal.withOpacity(0.3),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      'Pay Rp ${NumberFormat.decimalPattern('id').format(_totalChecked)}',
+                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                    ),
+                  )
+                else
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text('Paid & Completed', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
+                      ),
+                      const SizedBox(width: 8),
+                      TextButton(
+                        onPressed: _undoTransaction,
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.orange,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        child: const Text('Undo Pay', style: TextStyle(fontSize: 12)),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWalletInfo(WidgetRef ref, String walletId) {
+    final walletsAsync = ref.watch(walletListProvider);
+    return walletsAsync.when(
+      data: (wallets) {
+        final wallet = wallets.firstWhere(
+           (w) => (w.externalId ?? w.id.toString()) == walletId,
+           orElse: () => wallets.first
         );
+        return Row(
+          children: [
+            Icon(Icons.account_balance_wallet, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 4),
+            Text(wallet.name, style: TextStyle(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.w500)),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_,__) => const SizedBox.shrink(),
+    );
+  }
+
+  Future<void> _deleteNote() async {
+     final confirm = await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Delete Bundle?'),
+          actions: [
+             TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+             TextButton(onPressed: () {
+                Navigator.pop(ctx);
+                ref.read(smartNoteRepositoryProvider).deleteNote(_note.id);
+             }, child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          ],
+        ),
+     );
+  }
+
+  Future<void> _processTransaction() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Payment'),
+        content: Text('Create transaction for Rp ${NumberFormat.decimalPattern('id').format(_totalChecked)}?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true), 
+            child: const Text('Confirm', style: TextStyle(color: Colors.teal))
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      final transaction = Transaction.create(
+        title: 'Bundle: ${_note.title}',
+        amount: _totalChecked,
+        type: TransactionType.expense,
+        categoryId: 'notes', 
+        date: DateTime.now(),
+        note: 'Items: ${_note.items!.where((i) => i.isDone).map((i) => i.name).join(', ')}',
+        walletId: _note.walletId,
+      );
+      
+      final repo = await ref.read(transactionRepositoryProvider.future);
+      final tid = await repo.addTransaction(transaction);
+      
+      _note.isCompleted = true;
+      _note.transactionId = tid;
+      await ref.read(smartNoteRepositoryProvider).updateNote(_note);
+      
+      if (mounted) {
+         setState(() {});
+         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Paid & Completed!')));
       }
     }
+  }
 
-    // Update the note status and link/unlink transaction
-    await ref.read(smartNoteRepositoryProvider).toggleComplete(
-      note.id, 
-      isCompleted: value,
-      transactionId: transactionId,
+  Future<void> _undoTransaction() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Undo Payment?'),
+        content: const Text('This will delete the transaction, refund the wallet, and reopen the bundle.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true), 
+            child: const Text('Undo & Reopen', style: TextStyle(color: Colors.orange))
+          ),
+        ],
+      ),
     );
+
+    if (confirm == true && _note.transactionId != null) {
+      try {
+        final repo = await ref.read(transactionRepositoryProvider.future);
+        await repo.deleteTransaction(_note.transactionId!);
+      } catch (e) {
+        // Transaction might already be deleted manually, proceed to open note.
+      }
+      
+      _note.isCompleted = false;
+      _note.transactionId = null;
+      await ref.read(smartNoteRepositoryProvider).updateNote(_note);
+      
+      if (mounted) {
+         setState(() {});
+         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Purchase Reopened')));
+      }
+    }
   }
 }

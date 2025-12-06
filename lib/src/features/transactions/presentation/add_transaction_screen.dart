@@ -242,7 +242,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             const SizedBox(height: 8),
             if (type == TransactionType.system || 
                 type == TransactionType.transfer ||
-                (widget.transactionToEdit != null && ['debt', 'debts', 'saving', 'savings'].contains(widget.transactionToEdit!.categoryId)))
+                (widget.transactionToEdit != null && ['debt', 'debts', 'saving', 'savings', 'notes', 'bills', 'wishlist'].contains(widget.transactionToEdit!.categoryId)))
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -260,7 +260,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                                 ? Colors.purple.withOpacity(0.2)
                                 : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
                                     ? Colors.blue.withOpacity(0.2)
-                                    : Colors.blue.withOpacity(0.2))),
+                                    : (widget.transactionToEdit?.categoryId == 'notes' 
+                                        ? Colors.teal.withOpacity(0.2) 
+                                        : (widget.transactionToEdit?.categoryId == 'bills' 
+                                            ? Colors.orange.withOpacity(0.2) 
+                                            : (widget.transactionToEdit?.categoryId == 'wishlist' ? Colors.pink.withOpacity(0.2) : Colors.blue.withOpacity(0.2)))))),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -270,14 +274,22 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                                 ? Icons.handshake
                                 : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
                                     ? Icons.savings
-                                    : Icons.settings)),
+                                    : (widget.transactionToEdit?.categoryId == 'notes' 
+                                        ? Icons.shopping_basket 
+                                        : (widget.transactionToEdit?.categoryId == 'bills' 
+                                            ? Icons.receipt_long 
+                                            : (widget.transactionToEdit?.categoryId == 'wishlist' ? Icons.favorite : Icons.settings))))),
                         color: type == TransactionType.transfer 
                             ? Colors.indigo 
                             : (widget.transactionToEdit?.categoryId == 'debt' || widget.transactionToEdit?.categoryId == 'debts'
                                 ? Colors.purple
                                 : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
                                     ? Colors.blue
-                                    : Colors.blue)),
+                                    : (widget.transactionToEdit?.categoryId == 'notes' 
+                                        ? Colors.teal 
+                                        : (widget.transactionToEdit?.categoryId == 'bills' 
+                                            ? Colors.orange 
+                                            : (widget.transactionToEdit?.categoryId == 'wishlist' ? Colors.pink : Colors.blue))))),
                         size: 20
                       ),
                     ),
@@ -290,7 +302,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                               ? 'DEBT'
                               : (widget.transactionToEdit?.categoryId == 'saving' || widget.transactionToEdit?.categoryId == 'savings'
                                   ? 'SAVINGS'
-                                  : (widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM'))),
+                                  : (widget.transactionToEdit?.categoryId == 'notes' 
+                                      ? 'BUNDLED NOTES' 
+                                      : (widget.transactionToEdit?.categoryId == 'bills' 
+                                          ? 'BILLS' 
+                                          : (widget.transactionToEdit?.categoryId == 'wishlist' ? 'WISHLIST' : (widget.transactionToEdit?.categoryId?.toUpperCase() ?? 'SYSTEM')))))),
                         style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[700]),
                       ),
                     ),

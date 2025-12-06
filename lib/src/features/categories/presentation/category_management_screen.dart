@@ -282,10 +282,10 @@ class _SystemCategoryList extends StatelessWidget {
         'description': 'Automated transactions from Savings deposits/withdrawals',
       },
       {
-        'name': 'Notes',
-        'icon': Icons.edit_note_rounded,
+        'name': 'Bundled Notes',
+        'icon': Icons.shopping_basket_rounded,
         'color': Colors.teal,
-        'description': 'Automated transactions from Smart Notes',
+        'description': 'Automated transactions from Smart Bundles',
       },
       {
         'name': 'Reimburse',

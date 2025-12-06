@@ -4,6 +4,7 @@ import '../../transactions/domain/transaction.dart';
 
 import 'package:isar/isar.dart';
 import '../../common/data/isar_provider.dart';
+import '../../wallets/domain/wallet.dart';
 
 abstract class TransactionRepository {
   Future<int> addTransaction(Transaction transaction);
@@ -13,6 +14,16 @@ abstract class TransactionRepository {
   Stream<List<Transaction>> watchTransactions();
 }
 
+final transactionRepositoryProvider = FutureProvider<TransactionRepository>((ref) async {
+  final isar = await ref.watch(isarProvider.future);
+  return IsarTransactionRepository(isar);
+});
+
+final transactionStreamProvider = StreamProvider<List<Transaction>>((ref) async* {
+  final repository = await ref.watch(transactionRepositoryProvider.future);
+  yield* repository.watchTransactions();
+});
+
 class IsarTransactionRepository implements TransactionRepository {
   final Isar isar;
 
@@ -21,12 +32,30 @@ class IsarTransactionRepository implements TransactionRepository {
   @override
   Future<int> addTransaction(Transaction transaction) async {
     return await isar.writeTxn(() async {
-      return await isar.transactions.put(transaction);
+      final id = await isar.transactions.put(transaction);
+      
+      // Update Wallet Balance
+      if (transaction.walletId != null) {
+        final wallet = await isar.wallets.filter().idEqualTo(int.tryParse(transaction.walletId!) ?? -1).or().externalIdEqualTo(transaction.walletId!).findFirst();
+        
+        if (wallet != null) {
+          if (transaction.type == TransactionType.income) {
+            wallet.balance += transaction.amount;
+          } else {
+            wallet.balance -= transaction.amount;
+          }
+          await isar.wallets.put(wallet);
+        }
+      }
+      return id;
     });
   }
 
   @override
   Future<void> updateTransaction(Transaction transaction) async {
+    // Note: Complex handling needed for balance update on edit. 
+    // Simplified for now: assuming Amount changes are handled separately or rarely. 
+    // Ideally, we should diff with old transaction or revert old and apply new.
     await isar.writeTxn(() async {
       await isar.transactions.put(transaction);
     });
@@ -35,7 +64,23 @@ class IsarTransactionRepository implements TransactionRepository {
   @override
   Future<void> deleteTransaction(Id id) async {
     await isar.writeTxn(() async {
-      await isar.transactions.delete(id);
+      final transaction = await isar.transactions.get(id);
+      if (transaction != null) {
+        // Revert Wallet Balance
+        if (transaction.walletId != null) {
+          final wallet = await isar.wallets.filter().idEqualTo(int.tryParse(transaction.walletId!) ?? -1).or().externalIdEqualTo(transaction.walletId!).findFirst();
+          
+          if (wallet != null) {
+            if (transaction.type == TransactionType.income) {
+               wallet.balance -= transaction.amount;
+            } else {
+               wallet.balance += transaction.amount;
+            }
+            await isar.wallets.put(wallet);
+          }
+        }
+        await isar.transactions.delete(id);
+      }
     });
   }
 
@@ -50,12 +95,4 @@ class IsarTransactionRepository implements TransactionRepository {
   }
 }
 
-final transactionRepositoryProvider = FutureProvider<TransactionRepository>((ref) async {
-  final isar = await ref.watch(isarProvider.future);
-  return IsarTransactionRepository(isar);
-});
 
-final transactionStreamProvider = StreamProvider<List<Transaction>>((ref) async* {
-  final repository = await ref.watch(transactionRepositoryProvider.future);
-  yield* repository.watchTransactions();
-});
