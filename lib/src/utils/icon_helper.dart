@@ -11,6 +11,8 @@ class IconHelper {
       case 'savings': return Icons.savings;
       case 'monetization_on': return Icons.monetization_on;
       case 'wallet': return Icons.wallet;
+      case 'money': return Icons.wallet; // Mapped 'money' to Wallet icon as requested
+      case 'cash': return Icons.wallet; // Mapped 'cash' to Wallet icon as requested, just in case
       case 'currency_exchange': return Icons.currency_exchange;
       case 'account_box': return Icons.account_box;
       
