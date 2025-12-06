@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../data/onboarding_repository.dart';
@@ -20,22 +21,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final List<OnboardingPageData> _pages = [
     OnboardingPageData(
       title: 'Savings',
-      subtitle: 'Counts',
-      description: 'Including a Liability Guarantee that helps cover you from fraudulent transactions',
+      subtitle: 'Grow',
+      description: 'Start saving more effectively by tracking where your money goes and cutting unnecessary expenses.',
       imagePath: 'assets/images/onboarding_savings.png',
       color: Colors.white,
     ),
     OnboardingPageData(
       title: 'Statistics',
-      subtitle: 'Increase',
-      description: 'Invest your way! We help you create a personalized strategy to pursue your goals',
+      subtitle: 'Insights',
+      description: 'Analyze your income and expense trends with detailed reports to make smarter financial decisions.',
       imagePath: 'assets/images/onboarding_statistics.png',
       color: Colors.white,
     ),
     OnboardingPageData(
       title: 'Management',
-      subtitle: 'Finance',
-      description: 'Personalized insights and guidance to help you stay on top of your finances',
+      subtitle: 'Control',
+      description: 'Manage all your wallets, accounts, and budgets in one simple and intuitive place.',
       imagePath: 'assets/images/onboarding_management.png',
       color: Colors.white,
     ),
@@ -68,8 +69,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -140,6 +148,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ],
         ),
       ),
+      ),
     );
   }
 }
@@ -194,7 +203,7 @@ class _OnboardingPage extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const Spacer(flex: 2),
+
         ],
       ),
     );
