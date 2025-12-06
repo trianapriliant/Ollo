@@ -6,53 +6,63 @@ Ollo is a comprehensive personal finance management application built with **Flu
 ## Architecture
 
 ### 1. Project Structure
-The project follows a **Feature-First (Layered)** architecture. Features are modularized, which promotes scalability and maintainability.
+The project follows a **Feature-First (Layered)** architecture.
 - `lib/src/features/`: Contains all feature-specific code (e.g., `transactions`, `wallets`, `budget`).
 - `lib/src/routing/`: Centralized navigation logic.
 - `lib/src/common_widgets/`: Reusable UI components.
-- `lib/src/utils/`: Shared utilities.
-
-Each feature folder generally contains:
-- `domain`: Entity definitions (Data models).
-- `data`: Repositories and data sources.
-- `presentation`: UI screens and state management (providers/controllers).
 
 ### 2. State Management
 **Riverpod** is the primary state management solution.
 - Usage of `ConsumerStatefulWidget` and `ConsumerWidget` for UI updates.
-- `FutureProvider` and `StreamProvider` are used heavily for asynchronous data handling (database queries).
-- Dependency injection is handled gracefully by Riverpod containers (`ProviderScope` at the root).
+- `FutureProvider` and `StreamProvider` are used heavily for asynchronous data handling.
 
-### 3. Navigation
-**GoRouter** handles routing, providing deep linking support and a declarative routing structure.
-- **Shell Routes (`StatefulShellRoute`)**: Used for the persistent Bottom Navigation Bar (Home, Statistics, Wallet, Profile).
-- **Guards**: Logic exists to redirect users based on onboarding status (`/onboarding` vs `/home`).
+### 3. Data Persistence
+**Isar Database** is used for local data storage using the Repository Pattern.
 
-### 4. Data Persistence
-**Isar Database** is used for local data storage.
-- High-performance NoSQL database for Flutter.
-- Schema is defined via annotated classes (e.g., `@collection` in `Transaction`).
-- **Repository Pattern**: Data access logic is abstracted in repositories (e.g., `IsarTransactionRepository`), allowing for clean separation between UI and data layers.
+## Deep Dive Analysis: Interactions & Critical Risks
 
-### 5. Localization & Internationalization
-The app supports multiple languages (English and Indonesian) using `flutter_localizations` and generated `AppLocalizations`.
+### 1. Transaction & Wallet Interaction (CRITICAL)
+The application maintains `Wallet` balances as a **stored field** (`balance`) in the `Wallet` entity, rather than calculating it dynamically from the transaction history. This approach introduces a significant risk of **Data Consistency**.
 
-## Key Functionalities & Modules
+**Current Mechanism:**
+When adding a transaction (e.g., in `AddTransactionScreen`):
+1.  **Transaction Added**: `await transactionRepo.addTransaction(newTransaction);`
+2.  **Wallet Fetched**: `wallet = await walletRepo.getWallet(...)`
+3.  **Balance Modified**: `wallet.balance -= amount;` (Memory update)
+4.  **Wallet Saved**: `await walletRepo.addWallet(wallet);`
 
-| Module | Description |
-| :--- | :--- |
-| **Transactions** | Core feature. Handles Income, Expense, Transfers. Supports categories and recurring options. |
-| **Wallets** | Manages different accounts/cards. Transactions are linked to specific wallets. |
-| **Statistics** | Visual breakdown of financial data (likely charts/graphs). |
-| **Budgeting** | Allows setting and tracking spending limits. |
-| **Savings & Goals** | Goal-oriented saving tracking. |
-| **Debts & Loans** | Tracking borrowed/lent money. |
-| **Bills & Subscriptions** | Management of recurring payments and bills. |
+**Risk Identified (Race Coindition & Atomicity):**
+The operations `addTransaction` and `updateWallet` are **not atomic**. They run as two separate asynchronous database calls.
+-   **Scenario 1 (Crash/Error)**: If the app crashes or `addWallet` fails after `addTransaction` succeeds, the **Transaction exists but the Wallet Balance is not updated**. The user will see the transaction in the list, but their total balance will be wrong.
+-   **Scenario 2 (Concurrency)**: If two concurrent processes (e.g., a recurring background service and a manual user entry) try to update the same wallet, one might overwrite the other's balance update because they fetch-modify-save the entire wallet object.
 
-## Code Quality Observations
-- **Strong Typing**: Dart's type system is well-utilized.
-- **Asynchronous Handling**: Proper use of `async/await` and Streams for reactive UI updates from the database.
-- **Clean Code**: separation of concerns is evident. The distinction between `domain` (business logic/entities) and `presentation` (UI) is clear.
+### 2. Recurring Transactions
+The `RecurringTransactionService` follows the same risky pattern:
+```dart
+// Pseudo-code from analysis
+await transactionRepo.addTransaction(newTransaction);
+wallet.balance -= amount;
+await walletRepo.updateWallet(wallet);
+```
+Since this runs in the background (potentially), errors here are harder to catch for the user, leading to "mystery" balance mismatches over time.
+
+### 3. Budget Logic (SAFE)
+Unlike Wallets, the **Budget** feature is implemented safely.
+-   **Dynamic Calculation**: `BudgetRepository.calculateSpentAmount` queries `Isar` for all transactions within the budget period and sums them up on the fly.
+-   **No Stored State**: The `Budget` entity does not store a `spentAmount`.
+-   **Conclusion**: Budgets will always remain in sync with transactions.
+
+### 4. Edit/Update Complexity
+The generic `AddTransactionScreen` contains complex logic to handle updates:
+-   It manually reverts the *old* transaction's effect on the *old* wallet.
+-   Then applies the *new* transaction's effect on the *new* wallet.
+-   **Risk**: Complex conditional logic (Income vs Expense vs Transfer) in the UI layer increases the chance of "off-by-one" logic errors or missing edge cases (e.g. changing an Income to an Expense).
+
+## Recommendations for Stability
+
+1.  **Migrate to Atomic Transactions**: Use Isar's synchronous transactions (`isar.writeTxnSync`) or bundled async transactions to perform both the `Transaction` insert and `Wallet` update in a **single atomic block**. If one fails, both should roll back.
+2.  **Centralize Logic**: Move the "Add Transaction + Update Balance" logic out of the UI (`AddTransactionScreen`) and into a dedicated `TransactionService` class. This ensures that every entry point (UI, recurring, import) uses the exact same rigorous logic.
+3.  **Consider Dynamic Balances**: If performance allows (Isar is very fast), consider calculating Wallet balances dynamically like Budgets, or at least implementing a "Recalculate Balances" repair tool that users can run if they suspect sync issues.
 
 ## Conclusion
-The project is well-architected for a production-ready Flutter application. The combination of **Riverpod**, **GoRouter**, and **Isar** provides a modern, reactive, and performant foundation. The modular structure ensures that adding new features (like new transaction types or analytics) will not destabilize existing code.
+The project is well-architected overall, but the **Data Consistency** model for Wallets is brittle. The lack of ACID (Atomicity) in financial transactions is the most likely source of critical bugs (e.g. "My money disappeared" or "My balance is wrong"). Focusing on hardening the `TransactionService` to be atomic is the highest priority improvement.
