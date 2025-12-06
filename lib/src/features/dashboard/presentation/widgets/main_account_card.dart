@@ -65,6 +65,9 @@ class MainAccountCard extends ConsumerWidget {
                   label: 'Income',
                   amount: totals['income']!,
                   currency: currency,
+                  onTap: () {
+                    context.push('/filtered-transactions', extra: {'isExpense': false});
+                  },
                   icon: Icons.arrow_downward_rounded,
                   iconColor: Colors.white,
                 ),
@@ -76,6 +79,9 @@ class MainAccountCard extends ConsumerWidget {
                   label: 'Expense',
                   amount: totals['expense']!,
                   currency: currency,
+                  onTap: () {
+                    context.push('/filtered-transactions', extra: {'isExpense': true});
+                  },
                   icon: Icons.arrow_upward_rounded,
                   iconColor: Colors.white,
                 ),
@@ -94,51 +100,55 @@ class MainAccountCard extends ConsumerWidget {
     required Currency currency,
     required IconData icon,
     required Color iconColor,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(12), // Reduced from 16
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.2),
-          width: 1,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12), // Reduced from 16
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.2),
+            width: 1,
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, size: 16, color: iconColor),
                 ),
-                child: Icon(icon, size: 16, color: iconColor),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white.withOpacity(0.9),
-                  fontWeight: FontWeight.w500,
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8), // Reduced from 12
-          Text(
-            currency.format(amount),
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+              ],
             ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            const SizedBox(height: 8), // Reduced from 12
+            Text(
+              currency.format(amount),
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

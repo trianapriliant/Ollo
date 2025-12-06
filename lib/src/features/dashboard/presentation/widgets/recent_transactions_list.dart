@@ -248,7 +248,7 @@ class RecentTransactionsList extends ConsumerWidget {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
-    String dateLabel = DateFormat('dd MMM yyyy').format(date);
+    String dateLabel = DateFormat('dd MMM yyyy - EEEE').format(date);
 
     final isPositive = dailyTotal >= 0;
     final formattedTotal = '${isPositive ? "+" : ""}${currency.format(dailyTotal.abs())}';
