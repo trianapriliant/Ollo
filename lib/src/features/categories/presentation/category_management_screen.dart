@@ -287,6 +287,12 @@ class _SystemCategoryList extends StatelessWidget {
         'color': Colors.teal,
         'description': 'Automated transactions from Smart Notes',
       },
+      {
+        'name': 'Reimburse',
+        'icon': Icons.currency_exchange,
+        'color': Colors.orangeAccent,
+        'description': 'Reimbursement tracking system',
+      },
     ];
 
     return ListView.separated(

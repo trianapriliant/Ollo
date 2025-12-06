@@ -42,34 +42,40 @@ const TransactionSchema = CollectionSchema(
       name: r'note',
       type: IsarType.string,
     ),
-    r'subCategoryIcon': PropertySchema(
+    r'status': PropertySchema(
       id: 5,
+      name: r'status',
+      type: IsarType.string,
+      enumMap: _TransactionstatusEnumValueMap,
+    ),
+    r'subCategoryIcon': PropertySchema(
+      id: 6,
       name: r'subCategoryIcon',
       type: IsarType.string,
     ),
     r'subCategoryId': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'subCategoryId',
       type: IsarType.string,
     ),
     r'subCategoryName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'subCategoryName',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'title',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'type',
       type: IsarType.string,
       enumMap: _TransactiontypeEnumValueMap,
     ),
     r'walletId': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -112,6 +118,7 @@ int _transactionEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.status.name.length * 3;
   {
     final value = object.subCategoryIcon;
     if (value != null) {
@@ -152,12 +159,13 @@ void _transactionSerialize(
   writer.writeDateTime(offsets[2], object.date);
   writer.writeString(offsets[3], object.destinationWalletId);
   writer.writeString(offsets[4], object.note);
-  writer.writeString(offsets[5], object.subCategoryIcon);
-  writer.writeString(offsets[6], object.subCategoryId);
-  writer.writeString(offsets[7], object.subCategoryName);
-  writer.writeString(offsets[8], object.title);
-  writer.writeString(offsets[9], object.type.name);
-  writer.writeString(offsets[10], object.walletId);
+  writer.writeString(offsets[5], object.status.name);
+  writer.writeString(offsets[6], object.subCategoryIcon);
+  writer.writeString(offsets[7], object.subCategoryId);
+  writer.writeString(offsets[8], object.subCategoryName);
+  writer.writeString(offsets[9], object.title);
+  writer.writeString(offsets[10], object.type.name);
+  writer.writeString(offsets[11], object.walletId);
 }
 
 Transaction _transactionDeserialize(
@@ -173,14 +181,17 @@ Transaction _transactionDeserialize(
   object.destinationWalletId = reader.readStringOrNull(offsets[3]);
   object.id = id;
   object.note = reader.readStringOrNull(offsets[4]);
-  object.subCategoryIcon = reader.readStringOrNull(offsets[5]);
-  object.subCategoryId = reader.readStringOrNull(offsets[6]);
-  object.subCategoryName = reader.readStringOrNull(offsets[7]);
-  object.title = reader.readString(offsets[8]);
+  object.status =
+      _TransactionstatusValueEnumMap[reader.readStringOrNull(offsets[5])] ??
+          TransactionStatus.pending;
+  object.subCategoryIcon = reader.readStringOrNull(offsets[6]);
+  object.subCategoryId = reader.readStringOrNull(offsets[7]);
+  object.subCategoryName = reader.readStringOrNull(offsets[8]);
+  object.title = reader.readString(offsets[9]);
   object.type =
-      _TransactiontypeValueEnumMap[reader.readStringOrNull(offsets[9])] ??
+      _TransactiontypeValueEnumMap[reader.readStringOrNull(offsets[10])] ??
           TransactionType.income;
-  object.walletId = reader.readStringOrNull(offsets[10]);
+  object.walletId = reader.readStringOrNull(offsets[11]);
   return object;
 }
 
@@ -202,34 +213,47 @@ P _transactionDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
+      return (_TransactionstatusValueEnumMap[reader.readStringOrNull(offset)] ??
+          TransactionStatus.pending) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
+      return (reader.readString(offset)) as P;
+    case 10:
       return (_TransactiontypeValueEnumMap[reader.readStringOrNull(offset)] ??
           TransactionType.income) as P;
-    case 10:
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
+const _TransactionstatusEnumValueMap = {
+  r'pending': r'pending',
+  r'completed': r'completed',
+};
+const _TransactionstatusValueEnumMap = {
+  r'pending': TransactionStatus.pending,
+  r'completed': TransactionStatus.completed,
+};
 const _TransactiontypeEnumValueMap = {
   r'income': r'income',
   r'expense': r'expense',
   r'transfer': r'transfer',
   r'system': r'system',
+  r'reimbursement': r'reimbursement',
 };
 const _TransactiontypeValueEnumMap = {
   r'income': TransactionType.income,
   r'expense': TransactionType.expense,
   r'transfer': TransactionType.transfer,
   r'system': TransactionType.system,
+  r'reimbursement': TransactionType.reimbursement,
 };
 
 Id _transactionGetId(Transaction object) {
@@ -945,6 +969,140 @@ extension TransactionQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'note',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition> statusEqualTo(
+    TransactionStatus value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition>
+      statusGreaterThan(
+    TransactionStatus value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition> statusLessThan(
+    TransactionStatus value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition> statusBetween(
+    TransactionStatus lower,
+    TransactionStatus upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition>
+      statusStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition> statusEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition> statusContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition> statusMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'status',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition>
+      statusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterFilterCondition>
+      statusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'status',
         value: '',
       ));
     });
@@ -1899,6 +2057,18 @@ extension TransactionQuerySortBy
     });
   }
 
+  QueryBuilder<Transaction, Transaction, QAfterSortBy> sortByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterSortBy> sortByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
   QueryBuilder<Transaction, Transaction, QAfterSortBy> sortBySubCategoryIcon() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subCategoryIcon', Sort.asc);
@@ -2051,6 +2221,18 @@ extension TransactionQuerySortThenBy
     });
   }
 
+  QueryBuilder<Transaction, Transaction, QAfterSortBy> thenByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Transaction, Transaction, QAfterSortBy> thenByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
   QueryBuilder<Transaction, Transaction, QAfterSortBy> thenBySubCategoryIcon() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subCategoryIcon', Sort.asc);
@@ -2163,6 +2345,13 @@ extension TransactionQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Transaction, Transaction, QDistinct> distinctByStatus(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'status', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Transaction, Transaction, QDistinct> distinctBySubCategoryIcon(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2245,6 +2434,13 @@ extension TransactionQueryProperty
   QueryBuilder<Transaction, String?, QQueryOperations> noteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'note');
+    });
+  }
+
+  QueryBuilder<Transaction, TransactionStatus, QQueryOperations>
+      statusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'status');
     });
   }
 

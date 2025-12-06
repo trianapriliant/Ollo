@@ -64,6 +64,12 @@ class DashboardMenuGrid extends StatelessWidget {
         color: Colors.teal,
         onTap: () => context.push('/smart-notes'),
       ),
+      _MenuItem(
+        icon: Icons.currency_exchange,
+        label: 'Reimburse',
+        color: Colors.orangeAccent,
+        onTap: () => context.push('/reimburse'),
+      ),
     ];
 
     return Column(

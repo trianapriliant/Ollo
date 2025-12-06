@@ -2,7 +2,9 @@ import 'package:isar/isar.dart';
 
 part 'transaction.g.dart';
 
-enum TransactionType { income, expense, transfer, system }
+enum TransactionType { income, expense, transfer, system, reimbursement }
+
+enum TransactionStatus { pending, completed }
 
 @collection
 class Transaction {
@@ -16,6 +18,9 @@ class Transaction {
 
   @Enumerated(EnumType.name)
   late TransactionType type;
+  
+  @Enumerated(EnumType.name)
+  TransactionStatus status = TransactionStatus.completed; // Default to completed for existing types
 
   late String? note;
 
@@ -35,6 +40,7 @@ class Transaction {
     required this.amount,
     required this.date,
     required this.type,
+    this.status = TransactionStatus.completed,
     this.note,
     this.walletId,
     this.destinationWalletId,
@@ -57,4 +63,6 @@ class Transaction {
   bool get isTransfer => type == TransactionType.transfer;
   @ignore
   bool get isSystem => type == TransactionType.system;
+  @ignore
+  bool get isReimbursement => type == TransactionType.reimbursement;
 }

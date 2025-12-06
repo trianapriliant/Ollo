@@ -122,10 +122,15 @@ class RecentTransactionsList extends ConsumerWidget {
                     _buildDateHeader(group.date, group.dailyTotal, currency),
                     const SizedBox(height: 12),
                     ...group.transactions.map((transaction) {
-                      final walletName = wallets.firstWhere(
-                        (w) => w.id.toString() == transaction.walletId || w.externalId == transaction.walletId, 
-                        orElse: () => Wallet()..name = 'Unknown'
-                      ).name;
+                      String walletName;
+                      if (transaction.type == TransactionType.reimbursement && transaction.walletId == null) {
+                        walletName = 'Reimbursement';
+                      } else {
+                        walletName = wallets.firstWhere(
+                          (w) => w.id.toString() == transaction.walletId || w.externalId == transaction.walletId, 
+                          orElse: () => Wallet()..name = 'Unknown'
+                        ).name;
+                      }
                       
                       // Find category and subcategory
                       Category? category;
@@ -205,6 +210,7 @@ class RecentTransactionsList extends ConsumerWidget {
                             transaction.note,
                             transaction.date,
                             isSystem: isSystem,
+                            isReimbursement: transaction.type == TransactionType.reimbursement,
                           ),
                         ),
                       );
@@ -228,10 +234,15 @@ class RecentTransactionsList extends ConsumerWidget {
       groups[dateKey]!.transactions.add(transaction);
       
       final isSystem = transaction.type == TransactionType.system;
+      final isReimbursement = transaction.type == TransactionType.reimbursement;
       final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
       final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
       
-      if ((transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw) {
+      if (isReimbursement) {
+        // Reimbursement does not affect daily total logic for wallet balance display
+        // or effectively it's 0 change.
+        // So we do nothing to dailyTotal.
+      } else if ((transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw) {
         groups[dateKey]!.dailyTotal -= transaction.amount;
       } else {
         groups[dateKey]!.dailyTotal += transaction.amount;
@@ -283,6 +294,7 @@ class RecentTransactionsList extends ConsumerWidget {
     String? note,
     DateTime date, {
     bool isSystem = false,
+    bool isReimbursement = false,
   }) {
     // Determine if it's a Wishlist, Bill, Debt, or Savings transaction based on Category ID or Title
     final isWishlist = (category?.externalId == 'wishlist') || (isSystem && title.toLowerCase().contains('wishlist'));
@@ -293,41 +305,47 @@ class RecentTransactionsList extends ConsumerWidget {
 
     final iconPath = subCategoryIcon ?? category?.iconPath;
 
-    final iconData = isBill 
-        ? Icons.receipt_long_rounded
-        : (isWishlist 
-            ? Icons.favorite_rounded
-            : (isDebt 
-                ? Icons.handshake_rounded
-                : (isSavings 
-                    ? Icons.savings_rounded
-                    : (isTransfer 
-                        ? Icons.swap_horiz
-                        : (iconPath != null ? IconHelper.getIcon(iconPath) : Icons.help_outline)))));
+    final iconData = isReimbursement 
+        ? Icons.currency_exchange
+        : (isBill 
+            ? Icons.receipt_long_rounded
+            : (isWishlist 
+                ? Icons.favorite_rounded
+                : (isDebt 
+                    ? Icons.handshake_rounded
+                    : (isSavings 
+                        ? Icons.savings_rounded
+                        : (isTransfer 
+                            ? Icons.swap_horiz
+                            : (iconPath != null ? IconHelper.getIcon(iconPath) : Icons.help_outline))))));
         
-    final iconColor = isBill 
-        ? Colors.orange
-        : (isWishlist 
-            ? Colors.pinkAccent
-            : (isDebt 
-                ? Colors.purple
-                : (isSavings 
-                    ? Colors.blue
-                    : (isTransfer 
-                        ? Colors.indigo 
-                        : (category?.color ?? AppColors.primary)))));
+    final iconColor = isReimbursement
+        ? Colors.orangeAccent
+        : (isBill 
+            ? Colors.orange
+            : (isWishlist 
+                ? Colors.pinkAccent
+                : (isDebt 
+                    ? Colors.purple
+                    : (isSavings 
+                        ? Colors.blue
+                        : (isTransfer 
+                            ? Colors.indigo 
+                            : (category?.color ?? AppColors.primary))))));
         
-    final backgroundColor = isBill 
-        ? Colors.orange.withOpacity(0.1)
-        : (isWishlist 
-            ? Colors.pinkAccent.withOpacity(0.1)
-            : (isDebt 
-                ? Colors.purple.withOpacity(0.1)
-                : (isSavings 
-                    ? Colors.blue.withOpacity(0.1)
-                    : (isTransfer 
-                        ? Colors.indigo.withOpacity(0.1)
-                        : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue)))));
+    final backgroundColor = isReimbursement
+        ? Colors.orangeAccent.withOpacity(0.1)
+        : (isBill 
+            ? Colors.orange.withOpacity(0.1)
+            : (isWishlist 
+                ? Colors.pinkAccent.withOpacity(0.1)
+                : (isDebt 
+                    ? Colors.purple.withOpacity(0.1)
+                    : (isSavings 
+                        ? Colors.blue.withOpacity(0.1)
+                        : (isTransfer 
+                            ? Colors.indigo.withOpacity(0.1)
+                            : (category?.color.withOpacity(0.1) ?? AppColors.accentBlue))))));
         
     final timeStr = DateFormat('HH:mm').format(date);
     
@@ -337,8 +355,9 @@ class RecentTransactionsList extends ConsumerWidget {
     if (isDebt) systemNote = ' - Debt Transaction';
     if (isSavings) systemNote = ' - Savings Transaction';
     if (isTransfer) systemNote = ' - Transfer';
+    if (isReimbursement) systemNote = ' - Reimbursement';
     
-    final noteStr = isSystem 
+    final noteStr = isSystem || isReimbursement
         ? systemNote
         : (note != null && note.isNotEmpty ? ' - $note' : '');
 

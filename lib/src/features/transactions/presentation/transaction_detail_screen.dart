@@ -64,19 +64,6 @@ class TransactionDetailScreen extends ConsumerWidget {
                     _buildDetailItem('Kategori', _getCategoryName(categoryAsync, transaction.categoryId)),
                     _buildDivider(),
                   ],
-                  _buildDetailItem('Wallet', _getWalletName(walletsAsync, transaction.walletId)),
-                  if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) ...[
-                     _buildDivider(),
-                     _buildDetailItem('To Wallet', _getWalletName(walletsAsync, transaction.destinationWalletId)),
-                  ],
-                  _buildDivider(),
-                  _buildDetailItem('Tanggal', DateFormat('dd MMM yyyy').format(transaction.date)),
-                  _buildDivider(),
-                  _buildDetailItem('Jam', DateFormat('HH:mm').format(transaction.date)),
-                  if (transaction.note != null && transaction.note!.isNotEmpty) ...[
-                    _buildDivider(),
-                    _buildDetailItem('Catatan', transaction.note!),
-                  ],
                 ],
               ),
             ),
@@ -282,7 +269,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Wishlist data not found')),
                         );
-                      }
+                      } 
                     }
                   } else if (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('lent')) {
                      // Try to find associated Debt
@@ -301,6 +288,14 @@ class TransactionDetailScreen extends ConsumerWidget {
                      // Fallback for other system types
                      context.push('/add-transaction', extra: transaction); 
                   }
+                } else if (transaction.type == TransactionType.reimbursement) {
+                    // Reimbursements are edited via AddReimburseScreen, but currently we just allow basic edit or show message
+                     // For now, let's treat them as normal transactions for editing (or redirect to reimburse add screen if we adapt it)
+                     // But strictly speaking, we didn't make an EditReimburseScreen.
+                     // Let's just go to add-transaction for now, as it can handle basic edits, OR show a message.
+                     ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Edit Reimbursement not fully supported yet')),
+                      );
                 } else {
                   // Normal Transaction
                   context.push('/add-transaction', extra: transaction); 
@@ -319,6 +314,47 @@ class TransactionDetailScreen extends ConsumerWidget {
               ),
             ),
           ),
+          
+          // Mark as Completed Button (For Pending Reimbursement)
+          if (transaction.type == TransactionType.reimbursement && transaction.status == TransactionStatus.pending) ...[
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 2,
+              child: ElevatedButton(
+                onPressed: () async {
+                   final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Mark as Completed'),
+                      content: const Text('Mark this reimbursement as paid/completed?'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                        TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Confirm', style: TextStyle(color: Colors.green))),
+                      ],
+                    ),
+                  );
+
+                  if (confirm == true) {
+                    final repo = await ref.read(transactionRepositoryProvider.future);
+                    transaction.status = TransactionStatus.completed;
+                    await repo.updateTransaction(transaction);
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text('Mark Completed'),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -332,7 +368,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     if (categoryId == 'debt' || categoryId == 'debts') return 'Debts';
     if (categoryId == 'saving' || categoryId == 'savings') return 'Savings';
 
-    if (transaction.type == TransactionType.system) {
+    if (transaction.type == TransactionType.system || transaction.type == TransactionType.reimbursement) {
       return 'System';
     }
     if (categoryId == null) return '-';
