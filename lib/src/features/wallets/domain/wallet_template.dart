@@ -33,4 +33,5 @@ const List<WalletTemplate> eWalletTemplates = [
   WalletTemplate(name: 'OVO', assetPath: 'assets/wallets/ovo.svg', type: WalletType.ewallet),
   WalletTemplate(name: 'DANA', assetPath: 'assets/wallets/dana.svg', type: WalletType.ewallet),
   WalletTemplate(name: 'ShopeePay', assetPath: 'assets/wallets/shopeepay.svg', type: WalletType.ewallet),
+  WalletTemplate(name: 'LinkAja', assetPath: 'assets/wallets/linkaja.svg', type: WalletType.ewallet),
 ];
