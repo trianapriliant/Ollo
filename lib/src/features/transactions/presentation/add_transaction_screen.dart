@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,7 +71,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          widget.transactionToEdit != null
+          widget.transactionToEdit != null && widget.transactionToEdit!.id != Isar.autoIncrement
               ? 'Edit Transaction'
               : 'Add Transaction',
           style: AppTextStyles.h2,
@@ -178,15 +179,20 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   }
                 }
 
-                // Initial Selection Logic
                 if (_selectedItem == null && widget.transactionToEdit != null && items.isNotEmpty) {
                     try {
                        _selectedItem = items.firstWhere((item) {
                          final catId = item.category.externalId ?? item.category.id.toString();
-                         return catId == widget.transactionToEdit!.categoryId &&
-                         (item.subCategory?.name == widget.transactionToEdit!.title || item.subCategory == null && item.category.name == widget.transactionToEdit!.title);
+                         if (catId != widget.transactionToEdit!.categoryId) return false;
+                         
+                         if (widget.transactionToEdit!.subCategoryName != null) {
+                             return item.subCategory?.name == widget.transactionToEdit!.subCategoryName;
+                         } else {
+                             return item.subCategory == null;
+                         }
                        });
                     } catch (e) {
+                       // Fallback: Just try to match Main Category if Sub match fails
                        try {
                           _selectedItem = items.firstWhere((item) {
                             final catId = item.category.externalId ?? item.category.id.toString();
@@ -211,7 +217,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   onChanged: (value) {
                     setState(() {
                       _selectedItem = value;
-                      if (value != null) {
+                      if (value != null && _titleController.text.isEmpty) {
+                         // Only auto-fill title if empty. 
+                         // Refinement: If user manually changes category, they might want title updated IF it was previously the category name.
+                         // But for Quick Record integration, we want to keep the parsed title "Gaji".
                         _titleController.text = value.name;
                       }
                     });
@@ -284,8 +293,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   Future<void> _saveTransaction(double amount, String title, bool isTransfer) async {
       final transactionRepo = await ref.read(transactionRepositoryProvider.future);
       final walletRepo = await ref.read(walletRepositoryProvider.future);
+      
+      final bool isEditing = widget.transactionToEdit != null && widget.transactionToEdit!.id != Isar.autoIncrement;
 
-      if (widget.transactionToEdit != null) {
+      if (isEditing) {
         // UPDATE EXISTING
         final oldTransaction = widget.transactionToEdit!;
 

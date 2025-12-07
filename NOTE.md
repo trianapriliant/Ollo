@@ -60,4 +60,57 @@ Jika Anda ingin menambahkan bank baru yang belum ada di daftar:
     ```dart
     WalletTemplate(name: 'Bank Jago', assetPath: 'assets/wallets/jago.svg', type: WalletType.bank),
     ```
+    ```
 3.  (Opsional) Tambahkan path file baru ke `pubspec.yaml` jika tidak otomatis terdeteksi.
+
+# Panduan Memori AI
+
+Fitur **Quick Record** di Ollo menggunakan sistem "Pola Kata Kunci" untuk mengenali Kategori dan Sub-Kategori secara otomatis dari chat/suara Anda.
+
+## Lokasi File "Ingatan"
+Semua data kata kunci tersimpan di file ini:
+`lib/src/features/quick_record/domain/category_patterns.dart`
+
+## Cara Menambah Kata Kunci Baru
+
+### 1. Membuka File
+Buka file `category_patterns.dart` tersebut menggunakan text editor.
+
+### 2. Struktur Data
+Anda akan melihat daftar pola seperti ini:
+
+```dart
+'Food & Drinks': CategoryPattern(
+  mainKeywords: ['makan', 'minum', 'lapar'], // Kata kunci umum
+  subCategoryKeywords: {
+    'Breakfast': ['sarapan', 'bubur', 'nasi uduk'], // Kata kunci spesifik Sub-Kategori
+    'Restaurant': ['restoran', 'bakso', 'soto'],
+  },
+),
+```
+
+### 3. Menambah "Ingatan" (Keyword)
+**Kasus A: Menambah kata baru untuk kategori yang sudah ada**
+Misal Anda sering makan "Seblak" dan ingin itu masuk ke **Restaurant**.
+Tambahkan `'seblak'` ke dalam list `Restaurant`:
+```dart
+'Restaurant': ['restoran', 'bakso', 'soto', 'seblak'],
+```
+
+**Kasus B: Menambah kategori baru**
+Jika Anda membuat Kategori baru di aplikasi (misal: "Hobby"), Anda perlu menambahkannya juga disini agar AI kenal:
+```dart
+'Hobby': CategoryPattern(
+  mainKeywords: ['hobi', 'koleksi'],
+  subCategoryKeywords: {
+    'Fishing': ['mancing', 'joran', 'umpan'],
+    'Gaming': ['kaset game', 'steam wallet'],
+  },
+),
+```
+
+## Tips
+- Gunakan **huruf kecil** semua (lowercase) untuk keyword agar aman.
+- Gunakan kata dasar yang unik (misal "bensin" lebih baik daripada "isi").
+- Jika keyword ada di Sub-Kategori, AI akan memprioritaskan itu (lebih detail).
+

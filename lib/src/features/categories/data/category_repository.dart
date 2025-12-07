@@ -9,6 +9,8 @@ abstract class CategoryRepository {
   Future<List<Category>> getCategories(CategoryType type);
   Future<void> addCategory(Category category);
   Future<void> updateCategory(Category category);
+  Future<List<Category>> getAllCategories();
+
   Future<void> deleteCategory(Id id);
 }
 
@@ -20,6 +22,11 @@ class IsarCategoryRepository implements CategoryRepository {
   @override
   Future<List<Category>> getCategories(CategoryType type) async {
     return isar.categorys.filter().typeEqualTo(type).findAll();
+  }
+
+  @override
+  Future<List<Category>> getAllCategories() async {
+    return isar.categorys.where().findAll();
   }
 
   @override

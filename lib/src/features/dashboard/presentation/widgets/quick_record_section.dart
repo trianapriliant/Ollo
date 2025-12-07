@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../quick_record/presentation/quick_record_modal.dart';
 
 class QuickRecordSection extends StatelessWidget {
   const QuickRecordSection({super.key});
@@ -18,33 +19,24 @@ class QuickRecordSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _buildQuickActionItem(
+                context,
                 Icons.chat_bubble_outline,
                 'Chat',
-                () => _showComingSoonDialog(
-                  context,
-                  'AI Chat Assistant',
-                  'Chat with Ollo AI to record transactions naturally. "Spent 50k for lunch" is all you need to say!',
-                ),
+                'chat',
               ),
               const SizedBox(width: 24),
               _buildQuickActionItem(
+                context,
                 Icons.camera_alt_outlined,
                 'Scan',
-                () => _showComingSoonDialog(
-                  context,
-                  'Receipt Scanner',
-                  'Snap a photo of your receipt and let AI extract the details automatically.',
-                ),
+                'scan',
               ),
               const SizedBox(width: 24),
               _buildQuickActionItem(
+                context,
                 Icons.mic_none_outlined,
                 'Voice',
-                () => _showComingSoonDialog(
-                  context,
-                  'Voice Command',
-                  'Just speak to record! "Income 5 million from Salary" and it\'s done.',
-                ),
+                'voice',
               ),
             ],
           ),
@@ -53,9 +45,21 @@ class QuickRecordSection extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActionItem(IconData icon, String label, VoidCallback onTap) {
+  Widget _buildQuickActionItem(BuildContext context, IconData icon, String label, String mode) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: QuickRecordModal(initialMode: mode),
+          ),
+        );
+      },
       child: Column(
         children: [
           Container(
@@ -75,36 +79,6 @@ class QuickRecordSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(label, style: AppTextStyles.bodyMedium),
-        ],
-      ),
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context, String title, String description) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.rocket_launch, color: AppColors.primary),
-            const SizedBox(width: 8),
-            Text('Coming Soon', style: AppTextStyles.h3),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text(description, style: AppTextStyles.bodyMedium),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Can\'t Wait!'),
-          ),
         ],
       ),
     );
