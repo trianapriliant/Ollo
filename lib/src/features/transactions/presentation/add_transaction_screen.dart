@@ -291,7 +291,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 ),
                 child: _isSaving 
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : Text('Save Transaction (Fixed)', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
+                  : Text('Save Transaction', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
               ),
             ),
           ],
