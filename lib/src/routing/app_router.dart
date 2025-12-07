@@ -128,6 +128,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           final extra = state.extra as Map<String, dynamic>;
           return FilteredTransactionsScreen(
             isExpense: extra['isExpense'] as bool,
+            specificDate: extra['specificDate'] as DateTime?,
           );
         },
       ),

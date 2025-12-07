@@ -7,13 +7,11 @@ import '../domain/category_data.dart';
 import 'statistics_provider.dart';
 import 'widgets/category_pie_chart.dart';
 import 'widgets/monthly_bar_chart.dart';
-import 'widgets/daily_line_chart.dart';
 import 'widgets/insight_card.dart';
 import 'widgets/daily_stacked_bar_chart.dart';
 
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
-import '../../subscription/presentation/premium_provider.dart';
 import '../../../utils/icon_helper.dart';
 
 import 'extended_statistics_provider.dart';
@@ -165,6 +163,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                       avgIncome: avgIncome,
                       avgExpense: avgExpense,
                       avgSavings: avgSavings,
+                      selectedDate: _selectedDate,
                     );
                   },
                   loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
@@ -276,7 +275,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                         SpendingHeatmap(
                           key: ValueKey('Heatmap-$_selectedDate'),
                           dailyAmounts: dailyAmounts, 
-                          daysInMonth: daysInMonth
+                          daysInMonth: daysInMonth,
+                          monthStartDate: DateTime(_selectedDate.year, _selectedDate.month, 1),
+                          isExpense: _isExpense,
                         ),
                       ],
                     );

@@ -5,12 +5,13 @@ import '../../../../constants/app_text_styles.dart';
 import '../../../settings/presentation/currency_provider.dart';
 import '../statistics_provider.dart';
 
-class DailyStackedBarChart extends StatelessWidget {
+class DailyStackedBarChart extends StatefulWidget {
   final List<DailyData> data;
   final Currency currency;
   final double avgIncome;
   final double avgExpense;
   final double avgSavings;
+  final DateTime selectedDate;
 
   const DailyStackedBarChart({
     super.key,
@@ -19,17 +20,92 @@ class DailyStackedBarChart extends StatelessWidget {
     required this.avgIncome,
     required this.avgExpense,
     required this.avgSavings,
+    required this.selectedDate,
   });
+
+  @override
+  State<DailyStackedBarChart> createState() => _DailyStackedBarChartState();
+}
+
+class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToDay());
+  }
+
+  @override
+  void didUpdateWidget(covariant DailyStackedBarChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDate != widget.selectedDate || oldWidget.data != widget.data) {
+       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToDay());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToDay() {
+    if (!_scrollController.hasClients) return;
+
+    final now = DateTime.now();
+    final isCurrentMonth = widget.selectedDate.year == now.year && widget.selectedDate.month == now.month;
+
+    double targetOffset = 0.0;
+
+    if (isCurrentMonth) {
+      // Find index of today in data
+      // Assuming data is sorted by day, but safety first: find entry with day == now.day
+      int index = widget.data.indexWhere((element) => element.day == now.day);
+      
+      // If today not found (e.g. no transaction yet?), default to day index logic roughly
+      if (index == -1) {
+         index = now.day - 1; // 0-based index approximation
+      }
+      
+      // Since data might be sparse if specific days are missing, logic depends on if data contains ALL days or just days with transactions.
+      // Based on provider, it seems to return data for days with transactions? 
+      // Actually checking statistics_provider.dart would allow to verify if it fills empty days.
+      // Assuming it might be sparse or full. 
+      // If sparse, indexWhere is correct.
+      // If full (1..31), indexWhere is also correct.
+      
+      // Calculation:
+      // Item width is fixed at 50.0 (from build method logic below)
+      const double itemWidth = 50.0;
+      final double viewportWidth = _scrollController.position.viewportDimension;
+      final double maxScroll = _scrollController.position.maxScrollExtent;
+
+      // Center the item: (index * itemWidth) - (half viewport) + (half item)
+      double calculatedOffset = (index * itemWidth) - (viewportWidth / 2) + (itemWidth / 2);
+      
+      // Clamp
+      targetOffset = calculatedOffset.clamp(0.0, maxScroll);
+    } 
+    
+    // Animate to offset
+    _scrollController.animateTo(
+      targetOffset, 
+      duration: const Duration(milliseconds: 500), 
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     // Calculate width based on number of days to ensure bars are readable
     // 3 bars per day * 8px width + spacing
-    final double chartWidth = data.length * 50.0; 
+    final double chartWidth = widget.data.length * 50.0; 
     
     // Find max value for Y-axis scaling
     double maxY = 0;
-    for (var item in data) {
+    for (var item in widget.data) {
       if (item.income > maxY) maxY = item.income;
       if (item.expense > maxY) maxY = item.expense;
       if (item.savings > maxY) maxY = item.savings;
@@ -53,16 +129,16 @@ class DailyStackedBarChart extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    'Avg Inc: ${currency.format(avgIncome)}',
+                   Text(
+                    'Avg Inc: ${widget.currency.format(widget.avgIncome)}',
                     style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF4ADE80), fontSize: 10, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Avg Exp: ${currency.format(avgExpense)}',
+                   Text(
+                    'Avg Exp: ${widget.currency.format(widget.avgExpense)}',
                     style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFF87171), fontSize: 10, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Avg Sav: ${currency.format(avgSavings)}',
+                   Text(
+                    'Avg Sav: ${widget.currency.format(widget.avgSavings)}',
                     style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF60A5FA), fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -72,6 +148,7 @@ class DailyStackedBarChart extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         SingleChildScrollView(
+          controller: _scrollController,
           scrollDirection: Axis.horizontal,
           child: Container(
             width: chartWidth < MediaQuery.of(context).size.width ? MediaQuery.of(context).size.width : chartWidth,
@@ -84,7 +161,7 @@ class DailyStackedBarChart extends StatelessWidget {
                 extraLinesData: ExtraLinesData(
                   horizontalLines: [
                     HorizontalLine(
-                      y: avgIncome,
+                      y: widget.avgIncome,
                       color: const Color(0xFF4ADE80).withOpacity(0.8),
                       strokeWidth: 1,
                       dashArray: [5, 5],
@@ -93,11 +170,11 @@ class DailyStackedBarChart extends StatelessWidget {
                         alignment: Alignment.topRight,
                         padding: const EdgeInsets.only(right: 5, bottom: 5),
                         style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF4ADE80), fontSize: 10),
-                        labelResolver: (line) => 'Avg Inc: ${currency.format(line.y)}',
+                        labelResolver: (line) => 'Avg Inc: ${widget.currency.format(line.y)}',
                       ),
                     ),
                     HorizontalLine(
-                      y: avgExpense,
+                      y: widget.avgExpense,
                       color: const Color(0xFFF87171).withOpacity(0.8),
                       strokeWidth: 1,
                       dashArray: [5, 5],
@@ -106,11 +183,11 @@ class DailyStackedBarChart extends StatelessWidget {
                         alignment: Alignment.topRight,
                         padding: const EdgeInsets.only(right: 5, bottom: 20), // Stagger labels
                         style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFF87171), fontSize: 10),
-                        labelResolver: (line) => 'Avg Exp: ${currency.format(line.y)}',
+                        labelResolver: (line) => 'Avg Exp: ${widget.currency.format(line.y)}',
                       ),
                     ),
                     HorizontalLine(
-                      y: avgSavings,
+                      y: widget.avgSavings,
                       color: const Color(0xFF60A5FA).withOpacity(0.8),
                       strokeWidth: 1,
                       dashArray: [5, 5],
@@ -119,7 +196,7 @@ class DailyStackedBarChart extends StatelessWidget {
                         alignment: Alignment.topRight,
                         padding: const EdgeInsets.only(right: 5, bottom: 35), // Stagger labels
                         style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF60A5FA), fontSize: 10),
-                        labelResolver: (line) => 'Avg Sav: ${currency.format(line.y)}',
+                        labelResolver: (line) => 'Avg Sav: ${widget.currency.format(line.y)}',
                       ),
                     ),
                   ],
@@ -131,7 +208,7 @@ class DailyStackedBarChart extends StatelessWidget {
                     tooltipPadding: const EdgeInsets.all(8),
                     tooltipMargin: 8,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      final dayData = data[group.x.toInt() - 1];
+                      final dayData = widget.data[group.x.toInt() - 1];
                       String label;
                       double value;
                       Color color;
@@ -158,7 +235,7 @@ class DailyStackedBarChart extends StatelessWidget {
                         ),
                         children: <TextSpan>[
                           TextSpan(
-                            text: currency.format(value),
+                            text: widget.currency.format(value),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -193,7 +270,7 @@ class DailyStackedBarChart extends StatelessWidget {
                 ),
                 gridData: FlGridData(show: false),
                 borderData: FlBorderData(show: false),
-                barGroups: data.map((item) {
+                barGroups: widget.data.map((item) {
                   return BarChartGroupData(
                     x: item.day,
                     barsSpace: 4, // Space between bars in a group
