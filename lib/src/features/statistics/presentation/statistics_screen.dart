@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../settings/presentation/currency_provider.dart';
-import '../domain/category_data.dart';
 import 'statistics_provider.dart';
 import 'widgets/category_pie_chart.dart';
 import 'widgets/monthly_bar_chart.dart';
@@ -12,13 +11,16 @@ import 'widgets/daily_stacked_bar_chart.dart';
 
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
-import '../../../utils/icon_helper.dart';
 
 import 'extended_statistics_provider.dart';
 import 'widgets/new_stats/comparative_analysis_card.dart';
 import 'widgets/new_stats/top_spenders_card.dart';
 import 'widgets/new_stats/daily_average_card.dart';
 import 'widgets/new_stats/spending_heatmap.dart';
+
+import 'widgets/statistics_category_item.dart';
+import 'widgets/statistics_date_filter.dart';
+import 'widgets/statistics_type_toggle.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
@@ -59,7 +61,12 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // 1. Date Navigation & Toggle
-              _buildDateHeader(),
+              StatisticsDateFilter(
+                selectedDate: _selectedDate,
+                timeRange: _timeRange,
+                onDateChanged: _changeDate,
+                onRangeChanged: (range) => setState(() => _timeRange = range),
+              ),
               const SizedBox(height: 12),
 
               // 2. Insight Card
@@ -78,7 +85,10 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
               const SizedBox(height: 12),
 
               // 3. Income/Expense Toggle
-              _buildTypeToggle(),
+              StatisticsTypeToggle(
+                isExpense: _isExpense,
+                onTypeChanged: (val) => setState(() => _isExpense = val),
+              ),
               const SizedBox(height: 16),
 
               // 4. Pie Chart Section
@@ -116,7 +126,13 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                     separatorBuilder: (context, index) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final item = data[index];
-                      return _buildCategoryItem(item, currency);
+                      return StatisticsCategoryItem(
+                        item: item,
+                        currency: currency,
+                        filterDate: _selectedDate,
+                        filterTimeRange: _timeRange,
+                        isExpense: _isExpense,
+                      );
                     },
                   );
                 },
@@ -308,125 +324,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     );
   }
 
-  Widget _buildDateHeader() {
-    return Column(
-      children: [
-        // Toggle Month/Year
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildToggleBtn('Monthly', TimeRange.month),
-              _buildToggleBtn('Yearly', TimeRange.year),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
-        // Date Scroller
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.chevron_left),
-              onPressed: () => _changeDate(-1),
-            ),
-            Text(
-              _formatDate(_selectedDate),
-              style: AppTextStyles.h3,
-            ),
-            IconButton(
-              icon: const Icon(Icons.chevron_right),
-              onPressed: () => _changeDate(1),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildToggleBtn(String label, TimeRange range) {
-    final isSelected = _timeRange == range;
-    return GestureDetector(
-      onTap: () => setState(() => _timeRange = range),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
-        ),
-        child: Text(
-          label,
-          style: AppTextStyles.bodySmall.copyWith(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? Colors.black : Colors.grey,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTypeToggle() {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => _isExpense = false),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: !_isExpense ? Colors.green.withOpacity(0.1) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: !_isExpense ? Border.all(color: Colors.green.withOpacity(0.5)) : null,
-                ),
-                child: Text(
-                  'Income',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: !_isExpense ? Colors.green : Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => _isExpense = true),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: _isExpense ? Colors.red.withOpacity(0.1) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: _isExpense ? Border.all(color: Colors.red.withOpacity(0.5)) : null,
-                ),
-                child: Text(
-                  'Expense',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: _isExpense ? Colors.red : Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _changeDate(int offset) {
     setState(() {
       if (_timeRange == TimeRange.month) {
@@ -435,78 +332,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
         _selectedDate = DateTime(_selectedDate.year + offset, 1, 1);
       }
     });
-  }
-
-  String _formatDate(DateTime date) {
-    if (_timeRange == TimeRange.month) {
-      return '${_getMonthName(date.month)} ${date.year}';
-    } else {
-      return '${date.year}';
-    }
-  }
-
-  String _getMonthName(int month) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    return months[month - 1];
-  }
-
-
-  Widget _buildCategoryItem(CategoryData item, Currency currency) {
-    return GestureDetector(
-      onTap: () {
-        context.push(
-          '/statistics/category-details',
-          extra: {
-            'categoryId': item.categoryId,
-            'categoryName': item.categoryName,
-            'filterDate': _selectedDate,
-            'filterTimeRange': _timeRange,
-            'isExpense': _isExpense,
-          },
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              IconHelper.getIcon(item.iconPath),
-              color: item.color,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(item.categoryName, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 2,
-              child: LinearProgressIndicator(
-                value: item.percentage / 100,
-                backgroundColor: Colors.grey[100],
-                color: item.color,
-                minHeight: 8,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              '${item.percentage.toStringAsFixed(0)}%',
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 

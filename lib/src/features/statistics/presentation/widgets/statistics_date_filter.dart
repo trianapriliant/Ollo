@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import '../../../../constants/app_text_styles.dart';
+import '../statistics_provider.dart';
+
+class StatisticsDateFilter extends StatelessWidget {
+  final DateTime selectedDate;
+  final TimeRange timeRange;
+  final Function(int offset) onDateChanged;
+  final Function(TimeRange range) onRangeChanged;
+
+  const StatisticsDateFilter({
+    super.key,
+    required this.selectedDate,
+    required this.timeRange,
+    required this.onDateChanged,
+    required this.onRangeChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Toggle Month/Year
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildToggleBtn('Monthly', TimeRange.month),
+              _buildToggleBtn('Yearly', TimeRange.year),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        // Date Scroller
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.chevron_left),
+              onPressed: () => onDateChanged(-1),
+            ),
+            Text(
+              _formatDate(selectedDate),
+              style: AppTextStyles.h3,
+            ),
+            IconButton(
+              icon: const Icon(Icons.chevron_right),
+              onPressed: () => onDateChanged(1),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToggleBtn(String label, TimeRange range) {
+    final isSelected = timeRange == range;
+    return GestureDetector(
+      onTap: () => onRangeChanged(range),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)] : [],
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.bodySmall.copyWith(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? Colors.black : Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    if (timeRange == TimeRange.month) {
+      return '${_getMonthName(date.month)} ${date.year}';
+    } else {
+      return '${date.year}';
+    }
+  }
+
+  String _getMonthName(int month) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[month - 1];
+  }
+}
