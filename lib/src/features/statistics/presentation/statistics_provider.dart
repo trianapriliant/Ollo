@@ -28,32 +28,42 @@ class StatisticsFilter {
           date.month == other.date.month;
 
   @override
-  int get hashCode => isExpense.hashCode ^ timeRange.hashCode ^ date.year.hashCode ^ date.month.hashCode;
+  int get hashCode => Object.hash(isExpense, timeRange, date.year, date.month);
 }
 
-final statisticsProvider = FutureProvider.family<List<CategoryData>, StatisticsFilter>((ref, filter) async {
+final statisticsProvider = FutureProvider.autoDispose.family<List<CategoryData>, StatisticsFilter>((ref, filter) async {
   final transactions = await ref.watch(transactionListProvider.future);
   final categories = await ref.watch(categoryListProvider(filter.isExpense ? CategoryType.expense : CategoryType.income).future);
 
-  // 1. Filter transactions by type (Income/Expense) and Time Range
+  // 1. Calculate Date Range (Standardized with InsightProvider)
+  DateTime start, end;
+  if (filter.timeRange == TimeRange.month) {
+    start = DateTime(filter.date.year, filter.date.month, 1);
+    end = DateTime(filter.date.year, filter.date.month + 1, 0, 23, 59, 59, 999);
+  } else {
+    start = DateTime(filter.date.year, 1, 1);
+    end = DateTime(filter.date.year, 12, 31, 23, 59, 59, 999);
+  }
+
   final filteredTransactions = transactions.where((t) {
-    // STRICT FILTER w/ SAVINGS EXCLUSION (Option B):
-    // Income: Only Income type
-    // Expense: Expense type OR (System type AND NOT 'savings' category)
-    // Transfer: Excluded
+    // STRICT FILTER w/ SAVINGS EXCLUSION
     if (filter.isExpense) {
-      if (t.type == TransactionType.expense) return true;
-      if (t.type == TransactionType.system && t.categoryId != 'savings') return true;
-      return false;
+      if (t.type == TransactionType.expense) {
+         // keep
+      } else if (t.type == TransactionType.system && t.categoryId != 'savings') {
+         // keep
+      } else {
+        return false;
+      }
     } else {
       if (t.type != TransactionType.income) return false;
     }
 
-    if (filter.timeRange == TimeRange.month) {
-      return t.date.year == filter.date.year && t.date.month == filter.date.month;
-    } else {
-      return t.date.year == filter.date.year;
-    }
+    // Use range check (Standardized)
+    // t.date is likely UTC/Raw. start/end are Local.
+    // Dart comparison handles this, or we rely on the implementation that works in InsightProvider.
+    return t.date.isAfter(start.subtract(const Duration(milliseconds: 1))) && 
+           t.date.isBefore(end.add(const Duration(milliseconds: 1)));
   }).toList();
 
   if (filteredTransactions.isEmpty) return [];
@@ -124,7 +134,7 @@ class InsightData {
   InsightData({required this.message, required this.isGood, required this.percentageChange});
 }
 
-final insightProvider = FutureProvider.family<InsightData?, StatisticsFilter>((ref, filter) async {
+final insightProvider = FutureProvider.autoDispose.family<InsightData?, StatisticsFilter>((ref, filter) async {
   final transactions = await ref.watch(transactionListProvider.future);
   
   final now = filter.date;

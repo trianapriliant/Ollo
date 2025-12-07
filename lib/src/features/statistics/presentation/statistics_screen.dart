@@ -16,6 +16,12 @@ import 'package:go_router/go_router.dart';
 import '../../subscription/presentation/premium_provider.dart';
 import '../../../utils/icon_helper.dart';
 
+import 'extended_statistics_provider.dart';
+import 'widgets/new_stats/comparative_analysis_card.dart';
+import 'widgets/new_stats/top_spenders_card.dart';
+import 'widgets/new_stats/daily_average_card.dart';
+import 'widgets/new_stats/spending_heatmap.dart';
+
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
 
@@ -29,7 +35,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   DateTime _selectedDate = DateTime.now();
 
   @override
-  @override
   Widget build(BuildContext context) {
     final statisticsAsync = ref.watch(statisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
     final insightAsync = ref.watch(insightProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
@@ -37,6 +42,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
     final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider(_selectedDate));
     final dailyStatsAsync = ref.watch(dailyStatisticsProvider(_selectedDate));
+
+    final comparativeAsync = ref.watch(comparativeStatisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
+    final topSpendersAsync = ref.watch(topMerchantsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -84,6 +92,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                       SizedBox(
                         height: 250,
                         child: CategoryPieChart(
+                          key: ValueKey('$_selectedDate-$_timeRange-$_isExpense'), // Force rebuild on filter change
                           data: data,
                           totalAmount: totalAmount,
                           currency: currency,
@@ -211,6 +220,84 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
                   error: (_, __) => const SizedBox(),
                 ),
+
+              const SizedBox(height: 24),
+              
+              // 7. Comparative Analysis
+              comparativeAsync.when(
+                data: (data) {
+                  if (data == null) return const SizedBox();
+                  return ComparativeAnalysisCard(data: data, isExpense: _isExpense);
+                }, 
+                loading: () => const SizedBox(), 
+                error: (_,__) => const SizedBox(),
+              ),
+              const SizedBox(height: 16),
+
+              // 8. Daily Average & Projection (Reuse dailyStatsAsync)
+              // Only relevant per month
+              if (_timeRange == TimeRange.month)
+                dailyStatsAsync.when(
+                  data: (data) {
+                    if (data.isEmpty) return const SizedBox();
+                    
+                    double total = 0;
+                    for(var day in data) {
+                        // Logic similar to existing chart calculation
+                        if(_isExpense) {
+                          total += day.expense;
+                        } else {
+                          total += day.income;
+                        }
+                    }
+
+                    final now = DateTime.now();
+                    final isCurrentMonth = _selectedDate.year == now.year && _selectedDate.month == now.month;
+                    // Days passed so far or total days in closed month
+                    int daysPassed = isCurrentMonth ? now.day : data.length;
+                    if (daysPassed == 0) daysPassed = 1;
+
+                    final avg = total / daysPassed;
+                    final projected = avg * data.length; // Projected for full month
+
+                    final dailyAmounts = data.map((d) => _isExpense ? d.expense : d.income).toList();
+                    final daysInMonth = data.length;
+
+                    return Column(
+                      children: [
+                        DailyAverageCard(
+                          key: ValueKey('DailyAvg-$_selectedDate'),
+                          average: avg, 
+                          projected: projected, 
+                          currency: currency, 
+                          isExpense: _isExpense
+                        ),
+                        const SizedBox(height: 16),
+                        SpendingHeatmap(
+                          key: ValueKey('Heatmap-$_selectedDate'),
+                          dailyAmounts: dailyAmounts, 
+                          daysInMonth: daysInMonth
+                        ),
+                      ],
+                    );
+                  },
+                  loading: () => const SizedBox(), 
+                  error: (_,__) => const SizedBox(),
+                ),
+
+              const SizedBox(height: 16),
+
+              // 9. Top Spenders
+              topSpendersAsync.when(
+                data: (data) => TopSpendersCard(
+                  key: ValueKey('TopSpenders-$_selectedDate'),
+                  data: data, 
+                  currency: currency
+                ),
+                loading: () => const SizedBox(),
+                error: (e,s) => Text('Error: $e'),
+              ),
+
 
               const SizedBox(height: 80),
             ],
