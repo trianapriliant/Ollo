@@ -35,6 +35,7 @@ class IsarTransactionRepository implements TransactionRepository {
       final id = await isar.transactions.put(transaction);
       
       // Update Wallet Balance
+      // Update Wallet Balance
       if (transaction.walletId != null) {
         final wallet = await isar.wallets.filter().idEqualTo(int.tryParse(transaction.walletId!) ?? -1).or().externalIdEqualTo(transaction.walletId!).findFirst();
         
@@ -42,9 +43,20 @@ class IsarTransactionRepository implements TransactionRepository {
           if (transaction.type == TransactionType.income) {
             wallet.balance += transaction.amount;
           } else {
+            // Expense & Transfer (Source)
             wallet.balance -= transaction.amount;
           }
           await isar.wallets.put(wallet);
+        }
+      }
+
+      // Update Destination Wallet (for Transfers)
+      if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
+        final destWallet = await isar.wallets.filter().idEqualTo(int.tryParse(transaction.destinationWalletId!) ?? -1).or().externalIdEqualTo(transaction.destinationWalletId!).findFirst();
+        
+        if (destWallet != null) {
+           destWallet.balance += transaction.amount;
+           await isar.wallets.put(destWallet);
         }
       }
       return id;

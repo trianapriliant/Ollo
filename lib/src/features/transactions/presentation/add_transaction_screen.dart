@@ -38,6 +38,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   String? _selectedWalletId;
   String? _selectedDestinationWalletId;
   CategorySelectionItem? _selectedItem;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -242,36 +243,43 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async {
-                  final amount = double.tryParse(_amountController.text) ?? 0.0;
-                  if (amount <= 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter a valid amount")));
-                    return;
-                  }
-                  if (_selectedWalletId == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a wallet")));
-                    return;
-                  }
-                  if (isTransfer && _selectedDestinationWalletId == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a destination wallet")));
-                    return;
-                  }
-                  if (_selectedItem == null &&
-                      type != TransactionType.system &&
-                      type != TransactionType.transfer &&
-                      !(widget.transactionToEdit != null &&
-                          ['debt', 'debts', 'saving', 'savings'].contains(widget.transactionToEdit!.categoryId))) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a category")));
-                    return;
-                  }
+                onPressed: _isSaving ? null : () async {
+                  setState(() { _isSaving = true; });
+                  try {
+                    final amount = double.tryParse(_amountController.text) ?? 0.0;
+                    if (amount <= 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter a valid amount")));
+                      setState(() { _isSaving = false; });
+                      return;
+                    }
+                    if (_selectedWalletId == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a wallet")));
+                      setState(() { _isSaving = false; });
+                      return;
+                    }
+                    if (isTransfer && _selectedDestinationWalletId == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a destination wallet")));
+                      setState(() { _isSaving = false; });
+                      return;
+                    }
+                    if (_selectedItem == null &&
+                        type != TransactionType.system &&
+                        type != TransactionType.transfer &&
+                        !(widget.transactionToEdit != null &&
+                            ['debt', 'debts', 'saving', 'savings'].contains(widget.transactionToEdit!.categoryId))) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a category")));
+                      setState(() { _isSaving = false; });
+                      return;
+                    }
 
-                  final title = _titleController.text.isNotEmpty
-                      ? _titleController.text
-                      : (_selectedItem?.name ?? (type == TransactionType.transfer ? 'Transfer' : 'System Transaction'));
+                    final title = _titleController.text.isNotEmpty
+                        ? _titleController.text
+                        : (_selectedItem?.name ?? (type == TransactionType.transfer ? 'Transfer' : 'System Transaction'));
 
-                  // Save Logic (Delegated to helper method or keep here?)
-                  // Keeping here for now to avoid logic breakage, scope is UI refactoring.
-                  await _saveTransaction(amount, title, isTransfer);
+                    await _saveTransaction(amount, title, isTransfer);
+                  } finally {
+                    if (mounted) setState(() { _isSaving = false; });
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
@@ -281,7 +289,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: Text('Save Transaction', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
+                child: _isSaving 
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  : Text('Save Transaction (Fixed)', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
               ),
             ),
           ],
@@ -373,26 +383,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
         await transactionRepo.addTransaction(newTransaction);
 
-        // Update Wallet Balance
-        final wallet = await walletRepo.getWallet(_selectedWalletId!);
-        if (wallet != null) {
-          if (widget.type == TransactionType.expense) {
-            wallet.balance -= amount;
-          } else if (widget.type == TransactionType.income) {
-             wallet.balance += amount;
-          } else if (widget.type == TransactionType.transfer) {
-            wallet.balance -= amount;
-          }
-          await walletRepo.addWallet(wallet);
-        }
 
-        if (widget.type == TransactionType.transfer && _selectedDestinationWalletId != null) {
-           final destWallet = await walletRepo.getWallet(_selectedDestinationWalletId!);
-           if (destWallet != null) {
-              destWallet.balance += amount;
-              await walletRepo.addWallet(destWallet);
-           }
-        }
       }
 
       // Invalidate wallet list to ensure UI updates immediately

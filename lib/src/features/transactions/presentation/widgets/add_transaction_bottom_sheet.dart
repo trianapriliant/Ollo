@@ -17,6 +17,7 @@ import 'category_selector.dart';
 import 'sub_category_selector.dart';
 import 'num_pad.dart';
 import '../../../../common_widgets/modern_wallet_selector.dart';
+import '../../../dashboard/presentation/transaction_provider.dart';
 
 class AddTransactionBottomSheet extends ConsumerStatefulWidget {
   const AddTransactionBottomSheet({super.key});
@@ -34,6 +35,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
   String? _selectedDestinationWalletId; // For Transfer
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
+  bool _isSaving = false;
 
   @override
   void dispose() {
@@ -91,51 +93,38 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
       }
     }
 
-    // 1. Create Transaction
-    final newTransaction = Transaction()
-      ..title = _selectedType == TransactionType.transfer 
-          ? 'Transfer' 
-          : (_selectedSubCategory?.name ?? _selectedCategory!.name)
-      ..date = _selectedDate
-      ..amount = amount
-      ..type = _selectedType
-      ..walletId = _selectedWalletId
-      ..destinationWalletId = _selectedDestinationWalletId
-      ..categoryId = _selectedCategory?.externalId ?? _selectedCategory?.id.toString()
-      ..subCategoryId = _selectedSubCategory?.id
-      ..subCategoryName = _selectedSubCategory?.name
-      ..subCategoryIcon = _selectedSubCategory?.iconPath
-      ..note = _noteController.text;
-
-    // 2. Save Transaction
-    final transactionRepo = await ref.read(transactionRepositoryProvider.future);
-    await transactionRepo.addTransaction(newTransaction);
-
-    // 3. Update Wallet Balance
-    final walletRepo = await ref.read(walletRepositoryProvider.future);
+    setState(() => _isSaving = true);
     
-    // Source Wallet
-    final sourceWallet = await walletRepo.getWallet(_selectedWalletId!);
-    if (sourceWallet != null) {
-      if (_selectedType == TransactionType.expense || _selectedType == TransactionType.transfer) {
-        sourceWallet.balance -= amount;
-      } else {
-        sourceWallet.balance += amount;
-      }
-      await walletRepo.addWallet(sourceWallet);
-    }
+    try {
+      // 1. Create Transaction
+      final newTransaction = Transaction()
+        ..title = _selectedType == TransactionType.transfer 
+            ? 'Transfer' 
+            : (_selectedSubCategory?.name ?? _selectedCategory!.name)
+        ..date = _selectedDate
+        ..amount = amount
+        ..type = _selectedType
+        ..walletId = _selectedWalletId
+        ..destinationWalletId = _selectedDestinationWalletId
+        ..categoryId = _selectedCategory?.externalId ?? _selectedCategory?.id.toString()
+        ..subCategoryId = _selectedSubCategory?.id
+        ..subCategoryName = _selectedSubCategory?.name
+        ..subCategoryIcon = _selectedSubCategory?.iconPath
+        ..note = _noteController.text;
 
-    // Destination Wallet (for Transfer)
-    if (_selectedType == TransactionType.transfer && _selectedDestinationWalletId != null) {
-      final destWallet = await walletRepo.getWallet(_selectedDestinationWalletId!);
-      if (destWallet != null) {
-        destWallet.balance += amount;
-        await walletRepo.addWallet(destWallet);
-      }
-    }
+      // 2. Save Transaction (Repository automatically handles balance updates)
+      final transactionRepo = await ref.read(transactionRepositoryProvider.future);
+      await transactionRepo.addTransaction(newTransaction);
+      
+      // Explicitly invalidate providers to ensure UI refreshes immediately
+      ref.invalidate(walletListProvider);
+      ref.invalidate(transactionListProvider); // Ensure recent transactions update
 
-    if (mounted) {
-      context.pop();
+      if (mounted) {
+        context.pop();
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
   }
 
