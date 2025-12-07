@@ -7,7 +7,7 @@ import '../localization/generated/app_localizations.dart';
 
 import 'package:flutter/services.dart';
 
-class ScaffoldWithNavBar extends StatelessWidget {
+class ScaffoldWithNavBar extends StatefulWidget {
   const ScaffoldWithNavBar({
     required this.navigationShell,
     super.key,
@@ -16,106 +16,141 @@ class ScaffoldWithNavBar extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   @override
+  State<ScaffoldWithNavBar> createState() => _ScaffoldWithNavBarState();
+}
+
+class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
+  DateTime? _lastPressedAt;
+
+  @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      child: Scaffold(
-        body: navigationShell,
-        bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8.0,
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          elevation: 10,
-          shadowColor: Colors.black.withOpacity(0.2),
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Left Side
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _NavBarItem(
-                        icon: Icons.home_outlined,
-                        selectedIcon: Icons.home,
-                        label: AppLocalizations.of(context)!.home,
-                        isSelected: navigationShell.currentIndex == 0,
-                        onTap: () => _onTap(context, 0),
-                      ),
-                    ),
-                    Expanded(
-                      child: _NavBarItem(
-                        icon: Icons.bar_chart_outlined,
-                        selectedIcon: Icons.bar_chart,
-                        label: AppLocalizations.of(context)!.statistics,
-                        isSelected: navigationShell.currentIndex == 1,
-                        onTap: () => _onTap(context, 1),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Spacer for FAB
-              const SizedBox(width: 48), 
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (didPop) return;
 
-              // Right Side
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _NavBarItem(
-                        icon: Icons.wallet_outlined,
-                        selectedIcon: Icons.wallet,
-                        label: AppLocalizations.of(context)!.wallet,
-                        isSelected: navigationShell.currentIndex == 2,
-                        onTap: () => _onTap(context, 2),
-                      ),
-                    ),
-                    Expanded(
-                      child: _NavBarItem(
-                        icon: Icons.person_outline,
-                        selectedIcon: Icons.person,
-                        label: AppLocalizations.of(context)!.profile,
-                        isSelected: navigationShell.currentIndex == 3,
-                        onTap: () => _onTap(context, 3),
-                      ),
-                    ),
-                  ],
-                ),
+          // Only handle double-back-to-exit on the first tab (Home)
+          // For other tabs, we might want to go back to Home first?
+          // Standard pattern: If at root of a branch, handle exit.
+          // Since StatefulShellRoute handles internal navigation, if we are here,
+          // it generally means we are at the root of the app navigation stack from GoRouter's perspective
+          // or GoRouter didn't handle the pop.
+          
+          final now = DateTime.now();
+          if (_lastPressedAt == null ||
+              now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
+            _lastPressedAt = now;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Press back again to exit'),
+                duration: Duration(seconds: 2),
               ),
-            ],
-          ),
-        ),
-
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (context) => const AddTransactionBottomSheet(),
             );
-          },
-          backgroundColor: AppColors.primary,
-          elevation: 4,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white, size: 32),
+            return;
+          }
+
+          await SystemNavigator.pop();
+        },
+        child: Scaffold(
+          body: widget.navigationShell,
+          bottomNavigationBar: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 8.0,
+            color: Colors.white,
+            surfaceTintColor: Colors.white,
+            elevation: 10,
+            shadowColor: Colors.black.withOpacity(0.2),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left Side
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _NavBarItem(
+                          icon: Icons.home_outlined,
+                          selectedIcon: Icons.home,
+                          label: AppLocalizations.of(context)!.home,
+                          isSelected: widget.navigationShell.currentIndex == 0,
+                          onTap: () => _onTap(context, 0),
+                        ),
+                      ),
+                      Expanded(
+                        child: _NavBarItem(
+                          icon: Icons.bar_chart_outlined,
+                          selectedIcon: Icons.bar_chart,
+                          label: AppLocalizations.of(context)!.statistics,
+                          isSelected: widget.navigationShell.currentIndex == 1,
+                          onTap: () => _onTap(context, 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Spacer for FAB
+                const SizedBox(width: 48), 
+
+                // Right Side
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _NavBarItem(
+                          icon: Icons.wallet_outlined,
+                          selectedIcon: Icons.wallet,
+                          label: AppLocalizations.of(context)!.wallet,
+                          isSelected: widget.navigationShell.currentIndex == 2,
+                          onTap: () => _onTap(context, 2),
+                        ),
+                      ),
+                      Expanded(
+                        child: _NavBarItem(
+                          icon: Icons.person_outline,
+                          selectedIcon: Icons.person,
+                          label: AppLocalizations.of(context)!.profile,
+                          isSelected: widget.navigationShell.currentIndex == 3,
+                          onTap: () => _onTap(context, 3),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const AddTransactionBottomSheet(),
+              );
+            },
+            backgroundColor: AppColors.primary,
+            elevation: 4,
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add, color: Colors.white, size: 32),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
 
   void _onTap(BuildContext context, int index) {
-    navigationShell.goBranch(
+    widget.navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 }
