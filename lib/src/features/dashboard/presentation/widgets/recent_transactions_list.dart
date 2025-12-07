@@ -126,10 +126,20 @@ class RecentTransactionsList extends ConsumerWidget {
                       if (transaction.type == TransactionType.reimbursement && transaction.walletId == null) {
                         walletName = 'Reimbursement';
                       } else {
-                        walletName = wallets.firstWhere(
+                        final sourceWallet = wallets.firstWhere(
                           (w) => w.id.toString() == transaction.walletId || w.externalId == transaction.walletId, 
                           orElse: () => Wallet()..name = 'Unknown'
                         ).name;
+                        
+                        if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
+                            final destWallet = wallets.firstWhere(
+                                (w) => w.id.toString() == transaction.destinationWalletId || w.externalId == transaction.destinationWalletId,
+                                orElse: () => Wallet()..name = 'Unknown'
+                            ).name;
+                            walletName = '$sourceWallet ➔ $destWallet';
+                        } else {
+                            walletName = sourceWallet;
+                        }
                       }
                       
                       // Find category and subcategory
@@ -211,6 +221,7 @@ class RecentTransactionsList extends ConsumerWidget {
                             transaction.date,
                             isSystem: isSystem,
                             isReimbursement: transaction.type == TransactionType.reimbursement,
+                            isTransfer: transaction.type == TransactionType.transfer, // New Flag
                           ),
                         ),
                       );
@@ -235,13 +246,12 @@ class RecentTransactionsList extends ConsumerWidget {
       
       final isSystem = transaction.type == TransactionType.system;
       final isReimbursement = transaction.type == TransactionType.reimbursement;
+      final isTransfer = transaction.type == TransactionType.transfer; // Check Transfer
       final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
       final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
       
-      if (isReimbursement) {
-        // Reimbursement does not affect daily total logic for wallet balance display
-        // or effectively it's 0 change.
-        // So we do nothing to dailyTotal.
+      if (isReimbursement || isTransfer) { // Use isTransfer here
+        // Reimbursement and Transfer do not affect daily total
       } else if ((transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw) {
         groups[dateKey]!.dailyTotal -= transaction.amount;
       } else {
@@ -295,13 +305,14 @@ class RecentTransactionsList extends ConsumerWidget {
     DateTime date, {
     bool isSystem = false,
     bool isReimbursement = false,
+    bool isTransfer = false, // New parameter
   }) {
     // Determine if it's a Wishlist, Bill, Debt, or Savings transaction based on Category ID or Title
     final isWishlist = (category?.externalId == 'wishlist') || (isSystem && title.toLowerCase().contains('wishlist'));
     final isBill = (category?.externalId == 'bills') || (isSystem && title.toLowerCase().contains('bill'));
     final isDebt = (category?.externalId == 'debt') || (isSystem && (title.toLowerCase().contains('borrowed') || title.toLowerCase().contains('lent') || title.toLowerCase().contains('debt') || title.toLowerCase().contains('received payment')));
     final isSavings = (isSystem && (title.toLowerCase().contains('deposit to') || title.toLowerCase().contains('withdraw from') || title.toLowerCase().contains('savings'))) || title.toLowerCase().contains('savings');
-    final isTransfer = title.toLowerCase().contains('transfer');
+    // final isTransfer = title.toLowerCase().contains('transfer'); // Use passed param
 
     final iconPath = subCategoryIcon ?? category?.iconPath;
 
@@ -357,7 +368,7 @@ class RecentTransactionsList extends ConsumerWidget {
     if (isTransfer) systemNote = ' - Transfer';
     if (isReimbursement) systemNote = ' - Reimbursement';
     
-    final noteStr = isSystem || isReimbursement
+    final noteStr = isSystem || isReimbursement || isTransfer
         ? systemNote
         : (note != null && note.isNotEmpty ? ' - $note' : '');
 
@@ -415,7 +426,7 @@ class RecentTransactionsList extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        '$walletName$noteStr', 
+                        '$walletName', // noteStr removed here to avoid duplication if walletName is long? Or maybe user wants it? User said "Wallet used"
                         style: AppTextStyles.bodySmall,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -427,10 +438,10 @@ class RecentTransactionsList extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            '${isExpense ? "-" : "+"}${currency.format(amount)}',
+            isTransfer ? '~${currency.format(amount)}' : '${isExpense ? "-" : "+"}${currency.format(amount)}',
             style: AppTextStyles.bodyLarge.copyWith(
               fontWeight: FontWeight.bold,
-              color: isExpense ? Colors.red[400] : Colors.green[600],
+              color: isTransfer ? Colors.blue : (isExpense ? Colors.red[400] : Colors.green[600]),
             ),
           ),
         ],
