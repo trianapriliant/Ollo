@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item android:drawable="@drawable/widget_background" />
+    
+    <!-- Title Line (Simulated) -->
+    <item android:top="16dp" android:left="16dp" android:right="100dp" android:bottom="110dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#50B0BEC5"/>
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
+    <!-- Card 1 (Income) -->
+    <item android:top="50dp" android:left="16dp" android:right="90dp" android:bottom="50dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#30FFFFFF"/>
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+
+    <!-- Card 2 (Expense) -->
+    <item android:top="50dp" android:left="90dp" android:right="16dp" android:bottom="50dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#30FFFFFF"/>
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+    
+    <!-- Button (Bottom) -->
+    <item android:height="30dp" android:gravity="bottom" android:left="16dp" android:right="16dp" android:bottom="10dp">
+        <shape android:shape="rectangle">
+             <solid android:color="#2196F3" />
+             <corners android:radius="8dp" />
+        </shape>
+    </item>
+</layer-list>

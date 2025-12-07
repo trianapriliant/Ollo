@@ -12,6 +12,10 @@ import 'widgets/dashboard_budget_card.dart';
 import 'dashboard_filter_provider.dart';
 import '../../profile/data/user_profile_repository.dart';
 import '../../recurring/application/recurring_transaction_service.dart';
+import '../../transactions/domain/transaction.dart';
+import '../../home_widget/home_widget_service.dart';
+import 'transaction_provider.dart';
+
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -30,10 +34,85 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         service.processDueTransactions();
       });
     });
+    
+    // Sync Widget Data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+        // We use listenManual to avoid rebuilding the widget, but since we are in build/initState mix
+        // We can just listen to the provider in the build method for changes.
+    });
+  }
+
+  void _updateWidgetData(List<Transaction> transactions) {
+     final now = DateTime.now();
+     final currentMonthTransactions = transactions.where((t) {
+        return t.date.year == now.year && t.date.month == now.month;
+     }).toList();
+     
+     double income = 0;
+     double expense = 0;
+     
+     for (var t in currentMonthTransactions) {
+        if (t.type == TransactionType.income) {
+            income += t.amount;
+        } else if (t.type == TransactionType.expense) {
+            expense += t.amount;
+        }
+        // Handle System transactions if needed (like Debt Income)
+        // For simplicity, sticking to base types + System logic mirrored from other places could be complex.
+        // Let's reuse the simple check:
+        // Or better yet, just iterate and check isExpense getter?
+        // But the previous complex logic handled 'System' types efficiently.
+        // Let's use a simplified version:
+        final isSystem = t.type == TransactionType.system;
+        final isDebtIncome = isSystem && (t.title.toLowerCase().contains('borrowed') || t.title.toLowerCase().contains('received payment'));
+        final isSavingsWithdraw = isSystem && t.title.toLowerCase().contains('withdraw from');
+        
+        if (t.type == TransactionType.income || isDebtIncome || isSavingsWithdraw) {
+            if (t.type != TransactionType.income && (isDebtIncome || isSavingsWithdraw)) {
+                 income += t.amount;
+            }
+        } else if (t.type == TransactionType.expense || (isSystem && !isDebtIncome && !isSavingsWithdraw)) {
+             expense += t.amount;
+        }
+     }
+     
+     // Calculate Daily Expense for new Widget
+     double todayExpense = 0;
+     for (var t in transactions) {
+        // Must be Expense or equivalent
+        final isSystem = t.type == TransactionType.system;
+        final isDebtIncome = isSystem && (t.title.toLowerCase().contains('borrowed') || t.title.toLowerCase().contains('received payment'));
+        final isSavingsWithdraw = isSystem && t.title.toLowerCase().contains('withdraw from');
+        
+        final isExpenseOrEq = t.type == TransactionType.expense || (isSystem && !isDebtIncome && !isSavingsWithdraw);
+
+        if (isExpenseOrEq) {
+            if (t.date.year == now.year && t.date.month == now.month && t.date.day == now.day) {
+                todayExpense += t.amount;
+            }
+        }
+     }
+     
+     final balance = income - expense;
+     
+     HomeWidgetService.updateWidgetData(
+        income: income,
+        expense: expense,
+        balance: balance,
+        todayExpense: todayExpense,
+     );
+
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to ALL transactions to update the widget background service
+    ref.listen(transactionListProvider, (previous, next) {
+        next.whenData((transactions) {
+            _updateWidgetData(transactions);
+        });
+    });
+
     final transactionsAsync = ref.watch(filteredTransactionsProvider);
     final profileAsync = ref.watch(userProfileProvider);
 

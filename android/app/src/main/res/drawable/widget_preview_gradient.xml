@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item android:drawable="@drawable/widget_gradient_background" />
+    
+    <!-- Title (Today) -->
+    <item android:top="16dp" android:left="16dp" android:right="100dp" android:bottom="110dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#50FFFFFF"/>
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
+    <!-- Big Amount (Center) -->
+    <item android:width="100dp" android:height="30dp" android:gravity="center">
+        <shape android:shape="rectangle">
+            <solid android:color="#CCFFFFFF"/>
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
+    <!-- Bottom Text -->
+    <item android:width="80dp" android:height="15dp" android:gravity="bottom|left" android:left="16dp" android:bottom="20dp">
+         <shape android:shape="rectangle">
+            <solid android:color="#80FFFFFF"/>
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+</layer-list>
