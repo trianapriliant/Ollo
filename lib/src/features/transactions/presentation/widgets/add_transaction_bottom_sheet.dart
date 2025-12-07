@@ -17,6 +17,7 @@ import 'category_selector.dart';
 import 'sub_category_selector.dart';
 import 'num_pad.dart';
 import '../../../../common_widgets/modern_wallet_selector.dart';
+import '../../../wallets/domain/wallet.dart';
 import '../../../dashboard/presentation/transaction_provider.dart';
 
 class AddTransactionBottomSheet extends ConsumerStatefulWidget {
@@ -36,6 +37,23 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
   bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 1. Try to set default wallet immediately if data is available
+    final walletsVal = ref.read(walletListProvider);
+    if (walletsVal.hasValue) {
+      final wallets = walletsVal.valueOrNull ?? [];
+      if (wallets.isNotEmpty) {
+         final defaultWallet = wallets.firstWhere(
+           (w) => w.name.toLowerCase() == 'cash',
+           orElse: () => wallets.first,
+         );
+         _selectedWalletId = defaultWallet.externalId ?? defaultWallet.id.toString();
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -155,7 +173,10 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
   @override
   Widget build(BuildContext context) {
     final currencySymbol = ref.watch(currencyProvider).symbol;
-    final walletsAsync = ref.watch(walletListProvider);
+    final walletsAsync = ref.watch(walletListProvider); // Keep watching for UI updates
+
+    // ref.listen moved to build() start or initState is cleaner
+    // (Already handled in the previous edit's build override, so we just remove the block here)
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
@@ -371,16 +392,8 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                           data: (wallets) {
                             if (wallets.isEmpty) return const SizedBox();
                             
-                            // Ensure selection
-                            if (_selectedWalletId == null && wallets.isNotEmpty) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  if (mounted) {
-                                    final firstWallet = wallets.first;
-                                    setState(() => _selectedWalletId = firstWallet.externalId ?? firstWallet.id.toString());
-                                  }
-                                });
-                            }
-
+                            // Ensure selection handled by ref.listen
+                            
                             return Container(
                               height: 48,
                               decoration: BoxDecoration(

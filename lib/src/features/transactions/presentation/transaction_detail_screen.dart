@@ -196,31 +196,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 );
 
                 if (confirm == true) {
-                  // Delete logic
-                  // 1. Revert balance
-                  final walletRepo = await ref.read(walletRepositoryProvider.future);
-                  
-                  // Source Wallet
-                  final wallet = await walletRepo.getWallet(transaction.walletId!);
-                  if (wallet != null) {
-                    if (transaction.type == TransactionType.expense || transaction.type == TransactionType.transfer) {
-                      wallet.balance += transaction.amount;
-                    } else {
-                      wallet.balance -= transaction.amount;
-                    }
-                    await walletRepo.addWallet(wallet);
-                  }
-
-                  // Destination Wallet (for Transfer)
-                  if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
-                    final destWallet = await walletRepo.getWallet(transaction.destinationWalletId!);
-                    if (destWallet != null) {
-                      destWallet.balance -= transaction.amount; // Revert addition
-                      await walletRepo.addWallet(destWallet);
-                    }
-                  }
-
-                  // 2. Delete transaction
+                  // Delete transaction (Repository handles balance reversal)
                   final transactionRepo = await ref.read(transactionRepositoryProvider.future);
                   await transactionRepo.deleteTransaction(transaction.id); 
 

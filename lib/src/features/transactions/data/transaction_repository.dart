@@ -91,6 +91,20 @@ class IsarTransactionRepository implements TransactionRepository {
             await isar.wallets.put(wallet);
           }
         }
+        // Revert Destination Wallet for Transfers
+        if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
+            final destWallet = await isar.wallets.filter()
+                .idEqualTo(int.tryParse(transaction.destinationWalletId!) ?? -1)
+                .or()
+                .externalIdEqualTo(transaction.destinationWalletId!)
+                .findFirst();
+            
+            if (destWallet != null) {
+               destWallet.balance -= transaction.amount;
+               await isar.wallets.put(destWallet);
+            }
+        }
+
         await isar.transactions.delete(id);
       }
     });

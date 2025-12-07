@@ -50,6 +50,22 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       _titleController.text = t.title;
       _selectedWalletId = t.walletId;
       _selectedDestinationWalletId = t.destinationWalletId;
+    } 
+
+    // Logic to Auto-Select 'Cash' if no wallet is selected yet 
+    // (Works for new transactions AND drafts/voice results that missed a wallet)
+    if (_selectedWalletId == null) {
+      final walletsVal = ref.read(walletListProvider);
+      if (walletsVal.hasValue) {
+        final wallets = walletsVal.valueOrNull ?? [];
+        if (wallets.isNotEmpty) {
+           final defaultWallet = wallets.firstWhere(
+             (w) => w.name.toLowerCase() == 'cash',
+             orElse: () => wallets.first,
+           );
+           _selectedWalletId = defaultWallet.externalId ?? defaultWallet.id.toString();
+        }
+      }
     }
   }
 
@@ -61,6 +77,23 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final primaryColor = isExpense ? Colors.red[400]! : (isTransfer ? Colors.indigo : Colors.green[600]!);
 
     final categoriesAsync = ref.watch(categoryListProvider(isExpense ? CategoryType.expense : CategoryType.income));
+
+    // Listen for wallet data if not yet selected
+    ref.listen<AsyncValue<List<Wallet>>>(walletListProvider, (previous, next) {
+      if (_selectedWalletId == null && widget.transactionToEdit == null) {
+        next.whenData((wallets) {
+          if (wallets.isNotEmpty) {
+             final defaultWallet = wallets.firstWhere(
+               (w) => w.name.toLowerCase() == 'cash',
+               orElse: () => wallets.first,
+             );
+             setState(() {
+               _selectedWalletId = defaultWallet.externalId ?? defaultWallet.id.toString();
+             });
+          }
+        });
+      }
+    });
 
     return Scaffold(
       backgroundColor: AppColors.background,

@@ -117,13 +117,44 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: () {
-            ref.read(quickRecordControllerProvider.notifier).stopVoice();
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Stop & Process'),
+        Container(
+          width: double.infinity,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1DE9B6), Color(0xFF00BFA5)], // Aquamarine / Teal Accent gradient
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF1DE9B6).withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              ref.read(quickRecordControllerProvider.notifier).stopVoice();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+            child: const Text(
+              'Stop & Process',
+              style: TextStyle(
+                color: Colors.white, 
+                fontSize: 16, 
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
         ),
+        const SizedBox(height: 60), // Added extra padding to raise the view height as requested
       ],
     );
   }

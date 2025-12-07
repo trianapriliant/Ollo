@@ -127,7 +127,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
             ),
           ),
 
-          floatingActionButton: FloatingActionButton(
+          // Use a threshold to detect keyboard (avoid hiding for small insets like system bars)
+          floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 100 
+            ? null 
+            : FloatingActionButton(
             onPressed: () {
               showModalBottomSheet(
                 context: context,
