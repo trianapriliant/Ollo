@@ -64,6 +64,12 @@ class TransactionDetailScreen extends ConsumerWidget {
                     _buildDetailItem('Kategori', _getCategoryName(categoryAsync, transaction.categoryId)),
                     _buildDivider(),
                   ],
+                   _buildDetailItem('Wallet', _getFormattedWalletName(walletsAsync)),
+                  _buildDivider(),
+                  _buildDetailItem('Tanggal', DateFormat('dd MMMM yyyy').format(transaction.date)),
+                  _buildDivider(),
+                  _buildDetailItem('Jam', DateFormat('HH:mm').format(transaction.date)),
+                  _buildDivider(),
                 ],
               ),
             ),
@@ -412,17 +418,31 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  String _getWalletName(AsyncValue<List<Wallet>> walletsAsync, String? walletId) {
+
+
+  String _getFormattedWalletName(AsyncValue<List<Wallet>> walletsAsync) {
     return walletsAsync.when(
       data: (wallets) {
-        final wallet = wallets.firstWhere(
-          (w) => w.id.toString() == walletId || w.externalId == walletId, 
-          orElse: () => Wallet()..name = 'Unknown'
-        );
-        return wallet.name;
+        final walletName = _getWalletName((wallets), transaction.walletId);
+        
+        if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
+           final destName = _getWalletName((wallets), transaction.destinationWalletId);
+           return '$walletName ➔ $destName';
+        }
+        
+        return walletName;
       },
       loading: () => 'Loading...',
       error: (_, __) => 'Error',
     );
+  }
+
+  String _getWalletName(List<Wallet> wallets, String? walletId) {
+    if (walletId == null) return '-';
+    final wallet = wallets.firstWhere(
+      (w) => w.id.toString() == walletId || w.externalId == walletId, 
+      orElse: () => Wallet()..name = 'Unknown'
+    );
+    return wallet.name;
   }
 }
