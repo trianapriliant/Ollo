@@ -12,11 +12,9 @@ import '../../../categories/data/category_repository.dart';
 import '../../../categories/domain/category.dart';
 import '../dashboard_filter_provider.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
+import '../../../wallets/presentation/wallet_provider.dart';
 
-final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
-  final repo = await ref.watch(walletRepositoryProvider.future);
-  return repo.getAllWallets();
-});
+// Removed local walletsListProvider to use global one from wallet_provider.dart
 
 
 
@@ -71,7 +69,7 @@ class RecentTransactionsList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // final transactionsAsync = ref.watch(filteredTransactionsProvider); // Removed
     final currency = ref.watch(currencyProvider);
-    final walletsAsync = ref.watch(walletsListProvider);
+    final walletsAsync = ref.watch(walletListProvider);
     final wallets = walletsAsync.valueOrNull ?? [];
     final categoriesAsync = ref.watch(allCategoriesStreamProvider);
     final categories = categoriesAsync.valueOrNull ?? [];
