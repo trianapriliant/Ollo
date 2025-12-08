@@ -14,12 +14,16 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
   'Food & Drink': CategoryPattern(
     mainKeywords: ['makan', 'minum', 'food', 'drink', 'kuliner', 'lapar', 'haus'],
     subCategoryKeywords: {
-      'Breakfast': ['sarapan', 'bubur', 'nasi uduk', 'roti', 'pagi', 'soto ayam'],
-      'Lunch': ['makan siang', 'lunch', 'nasi padang', 'warteg', 'siang'],
-      'Dinner': ['makan malam', 'dinner', 'nasi goreng', 'malam', 'sate', 'martabak'],
-      'Snacks': ['cemilan', 'snack', 'jajan', 'coklat', 'keripik', 'roti', 'kue'],
-      'Drinks': ['minum', 'kopi', 'teh', 'boba', 'jus', 'coffee', 'tea', 'latte', 'starbucks', 'chatime'],
-      'Groceries': ['belanja', 'sayur', 'buah', 'beras', 'minyak', 'telur', 'bumbu', 'supermarket', 'pasar', 'indomaret', 'alfamart'],
+      'Breakfast': ['sarapan', 'bubur', 'nasi uduk', 'roti', 'pagi'],
+      'Lunch': ['makan siang', 'lunch', 'siang'],
+      'Dinner': ['makan malam', 'dinner', 'malam'],
+      'Eateries': [
+        'mie gacoan','mie ayam', 'bakso', 'soto', 'nasi goreng', 'gorengan', 'sate', 'pecel lele', 'ayam penyet', 'bubur ayam', 'warteg', 'kaki lima', // Warung
+        'padang', 'rendang', 'betutu', 'gudeg', 'rawon', 'coto', 'restoran', 'resto', 'buffet', 'all you can eat', 'sushi', 'steak', // Resto
+      ],
+      'Snacks': ['cemilan', 'snack', 'jajan', 'coklat', 'keripik', 'roti', 'kue', 'martabak'],
+      'Drinks': ['minum', 'kopi', 'teh', 'boba', 'jus', 'coffee', 'tea', 'latte', 'starbucks', 'chatime', 'haus', 'matcha', 'cappucino', 'espresso', 'smoothie', 'smoothie'],
+      'Groceries': ['belanja', 'sayur', 'buah', 'beras', 'minyak', 'telur', 'bumbu', 'supermarket', 'pasar', 'indomaret', 'alfamart', 'grocery', 'groceries'],
       'Delivery': ['gofood', 'grabfood', 'shopeefood', 'delivery', 'pesan antar'],
       'Alcohol': ['bir', 'wine', 'alkohol', 'vodka', 'soju', 'beer'],
     },
@@ -42,7 +46,7 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
       'Clothes': ['baju', 'kaos', 'celana', 'kemeja', 'jaket', 'fashion', 'zara', 'uniqlo', 'h&m'],
       'Electronics': ['hp', 'laptop', 'charger', 'gadget', 'kabel', 'mouse', 'keyboard', 'elektronik'],
       'Home': ['dekorasi', 'sprei', 'korden', 'karpet', 'peralatan rumah'],
-      'Beauty': ['makeup', 'skincare', 'lipstik', 'bedak', 'serum', 'toner', 'facial', 'salon', 'potong rambut'], // Moved Haircut here if implicit? Or Personal?
+      'Beauty': ['makeup', 'skincare', 'skin care', 'lipstik', 'bedak', 'serum', 'toner', 'facial', 'salon', 'potong rambut'], // Moved Haircut here if implicit? Or Personal?
       'Gifts': ['kado', 'hadiah', 'oleh-oleh', 'bingkisan'],
       'Software': ['aplikasi', 'subscription', 'langganan app', 'adobe', 'office', 'windows'],
       'Tools': ['obeng', 'palu', 'perkakas', 'bor', 'alat tukang'],
@@ -116,18 +120,43 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
     subCategoryKeywords: {
       'Haircut': ['potong rambut', 'cukur', 'barbershop', 'pangkas'],
       'Spa': ['pijat', 'massage', 'spa', 'refleksi'],
-      'Cosmetics': ['kosmetik', 'parfum', 'deodoran'],
+      'Cosmetics': ['kosmetik', 'parfum', 'deodoran', 'makeup', 'lipstik', 'bedak', 'foundation', 'concealer', 'cushion', 'blush', 'eyeliner', 'maskara', 'eyeshadow',
+      'pembersih muka', 'skincare', 'toner', 'serum', 'moisturizer', 'pelembab', 'sunscreen', 'sunblock',
+      'krim malam', 'krim siang', 'lotion', 'body lotion', 'body butter', 'body scrub', 'lulur', 'masker wajah',
+      'hair care', 'shampoo', 'conditioner', 'hair serum', 'pomade', 'hair gel', 'cat rambut', 'handbody',
+      'deodorant spray', 'roll on', 'body mist'],
     },
   ),
 
   // --- INCOME ---
   'Salary': CategoryPattern(
-    mainKeywords: ['gaji', 'pendapatan', 'salary'],
+    mainKeywords: ['pendapatan', 'salary'],
     subCategoryKeywords: {
-      'Monthly': ['gaji bulanan', 'gajian', 'monthly', 'gaji pokok'],
-      'Weekly': ['gaji mingguan', 'upah'],
-      'Bonus': ['thr', 'bonus', 'insentif', 'komisi'],
-      'Overtime': ['lembur', 'uang lembur'],
+      'Monthly': [
+        'gaji', 'gaji bulanan', 'gajian', 'monthly', 'gaji pokok',
+        'salary', 'pendapatan bulanan', 'income bulanan', 'penghasilan tetap',
+        'pemasukan rutin', 'upah bulanan', 'gaji tetap', 'uang bulanan',
+        'fixed salary', 'bayaran bulanan'
+      ],
+
+      'Weekly': [
+        'gaji mingguan', 'upah', 'upah mingguan', 'upah harian', 'daily pay',
+        'weekly pay', 'uang harian', 'uang mingguan', 'bayaran mingguan',
+        'bayaran harian', 'honor harian', 'honor mingguan'
+      ],
+
+      'Bonus': [
+        'thr', 'tunjangan hari raya', 'bonus', 'insentif', 'komisi',
+        'bonus penjualan', 'bonus performa', 'bonus akhir tahun', 'bonus target',
+        'reward', 'tip', 'tips', 'service fee', 'uang jasa', 'uang tip',
+        'uang tambahan', 'uang komisi', 'fee hasil kerja'
+      ],
+
+      'Overtime': [
+        'lembur', 'uang lembur', 'overtime', 'ot', 'bayaran lembur',
+        'honor lembur', 'uang tambahan lembur', 'jam lembur', 'jam tambahan',
+        'extra time', 'upah lembur', 'uang kerja tambahan'
+      ],
     },
   ),
   'Business': CategoryPattern(

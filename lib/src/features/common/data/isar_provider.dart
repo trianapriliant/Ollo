@@ -32,6 +32,32 @@ final isarProvider = FutureProvider<Isar>((ref) async {
   
   if (await isar.categorys.count() == 0) {
     await seedCategories(isar);
+  } else {
+    // Migration: Check if 'Eateries' exists. If not add it.
+    // Also remove 'Warung' or 'Restoran' if I accidentally added them in previous step.
+    final foodCat = await isar.categorys.filter().externalIdEqualTo('food').findFirst();
+    if (foodCat != null) {
+      bool changed = false;
+      List<SubCategory> subs = List.from(foodCat.subCategories ?? []);
+      
+      // Cleanup previous attempt keys
+      final initialLen = subs.length;
+      subs.removeWhere((s) => s.id == 'warung' || s.id == 'restoran');
+      if (subs.length != initialLen) changed = true;
+
+      // Add Eateries
+      if (!subs.any((s) => s.id == 'eateries')) {
+        subs.insert(3, SubCategory(id: 'eateries', name: 'Eateries', iconPath: 'restaurant'));
+        changed = true;
+      }
+
+      if (changed) {
+        foodCat.subCategories = subs;
+        await isar.writeTxn(() async {
+          await isar.categorys.put(foodCat);
+        });
+      }
+    }
   }
 
   return isar;
@@ -68,6 +94,7 @@ final defaultCategories = [
         SubCategory(id: 'breakfast', name: 'Breakfast', iconPath: 'bakery_dining'),
         SubCategory(id: 'lunch', name: 'Lunch', iconPath: 'lunch_dining'),
         SubCategory(id: 'dinner', name: 'Dinner', iconPath: 'dinner_dining'),
+        SubCategory(id: 'eateries', name: 'Eateries', iconPath: 'restaurant'), // New Consolidated
         SubCategory(id: 'snacks', name: 'Snacks', iconPath: 'icecream'),
         SubCategory(id: 'drinks', name: 'Drinks', iconPath: 'coffee'),
         SubCategory(id: 'groceries', name: 'Groceries', iconPath: 'local_grocery_store'),

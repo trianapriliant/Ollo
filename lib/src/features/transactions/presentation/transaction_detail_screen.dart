@@ -70,6 +70,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                   _buildDivider(),
                   _buildDetailItem('Jam', DateFormat('HH:mm').format(transaction.date)),
                   _buildDivider(),
+                  if (transaction.note != null && transaction.note!.isNotEmpty) ...[
+                    _buildDetailItem('Catatan', transaction.note!),
+                    _buildDivider(),
+                  ],
                 ],
               ),
             ),
@@ -142,14 +146,19 @@ class TransactionDetailScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           Text(
             label,
             style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
           ),
-          Text(
-            value,
-            style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              value,
+              style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600),
+              textAlign: TextAlign.right,
+            ),
           ),
         ],
       ),
