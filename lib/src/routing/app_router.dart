@@ -9,6 +9,7 @@ import '../features/statistics/presentation/category_transactions_screen.dart';
 import '../features/statistics/presentation/category_transactions_screen.dart';
 import '../features/statistics/presentation/statistics_provider.dart'; // For TimeRange enum
 import '../features/transactions/presentation/add_transaction_screen.dart';
+import '../features/quick_record/presentation/widgets/scan_receipt_screen.dart';
 import '../features/wallets/presentation/add_wallet_screen.dart';
 import '../features/wallets/presentation/wallet_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
@@ -379,6 +380,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const AddReimburseScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/scan-receipt',
+        builder: (context, state) => const ScanReceiptScreen(),
       ),
     ],
   );

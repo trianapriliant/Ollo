@@ -79,9 +79,21 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
       return;
     }
 
-    bool available = await _speechToText.initialize();
+    bool available = await _speechToText.initialize(
+      onError: (error) {
+        // Just set error state, let UI show red button. Keep text if any.
+        state = state.copyWith(state: QuickRecordState.error);
+      },
+      onStatus: (status) {
+         if (status == 'done' && state.state == QuickRecordState.listening && state.recognizedText.isEmpty) {
+             // Silence/Timeout -> Error state (Red button)
+             state = state.copyWith(state: QuickRecordState.error);
+         }
+      },
+    );
+
     if (available) {
-      state = state.copyWith(state: QuickRecordState.listening, recognizedText: '');
+      state = state.copyWith(state: QuickRecordState.listening, recognizedText: '', errorMessage: null); // Clear error
       _speechToText.listen(
         onResult: (result) {
           state = state.copyWith(recognizedText: result.recognizedWords);
@@ -90,10 +102,13 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
             _speechToText.stop();
           }
         },
-        localeId: 'id_ID', // Default to Indo for now, maybe configurable later
+        localeId: 'id_ID', 
+        cancelOnError: true,
+        listenFor: const Duration(seconds: 15),
+        pauseFor: const Duration(seconds: 3), 
       );
     } else {
-      state = state.copyWith(state: QuickRecordState.error, errorMessage: 'Speech recognition not available');
+      state = state.copyWith(state: QuickRecordState.error, errorMessage: 'Speech recognition unavailable');
     }
   }
 
@@ -102,7 +117,8 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
     if (state.recognizedText.isNotEmpty) {
       processText(state.recognizedText);
     } else {
-      state = state.copyWith(state: QuickRecordState.initial); // Back to start if nothing heard
+      // Manual stop with no text -> Error state (Red button)
+      state = state.copyWith(state: QuickRecordState.error);
     }
   }
 
@@ -122,11 +138,55 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
       String fullText = recognizedText.text;
       
       // Let's try to pass it to parser.
+      // Let's try to pass it to parser.
       processText(fullText);
       
     } catch (e) {
       state = state.copyWith(state: QuickRecordState.error, errorMessage: e.toString());
     }
+  }
+
+  // Process image from camera/gallery
+  Future<void> processImage(String path) async {
+      try {
+        state = state.copyWith(state: QuickRecordState.processing);
+
+        final inputImage = InputImage.fromFilePath(path);
+        final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+        final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+        
+        // --- SMART ROW SORTING LOGIC ---
+        // 1. Collect all lines
+        List<TextLine> allLines = [];
+        for (TextBlock block in recognizedText.blocks) {
+          allLines.addAll(block.lines);
+        }
+
+        // 2. Sort primarily by Top (Y), secondarily by Left (X)
+        // Group lines into "rows" based on Y overlapping
+        // Threshold: 10 pixels vertical difference considered same row
+        allLines.sort((a, b) {
+           double yDiff = (a.boundingBox.top - b.boundingBox.top).abs();
+           if (yDiff < 20) { // Same visual row
+              return a.boundingBox.left.compareTo(b.boundingBox.left);
+           }
+           return a.boundingBox.top.compareTo(b.boundingBox.top);
+        });
+
+        // 3. Join textual content
+        String fullText = allLines.map((e) => e.text).join('\n');
+        
+        await textRecognizer.close();
+
+        if (fullText.isNotEmpty) {
+           processText(fullText);
+        } else {
+           state = state.copyWith(state: QuickRecordState.error, errorMessage: 'No text found in image');
+        }
+
+      } catch (e) {
+         state = state.copyWith(state: QuickRecordState.error, errorMessage: 'Failed to process image');
+      }
   }
 }
 

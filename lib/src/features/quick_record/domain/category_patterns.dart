@@ -18,7 +18,7 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
       'Lunch': ['makan siang', 'lunch', 'siang'],
       'Dinner': ['makan malam', 'dinner', 'malam'],
       'Eateries': [
-        'mie gacoan','mie ayam', 'bakso', 'soto', 'nasi goreng', 'gorengan', 'sate', 'pecel lele', 'ayam penyet', 'bubur ayam', 'warteg', 'kaki lima', // Warung
+        'gacoan','mie gacoan','mie ayam', 'bakso', 'soto', 'nasi goreng', 'gorengan', 'sate', 'pecel lele', 'ayam penyet', 'bubur ayam', 'warteg', 'kaki lima', // Warung
         'padang', 'rendang', 'betutu', 'gudeg', 'rawon', 'coto', 'restoran', 'resto', 'buffet', 'all you can eat', 'sushi', 'steak', // Resto
       ],
       'Snacks': ['cemilan', 'snack', 'jajan', 'coklat', 'keripik', 'roti', 'kue', 'martabak'],
@@ -81,7 +81,7 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
     mainKeywords: ['kesehatan', 'sakit', 'sehat'],
     subCategoryKeywords: {
       'Doctor': ['dokter', 'konsultasi', 'rs', 'rumah sakit', 'klinik', 'spesialis', 'halodoc'],
-      'Pharmacy': ['obat', 'apotek', 'vitamin', 'suplemen', 'masker'],
+      'Pharmacy': ['obat', 'apotek', 'vitamin', 'suplemen', 'masker', 'strip', 'kapsul', 'tablet', 'resep', 'sirup'],
       'Gym': ['fitness', 'olahraga', 'renang', 'badminton', 'futsal', 'yoga'],
       'Insurance': ['bpjs', 'asuransi kesehatan', 'premi'],
       'Mental Health': ['psikolog', 'konseling', 'terapi'],
@@ -180,9 +180,23 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
   'Gifts': CategoryPattern(
     mainKeywords: ['hadiah', 'kado'],
     subCategoryKeywords: {
-      'Birthday': ['ulang tahun', 'ultah'],
-      'Holiday': ['angpao', 'lebaran', 'natal'],
-      'Allowance': ['uang jajan', 'kiriman orang tua'],
+      'Birthday': [
+        'ulang tahun', 'ultah', 'birthday', 'hadiah ultah', 'kado ulang tahun',
+        'uang ulang tahun', 'uang ultah', 'birthday gift', 'gift birthday'
+      ],
+
+      'Holiday': [
+        'angpao', 'ampao', 'uang angpao', 'uang ampao', 'lebaran', 'idul fitri',
+        'idul adha', 'ramadhan', 'natal', 'christmas', 'imlek', 'tahun baru',
+        'holiday gift', 'hadiah liburan', 'uang liburan', 'musiman'
+      ],
+
+      'Allowance': [
+        'pesangon','uang jajan', 'kiriman orang tua', 'kiriman ortu', 'uang bulanan orang tua',
+        'monthly allowance', 'allowance', 'uang saku', 'uang kiriman',
+        'transfer orang tua', 'dikirim orang tua'
+      ],
+
     },
   ),
   'Other': CategoryPattern(
