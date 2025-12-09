@@ -112,6 +112,11 @@ class FilteredTransactionsScreen extends ConsumerWidget {
       final isDebtIncome = isSystem && (t.title.toLowerCase().contains('borrowed') || t.title.toLowerCase().contains('received payment'));
       final isSavingsWithdraw = isSystem && t.title.toLowerCase().contains('withdraw from');
       
+      final isTransfer = t.type == TransactionType.transfer;
+      final isReimbursement = t.type == TransactionType.reimbursement;
+
+      if (isTransfer || isReimbursement) return false; // Strictly exclude Transfer/Reimbursement from Income/Expense lists
+
       final isTExpense = (t.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw;
       
       return isTExpense == isExpense;

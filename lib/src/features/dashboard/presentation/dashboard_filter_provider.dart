@@ -86,11 +86,22 @@ final dashboardTotalsProvider = FutureProvider<Map<String, double>>((ref) async 
   double expense = 0;
 
   for (var t in transactions) {
-    if (!t.isExpense) {
+    // Correctly categorize transactions
+    if (t.type == TransactionType.income) {
       income += t.amount;
-    } else {
+    } else if (t.type == TransactionType.expense) {
       expense += t.amount;
+    } else if (t.type == TransactionType.system) {
+      final isDebtIncome = t.title.toLowerCase().contains('borrowed') || t.title.toLowerCase().contains('received payment');
+      final isSavingsWithdraw = t.title.toLowerCase().contains('withdraw from');
+      
+      if (isDebtIncome || isSavingsWithdraw) {
+         income += t.amount;
+      } else {
+         expense += t.amount;
+      }
     }
+    // Transfer and Reimbursement are IGNORED
   }
 
   return {'income': income, 'expense': expense};

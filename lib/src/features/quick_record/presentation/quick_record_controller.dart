@@ -3,6 +3,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 import '../../transactions/domain/transaction.dart';
 import '../application/quick_record_service.dart';
 
@@ -73,6 +74,10 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
   }
 
   Future<void> startVoice() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      state = state.copyWith(state: QuickRecordState.error, errorMessage: 'Voice input tidak tersedia di Desktop');
+      return;
+    }
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
       state = state.copyWith(state: QuickRecordState.error, errorMessage: 'Microphone permission denied');
@@ -123,6 +128,11 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
   }
 
   Future<void> startScan() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      state = state.copyWith(state: QuickRecordState.error, errorMessage: 'OCR fitur ini hanya tersedia di Android/iOS');
+      return;
+    }
+
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
       if (image == null) return; // User canceled
@@ -148,6 +158,10 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
 
   // Process image from camera/gallery
   Future<void> processImage(String path) async {
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        state = state.copyWith(state: QuickRecordState.error, errorMessage: 'OCR fitur ini hanya tersedia di Android/iOS');
+        return;
+      }
       try {
         state = state.copyWith(state: QuickRecordState.processing);
 

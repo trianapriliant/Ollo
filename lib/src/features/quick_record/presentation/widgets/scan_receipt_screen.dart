@@ -14,6 +14,7 @@ class _ScanReceiptScreenState extends State<ScanReceiptScreen> {
   CameraController? _controller;
   Future<void>? _initializeControllerFuture;
   bool _isTakingPicture = false;
+  bool _noCamera = false;
 
   @override
   void initState() {
@@ -23,7 +24,10 @@ class _ScanReceiptScreenState extends State<ScanReceiptScreen> {
 
   Future<void> _initCamera() async {
     final cameras = await availableCameras();
-    if (cameras.isEmpty) return; // Handle no camera
+    if (cameras.isEmpty) {
+      if (mounted) setState(() => _noCamera = true);
+      return; 
+    }
 
     _controller = CameraController(
       cameras.first, // Back camera usually
@@ -62,6 +66,14 @@ class _ScanReceiptScreenState extends State<ScanReceiptScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_noCamera) {
+       return Scaffold(
+          appBar: AppBar(backgroundColor: Colors.black, iconTheme: const IconThemeData(color: Colors.white)),
+          backgroundColor: Colors.black,
+          body: const Center(child: Text("Camera not available", style: TextStyle(color: Colors.white))),
+       );
+    }
+
     if (_controller == null || _initializeControllerFuture == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
