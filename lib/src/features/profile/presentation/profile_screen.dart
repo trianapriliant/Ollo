@@ -21,7 +21,9 @@ import 'widgets/developer_options_helper.dart';
 import 'widgets/premium_status_card.dart';
 import 'widgets/profile_header.dart';
 import 'widgets/profile_menu_item.dart';
+import 'widgets/profile_menu_item.dart';
 import 'widgets/profile_menu_section.dart';
+import '../../profile/application/data_export_service.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -101,7 +103,7 @@ class ProfileScreen extends ConsumerWidget {
                   icon: Icons.file_download_outlined,
                   title: 'Data Export',
                   onTap: () {
-                     _showComingSoonDialog(context, 'Data Export', 'Export your financial data to CSV or Excel formats. (Premium Feature)');
+                     context.push('/data-export');
                   },
                 ),
                 const SizedBox(height: 24),

@@ -301,3 +301,4 @@ final quickRecordServiceProvider = Provider<QuickRecordService>((ref) {
   final repo = ref.watch(quickRecordRepositoryProvider);
   return QuickRecordService(repo);
 });
+

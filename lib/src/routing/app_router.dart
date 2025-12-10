@@ -54,6 +54,7 @@ import '../features/onboarding/data/onboarding_repository.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/reimbursement/presentation/reimburse_screen.dart';
 import '../features/reimbursement/presentation/add_reimburse_screen.dart';
+import '../features/profile/presentation/data_export_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -370,6 +371,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/about-ollo',
         builder: (context, state) => const AboutOlloScreen(),
+      ),
+      GoRoute(
+        path: '/data-export',
+        builder: (context, state) => const DataExportScreen(),
       ),
       GoRoute(
         path: '/reimburse',
