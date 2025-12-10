@@ -73,7 +73,7 @@ class ProfileScreen extends ConsumerWidget {
                 // Modular Header
                 ProfileHeader(profile: profile),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 
                 // Modular Premium Card
                 const PremiumStatusCard(),

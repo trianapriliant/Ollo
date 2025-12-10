@@ -52,12 +52,7 @@ class ProfileHeader extends ConsumerWidget {
         if (profile.email != null)
           Text(profile.email!, style: AppTextStyles.bodyMedium),
 
-        const SizedBox(height: 8),
-        TextButton(
-          onPressed: () => _showEditProfileDialog(context, ref, profile),
-          child: Text('Edit Profile',
-              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.primary)),
-        ),
+
       ],
     );
   }
