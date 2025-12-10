@@ -61,4 +61,45 @@ class BankCard {
     this.isPinned = false,
     this.qrCodePath,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'number': number,
+      'holderName': holderName,
+      'type': type.name,
+      'color': color,
+      'balance': balance,
+      'category': category.name,
+      'accountType': accountType.name,
+      'label': label,
+      'branch': branch,
+      'isPinned': isPinned,
+      'qrCodePath': qrCodePath,
+    };
+  }
+
+  factory BankCard.fromJson(Map<String, dynamic> json) {
+    return BankCard(
+      name: json['name'] as String,
+      number: json['number'] as String,
+      holderName: json['holderName'] as String,
+      type: CardType.values.firstWhere((e) => e.name == json['type']),
+      color: json['color'] as int? ?? 0xFF2196F3,
+      balance: (json['balance'] as num?)?.toDouble(),
+      category: CardCategory.values.firstWhere(
+        (e) => e.name == json['category'],
+        orElse: () => CardCategory.main,
+      ),
+      accountType: CardAccountType.values.firstWhere(
+        (e) => e.name == json['accountType'],
+        orElse: () => CardAccountType.personal,
+      ),
+      label: json['label'] as String?,
+      branch: json['branch'] as String?,
+      isPinned: json['isPinned'] as bool? ?? false,
+      qrCodePath: json['qrCodePath'] as String?,
+    )..id = json['id'] as int;
+  }
 }

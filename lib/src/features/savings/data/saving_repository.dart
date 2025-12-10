@@ -16,6 +16,8 @@ abstract class SavingRepository {
   Future<void> addLog(SavingLog log);
   Future<List<SavingLog>> getLogsForGoal(int goalId);
   Future<List<SavingLog>> getAllLogs();
+  Future<void> clearAll();
+  Future<void> importAll(List<SavingGoal> goals, List<SavingLog> logs);
 }
 
 class IsarSavingRepository implements SavingRepository {
@@ -74,6 +76,22 @@ class IsarSavingRepository implements SavingRepository {
   @override
   Future<List<SavingLog>> getAllLogs() async {
     return isar.savingLogs.where().findAll();
+  }
+
+  @override
+  Future<void> clearAll() async {
+    await isar.writeTxn(() async {
+      await isar.savingLogs.clear();
+      await isar.savingGoals.clear();
+    });
+  }
+
+  @override
+  Future<void> importAll(List<SavingGoal> goals, List<SavingLog> logs) async {
+    await isar.writeTxn(() async {
+      await isar.savingGoals.putAll(goals);
+      await isar.savingLogs.putAll(logs);
+    });
   }
 }
 

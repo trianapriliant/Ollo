@@ -38,4 +38,33 @@ class RecurringTransaction {
   });
 
   bool createBillOnly;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'amount': amount,
+      'categoryId': categoryId,
+      'walletId': walletId,
+      'note': note,
+      'frequency': frequency.name,
+      'startDate': startDate.toIso8601String(),
+      'nextDueDate': nextDueDate.toIso8601String(),
+      'isActive': isActive,
+      'createBillOnly': createBillOnly,
+    };
+  }
+
+  factory RecurringTransaction.fromJson(Map<String, dynamic> json) {
+    return RecurringTransaction(
+      amount: (json['amount'] as num).toDouble(),
+      categoryId: json['categoryId'] as String,
+      walletId: json['walletId'] as String,
+      note: json['note'] as String?,
+      frequency: RecurringFrequency.values.firstWhere((e) => e.name == json['frequency']),
+      startDate: DateTime.parse(json['startDate'] as String),
+      nextDueDate: DateTime.parse(json['nextDueDate'] as String),
+      isActive: json['isActive'] as bool? ?? true,
+      createBillOnly: json['createBillOnly'] as bool? ?? false,
+    )..id = json['id'] as int;
+  }
 }

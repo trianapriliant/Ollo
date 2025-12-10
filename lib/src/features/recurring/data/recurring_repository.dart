@@ -10,6 +10,8 @@ abstract class RecurringRepository {
   Future<void> updateRecurringTransaction(RecurringTransaction transaction);
   Future<void> deleteRecurringTransaction(int id);
   Future<double> calculateMonthlyCommitment();
+  Future<void> clearAll();
+  Future<void> importAll(List<RecurringTransaction> transactions);
 }
 
 class IsarRecurringRepository implements RecurringRepository {
@@ -70,6 +72,18 @@ class IsarRecurringRepository implements RecurringRepository {
       }
     }
     return totalMonthly;
+  }
+
+  Future<void> clearAll() async {
+    await isar.writeTxn(() async {
+      await isar.recurringTransactions.clear();
+    });
+  }
+
+  Future<void> importAll(List<RecurringTransaction> transactions) async {
+    await isar.writeTxn(() async {
+      await isar.recurringTransactions.putAll(transactions);
+    });
   }
 }
 

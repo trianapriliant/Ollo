@@ -26,4 +26,25 @@ class SavingLog {
     required this.date,
     this.note,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'savingGoalId': savingGoalId,
+      'amount': amount,
+      'type': type.name,
+      'date': date.toIso8601String(),
+      'note': note,
+    };
+  }
+
+  factory SavingLog.fromJson(Map<String, dynamic> json) {
+    return SavingLog(
+      savingGoalId: json['savingGoalId'] as int,
+      amount: (json['amount'] as num).toDouble(),
+      type: SavingLogType.values.firstWhere((e) => e.name == json['type']),
+      date: DateTime.parse(json['date'] as String),
+      note: json['note'] as String?,
+    )..id = json['id'] as int;
+  }
 }

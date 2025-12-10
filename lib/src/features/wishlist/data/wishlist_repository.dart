@@ -45,4 +45,16 @@ class WishlistRepository {
         .transactionIdEqualTo(transactionId)
         .findFirst();
   }
+
+  Future<void> clearAll() async {
+    await _isar.writeTxn(() async {
+      await _isar.wishlists.clear();
+    });
+  }
+
+  Future<void> importAll(List<Wishlist> wishlists) async {
+    await _isar.writeTxn(() async {
+      await _isar.wishlists.putAll(wishlists);
+    });
+  }
 }

@@ -20,6 +20,21 @@ import '../../transactions/domain/transaction.dart';
 import '../../wallets/data/wallet_repository.dart';
 import '../../wallets/domain/wallet.dart';
 
+import '../../recurring/data/recurring_repository.dart';
+import '../../recurring/domain/recurring_transaction.dart';
+import '../../wishlist/data/wishlist_repository.dart';
+import '../../wishlist/domain/wishlist.dart';
+import '../../smart_notes/data/smart_note_repository.dart';
+import '../../smart_notes/domain/smart_note.dart';
+import '../../savings/data/saving_repository.dart';
+import '../../savings/domain/saving_goal.dart';
+import '../../savings/domain/saving_log.dart';
+import '../../cards/data/card_repository.dart';
+import '../../cards/domain/card.dart';
+
+import '../../profile/data/user_profile_repository.dart';
+import '../../profile/domain/user_profile.dart';
+
 final backupServiceProvider = Provider((ref) => BackupService(ref));
 
 class BackupService {
@@ -35,6 +50,12 @@ class BackupService {
     final debtRepo = _ref.read(debtRepositoryProvider);
     final budgetRepo = _ref.read(budgetRepositoryProvider);
     final billRepo = _ref.read(billRepositoryProvider);
+    final recurringRepo = _ref.read(recurringRepositoryProvider);
+    final wishlistRepo = _ref.read(wishlistRepositoryProvider);
+    final smartNoteRepo = _ref.read(smartNoteRepositoryProvider);
+    final savingRepo = _ref.read(savingRepositoryProvider);
+    final cardRepo = _ref.read(cardRepositoryProvider);
+    final profileRepo = await _ref.read(userProfileRepositoryProvider.future);
 
     final transactions = await transactionRepo.getAllTransactions();
     final wallets = await walletRepo.getAllWallets();
@@ -42,10 +63,17 @@ class BackupService {
     final debts = await debtRepo.getAllDebts();
     final budgets = await budgetRepo.getAllBudgets();
     final bills = await billRepo.getAllBills();
+    final recurring = await recurringRepo.getAllRecurringTransactions();
+    final wishlists = await wishlistRepo.getAllWishlists();
+    final smartNotes = await smartNoteRepo.watchNotes().first; // Stream
+    final savingGoals = await savingRepo.getSavingGoals();
+    final savingLogs = await savingRepo.getAllLogs();
+    final cards = await cardRepo.watchCards().first; // Stream
+    final profile = await profileRepo.getUserProfile();
 
     // 2. Construct Data Map
     final backupData = {
-      'version': 1,
+      'version': 2,
       'timestamp': DateTime.now().toIso8601String(),
       'data': {
         'wallets': wallets.map((e) => e.toJson()).toList(),
@@ -54,25 +82,35 @@ class BackupService {
         'debts': debts.map((e) => e.toJson()).toList(),
         'budgets': budgets.map((e) => e.toJson()).toList(),
         'bills': bills.map((e) => e.toJson()).toList(),
+        'recurring': recurring.map((e) => e.toJson()).toList(),
+        'wishlists': wishlists.map((e) => e.toJson()).toList(),
+        'smartNotes': smartNotes.map((e) => e.toJson()).toList(),
+        'savingGoals': savingGoals.map((e) => e.toJson()).toList(),
+        'savingLogs': savingLogs.map((e) => e.toJson()).toList(),
+        'cards': cards.map((e) => e.toJson()).toList(),
+        'profile': profile.toJson(),
       }
     };
 
     // 3. Convert to JSON
     final jsonString = jsonEncode(backupData);
 
-    // 4. Save to Downloads (Logic matched from DataExportService)
+    // 4. Save to Custom Folder
     String? downloadPath;
     if (Platform.isAndroid) {
-      downloadPath = '/storage/emulated/0/Download';
-      
-      // Basic check for permissions if needed, generally public dir writable
-      // If we want to be safe we could request manage external storage but let's try direct write first
+      // Try to save to "Documents/Ollo/Backup"
+      // /storage/emulated/0/Documents/Ollo/Backup
+      final directory = Directory('/storage/emulated/0/Documents/Ollo/Backup');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      downloadPath = directory.path;
     } else {
       final dir = await getDownloadsDirectory();
       downloadPath = dir?.path ?? (await getApplicationDocumentsDirectory()).path;
     }
 
-    final fileName = "ollo_backup_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.json";
+    final fileName = "ollo_backup_v2_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.json";
     final path = "$downloadPath/$fileName";
     final file = File(path);
 
@@ -80,7 +118,6 @@ class BackupService {
         await file.writeAsString(jsonString);
         return path;
     } catch (e) {
-        // Fallback
         final docsDir = await getApplicationDocumentsDirectory();
         final fallbackPath = "${docsDir.path}/$fileName";
         final fallbackFile = File(fallbackPath);
@@ -112,19 +149,34 @@ class BackupService {
     }
 
     final version = backupData['version'] as int?;
-    if (version == null || version != 1) {
-       // Handle version mismatch if needed in future
-    }
+    // Version check kept simple for now
     
     final data = backupData['data'] as Map<String, dynamic>;
 
     // 3. Deserialize Data
-    final wallets = (data['wallets'] as List).map((e) => Wallet.fromJson(e)).toList();
-    final categories = (data['categories'] as List).map((e) => Category.fromJson(e)).toList();
-    final transactions = (data['transactions'] as List).map((e) => Transaction.fromJson(e)).toList();
-    final debts = (data['debts'] as List?)?.map((e) => Debt.fromJson(e)).toList() ?? [];
-    final budgets = (data['budgets'] as List?)?.map((e) => Budget.fromJson(e)).toList() ?? [];
-    final bills = (data['bills'] as List?)?.map((e) => Bill.fromJson(e)).toList() ?? [];
+    // Helper to safely map list
+    List<T> safeMap<T>(dynamic list, T Function(Map<String, dynamic>) mapper) {
+      if (list == null) return [];
+      return (list as List).map((e) => mapper(e as Map<String, dynamic>)).toList();
+    }
+
+    final wallets = safeMap(data['wallets'], (json) => Wallet.fromJson(json));
+    final categories = safeMap(data['categories'], (json) => Category.fromJson(json));
+    final transactions = safeMap(data['transactions'], (json) => Transaction.fromJson(json));
+    final debts = safeMap(data['debts'], (json) => Debt.fromJson(json));
+    final budgets = safeMap(data['budgets'], (json) => Budget.fromJson(json));
+    final bills = safeMap(data['bills'], (json) => Bill.fromJson(json));
+    final recurring = safeMap(data['recurring'], (json) => RecurringTransaction.fromJson(json));
+    final wishlists = safeMap(data['wishlists'], (json) => Wishlist.fromJson(json));
+    final smartNotes = safeMap(data['smartNotes'], (json) => SmartNote.fromJson(json));
+    final savingGoals = safeMap(data['savingGoals'], (json) => SavingGoal.fromJson(json));
+    final savingLogs = safeMap(data['savingLogs'], (json) => SavingLog.fromJson(json));
+    final cards = safeMap(data['cards'], (json) => BankCard.fromJson(json));
+    
+    UserProfile? profile;
+    if (data['profile'] != null) {
+      profile = UserProfile.fromJson(data['profile']);
+    }
 
     // 4. Clear & Import (Wipe & Replace)
     final transactionRepo = await _ref.read(transactionRepositoryProvider.future);
@@ -133,14 +185,12 @@ class BackupService {
     final debtRepo = _ref.read(debtRepositoryProvider);
     final budgetRepo = _ref.read(budgetRepositoryProvider);
     final billRepo = _ref.read(billRepositoryProvider);
-
-    // Order matters? Usually Reference integrity isn't strictly enforced by Isar unless links are set.
-    // We clear children first usually, but Isar clear removes collection.
-    
-    // Validate we have data before clearing!
-    if (wallets.isEmpty && transactions.isEmpty) {
-       throw Exception("Backup file appears empty");
-    }
+    final recurringRepo = _ref.read(recurringRepositoryProvider);
+    final wishlistRepo = _ref.read(wishlistRepositoryProvider);
+    final smartNoteRepo = _ref.read(smartNoteRepositoryProvider);
+    final savingRepo = _ref.read(savingRepositoryProvider);
+    final cardRepo = _ref.read(cardRepositoryProvider);
+    final profileRepo = await _ref.read(userProfileRepositoryProvider.future);
 
     await transactionRepo.clearAllTransactions();
     await walletRepo.clearAllWallets();
@@ -148,6 +198,12 @@ class BackupService {
     await debtRepo.clearAllDebts();
     await budgetRepo.clearAllBudgets();
     await billRepo.clearAllBills();
+    await recurringRepo.clearAll();
+    await wishlistRepo.clearAll();
+    await smartNoteRepo.clearAll();
+    await savingRepo.clearAll();
+    await cardRepo.clearAll();
+    // No need to clear profile, we overwrite it.
 
     await walletRepo.importWallets(wallets);
     await categoryRepo.importCategories(categories);
@@ -155,5 +211,14 @@ class BackupService {
     await debtRepo.importDebts(debts);
     await budgetRepo.importBudgets(budgets);
     await billRepo.importBills(bills);
+    await recurringRepo.importAll(recurring);
+    await wishlistRepo.importAll(wishlists);
+    await smartNoteRepo.importAll(smartNotes);
+    await savingRepo.importAll(savingGoals, savingLogs);
+    await cardRepo.importAll(cards);
+    
+    if (profile != null) {
+      await profileRepo.importProfile(profile);
+    }
   }
 }

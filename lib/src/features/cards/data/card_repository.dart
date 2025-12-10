@@ -50,4 +50,16 @@ class CardRepository {
       }
     });
   }
+
+  Future<void> clearAll() async {
+    await _isar.writeTxn(() async {
+      await _isar.bankCards.clear();
+    });
+  }
+
+  Future<void> importAll(List<BankCard> cards) async {
+    await _isar.writeTxn(() async {
+      await _isar.bankCards.putAll(cards);
+    });
+  }
 }

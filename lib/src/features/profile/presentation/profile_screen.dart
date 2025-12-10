@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../profile/data/user_profile_repository.dart';
@@ -96,7 +97,7 @@ class ProfileScreen extends ConsumerWidget {
                 ProfileMenuItem(
                   icon: Icons.feedback_outlined,
                   title: 'Feedback & Roadmap',
-                  onTap: () => _showComingSoonDialog(context, 'Feedback & Roadmap', 'Vote on new features and share your thoughts with the developer.'),
+                  onTap: () => context.push('/roadmap'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
@@ -165,6 +166,11 @@ class ProfileScreen extends ConsumerWidget {
                   onTap: () {},
                   isDestructive: true,
                 ),
+
+                
+                const SizedBox(height: 32),
+                _buildVersionInfo(),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -172,6 +178,37 @@ class ProfileScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
       ),
+    );
+  }
+
+  Widget _buildVersionInfo() {
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox.shrink();
+        }
+        final info = snapshot.data!;
+        return Column(
+          children: [
+            Text(
+              'Ollo v${info.version} (Build ${info.buildNumber})',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'by Ollo Labs',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary.withOpacity(0.5),
+                fontSize: 10,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

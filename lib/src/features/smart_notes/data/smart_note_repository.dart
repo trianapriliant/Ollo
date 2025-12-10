@@ -95,4 +95,16 @@ class SmartNoteRepository {
       }
     });
   }
+
+  Future<void> clearAll() async {
+    await _isar.writeTxn(() async {
+      await _isar.smartNotes.clear();
+    });
+  }
+
+  Future<void> importAll(List<SmartNote> notes) async {
+    await _isar.writeTxn(() async {
+      await _isar.smartNotes.putAll(notes);
+    });
+  }
 }

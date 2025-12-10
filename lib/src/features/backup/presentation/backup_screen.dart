@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ollo/src/constants/app_colors.dart';
 import 'package:ollo/src/constants/app_text_styles.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../application/backup_service.dart';
 
 class BackupScreen extends ConsumerStatefulWidget {
@@ -25,6 +26,22 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     });
 
     try {
+      // Request permission
+      var status = await Permission.manageExternalStorage.status;
+      if (!status.isGranted) {
+        status = await Permission.manageExternalStorage.request();
+      }
+      
+      // Fallback for older Android
+      if (!status.isGranted) {
+         if (await Permission.storage.request().isGranted) {
+            // Good
+         } else {
+            // throw Exception("Storage permission required");
+            // Just proceed and let it try falling back to app docs
+         }
+      }
+
       final path = await ref.read(backupServiceProvider).createBackup();
       if (mounted) {
         setState(() {

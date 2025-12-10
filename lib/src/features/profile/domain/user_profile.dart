@@ -17,4 +17,21 @@ class UserProfile {
     this.email,
     this.currencyCode = 'IDR',
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'profileImagePath': profileImagePath,
+      'email': email,
+      'currencyCode': currencyCode,
+    };
+  }
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      name: json['name'] as String? ?? 'User',
+      profileImagePath: json['profileImagePath'] as String?,
+      email: json['email'] as String?,
+      currencyCode: json['currencyCode'] as String? ?? 'IDR',
+    )..id = 0;
+  }
 }

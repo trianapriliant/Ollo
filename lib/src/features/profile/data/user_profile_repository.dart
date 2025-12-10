@@ -6,6 +6,7 @@ import '../domain/user_profile.dart';
 abstract class UserProfileRepository {
   Future<UserProfile> getUserProfile();
   Future<void> updateUserProfile(UserProfile profile);
+  Future<void> importProfile(UserProfile profile);
 }
 
 class IsarUserProfileRepository implements UserProfileRepository {
@@ -31,6 +32,14 @@ class IsarUserProfileRepository implements UserProfileRepository {
   Future<void> updateUserProfile(UserProfile profile) async {
     await isar.writeTxn(() async {
       profile.id = 0; // Ensure ID is always 0
+      await isar.userProfiles.put(profile);
+    });
+  }
+
+  @override
+  Future<void> importProfile(UserProfile profile) async {
+    await isar.writeTxn(() async {
+      profile.id = 0;
       await isar.userProfiles.put(profile);
     });
   }
