@@ -12,6 +12,8 @@ abstract class WalletRepository {
   Future<List<Wallet>> getAllWallets();
   Stream<List<Wallet>> watchWallets();
   Future<Wallet?> getWallet(String id);
+  Future<void> clearAllWallets();
+  Future<void> importWallets(List<Wallet> wallets);
 }
 
 class IsarWalletRepository implements WalletRepository {
@@ -60,6 +62,20 @@ class IsarWalletRepository implements WalletRepository {
   @override
   Stream<List<Wallet>> watchWallets() {
     return isar.wallets.where().watch(fireImmediately: true);
+  }
+
+  @override
+  Future<void> clearAllWallets() async {
+    await isar.writeTxn(() async {
+      await isar.wallets.clear();
+    });
+  }
+
+  @override
+  Future<void> importWallets(List<Wallet> wallets) async {
+    await isar.writeTxn(() async {
+      await isar.wallets.putAll(wallets);
+    });
   }
 }
 

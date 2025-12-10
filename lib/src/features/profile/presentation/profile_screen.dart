@@ -84,7 +84,7 @@ class ProfileScreen extends ConsumerWidget {
                 ProfileMenuItem(
                   icon: Icons.cloud_sync_outlined,
                   title: 'Backup & Recovery',
-                  onTap: () => _showComingSoonDialog(context, 'Backup & Recovery', 'Securely backup your data to the cloud and restore it on any device.'),
+                  onTap: () => context.push('/backup'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(

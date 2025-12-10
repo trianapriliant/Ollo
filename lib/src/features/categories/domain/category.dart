@@ -16,6 +16,22 @@ class SubCategory {
     this.name,
     this.iconPath,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'iconPath': iconPath,
+    };
+  }
+
+  factory SubCategory.fromJson(Map<String, dynamic> json) {
+    return SubCategory(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      iconPath: json['iconPath'] as String?,
+    );
+  }
 }
 
 @collection
@@ -49,4 +65,49 @@ class Category {
     required this.colorValue,
     this.subCategories,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'externalId': externalId,
+      'name': name,
+      'iconPath': iconPath,
+      'type': type.name,
+      'colorValue': colorValue,
+      'subCategories': subCategories?.map((s) => s.toJson()).toList(),
+    };
+  }
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      externalId: json['externalId'] as String?,
+      name: json['name'] as String,
+      iconPath: json['iconPath'] as String,
+      type: CategoryType.values.firstWhere(
+        (e) => e.name == (json['type'] as String),
+        orElse: () => CategoryType.expense,
+      ),
+      colorValue: json['colorValue'] as int?,
+      subCategories: (json['subCategories'] as List<dynamic>?)
+          ?.map((e) => SubCategory.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    )..id = json['id'] as int;
+  }
+}
+
+extension SubCategoryExtension on SubCategory {
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'iconPath': iconPath,
+    };
+  }
+  
+  static SubCategory fromJson(Map<String, dynamic> json) {
+    return SubCategory(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      iconPath: json['iconPath'] as String?,
+    );
+  }
 }

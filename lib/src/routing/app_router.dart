@@ -55,6 +55,7 @@ import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/reimbursement/presentation/reimburse_screen.dart';
 import '../features/reimbursement/presentation/add_reimburse_screen.dart';
 import '../features/profile/presentation/data_export_screen.dart';
+import '../features/backup/presentation/backup_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -375,6 +376,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/data-export',
         builder: (context, state) => const DataExportScreen(),
+      ),
+      GoRoute(
+        path: '/backup',
+        builder: (context, state) => const BackupScreen(),
       ),
       GoRoute(
         path: '/reimburse',

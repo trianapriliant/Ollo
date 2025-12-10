@@ -54,4 +54,16 @@ class DebtRepository {
         .transactionIdEqualTo(transactionId)
         .findFirst();
   }
+
+  Future<void> clearAllDebts() async {
+    await _isar.writeTxn(() async {
+      await _isar.debts.clear();
+    });
+  }
+
+  Future<void> importDebts(List<Debt> debts) async {
+    await _isar.writeTxn(() async {
+      await _isar.debts.putAll(debts);
+    });
+  }
 }

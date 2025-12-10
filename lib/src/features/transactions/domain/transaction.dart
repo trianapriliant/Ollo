@@ -65,4 +65,44 @@ class Transaction {
   bool get isSystem => type == TransactionType.system;
   @ignore
   bool get isReimbursement => type == TransactionType.reimbursement;
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'date': date.toIso8601String(),
+      'type': type.name,
+      'status': status.name,
+      'note': note,
+      'walletId': walletId,
+      'destinationWalletId': destinationWalletId,
+      'categoryId': categoryId,
+      'subCategoryId': subCategoryId,
+      'subCategoryName': subCategoryName,
+      'subCategoryIcon': subCategoryIcon,
+    };
+  }
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction.create(
+      title: json['title'] as String,
+      amount: (json['amount'] as num).toDouble(),
+      date: DateTime.parse(json['date'] as String),
+      type: TransactionType.values.firstWhere(
+        (e) => e.name == (json['type'] as String),
+        orElse: () => TransactionType.expense,
+      ),
+      status: TransactionStatus.values.firstWhere(
+        (e) => e.name == (json['status'] as String),
+        orElse: () => TransactionStatus.completed,
+      ),
+      note: json['note'] as String?,
+      walletId: json['walletId'] as String?,
+      destinationWalletId: json['destinationWalletId'] as String?,
+      categoryId: json['categoryId'] as String?,
+      subCategoryId: json['subCategoryId'] as String?,
+      subCategoryName: json['subCategoryName'] as String?,
+      subCategoryIcon: json['subCategoryIcon'] as String?,
+    )..id = json['id'] as int;
+  }
 }

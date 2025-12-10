@@ -12,6 +12,8 @@ abstract class CategoryRepository {
   Future<List<Category>> getAllCategories();
 
   Future<void> deleteCategory(Id id);
+  Future<void> clearAllCategories();
+  Future<void> importCategories(List<Category> categories);
 }
 
 class IsarCategoryRepository implements CategoryRepository {
@@ -47,6 +49,20 @@ class IsarCategoryRepository implements CategoryRepository {
   Future<void> deleteCategory(Id id) async {
     await isar.writeTxn(() async {
       await isar.categorys.delete(id);
+    });
+  }
+
+  @override
+  Future<void> clearAllCategories() async {
+    await isar.writeTxn(() async {
+      await isar.categorys.clear();
+    });
+  }
+
+  @override
+  Future<void> importCategories(List<Category> categories) async {
+    await isar.writeTxn(() async {
+      await isar.categorys.putAll(categories);
     });
   }
 }

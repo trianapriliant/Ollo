@@ -27,6 +27,8 @@ abstract class BudgetRepository {
   // Calculate spent amount for a budget based on transactions
   Future<double> calculateSpentAmount(Budget budget);
   Future<double> calculateSpentAmountForRange(Budget budget, DateTime start, DateTime end);
+  Future<void> clearAllBudgets();
+  Future<void> importBudgets(List<Budget> budgets);
 }
 
 class IsarBudgetRepository implements BudgetRepository {
@@ -115,5 +117,19 @@ class IsarBudgetRepository implements BudgetRepository {
         .findAll();
 
     return transactions.fold<double>(0.0, (sum, t) => sum + t.amount);
+  }
+
+  @override
+  Future<void> clearAllBudgets() async {
+    await isar.writeTxn(() async {
+      await isar.budgets.clear();
+    });
+  }
+
+  @override
+  Future<void> importBudgets(List<Budget> budgets) async {
+    await isar.writeTxn(() async {
+      await isar.budgets.putAll(budgets);
+    });
   }
 }

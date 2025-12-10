@@ -63,6 +63,18 @@ class BillRepository {
         .transactionIdEqualTo(transactionId)
         .findFirst();
   }
+
+  Future<void> clearAllBills() async {
+    await isar.writeTxn(() async {
+      await isar.bills.clear();
+    });
+  }
+
+  Future<void> importBills(List<Bill> bills) async {
+    await isar.writeTxn(() async {
+      await isar.bills.putAll(bills);
+    });
+  }
 }
 
 final billRepositoryProvider = Provider<BillRepository>((ref) {

@@ -48,6 +48,31 @@ class Wallet {
     this.colorValue = 0xFF2196F3,
     this.type = WalletType.other,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'externalId': externalId,
+      'name': name,
+      'balance': balance,
+      'iconPath': iconPath,
+      'colorValue': colorValue,
+      'type': type.name,
+    };
+  }
+
+  factory Wallet.fromJson(Map<String, dynamic> json) {
+    return Wallet.create(
+      externalId: json['externalId'] as String?,
+      name: json['name'] as String,
+      balance: (json['balance'] as num).toDouble(),
+      iconPath: json['iconPath'] as String,
+      colorValue: json['colorValue'] as int? ?? 0xFF2196F3,
+      type: WalletType.values.firstWhere(
+        (e) => e.name == (json['type'] as String),
+        orElse: () => WalletType.other,
+      ),
+    )..id = json['id'] as int;
+  }
 }
 
 enum WalletType {
