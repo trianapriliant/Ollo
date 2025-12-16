@@ -21,6 +21,54 @@ class AppLocalizationsId extends AppLocalizations {
   String get home => 'Beranda';
 
   @override
+  String get cardAppearance => 'Tampilan Kartu';
+
+  @override
+  String get selectTheme => 'Pilih Tema';
+
+  @override
+  String get themeClassic => 'Biru Klasik';
+
+  @override
+  String get themeSunset => 'Senja Jingga';
+
+  @override
+  String get themeOcean => 'Laut Tosca';
+
+  @override
+  String get themeBerry => 'Ungu Berry';
+
+  @override
+  String get themeForest => 'Hijau Alam';
+
+  @override
+  String get themeMidnight => 'Gelap Malam';
+
+  @override
+  String get themeOasis => 'Oasis Tenang';
+
+  @override
+  String get themeLavender => 'Lavender Lembut';
+
+  @override
+  String get themeCottonCandy => 'Mimpi Pastel';
+
+  @override
+  String get themeMint => 'Mint Polos';
+
+  @override
+  String get themePeach => 'Persik Polos';
+
+  @override
+  String get themeSoftBlue => 'Biru Lembut';
+
+  @override
+  String get themeLilac => 'Lilac Polos';
+
+  @override
+  String get themeLemon => 'Lemon Polos';
+
+  @override
   String get wallet => 'Dompet';
 
   @override

@@ -130,6 +130,102 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
+  /// No description provided for @cardAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Card Appearance'**
+  String get cardAppearance;
+
+  /// No description provided for @selectTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Theme'**
+  String get selectTheme;
+
+  /// No description provided for @themeClassic.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic Blue'**
+  String get themeClassic;
+
+  /// No description provided for @themeSunset.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunset Orange'**
+  String get themeSunset;
+
+  /// No description provided for @themeOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean Teal'**
+  String get themeOcean;
+
+  /// No description provided for @themeBerry.
+  ///
+  /// In en, this message translates to:
+  /// **'Berry Purple'**
+  String get themeBerry;
+
+  /// No description provided for @themeForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Nature Green'**
+  String get themeForest;
+
+  /// No description provided for @themeMidnight.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight Dark'**
+  String get themeMidnight;
+
+  /// No description provided for @themeOasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm Oasis'**
+  String get themeOasis;
+
+  /// No description provided for @themeLavender.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft Lavender'**
+  String get themeLavender;
+
+  /// No description provided for @themeCottonCandy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pastel Dream'**
+  String get themeCottonCandy;
+
+  /// No description provided for @themeMint.
+  ///
+  /// In en, this message translates to:
+  /// **'Simply Mint'**
+  String get themeMint;
+
+  /// No description provided for @themePeach.
+  ///
+  /// In en, this message translates to:
+  /// **'Simply Peach'**
+  String get themePeach;
+
+  /// No description provided for @themeSoftBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Simply Blue'**
+  String get themeSoftBlue;
+
+  /// No description provided for @themeLilac.
+  ///
+  /// In en, this message translates to:
+  /// **'Simply Lilac'**
+  String get themeLilac;
+
+  /// No description provided for @themeLemon.
+  ///
+  /// In en, this message translates to:
+  /// **'Simply Lemon'**
+  String get themeLemon;
+
   /// No description provided for @wallet.
   ///
   /// In en, this message translates to:

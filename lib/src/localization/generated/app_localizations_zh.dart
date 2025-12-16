@@ -21,6 +21,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String get home => '首页';
 
   @override
+  String get cardAppearance => 'Card Appearance';
+
+  @override
+  String get selectTheme => 'Select Theme';
+
+  @override
+  String get themeClassic => 'Classic Blue';
+
+  @override
+  String get themeSunset => 'Sunset Orange';
+
+  @override
+  String get themeOcean => 'Ocean Teal';
+
+  @override
+  String get themeBerry => 'Berry Purple';
+
+  @override
+  String get themeForest => 'Nature Green';
+
+  @override
+  String get themeMidnight => 'Midnight Dark';
+
+  @override
+  String get themeOasis => 'Calm Oasis';
+
+  @override
+  String get themeLavender => 'Soft Lavender';
+
+  @override
+  String get themeCottonCandy => 'Pastel Dream';
+
+  @override
+  String get themeMint => 'Simply Mint';
+
+  @override
+  String get themePeach => 'Simply Peach';
+
+  @override
+  String get themeSoftBlue => 'Simply Blue';
+
+  @override
+  String get themeLilac => 'Simply Lilac';
+
+  @override
+  String get themeLemon => 'Simply Lemon';
+
+  @override
   String get wallet => '钱包';
 
   @override

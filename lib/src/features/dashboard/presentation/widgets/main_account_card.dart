@@ -8,6 +8,8 @@ import '../../../settings/presentation/currency_provider.dart';
 import '../dashboard_filter_provider.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 
+import '../main_card_theme_provider.dart';
+
 class MainAccountCard extends ConsumerWidget {
   const MainAccountCard({super.key});
 
@@ -18,22 +20,17 @@ class MainAccountCard extends ConsumerWidget {
     final currency = ref.watch(currencyProvider);
     final totalsAsync = ref.watch(dashboardTotalsProvider);
     final totals = totalsAsync.valueOrNull ?? {'income': 0.0, 'expense': 0.0};
+    
+    final currentTheme = ref.watch(mainCardThemeProvider);
 
     return Container(
       padding: const EdgeInsets.all(20), // Reduced from 24
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF4A90E2), // Blue
-            const Color(0xFF50E3C2).withOpacity(0.8), // Teal
-          ],
-        ),
+        gradient: currentTheme.gradient,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF4A90E2).withOpacity(0.3),
+            color: currentTheme.gradient.colors.first.withOpacity(0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

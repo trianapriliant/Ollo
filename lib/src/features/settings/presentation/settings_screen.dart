@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'reorder_menu_screen.dart';
+import 'card_theme_selection_screen.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'currency_provider.dart';
@@ -56,6 +57,26 @@ class SettingsScreen extends ConsumerWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const ReorderMenuScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.accentBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.palette, color: AppColors.primary),
+                    ),
+                    title: Text(AppLocalizations.of(context)!.cardAppearance, style: AppTextStyles.bodyLarge),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CardThemeSelectionScreen(),
                         ),
                       );
                     },
