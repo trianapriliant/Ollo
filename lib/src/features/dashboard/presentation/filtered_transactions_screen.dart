@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'dashboard_filter_provider.dart';
 import 'widgets/recent_transactions_list.dart';
 import 'transaction_provider.dart';
 import '../../transactions/domain/transaction.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class FilteredTransactionsScreen extends ConsumerWidget {
   final bool isExpense;
@@ -28,23 +30,23 @@ class FilteredTransactionsScreen extends ConsumerWidget {
     
     if (specificDate != null) {
       // Format: "Dec 7, 2025"
-      timeLabel = _formatDate(specificDate!);
+      timeLabel = _formatDate(context, specificDate!);
     } else {
       switch (filterState.filterType) {
         case TimeFilterType.day:
-          timeLabel = 'Today';
+          timeLabel = AppLocalizations.of(context)!.timeFilterToday;
           break;
         case TimeFilterType.week:
-          timeLabel = 'This Week';
+          timeLabel = AppLocalizations.of(context)!.timeFilterThisWeek;
           break;
         case TimeFilterType.month:
-          timeLabel = 'This Month';
+          timeLabel = AppLocalizations.of(context)!.timeFilterThisMonth;
           break;
         case TimeFilterType.year:
-          timeLabel = 'This Year';
+          timeLabel = AppLocalizations.of(context)!.timeFilterThisYear;
           break;
         case TimeFilterType.all:
-          timeLabel = 'All Time';
+          timeLabel = AppLocalizations.of(context)!.timeFilterAllTime;
           break;
       }
     }
@@ -61,7 +63,7 @@ class FilteredTransactionsScreen extends ConsumerWidget {
         title: Column(
           children: [
             Text(
-              isExpense ? 'Expense Details' : 'Income Details',
+              isExpense ? AppLocalizations.of(context)!.expenseDetails : AppLocalizations.of(context)!.incomeDetails,
               style: AppTextStyles.h3,
             ),
             Text(
@@ -74,24 +76,23 @@ class FilteredTransactionsScreen extends ConsumerWidget {
       ),
       body: specificDate != null 
           ? allTransactionsAsync.when(
-              data: (transactions) => _buildTransactionList(transactions, isSpecificDate: true),
+              data: (transactions) => _buildTransactionList(context, transactions, isSpecificDate: true),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+              error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error(err.toString()))),
             )
           : filteredTransactionsAsync.when(
-              data: (transactions) => _buildTransactionList(transactions, isSpecificDate: false),
+              data: (transactions) => _buildTransactionList(context, transactions, isSpecificDate: false),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+              error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error(err.toString()))),
             ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  String _formatDate(BuildContext context, DateTime date) {
+    return DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(date);
   }
 
-  Widget _buildTransactionList(List<Transaction> transactions, {required bool isSpecificDate}) { 
+  Widget _buildTransactionList(BuildContext context, List<Transaction> transactions, {required bool isSpecificDate}) { 
     // Filter logic
     final typeFilteredTransactions = transactions.where((t) {
       
@@ -134,12 +135,12 @@ class FilteredTransactionsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "No ${isExpense ? 'expenses' : 'income'} found",
+              isExpense ? AppLocalizations.of(context)!.noExpensesFound : AppLocalizations.of(context)!.noIncomeFound,
               style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 4),
             Text(
-              "for this date", // Simplified label
+              AppLocalizations.of(context)!.forThisDate, // Simplified label
               style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[500]),
             ),
           ],

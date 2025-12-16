@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../transactions/data/transaction_repository.dart';
@@ -141,7 +142,7 @@ class _SmartNoteDetailScreenState extends ConsumerState<SmartNoteDetailScreen> {
                    Row(
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
-                       const Text('Checked Total:', style: TextStyle(color: Colors.grey)),
+                       Text(AppLocalizations.of(context)!.checkedTotal, style: const TextStyle(color: Colors.grey)),
                        Text(
                          NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(_totalChecked),
                          style: AppTextStyles.h2.copyWith(color: Colors.teal),
@@ -160,7 +161,7 @@ class _SmartNoteDetailScreenState extends ConsumerState<SmartNoteDetailScreen> {
                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                        ),
                        child: Text(
-                         _note.isCompleted ? 'Completed' : 'Pay & Finish',
+                         _note.isCompleted ? AppLocalizations.of(context)!.completed : AppLocalizations.of(context)!.payAndFinish,
                          style: AppTextStyles.bodyLarge.copyWith(
                            color: Colors.white, 
                            fontWeight: FontWeight.bold
@@ -199,7 +200,7 @@ class _SmartNoteDetailScreenState extends ConsumerState<SmartNoteDetailScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Paying with', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  Text(AppLocalizations.of(context)!.payingWith, style: const TextStyle(fontSize: 10, color: Colors.grey)),
                   Text(wallet.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
                 ],
               ),
@@ -220,7 +221,7 @@ class _SmartNoteDetailScreenState extends ConsumerState<SmartNoteDetailScreen> {
   Future<void> _processTransaction() async {
     if (_totalChecked == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No items checked to pay!')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noItemsChecked)),
       );
       return;
     }
@@ -228,13 +229,13 @@ class _SmartNoteDetailScreenState extends ConsumerState<SmartNoteDetailScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Payment'),
-        content: Text('Create transaction for Rp ${NumberFormat.decimalPattern('id').format(_totalChecked)}?'),
+        title: Text(AppLocalizations.of(context)!.confirmPayment),
+        content: Text(AppLocalizations.of(context)!.confirmPaymentMessage(NumberFormat.decimalPattern('id').format(_totalChecked))),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true), 
-            child: const Text('Confirm', style: TextStyle(color: Colors.teal))
+            child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(color: Colors.teal))
           ),
         ],
       ),
@@ -263,7 +264,7 @@ class _SmartNoteDetailScreenState extends ConsumerState<SmartNoteDetailScreen> {
       if (mounted) {
         setState(() {}); // refresh UI
         ScaffoldMessenger.of(context).showSnackBar(
-           const SnackBar(content: Text('Transaction recorded & Bundle completed!')),
+           SnackBar(content: Text(AppLocalizations.of(context)!.smartNoteTransactionRecorded)),
         );
         context.pop(); // Go back to list
       }

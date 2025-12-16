@@ -7,6 +7,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../cards/data/card_repository.dart';
 import '../../cards/domain/card.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class CardsScreen extends ConsumerStatefulWidget {
   const CardsScreen({super.key});
@@ -29,7 +30,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
     });
   }
 
-  void _copySelected(List<BankCard> allCards) {
+  void _copySelected(List<BankCard> allCards, AppLocalizations l10n) {
     final selectedCards = allCards.where((c) => _selectedIds.contains(c.id)).toList();
     if (selectedCards.isEmpty) return;
 
@@ -40,7 +41,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
 
     Clipboard.setData(ClipboardData(text: buffer.toString().trim()));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${selectedCards.length} cards copied!')),
+      SnackBar(content: Text(l10n.cardsCopied(selectedCards.length))),
     );
     setState(() {
       _selectedIds.clear();
@@ -50,6 +51,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
   @override
   Widget build(BuildContext context) {
     final cardsAsync = ref.watch(cardListProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -57,7 +59,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          _isMultiSelectMode ? '${_selectedIds.length} Selected' : 'My Cards',
+          _isMultiSelectMode ? l10n.selectedCount(_selectedIds.length) : l10n.myCards,
           style: AppTextStyles.h2,
         ),
         centerTitle: true,
@@ -75,7 +77,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
           if (_isMultiSelectMode)
             IconButton(
               icon: const Icon(Icons.copy_all, color: AppColors.primary),
-              onPressed: () => cardsAsync.whenData((cards) => _copySelected(cards)),
+              onPressed: () => cardsAsync.whenData((cards) => _copySelected(cards, l10n)),
             ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.black),
@@ -86,13 +88,13 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'home',
                   child: Row(
                     children: [
-                      Icon(Icons.home, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text('Home'),
+                      const Icon(Icons.home, color: Colors.black),
+                      const SizedBox(width: 8),
+                      Text(l10n.home),
                     ],
                   ),
                 ),
@@ -110,9 +112,9 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
                 children: [
                   Icon(Icons.credit_card, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
-                  Text('No cards yet', style: AppTextStyles.h3.copyWith(color: Colors.grey)),
+                  Text(l10n.noCardsYet, style: AppTextStyles.h3.copyWith(color: Colors.grey)),
                   const SizedBox(height: 8),
-                  Text('Add your bank accounts or e-wallets', style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
+                  Text(l10n.addCardsMessage, style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
                 ],
               ),
             );
@@ -128,7 +130,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
             separatorBuilder: (_, __) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final card = cards[index];
-              return _buildCardItem(context, card);
+              return _buildCardItem(context, card, l10n);
             },
           );
         },
@@ -145,7 +147,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
     );
   }
 
-  Widget _buildCardItem(BuildContext context, BankCard card) {
+  Widget _buildCardItem(BuildContext context, BankCard card, AppLocalizations l10n) {
     final isSelected = _selectedIds.contains(card.id);
     final isPinned = card.isPinned;
 
@@ -247,11 +249,11 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
                         child: _buildActionButton(
                           context,
                           icon: Icons.copy,
-                          label: 'Copy Number',
+                          label: l10n.copyNumber,
                           onTap: () {
                             Clipboard.setData(ClipboardData(text: card.number));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Card number copied!')),
+                              SnackBar(content: Text(l10n.cardNumberCopied)),
                             );
                           },
                         ),
@@ -261,13 +263,13 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
                         child: _buildActionButton(
                           context,
                           icon: Icons.copy_all,
-                          label: 'Copy Template',
+                          label: l10n.copyTemplate,
                           onTap: () {
                             // Format: "Trian | BCA: 123456"
                             final text = '${card.holderName} | ${card.name}: ${card.number}';
                             Clipboard.setData(ClipboardData(text: text));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Card template copied!')),
+                              SnackBar(content: Text(l10n.cardTemplateCopied)),
                             );
                           },
                         ),
@@ -322,3 +324,5 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
     );
   }
 }
+
+

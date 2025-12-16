@@ -8,6 +8,7 @@ import '../../wallets/domain/wallet.dart';
 import '../../wallets/data/wallet_repository.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../../../utils/icon_helper.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class AddEditWalletScreen extends ConsumerStatefulWidget {
   final Wallet? wallet;
@@ -85,7 +86,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          widget.wallet != null ? 'Edit Wallet' : 'New Wallet',
+          widget.wallet != null ? AppLocalizations.of(context)!.editWallet : AppLocalizations.of(context)!.newWallet,
           style: AppTextStyles.h3,
         ),
         centerTitle: true,
@@ -145,7 +146,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            'Debit Card', // Placeholder type
+                            AppLocalizations.of(context)!.debitCard, // Placeholder type
                             style: GoogleFonts.inter(
                               color: Colors.white,
                               fontSize: 12,
@@ -159,7 +160,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _nameController.text.isEmpty ? 'Wallet Name' : _nameController.text,
+                          _nameController.text.isEmpty ? AppLocalizations.of(context)!.walletName : _nameController.text,
                           style: GoogleFonts.inter(
                             color: Colors.white.withAlpha(204), // 0.8 * 255
                             fontSize: 16,
@@ -184,18 +185,18 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
             const SizedBox(height: 40),
 
             // Input Fields
-            Text('Wallet Details', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.walletDetails, style: AppTextStyles.h3),
             const SizedBox(height: 20),
             
             _buildTextField(
               controller: _nameController,
-              label: 'Wallet Name',
+              label: AppLocalizations.of(context)!.walletName,
               icon: Icons.account_balance_wallet_outlined,
             ),
             const SizedBox(height: 16),
             _buildTextField(
               controller: _balanceController,
-              label: 'Initial Balance',
+              label: AppLocalizations.of(context)!.initialBalance,
               icon: Icons.attach_money,
               keyboardType: TextInputType.number,
             ),
@@ -203,9 +204,9 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
             const SizedBox(height: 32),
             
             // Color Picker
-            Text('Appearance', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.appearance, style: AppTextStyles.h3),
             const SizedBox(height: 16),
-            Text('Color', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.color, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 12),
             SizedBox(
               height: 50,
@@ -245,7 +246,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
             ),
 
             const SizedBox(height: 24),
-            Text('Icon', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.icon, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 12),
             SizedBox(
               height: 60,
@@ -292,7 +293,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
                   elevation: 0,
                 ),
                 child: Text(
-                  'Save Wallet',
+                  AppLocalizations.of(context)!.saveWallet,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

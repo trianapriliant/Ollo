@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../../common_widgets/modern_wallet_selector.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class TransactionWalletSelector extends ConsumerWidget {
   final String? selectedWalletId;
@@ -26,7 +27,7 @@ class TransactionWalletSelector extends ConsumerWidget {
 
     return walletsAsync.when(
       data: (wallets) {
-        if (wallets.isEmpty) return const Text("No wallets found. Please create one.");
+        if (wallets.isEmpty) return Text(AppLocalizations.of(context)!.emptyWalletsTitle);
 
         // NOTE: Parent widget handles data validation and auto-selection initial state logic.
         // This widget focuses on rendering based on passed props.
@@ -38,7 +39,7 @@ class TransactionWalletSelector extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('From', style: AppTextStyles.bodyMedium),
+                    Text(AppLocalizations.of(context)!.from, style: AppTextStyles.bodyMedium),
                     const SizedBox(height: 8),
                     ModernWalletSelector(
                       selectedWalletId: selectedWalletId,
@@ -52,13 +53,13 @@ class TransactionWalletSelector extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('To', style: AppTextStyles.bodyMedium),
+                    Text(AppLocalizations.of(context)!.to, style: AppTextStyles.bodyMedium),
                     const SizedBox(height: 8),
                     if (wallets.length < 2)
-                      const Padding(
-                          padding: EdgeInsets.only(top: 12),
-                          child: Text("Need 2+ wallets",
-                              style: TextStyle(color: Colors.red, fontSize: 12)))
+                       Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text(AppLocalizations.of(context)!.needTwoWallets,
+                              style: const TextStyle(color: Colors.red, fontSize: 12)))
                     else
                       ModernWalletSelector(
                         selectedWalletId: selectedDestinationWalletId,
@@ -75,7 +76,7 @@ class TransactionWalletSelector extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Wallet', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.wallet, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
             ModernWalletSelector(
               selectedWalletId: selectedWalletId,
@@ -85,7 +86,7 @@ class TransactionWalletSelector extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Text('Error loading wallets: $err'),
+      error: (err, stack) => Text(AppLocalizations.of(context)!.error(err.toString())),
     );
   }
 }

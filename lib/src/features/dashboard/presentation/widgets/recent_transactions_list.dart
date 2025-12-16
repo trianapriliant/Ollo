@@ -13,6 +13,7 @@ import '../../../categories/domain/category.dart';
 import '../dashboard_filter_provider.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
+import '../../../../localization/generated/app_localizations.dart';
 
 // Removed local walletsListProvider to use global one from wallet_provider.dart
 
@@ -85,12 +86,12 @@ class RecentTransactionsList extends ConsumerWidget {
                   Icon(Icons.receipt_long_outlined, size: 48, color: Colors.grey[300]),
                   const SizedBox(height: 16),
                   Text(
-                    "Belum ada transaksi",
+                    AppLocalizations.of(context)!.noTransactions,
                     style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[600], fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Ayo mulai catat pengeluaran dan pemasukanmu agar keuangan lebih rapi! 🚀",
+                    AppLocalizations.of(context)!.startRecording,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[500]),
                   ),
@@ -105,7 +106,7 @@ class RecentTransactionsList extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Recent Transactions', style: AppTextStyles.h2),
+            Text(AppLocalizations.of(context)!.recentTransactions, style: AppTextStyles.h2),
             const SizedBox(height: 16),
             ListView.separated(
               shrinkWrap: true,
@@ -117,22 +118,22 @@ class RecentTransactionsList extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDateHeader(group.date, group.dailyTotal, currency),
+                    _buildDateHeader(context, group.date, group.dailyTotal, currency),
                     const SizedBox(height: 12),
                     ...group.transactions.map((transaction) {
                       String walletName;
                       if (transaction.type == TransactionType.reimbursement && transaction.walletId == null) {
-                        walletName = 'Reimbursement';
+                        walletName = AppLocalizations.of(context)!.reimburse;
                       } else {
                         final sourceWallet = wallets.firstWhere(
                           (w) => w.id.toString() == transaction.walletId || w.externalId == transaction.walletId, 
-                          orElse: () => Wallet()..name = 'Unknown'
+                          orElse: () => Wallet()..name = AppLocalizations.of(context)!.unknown
                         ).name;
                         
                         if (transaction.type == TransactionType.transfer && transaction.destinationWalletId != null) {
                             final destWallet = wallets.firstWhere(
                                 (w) => w.id.toString() == transaction.destinationWalletId || w.externalId == transaction.destinationWalletId,
-                                orElse: () => Wallet()..name = 'Unknown'
+                                orElse: () => Wallet()..name = AppLocalizations.of(context)!.unknown
                             ).name;
                             walletName = '$sourceWallet ➔ $destWallet';
                         } else {
@@ -147,7 +148,7 @@ class RecentTransactionsList extends ConsumerWidget {
                          if (transaction.categoryId == 'bills') {
                            category = Category(
                              externalId: 'bills', 
-                             name: 'Bills', 
+                             name: AppLocalizations.of(context)!.bills, 
                              iconPath: 'receipt_long', 
                              type: CategoryType.expense, 
                              colorValue: Colors.orange.value
@@ -155,7 +156,7 @@ class RecentTransactionsList extends ConsumerWidget {
                          } else if (transaction.categoryId == 'wishlist') {
                            category = Category(
                              externalId: 'wishlist', 
-                             name: 'Wishlist', 
+                             name: AppLocalizations.of(context)!.wishlist, 
                              iconPath: 'favorite', 
                              type: CategoryType.expense, 
                              colorValue: Colors.pink.value
@@ -163,7 +164,7 @@ class RecentTransactionsList extends ConsumerWidget {
                          } else if (transaction.categoryId == 'debt') {
                            category = Category(
                              externalId: 'debt', 
-                             name: 'Debt', 
+                             name: AppLocalizations.of(context)!.debts, 
                              iconPath: 'handshake', 
                              type: CategoryType.expense, 
                              colorValue: Colors.purple.value
@@ -171,7 +172,7 @@ class RecentTransactionsList extends ConsumerWidget {
                          } else if (['notes', 'note', 'Smart Notes', 'Smart Note', 'smart notes', 'smart note'].contains(transaction.categoryId)) {
                            category = Category(
                              externalId: 'notes', 
-                             name: 'Smart Notes', 
+                             name: AppLocalizations.of(context)!.smartNotesTitle, 
                              iconPath: 'edit_note', 
                              type: CategoryType.expense, 
                              colorValue: Colors.teal.value
@@ -180,7 +181,7 @@ class RecentTransactionsList extends ConsumerWidget {
                            category = categories.firstWhere(
                              (c) => (c.externalId ?? c.id.toString()) == transaction.categoryId, 
                              orElse: () => Category(
-                               name: 'Unknown', 
+                               name: AppLocalizations.of(context)!.unknown, 
                                iconPath: 'help', 
                                type: CategoryType.expense, 
                                colorValue: Colors.grey.value
@@ -207,6 +208,7 @@ class RecentTransactionsList extends ConsumerWidget {
                             context.push('/transaction-detail', extra: transaction);
                           },
                           child: _buildActivityItem(
+                            context,
                             transaction.title,
                             walletName,
                             transaction.amount,
@@ -263,11 +265,11 @@ class RecentTransactionsList extends ConsumerWidget {
     return sortedGroups;
   }
 
-  Widget _buildDateHeader(DateTime date, double dailyTotal, Currency currency) {
+  Widget _buildDateHeader(BuildContext context, DateTime date, double dailyTotal, Currency currency) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
-    String dateLabel = DateFormat('dd MMM yyyy - EEEE').format(date);
+    String dateLabel = DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString()).format(date);
 
     final isPositive = dailyTotal >= 0;
     final formattedTotal = '${isPositive ? "+" : ""}${currency.format(dailyTotal.abs())}';
@@ -291,6 +293,7 @@ class RecentTransactionsList extends ConsumerWidget {
   }
 
   Widget _buildActivityItem(
+    BuildContext context,
     String title, 
     String walletName, 
     double amount, 
@@ -359,13 +362,14 @@ class RecentTransactionsList extends ConsumerWidget {
     final timeStr = DateFormat('HH:mm').format(date);
     
     String systemNote = '';
-    if (isWishlist) systemNote = ' - Wishlist Purchase';
-    if (isBill) systemNote = ' - Bill Payment';
-    if (isDebt) systemNote = ' - Debt Transaction';
-    if (isSavings) systemNote = ' - Savings Transaction';
-    if (isTransfer) systemNote = ' - Transfer';
-    if (isReimbursement) systemNote = ' - Reimbursement';
+    if (isWishlist) systemNote = ' - ${AppLocalizations.of(context)!.wishlistPurchase}';
+    if (isBill) systemNote = ' - ${AppLocalizations.of(context)!.billPayment}';
+    if (isDebt) systemNote = ' - ${AppLocalizations.of(context)!.debtTransaction}';
+    if (isSavings) systemNote = ' - ${AppLocalizations.of(context)!.savingsTransaction}';
+    if (isTransfer) systemNote = ' - ${AppLocalizations.of(context)!.transferTransaction}';
+    if (isReimbursement) systemNote = ' - ${AppLocalizations.of(context)!.reimburse}';
     
+    // ignore: unused_local_variable
     final noteStr = isSystem || isReimbursement || isTransfer
         ? systemNote
         : (note != null && note.isNotEmpty ? ' - $note' : '');

@@ -6,6 +6,7 @@ import '../../../../constants/app_text_styles.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
 import '../../../settings/presentation/currency_provider.dart';
 import '../dashboard_filter_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class MainAccountCard extends ConsumerWidget {
   const MainAccountCard({super.key});
@@ -41,7 +42,7 @@ class MainAccountCard extends ConsumerWidget {
       child: Column(
         children: [
           Text(
-            'Total Balance',
+            AppLocalizations.of(context)!.totalBalance,
             style: AppTextStyles.bodyMedium.copyWith(
               color: Colors.white.withOpacity(0.8),
               fontWeight: FontWeight.w500,
@@ -62,7 +63,7 @@ class MainAccountCard extends ConsumerWidget {
               Expanded(
                 child: _buildGlassSummaryItem(
                   context,
-                  label: 'Income',
+                  label: AppLocalizations.of(context)!.income,
                   amount: totals['income']!,
                   currency: currency,
                   onTap: () {
@@ -76,7 +77,7 @@ class MainAccountCard extends ConsumerWidget {
               Expanded(
                 child: _buildGlassSummaryItem(
                   context,
-                  label: 'Expense',
+                  label: AppLocalizations.of(context)!.expense,
                   amount: totals['expense']!,
                   currency: currency,
                   onTap: () {

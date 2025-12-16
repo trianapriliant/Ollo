@@ -12,6 +12,7 @@ import '../domain/bill.dart';
 import '../../../utils/icon_helper.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class AddBillScreen extends ConsumerStatefulWidget {
   final Bill? billToEdit;
@@ -63,7 +64,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.billToEdit != null ? 'Edit Bill' : 'Add Bill', style: AppTextStyles.h2),
+        title: Text(widget.billToEdit != null ? AppLocalizations.of(context)!.editBill : AppLocalizations.of(context)!.addBill, style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -85,12 +86,12 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title Input
-            Text('Bill Details', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.billDetails, style: AppTextStyles.h3),
             const SizedBox(height: 16),
             
             _buildTextField(
               controller: _titleController,
-              label: 'Bill Name',
+              label: AppLocalizations.of(context)!.billName,
               hint: 'e.g. Internet, Rent',
               icon: Icons.description_outlined,
             ),
@@ -99,7 +100,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             // Amount Input
             _buildTextField(
               controller: _amountController,
-              label: 'Amount',
+              label: AppLocalizations.of(context)!.amount,
               hint: '0',
               prefix: 'Rp ',
               icon: Icons.attach_money,
@@ -108,7 +109,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             const SizedBox(height: 24),
 
             // Due Date
-            Text('Due Date', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.dueDateLabel, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             InkWell(
               onTap: _pickDate,
@@ -144,7 +145,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             const SizedBox(height: 24),
 
             // Bill Type Selector
-            Text('Bill Type', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.billType, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -204,8 +205,8 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
                 child: Column(
                   children: [
                     SwitchListTile(
-                      title: Text('Repeat this bill?', style: AppTextStyles.bodyMedium),
-                      subtitle: Text('Automatically create new bills', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+                      title: Text(AppLocalizations.of(context)!.repeatBill, style: AppTextStyles.bodyMedium),
+                      subtitle: Text(AppLocalizations.of(context)!.autoCreateBill, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
                       value: _isRecurring,
                       onChanged: (val) => setState(() => _isRecurring = val),
                       activeColor: AppColors.primary,
@@ -217,7 +218,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Row(
                           children: [
-                            Text('Frequency', style: AppTextStyles.bodyMedium),
+                            Text(AppLocalizations.of(context)!.frequency, style: AppTextStyles.bodyMedium),
                             const Spacer(),
                             DropdownButtonHideUnderline(
                               child: DropdownButton<RecurringFrequency>(
@@ -256,7 +257,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: Text(widget.billToEdit != null ? 'Update Bill' : 'Save Bill', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text(widget.billToEdit != null ? AppLocalizations.of(context)!.updateBill : AppLocalizations.of(context)!.saveBill, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -327,7 +328,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
 
     if (title.isEmpty || amount == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter valid title and amount')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorInvalidBill)),
       );
       return;
     }
@@ -348,7 +349,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         await billRepo.updateBill(bill);
         
         if (mounted) {
-           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bill updated successfully')));
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.billUpdated)));
         }
       } else {
         // CREATE
@@ -390,7 +391,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         }
         
         if (mounted) {
-           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bill saved successfully')));
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.billSaved)));
         }
       }
 
@@ -408,11 +409,11 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Bill?'),
-        content: const Text('This action cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.deleteBill),
+        content: Text(AppLocalizations.of(context)!.deleteBillConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
         ],
       ),
     );
@@ -423,7 +424,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         await billRepo.deleteBill(widget.billToEdit!.id);
         if (mounted) {
           context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bill deleted')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.billDeleted)));
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

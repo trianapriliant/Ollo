@@ -4,13 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class SendFeedbackScreen extends StatelessWidget {
   const SendFeedbackScreen({super.key});
 
-  Future<void> _launchWhatsApp() async {
+  Future<void> _launchWhatsApp(BuildContext context) async {
     const phoneNumber = '6283862181940'; // 083862181940
-    const message = 'Halo Tim Ollo, saya ingin memberikan feedback...';
+    final message = AppLocalizations.of(context)!.whatsappMessage;
     final url = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
     
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -29,7 +30,7 @@ class SendFeedbackScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text('Send Feedback', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.sendFeedbackTitle, style: AppTextStyles.h2),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -60,13 +61,13 @@ class SendFeedbackScreen extends StatelessWidget {
 
             // Title & Description
             Text(
-              'We Value Your Voice',
+              AppLocalizations.of(context)!.weValueYourVoice,
               style: AppTextStyles.h2.copyWith(color: AppColors.primary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Text(
-              'Punya ide fitur baru? Menemukan bug? Atau sekadar ingin menyapa? Kami siap mendengarkan! Masukan Anda sangat berarti bagi perkembangan Ollo.',
+              AppLocalizations.of(context)!.feedbackDescription,
               style: AppTextStyles.bodyLarge.copyWith(
                 color: AppColors.textSecondary,
                 height: 1.5,
@@ -80,7 +81,7 @@ class SendFeedbackScreen extends StatelessWidget {
               width: double.infinity,
               height: 56,
               child: ElevatedButton.icon(
-                onPressed: _launchWhatsApp,
+                onPressed: () => _launchWhatsApp(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF25D366), // WhatsApp Green
                   shape: RoundedRectangleBorder(
@@ -91,7 +92,7 @@ class SendFeedbackScreen extends StatelessWidget {
                 ),
                 icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white),
                 label: Text(
-                  'Chat via WhatsApp',
+                  AppLocalizations.of(context)!.chatViaWhatsApp,
                   style: AppTextStyles.bodyLarge.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -101,7 +102,7 @@ class SendFeedbackScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Typically replies within a few hours',
+              AppLocalizations.of(context)!.repliesInHours,
               style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
             ),
           ],

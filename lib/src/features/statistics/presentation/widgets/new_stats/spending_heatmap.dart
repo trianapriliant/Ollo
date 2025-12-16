@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_text_styles.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class SpendingHeatmap extends StatelessWidget {
   final List<double> dailyAmounts;
@@ -99,7 +100,7 @@ class SpendingHeatmap extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.min, 
             children: [
-              Text('Less', style: AppTextStyles.bodySmall.copyWith(fontSize: 10)),
+              Text(AppLocalizations.of(context)!.less, style: AppTextStyles.bodySmall.copyWith(fontSize: 10)),
               const SizedBox(width: 4),
               ...List.generate(5, (index) {
                 const baseColor = Color(0xFF7FFFD4);
@@ -118,7 +119,7 @@ class SpendingHeatmap extends StatelessWidget {
                 );
               }),
               const SizedBox(width: 4),
-              Text('More', style: AppTextStyles.bodySmall.copyWith(fontSize: 10)),
+              Text(AppLocalizations.of(context)!.more, style: AppTextStyles.bodySmall.copyWith(fontSize: 10)),
             ],
      );
 
@@ -147,7 +148,7 @@ class SpendingHeatmap extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-         boxShadow: [
+        boxShadow: [
            BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
@@ -161,7 +162,7 @@ class SpendingHeatmap extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Activity Heatmap', style: AppTextStyles.h3.copyWith(fontSize: 16)),
+              Text(AppLocalizations.of(context)!.activityHeatmap, style: AppTextStyles.h3.copyWith(fontSize: 16)),
             ],
           ),
           const SizedBox(height: 16),

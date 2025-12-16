@@ -5,6 +5,7 @@ import '../../../../constants/app_text_styles.dart';
 import '../../../budget/data/budget_repository.dart';
 import '../../../budget/domain/budget.dart';
 import '../dashboard_filter_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 import '../transaction_provider.dart';
 
@@ -32,10 +33,10 @@ class DashboardBudgetCard extends ConsumerWidget {
             final totalSpent = data['totalSpent']!;
             final percentage = totalBudget > 0 ? (totalSpent / totalBudget).clamp(0.0, 1.0) : 0.0;
 
-            String title = 'Monthly Budget';
-            if (filterState.filterType == TimeFilterType.day) title = 'Daily Budget';
-            if (filterState.filterType == TimeFilterType.week) title = 'Weekly Budget';
-            if (filterState.filterType == TimeFilterType.year) title = 'Yearly Budget';
+            String title = AppLocalizations.of(context)!.monthlyBudget;
+            if (filterState.filterType == TimeFilterType.day) title = AppLocalizations.of(context)!.dailyBudget;
+            if (filterState.filterType == TimeFilterType.week) title = AppLocalizations.of(context)!.weeklyBudget;
+            if (filterState.filterType == TimeFilterType.year) title = AppLocalizations.of(context)!.yearlyBudget;
 
             return Container(
               padding: const EdgeInsets.all(16),

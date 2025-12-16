@@ -9,6 +9,7 @@ import '../../wallets/domain/wallet.dart';
 import '../../recurring/data/recurring_repository.dart';
 import '../../recurring/domain/recurring_transaction.dart';
 import '../../../common_widgets/modern_wallet_selector.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class AddEditRecurringScreen extends ConsumerStatefulWidget {
   final RecurringTransaction? transaction;
@@ -61,7 +62,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
           onPressed: () => context.pop(),
         ),
         title: Text(
-          isEditing ? 'Edit Recurring' : 'New Recurring',
+          isEditing ? AppLocalizations.of(context)!.editRecurring : AppLocalizations.of(context)!.newRecurring,
           style: AppTextStyles.h2,
         ),
         centerTitle: true,
@@ -84,7 +85,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
               Center(
                 child: Column(
                   children: [
-                    Text('Amount', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                    Text(AppLocalizations.of(context)!.amount, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
                     const SizedBox(height: 8),
                     IntrinsicWidth(
                       child: TextFormField(
@@ -100,8 +101,8 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                           hintStyle: AppTextStyles.amountLarge.copyWith(color: Colors.grey[300]),
                         ),
                         validator: (val) {
-                          if (val == null || val.isEmpty) return 'Enter amount';
-                          if (double.tryParse(val) == null) return 'Invalid';
+                          if (val == null || val.isEmpty) return AppLocalizations.of(context)!.enterAmount;
+                          if (double.tryParse(val) == null) return AppLocalizations.of(context)!.errorInvalidAmount;
                           return null;
                         },
                       ),
@@ -112,7 +113,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
               const SizedBox(height: 32),
 
               // Name Input
-              Text('Name', style: AppTextStyles.bodyMedium),
+              Text(AppLocalizations.of(context)!.title, style: AppTextStyles.bodyMedium),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _nameController,
@@ -137,7 +138,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Frequency', style: AppTextStyles.bodyMedium),
+                        Text(AppLocalizations.of(context)!.frequency, style: AppTextStyles.bodyMedium),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -169,7 +170,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Start Date', style: AppTextStyles.bodyMedium),
+                        Text(AppLocalizations.of(context)!.startDate, style: AppTextStyles.bodyMedium),
                         const SizedBox(height: 8),
                         InkWell(
                           onTap: () async {
@@ -204,7 +205,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
               const SizedBox(height: 24),
 
               // Wallet Selector
-              Text('Pay with Wallet', style: AppTextStyles.bodyMedium),
+              Text(AppLocalizations.of(context)!.payWithWallet, style: AppTextStyles.bodyMedium),
               const SizedBox(height: 8),
               StreamBuilder<List<Wallet>>(
                 stream: ref.watch(walletRepositoryProvider).value?.watchWallets() ?? const Stream.empty(),
@@ -244,7 +245,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                     shadowColor: AppColors.primary.withOpacity(0.4),
                   ),
                   child: Text(
-                    isEditing ? 'Update Recurring' : 'Save Recurring',
+                    isEditing ? AppLocalizations.of(context)!.updateRecurring : AppLocalizations.of(context)!.saveRecurring,
                     style: AppTextStyles.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -312,7 +313,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
       if (mounted) context.pop();
     } else if (_selectedWalletId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a wallet')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseSelectWallet)),
       );
     }
   }
@@ -322,13 +323,13 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
       final confirm = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Delete Recurring?'),
-          content: const Text('This will stop future auto-payments. Past transactions will remain.'),
+          title: Text(AppLocalizations.of(context)!.deleteRecurring),
+          content: Text(AppLocalizations.of(context)!.deleteRecurringConfirm),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
             TextButton(
               onPressed: () => Navigator.pop(context, true), 
-              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+              child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
             ),
           ],
         ),

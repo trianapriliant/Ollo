@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../settings/presentation/currency_provider.dart';
@@ -15,6 +16,7 @@ import '../../../utils/icon_helper.dart';
 import '../../bills/data/bill_repository.dart';
 import '../../wishlist/data/wishlist_repository.dart';
 import '../../debts/data/debt_repository.dart';
+import '../../categories/presentation/category_localization_helper.dart';
 
 final walletsListProvider = FutureProvider<List<Wallet>>((ref) async {
   final repo = await ref.watch(walletRepositoryProvider.future);
@@ -45,7 +47,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: Text('Detail Transaksi', style: AppTextStyles.h3),
+        title: Text(AppLocalizations.of(context)!.transactionDetail, style: AppTextStyles.h3),
         centerTitle: true,
       ),
       body: Column(
@@ -56,22 +58,22 @@ class TransactionDetailScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildAmountSection(currencySymbol),
+                  _buildAmountSection(context, currencySymbol),
                   const SizedBox(height: 32),
-                  _buildDetailItem('Judul', transaction.title),
+                  _buildDetailItem(AppLocalizations.of(context)!.title, transaction.title),
                   _buildDivider(),
                   if (transaction.type != TransactionType.transfer) ...[
-                    _buildDetailItem('Kategori', _getCategoryName(categoryAsync, transaction.categoryId)),
+                    _buildDetailItem(AppLocalizations.of(context)!.category, _getCategoryName(context, categoryAsync, transaction.categoryId)),
                     _buildDivider(),
                   ],
-                   _buildDetailItem('Wallet', _getFormattedWalletName(walletsAsync)),
+                   _buildDetailItem(AppLocalizations.of(context)!.wallet, _getFormattedWalletName(walletsAsync)),
                   _buildDivider(),
-                  _buildDetailItem('Tanggal', DateFormat('dd MMMM yyyy').format(transaction.date)),
+                  _buildDetailItem(AppLocalizations.of(context)!.date, DateFormat('dd MMMM yyyy').format(transaction.date)),
                   _buildDivider(),
-                  _buildDetailItem('Jam', DateFormat('HH:mm').format(transaction.date)),
+                  _buildDetailItem(AppLocalizations.of(context)!.time, DateFormat('HH:mm').format(transaction.date)),
                   _buildDivider(),
                   if (transaction.note != null && transaction.note!.isNotEmpty) ...[
-                    _buildDetailItem('Catatan', transaction.note!),
+                    _buildDetailItem(AppLocalizations.of(context)!.note, transaction.note!),
                     _buildDivider(),
                   ],
                 ],
@@ -84,7 +86,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAmountSection(String currencySymbol) {
+  Widget _buildAmountSection(BuildContext context, String currencySymbol) {
     final isExpense = transaction.type == TransactionType.expense;
     final isTransfer = transaction.type == TransactionType.transfer;
     
@@ -96,17 +98,17 @@ class TransactionDetailScreen extends ConsumerWidget {
     if (isTransfer) {
       color = Colors.blue;
       icon = Icons.swap_horiz;
-      label = 'Transfer';
+      label = AppLocalizations.of(context)!.transfer;
       prefix = '';
     } else if (isExpense || transaction.type == TransactionType.system) {
       color = Colors.red;
       icon = Icons.arrow_upward;
-      label = transaction.type == TransactionType.system ? 'System (Wishlist)' : 'Pengeluaran';
+      label = transaction.type == TransactionType.system ? '${AppLocalizations.of(context)!.system} (Wishlist)' : AppLocalizations.of(context)!.expense;
       prefix = '-';
     } else {
       color = Colors.green;
       icon = Icons.arrow_downward;
-      label = 'Pemasukan';
+      label = AppLocalizations.of(context)!.income;
       prefix = '+';
     }
 
@@ -192,13 +194,13 @@ class TransactionDetailScreen extends ConsumerWidget {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Hapus Transaksi?'),
-                    content: const Text('Apakah Anda yakin ingin menghapus transaksi ini? Saldo wallet akan dikembalikan.'),
+                    title: Text(AppLocalizations.of(context)!.deleteTransaction),
+                    content: Text(AppLocalizations.of(context)!.deleteTransactionConfirm),
                     actions: [
-                      TextButton(onPressed: () => context.pop(false), child: const Text('Batal')),
+                      TextButton(onPressed: () => context.pop(false), child: Text(AppLocalizations.of(context)!.cancel)),
                       TextButton(
                         onPressed: () => context.pop(true), 
-                        child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                        child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
@@ -244,7 +246,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         context.push('/bills/edit', extra: bill);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Bill data not found')),
+                          SnackBar(content: Text(AppLocalizations.of(context)!.billDataNotFound)),
                         );
                       }
                     }
@@ -258,7 +260,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         context.push('/wishlist/edit', extra: wishlist);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Wishlist data not found')),
+                          SnackBar(content: Text(AppLocalizations.of(context)!.wishlistDataNotFound)),
                         );
                       } 
                     }
@@ -285,7 +287,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                      // But strictly speaking, we didn't make an EditReimburseScreen.
                      // Let's just go to add-transaction for now, as it can handle basic edits, OR show a message.
                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Edit Reimbursement not fully supported yet')),
+                        SnackBar(content: Text(AppLocalizations.of(context)!.editReimbursementNotSupported)),
                       );
                 } else {
                   // Normal Transaction
@@ -293,7 +295,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 }
               },
               icon: const Icon(Icons.edit_outlined),
-              label: const Text('Edit'),
+              label: Text(AppLocalizations.of(context)!.edit),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
@@ -316,11 +318,11 @@ class TransactionDetailScreen extends ConsumerWidget {
                    final confirm = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Mark as Completed'),
-                      content: const Text('Mark this reimbursement as paid/completed?'),
+                      title: Text(AppLocalizations.of(context)!.markCompleted),
+                      content: Text(AppLocalizations.of(context)!.markCompletedConfirm),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                        TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Confirm', style: TextStyle(color: Colors.green))),
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+                        TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(color: Colors.green))),
                       ],
                     ),
                   );
@@ -342,7 +344,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text('Mark Completed'),
+                child: Text(AppLocalizations.of(context)!.markCompleted),
               ),
             ),
           ],
@@ -351,21 +353,26 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  String _getCategoryName(AsyncValue<List<Category>> categoryAsync, String? categoryId) {
+
+
+  String _getCategoryName(BuildContext context, AsyncValue<List<Category>> categoryAsync, String? categoryId) {
+    final l10n = AppLocalizations.of(context)!;
+    
     // Handle System Categories explicitly
-    if (categoryId == 'notes' || categoryId == 'note') return 'Smart Notes';
-    if (categoryId == 'bills' || categoryId == 'bill') return 'Bills';
-    if (categoryId == 'wishlist') return 'Wishlist';
-    if (categoryId == 'debt' || categoryId == 'debts') return 'Debts';
-    if (categoryId == 'saving' || categoryId == 'savings') return 'Savings';
+    if (categoryId == 'notes' || categoryId == 'note') return l10n.smartNotesTitle;
+    if (categoryId == 'bills' || categoryId == 'bill') return l10n.bills; 
+    if (categoryId == 'wishlist') return l10n.wishlist;
+    if (categoryId == 'debt' || categoryId == 'debts') return l10n.debts;
+    if (categoryId == 'saving' || categoryId == 'savings') return l10n.sysCatSavings;
 
     if (transaction.type == TransactionType.reimbursement) {
-      return 'Reimburse';
+      return l10n.sysCatReimburse;
     }
     if (transaction.type == TransactionType.system) {
-      return 'System';
+      return l10n.system;
     }
     if (categoryId == null) return '-';
+    
     return categoryAsync.when(
       data: (categories) {
         try {
@@ -373,22 +380,33 @@ class TransactionDetailScreen extends ConsumerWidget {
             (c) => (c.externalId ?? c.id.toString()) == categoryId
           );
           
+          final catName = CategoryLocalizationHelper.getLocalizedCategoryName(context, category);
+          
           if (transaction.subCategoryId != null) {
-             final sub = category.subCategories?.firstWhere(
-               (s) => s.id == transaction.subCategoryId, 
-               orElse: () => SubCategory()
+             // Try to find object
+             final sub = category.subCategories?.cast<SubCategory?>().firstWhere(
+               (s) => s?.id == transaction.subCategoryId, 
+               orElse: () => null
              );
-             if (sub != null && sub.name != null) {
-                return '${category.name} - ${sub.name}';
+             
+             if (sub != null) {
+                return '$catName - ${CategoryLocalizationHelper.getLocalizedSubCategoryName(context, sub)}';
+             }
+
+             // Fallback if object not found but ID exists (deleted/legacy)
+             final dummySub = SubCategory(id: transaction.subCategoryId, name: transaction.subCategoryName);
+             final subName = CategoryLocalizationHelper.getLocalizedSubCategoryName(context, dummySub);
+             if (subName.isNotEmpty) { // If it found a localization key
+                 return '$catName - $subName';
              }
           }
           
-          // Fallback to snapshot if fresh lookup of subcategory failed but we have it stored
+          // Fallback to snapshot name if strictly no ID match found
           if (transaction.subCategoryName != null) {
-             return '${category.name} - ${transaction.subCategoryName}';
+             return '$catName - ${transaction.subCategoryName}';
           }
 
-          return category.name;
+          return catName;
         } catch (e) {
           // Category not found (deleted?)
           // Try snapshot
@@ -398,11 +416,10 @@ class TransactionDetailScreen extends ConsumerWidget {
           return 'Unknown';
         }
       },
-      loading: () => 'Loading...',
-      error: (_, __) => 'Error',
+      loading: () => l10n.loading,
+      error: (_, __) => l10n.error('Loading category'),
     );
   }
-
 
 
   String _getFormattedWalletName(AsyncValue<List<Wallet>> walletsAsync) {

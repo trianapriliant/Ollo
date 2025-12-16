@@ -4,12 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class AboutOlloScreen extends StatelessWidget {
   const AboutOlloScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -19,7 +22,7 @@ class AboutOlloScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text('About Ollo', style: AppTextStyles.h2),
+        title: Text(l10n.aboutTitle, style: AppTextStyles.h2),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -50,13 +53,13 @@ class AboutOlloScreen extends StatelessWidget {
 
             // Philosophy Section
             Text(
-              'Your Financial Companion',
+              l10n.aboutPhilosophyTitle,
               style: AppTextStyles.h2.copyWith(color: AppColors.primary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Text(
-              'Ollo lahir dari keyakinan bahwa mengelola keuangan seharusnya tidak rumit. Kami ingin menciptakan teman finansial yang cerdas, ramah, dan membantu Anda mencapai impian finansial Anda, satu langkah demi satu langkah.',
+              l10n.aboutPhilosophyDesc,
               style: AppTextStyles.bodyLarge.copyWith(
                 color: AppColors.textSecondary,
                 height: 1.5,
@@ -67,7 +70,7 @@ class AboutOlloScreen extends StatelessWidget {
 
             // Social Media Section
             Text(
-              'Connect with us',
+              l10n.connectWithUs,
               style: AppTextStyles.h3,
             ),
             const SizedBox(height: 24),
@@ -102,7 +105,7 @@ class AboutOlloScreen extends StatelessWidget {
             
             const SizedBox(height: 48),
             Text(
-              'Version 1.0.0',
+              l10n.version('1.0.0'),
               style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
             ),
           ],

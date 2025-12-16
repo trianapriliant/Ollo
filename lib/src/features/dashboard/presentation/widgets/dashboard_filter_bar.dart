@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../dashboard_filter_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class DashboardFilterBar extends ConsumerWidget {
   const DashboardFilterBar({super.key});
@@ -16,11 +17,11 @@ class DashboardFilterBar extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildFilterTab(context, ref, 'Day', TimeFilterType.day, filterState.filterType),
-          _buildFilterTab(context, ref, 'Week', TimeFilterType.week, filterState.filterType),
-          _buildFilterTab(context, ref, 'Month', TimeFilterType.month, filterState.filterType),
-          _buildFilterTab(context, ref, 'Year', TimeFilterType.year, filterState.filterType),
-          _buildFilterTab(context, ref, 'All', TimeFilterType.all, filterState.filterType),
+          _buildFilterTab(context, ref, AppLocalizations.of(context)!.filterDay, TimeFilterType.day, filterState.filterType),
+          _buildFilterTab(context, ref, AppLocalizations.of(context)!.filterWeek, TimeFilterType.week, filterState.filterType),
+          _buildFilterTab(context, ref, AppLocalizations.of(context)!.filterMonth, TimeFilterType.month, filterState.filterType),
+          _buildFilterTab(context, ref, AppLocalizations.of(context)!.filterYear, TimeFilterType.year, filterState.filterType),
+          _buildFilterTab(context, ref, AppLocalizations.of(context)!.filterAll, TimeFilterType.all, filterState.filterType),
         ],
       ),
     );

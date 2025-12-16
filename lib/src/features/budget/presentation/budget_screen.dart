@@ -10,6 +10,7 @@ import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import 'widgets/budget_summary_card.dart';
 import '../../../utils/icon_helper.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class BudgetScreen extends ConsumerWidget {
   const BudgetScreen({super.key});
@@ -28,7 +29,7 @@ class BudgetScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: Text('Budgets', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.budgetsTitle, style: AppTextStyles.h2),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.black),
@@ -53,7 +54,7 @@ class BudgetScreen extends ConsumerWidget {
                     children: [
                       Icon(Icons.pie_chart_outline, size: 64, color: Colors.grey[300]),
                       const SizedBox(height: 16),
-                      Text('No budgets yet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey)),
+                      Text(AppLocalizations.of(context)!.noBudgetsYet, style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey)),
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: () {
@@ -62,13 +63,13 @@ class BudgetScreen extends ConsumerWidget {
                             MaterialPageRoute(builder: (_) => const AddEditBudgetScreen()),
                           );
                         },
-                        child: const Text('Create Budget'),
+                        child: Text(AppLocalizations.of(context)!.createBudget),
                       ),
                     ],
                   ),
                 ),
               ] else ...[
-                Text('Your Budgets', style: AppTextStyles.h2),
+                Text(AppLocalizations.of(context)!.yourBudgets, style: AppTextStyles.h2),
                 const SizedBox(height: 16),
                 ...budgets.map((budget) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
@@ -176,7 +177,7 @@ class _BudgetCard extends ConsumerWidget {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              Text(category?.name ?? 'Unknown', style: AppTextStyles.h3),
+                              Text(category?.name ?? AppLocalizations.of(context)!.unknown, style: AppTextStyles.h3),
                             ],
                           );
                         },

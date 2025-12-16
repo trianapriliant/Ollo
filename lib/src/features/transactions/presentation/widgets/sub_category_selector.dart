@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../categories/domain/category.dart';
+import '../../../categories/presentation/category_localization_helper.dart';
 
 import '../../../../utils/icon_helper.dart';
 
@@ -52,7 +53,7 @@ class SubCategorySelector extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    subCategory.name ?? 'Unknown',
+                    CategoryLocalizationHelper.getLocalizedSubCategoryName(context, subCategory),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: isSelected ? Colors.white : Colors.grey[800],
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,

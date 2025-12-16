@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../constants/app_text_styles.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class TransactionAmountInput extends StatelessWidget {
   final TextEditingController controller;
@@ -18,7 +19,7 @@ class TransactionAmountInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Amount', style: AppTextStyles.bodyMedium),
+        Text(AppLocalizations.of(context)!.amount, style: AppTextStyles.bodyMedium),
         const SizedBox(height: 8),
         TextField(
           controller: controller,

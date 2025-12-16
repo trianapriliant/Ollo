@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../categories/domain/category.dart';
+import '../../../categories/presentation/category_localization_helper.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../settings/presentation/currency_provider.dart';
@@ -26,11 +28,22 @@ class StatisticsCategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        final localizedName = CategoryLocalizationHelper.getLocalizedCategoryName(
+            context,
+            Category(
+                name: item.categoryName,
+                colorValue: item.color.value,
+                iconPath: item.iconPath,
+                type: isExpense ? CategoryType.expense : CategoryType.income,
+                externalId: int.tryParse(item.categoryId) == null ? item.categoryId : null,
+            )..id = int.tryParse(item.categoryId) ?? -1
+        );
+        
         context.push(
           '/statistics/category-details',
           extra: {
             'categoryId': item.categoryId,
-            'categoryName': item.categoryName,
+            'categoryName': localizedName, 
             'filterDate': filterDate,
             'filterTimeRange': filterTimeRange,
             'isExpense': isExpense,
@@ -55,7 +68,20 @@ class StatisticsCategoryItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.categoryName, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                  Text(
+                    CategoryLocalizationHelper.getLocalizedCategoryName(
+                        context,
+                        Category(
+                            name: item.categoryName,
+                            colorValue: item.color.value, 
+                            iconPath: item.iconPath,
+                            type: isExpense ? CategoryType.expense : CategoryType.income,
+                            externalId: int.tryParse(item.categoryId) == null ? item.categoryId : null,
+                        )..id = int.tryParse(item.categoryId) ?? -1
+                    ),
+                    style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                  ),
+
                 ],
               ),
             ),

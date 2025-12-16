@@ -11,6 +11,7 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../data/debt_repository.dart';
 import '../domain/debt.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class DebtDetailScreen extends ConsumerStatefulWidget {
   final Debt debt;
@@ -43,7 +44,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text('Debt Details', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.debtDetails, style: AppTextStyles.h2),
         centerTitle: true,
         actions: [
           IconButton(
@@ -89,7 +90,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    isBorrowing ? 'You owe ${_debt.personName}' : '${_debt.personName} owes you',
+                    isBorrowing ? AppLocalizations.of(context)!.youOweName(_debt.personName) : AppLocalizations.of(context)!.nameOwesYou(_debt.personName),
                     style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 8),
@@ -102,7 +103,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Total: ${currency.format(_debt.amount)}',
+                    AppLocalizations.of(context)!.totalAmount(currency.format(_debt.amount)),
                     style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 24),
@@ -121,7 +122,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Paid: ${currency.format(_debt.paidAmount)}', style: AppTextStyles.bodySmall),
+                      Text(AppLocalizations.of(context)!.paidAmount(currency.format(_debt.paidAmount)), style: AppTextStyles.bodySmall),
                       Text('${((_debt.paidAmount / _debt.amount) * 100).toStringAsFixed(0)}%', style: AppTextStyles.bodySmall),
                     ],
                   ),
@@ -139,16 +140,16 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
               ),
               child: Column(
                 children: [
-                  _buildInfoRow(Icons.calendar_today, 'Due Date', DateFormat('d MMM yyyy').format(_debt.dueDate)),
+                  _buildInfoRow(Icons.calendar_today, AppLocalizations.of(context)!.dueDateLabel, DateFormat('d MMM yyyy').format(_debt.dueDate)),
                   if (_debt.note != null && _debt.note!.isNotEmpty) ...[
                     const Divider(height: 24),
-                    _buildInfoRow(Icons.note_outlined, 'Note', _debt.note!),
+                    _buildInfoRow(Icons.note_outlined, AppLocalizations.of(context)!.note, _debt.note!),
                   ],
                   const Divider(height: 24),
                   _buildInfoRow(
                     Icons.info_outline, 
-                    'Status', 
-                    _debt.isPaid ? 'Paid' : (_debt.dueDate.isBefore(DateTime.now()) ? 'Overdue' : 'Active'),
+                    AppLocalizations.of(context)!.statusLabel, 
+                    _debt.isPaid ? AppLocalizations.of(context)!.paidStatus : (_debt.dueDate.isBefore(DateTime.now()) ? AppLocalizations.of(context)!.overdue : AppLocalizations.of(context)!.activeStatus),
                     valueColor: _debt.isPaid ? Colors.green : (_debt.dueDate.isBefore(DateTime.now()) ? Colors.red : Colors.orange),
                   ),
                 ],
@@ -159,14 +160,14 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
             // History Section
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('Payment History', style: AppTextStyles.h3),
+              child: Text(AppLocalizations.of(context)!.paymentHistory, style: AppTextStyles.h3),
             ),
             const SizedBox(height: 16),
             if (_debt.history.isEmpty)
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(32.0),
-                  child: Text('No payments yet', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                  child: Text(AppLocalizations.of(context)!.noPaymentsYet, style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
                 ),
               )
             else
@@ -217,7 +218,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
               onPressed: () => _showAddPaymentDialog(context),
               backgroundColor: AppColors.primary,
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('Add Payment', style: TextStyle(color: Colors.white)),
+              label: Text(AppLocalizations.of(context)!.addPayment, style: const TextStyle(color: Colors.white)),
             )
           : null,
     );
@@ -245,14 +246,14 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Debt?'),
-        content: const Text('This will remove the debt record. Wallet balances will NOT be reverted automatically.'),
+        title: Text(AppLocalizations.of(context)!.deleteDebt),
+        content: Text(AppLocalizations.of(context)!.deleteDebtWarning),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -289,7 +290,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Add Payment', style: AppTextStyles.h2),
+              Text(AppLocalizations.of(context)!.addPayment, style: AppTextStyles.h2),
               const SizedBox(height: 24),
               
               // Percentage Shortcuts
@@ -320,7 +321,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                 controller: amountController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: 'Amount',
+                  labelText: AppLocalizations.of(context)!.amount,
                   prefixText: 'Rp ',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
@@ -335,7 +336,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                   final wallets = snapshot.data as List<Wallet>;
                   return DropdownButtonFormField<String>(
                     decoration: InputDecoration(
-                      labelText: 'Wallet (Optional)',
+                      labelText: '${AppLocalizations.of(context)!.wallet} (Optional)',
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     items: [
@@ -351,7 +352,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
               TextField(
                 controller: noteController,
                 decoration: InputDecoration(
-                  labelText: 'Note (Optional)',
+                  labelText: '${AppLocalizations.of(context)!.note} (Optional)',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
@@ -373,7 +374,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: const Text('Confirm Payment'),
+                  child: Text(AppLocalizations.of(context)!.confirmPayment),
                 ),
               ),
             ],
@@ -434,7 +435,7 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Payment recorded successfully!'), backgroundColor: Colors.green),
+          SnackBar(content: Text(AppLocalizations.of(context)!.paymentRecorded), backgroundColor: Colors.green),
         );
       }
     } catch (e) {

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ollo/src/constants/app_colors.dart';
 import 'package:ollo/src/constants/app_text_styles.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class RoadmapScreen extends StatelessWidget {
   const RoadmapScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -19,16 +22,16 @@ class RoadmapScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => context.pop(),
           ),
-          title: Text('Product Roadmap', style: AppTextStyles.h2),
+          title: Text(l10n.roadmapTitle, style: AppTextStyles.h2),
           centerTitle: true,
-          bottom: const TabBar(
+          bottom: TabBar(
             labelColor: AppColors.primary,
             unselectedLabelColor: Colors.grey,
             indicatorColor: AppColors.primary,
             tabs: [
-              Tab(text: 'In Progress'),
-              Tab(text: 'Planned'),
-              Tab(text: 'Completed'),
+              Tab(text: l10n.roadmapInProgress),
+              Tab(text: l10n.roadmapPlanned),
+              Tab(text: l10n.roadmapCompleted),
             ],
           ),
         ),
@@ -36,49 +39,49 @@ class RoadmapScreen extends StatelessWidget {
           children: [
             _buildFeatureList([
               _FeatureItem(
-                title: 'Cloud Backup (Google Drive)',
-                description: 'Sync your data securely to your personal Google Drive.',
-                tag: 'High Priority',
+                title: l10n.featureCloudBackupTitle,
+                description: l10n.featureCloudBackupDesc,
+                tag: l10n.roadmapHighPriority,
               ),
               _FeatureItem(
-                title: 'Advanced AI Insights',
-                description: 'Deeper analysis of your spending habits with personalized tips.',
-                tag: 'BETA',
+                title: l10n.featureAiInsightsTitle,
+                description: l10n.featureAiInsightsDesc,
+                tag: l10n.roadmapBeta,
               ),
-               _FeatureItem(
-                title: 'Data Export to CSV/Excel',
-                description: 'Export transaction history for external analysis in Excel or Sheets.',
-                tag: 'Dev',
+              _FeatureItem(
+                title: l10n.featureDataExportTitle,
+                description: l10n.featureDataExportDesc,
+                tag: l10n.roadmapDev,
               ),
             ]),
             _buildFeatureList([
               _FeatureItem(
-                title: 'Budget Forecasing',
-                description: 'Predict next month\'s expenses based on historical data.',
+                title: l10n.featureBudgetForecastingTitle,
+                description: l10n.featureBudgetForecastingDesc,
               ),
               _FeatureItem(
-                title: 'Multi-Currency Support',
-                description: 'Real-time conversion for international transactions.',
+                title: l10n.featureMultiCurrencyTitle,
+                description: l10n.featureMultiCurrencyDesc,
               ),
-               _FeatureItem(
-                title: 'Receipt Scanning OCR',
-                description: 'Scan receipts to automatically input transaction details.',
+              _FeatureItem(
+                title: l10n.featureReceiptScanningTitle,
+                description: l10n.featureReceiptScanningDesc,
               ),
             ]),
             _buildFeatureList([
               _FeatureItem(
-                title: 'Full Local Backup',
-                description: 'Backup all app data (transactions, wallets, notes, etc.) to a local file.',
+                title: l10n.featureLocalBackupTitle,
+                description: l10n.featureLocalBackupDesc,
                 isDone: true,
               ),
               _FeatureItem(
-                title: 'Smart Notes',
-                description: 'Shopping lists with checklists and total calculation.',
+                title: l10n.featureSmartNotesTitle,
+                description: l10n.featureSmartNotesDesc,
                 isDone: true,
               ),
-               _FeatureItem(
-                title: 'Recurring Transactions',
-                description: 'Automate bills and salary inputs.',
+              _FeatureItem(
+                title: l10n.featureRecurringTitle,
+                description: l10n.featureRecurringDesc,
                 isDone: true,
               ),
             ]),

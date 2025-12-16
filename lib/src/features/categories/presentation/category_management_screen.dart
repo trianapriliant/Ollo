@@ -6,6 +6,9 @@ import '../../../constants/app_text_styles.dart';
 import '../data/category_repository.dart';
 import '../domain/category.dart';
 import '../../../utils/icon_helper.dart';
+import '../../../localization/generated/app_localizations.dart';
+
+import 'category_localization_helper.dart';
 
 class CategoryManagementScreen extends ConsumerStatefulWidget {
   const CategoryManagementScreen({super.key});
@@ -43,16 +46,16 @@ class _CategoryManagementScreenState extends ConsumerState<CategoryManagementScr
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: Text('Categories', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.categoriesTitle, style: AppTextStyles.h2),
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
           unselectedLabelColor: Colors.grey,
           indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Expense'),
-            Tab(text: 'Income'),
-            Tab(text: 'System'),
+          tabs: [
+            Tab(text: AppLocalizations.of(context)!.expense),
+            Tab(text: AppLocalizations.of(context)!.income),
+            Tab(text: AppLocalizations.of(context)!.systemCategoryTitle),
           ],
         ),
       ),
@@ -89,7 +92,7 @@ class _CategoryList extends ConsumerWidget {
     return categoriesAsync.when(
       data: (categories) {
         if (categories.isEmpty) {
-          return Center(child: Text('No categories found', style: AppTextStyles.bodyMedium));
+          return Center(child: Text(AppLocalizations.of(context)!.noCategoriesFound, style: AppTextStyles.bodyMedium));
         }
         return ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -102,7 +105,7 @@ class _CategoryList extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.errorPrefix(err.toString()))),
     );
   }
 }
@@ -145,11 +148,11 @@ class _CategoryCard extends StatelessWidget {
             ),
           ),
           title: Text(
-            category.name,
+            CategoryLocalizationHelper.getLocalizedCategoryName(context, category),
             style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            '${subCategories.length} sub-categories',
+            AppLocalizations.of(context)!.subCategoriesCount(subCategories.length), 
             style: AppTextStyles.bodySmall,
           ),
           children: [
@@ -192,7 +195,7 @@ class _CategoryCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 16),
                           Text(
-                            sub.name ?? 'Unnamed', 
+                            CategoryLocalizationHelper.getLocalizedSubCategoryName(context, sub), 
                             style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -215,7 +218,7 @@ class _CategoryCard extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: const Text('Edit Category'),
+                    label: Text(AppLocalizations.of(context)!.editCategory),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
                       side: const BorderSide(color: AppColors.primary),
@@ -246,52 +249,52 @@ class _SystemCategoryList extends StatelessWidget {
     // Static list of system categories
     final systemCategories = [
       {
-        'name': 'Transfer',
+        'name': AppLocalizations.of(context)!.sysCatTransfer,
         'icon': Icons.swap_horiz_rounded,
         'color': Colors.indigo,
-        'description': 'Fund transfers between wallets',
+        'description': AppLocalizations.of(context)!.sysCatTransferDesc,
       },
       {
-        'name': 'Recurring',
+        'name': AppLocalizations.of(context)!.sysCatRecurring,
         'icon': Icons.update_rounded,
         'color': Colors.blueGrey,
-        'description': 'Automated recurring transactions',
+        'description': AppLocalizations.of(context)!.sysCatRecurringDesc,
       },
       {
-        'name': 'Wishlist',
+        'name': AppLocalizations.of(context)!.sysCatWishlist,
         'icon': Icons.favorite_rounded,
         'color': Colors.pinkAccent,
-        'description': 'Automated transactions from Wishlist purchases',
+        'description': AppLocalizations.of(context)!.sysCatWishlistDesc,
       },
       {
-        'name': 'Bills',
+        'name': AppLocalizations.of(context)!.sysCatBills,
         'icon': Icons.receipt_long_rounded,
         'color': Colors.orange,
-        'description': 'Automated transactions from Bill payments',
+        'description': AppLocalizations.of(context)!.sysCatBillsDesc,
       },
       {
-        'name': 'Debts',
+        'name': AppLocalizations.of(context)!.sysCatDebts,
         'icon': Icons.handshake_rounded,
         'color': Colors.purple,
-        'description': 'Automated transactions from Debt/Loan records',
+        'description': AppLocalizations.of(context)!.sysCatDebtsDesc,
       },
       {
-        'name': 'Savings',
+        'name': AppLocalizations.of(context)!.sysCatSavings,
         'icon': Icons.savings_rounded,
         'color': Colors.blue,
-        'description': 'Automated transactions from Savings deposits/withdrawals',
+        'description': AppLocalizations.of(context)!.sysCatSavingsDesc,
       },
       {
-        'name': 'Bundled Notes',
+        'name': AppLocalizations.of(context)!.sysCatSmartNotes,
         'icon': Icons.shopping_basket_rounded,
         'color': Colors.teal,
-        'description': 'Automated transactions from Smart Bundles',
+        'description': AppLocalizations.of(context)!.sysCatSmartNotesDesc,
       },
       {
-        'name': 'Reimburse',
+        'name': AppLocalizations.of(context)!.sysCatReimburse,
         'icon': Icons.currency_exchange,
         'color': Colors.orangeAccent,
-        'description': 'Reimbursement tracking system',
+        'description': AppLocalizations.of(context)!.sysCatReimburseDesc,
       },
     ];
 
@@ -338,14 +341,14 @@ class _SystemCategoryList extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('System Category', style: AppTextStyles.h3),
-                  content: const Text(
-                    'This category is managed by the system and cannot be edited or deleted manually.',
+                  title: Text(AppLocalizations.of(context)!.systemCategoryTitle, style: AppTextStyles.h3),
+                  content: Text(
+                    AppLocalizations.of(context)!.systemCategoryMessage,
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
+                      child: Text(AppLocalizations.of(context)!.ok),
                     ),
                   ],
                 ),

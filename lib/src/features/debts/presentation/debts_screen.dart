@@ -7,6 +7,7 @@ import '../../../constants/app_text_styles.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../data/debt_repository.dart';
 import '../domain/debt.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 final debtsProvider = StreamProvider.autoDispose<List<Debt>>((ref) {
   final repo = ref.watch(debtRepositoryProvider);
@@ -40,7 +41,7 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Debts', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.debtsTitle, style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -50,7 +51,11 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
               // Handle menu actions
             },
             itemBuilder: (BuildContext context) {
-              return {'Sort by Date', 'Sort by Amount', 'Settings'}.map((String choice) {
+              return {
+                AppLocalizations.of(context)!.sortByDate,
+                AppLocalizations.of(context)!.sortByAmount,
+                AppLocalizations.of(context)!.settings
+              }.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -89,9 +94,9 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey,
               labelStyle: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-              tabs: const [
-                Tab(text: 'I Owe'),
-                Tab(text: 'Owed to Me'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context)!.iOwe),
+                Tab(text: AppLocalizations.of(context)!.owedToMe),
               ],
               dividerColor: Colors.transparent,
               indicatorSize: TabBarIndicatorSize.tab,
@@ -170,7 +175,7 @@ class _DebtsSummaryCard extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Net Balance', style: AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
+                      Text(AppLocalizations.of(context)!.netBalance, style: AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
                       const SizedBox(height: 4),
                       Text(
                         currency.format(totalOwedToMe - totalOwedByMe),
@@ -201,7 +206,7 @@ class _DebtsSummaryCard extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('I Owe', style: AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
+                          Text(AppLocalizations.of(context)!.iOwe, style: AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
                           const SizedBox(height: 4),
                           Text(
                             currency.format(totalOwedByMe),
@@ -222,7 +227,7 @@ class _DebtsSummaryCard extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Owed to Me', style: AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
+                          Text(AppLocalizations.of(context)!.owedToMe, style: AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
                           const SizedBox(height: 4),
                           Text(
                             currency.format(totalOwedToMe),
@@ -265,7 +270,7 @@ class _DebtList extends ConsumerWidget {
                 Icon(Icons.check_circle_outline, size: 64, color: Colors.grey[300]),
                 const SizedBox(height: 16),
                 Text(
-                  type == DebtType.borrowing ? 'You are debt free!' : 'No one owes you money.',
+                  type == DebtType.borrowing ? AppLocalizations.of(context)!.debtFree : AppLocalizations.of(context)!.noOneOwesYou,
                   style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
                 ),
               ],
@@ -331,7 +336,7 @@ class _DebtList extends ConsumerWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                debt.isPaid ? 'Paid' : (isOverdue ? 'Overdue' : 'Due ${DateFormat('d MMM').format(debt.dueDate)}'),
+                                debt.isPaid ? AppLocalizations.of(context)!.paidStatus : (isOverdue ? AppLocalizations.of(context)!.overdue : AppLocalizations.of(context)!.dueOnDate(DateFormat('d MMM').format(debt.dueDate))),
                                 style: AppTextStyles.bodySmall.copyWith(
                                   color: debt.isPaid ? Colors.green : (isOverdue ? Colors.red : Colors.grey),
                                   fontWeight: isOverdue ? FontWeight.bold : FontWeight.normal,
@@ -366,7 +371,7 @@ class _DebtList extends ConsumerWidget {
                 ),
                 if (!debt.isPaid && debt.paidAmount > 0)
                   Text(
-                    '${currency.format(debt.remainingAmount)} left',
+                    AppLocalizations.of(context)!.amountLeft(currency.format(debt.remainingAmount)),
                     style: AppTextStyles.bodySmall.copyWith(color: AppColors.primary),
                   ),
               ],
@@ -386,14 +391,14 @@ class _DebtList extends ConsumerWidget {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Debt?'),
-        content: const Text('This will remove the debt record.'),
+        title: Text(AppLocalizations.of(context)!.deleteDebt),
+        content: Text(AppLocalizations.of(context)!.deleteDebtConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),

@@ -15,6 +15,7 @@ import '../../recurring/application/recurring_transaction_service.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../home_widget/home_widget_service.dart';
 import 'transaction_provider.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -123,11 +124,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         elevation: 0,
         title: profileAsync.when(
           data: (profile) => Text(
-            '~ Hi, ${profile.name}!',
+            '~ ${AppLocalizations.of(context)!.welcome(profile.name)}',
             style: AppTextStyles.h2,
           ),
-          loading: () => Text('~ Hi!', style: AppTextStyles.h2),
-          error: (_, __) => Text('~ Hi!', style: AppTextStyles.h2),
+          loading: () => Text('~ ${AppLocalizations.of(context)!.welcomeSimple}', style: AppTextStyles.h2),
+          error: (_, __) => Text('~ ${AppLocalizations.of(context)!.welcomeSimple}', style: AppTextStyles.h2),
         ),
         actions: [
           profileAsync.when(

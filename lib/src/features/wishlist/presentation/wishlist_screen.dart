@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
@@ -47,7 +48,7 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Wishlist', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.wishlistTitle, style: AppTextStyles.h2),
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(
@@ -59,13 +60,13 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'home',
                   child: Row(
                     children: [
-                      Icon(Icons.home, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text('Home'),
+                      const Icon(Icons.home, color: Colors.black),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context)!.home),
                     ],
                   ),
                 ),
@@ -97,9 +98,9 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
-              tabs: const [
-                Tab(text: 'Active'),
-                Tab(text: 'Achieved'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context)!.activeTab),
+                Tab(text: AppLocalizations.of(context)!.achievedTab),
               ],
             ),
           ),
@@ -125,12 +126,12 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
                     _WishlistList(
                       wishlists: activeWishlists,
                       currency: currency,
-                      isEmptyMessage: 'Start adding items you want to buy',
+                      isEmptyMessage: AppLocalizations.of(context)!.emptyActiveWishlistMessage,
                     ),
                     _WishlistList(
                       wishlists: achievedWishlists,
                       currency: currency,
-                      isEmptyMessage: 'No achieved dreams yet. Keep going!',
+                      isEmptyMessage: AppLocalizations.of(context)!.emptyAchievedWishlistMessage,
                       isAchieved: true,
                     ),
                   ],
@@ -176,7 +177,7 @@ class _WishlistList extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              isAchieved ? 'No achievements yet' : 'Your wishlist is empty',
+              isAchieved ? AppLocalizations.of(context)!.noAchievementsYet : AppLocalizations.of(context)!.wishlistEmpty,
               style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 8),
@@ -332,7 +333,7 @@ class _WishlistCard extends ConsumerWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 0,
                       ),
-                      child: const Text('Buy'),
+                      child: Text(AppLocalizations.of(context)!.buy),
                     )
                   else
                     const Icon(Icons.check_circle, color: Colors.green, size: 32),
@@ -359,14 +360,14 @@ class _WishlistCard extends ConsumerWidget {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not launch $finalUrl')),
+            SnackBar(content: Text(AppLocalizations.of(context)!.errorLaunchingUrl(finalUrl))),
           );
         }
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error launching URL: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorLaunchingUrl(e.toString()))),
         );
       }
     }
@@ -376,13 +377,13 @@ class _WishlistCard extends ConsumerWidget {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Item?'),
-        content: Text('Are you sure you want to delete "${item.title}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteItemTitle),
+        content: Text(AppLocalizations.of(context)!.deleteItemConfirm(item.title)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -426,7 +427,7 @@ class _WishlistCard extends ConsumerWidget {
 
     if (context.mounted && wallets.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No wallets found. Please create a wallet first.')),
+         SnackBar(content: Text(AppLocalizations.of(context)!.noWalletsFoundMessage)),
       );
       return;
     }
@@ -440,14 +441,14 @@ class _WishlistCard extends ConsumerWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text('Buy Item', style: AppTextStyles.h3),
+          title: Text(AppLocalizations.of(context)!.buyItemTitle, style: AppTextStyles.h3),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Purchase "${item.title}"?', style: AppTextStyles.bodyMedium),
+              Text(AppLocalizations.of(context)!.purchaseItemTitle(item.title), style: AppTextStyles.bodyMedium),
               const SizedBox(height: 16),
-              Text('Select Wallet:', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+              Text(AppLocalizations.of(context)!.selectWalletLabel, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -486,7 +487,7 @@ class _WishlistCard extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Amount:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.amountLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
                   Text(
                     currency.format(item.price),
                     style: AppTextStyles.h3.copyWith(color: AppColors.primary),
@@ -498,7 +499,7 @@ class _WishlistCard extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () => _processPurchase(context, ref, item, selectedWallet!),
@@ -507,7 +508,7 @@ class _WishlistCard extends ConsumerWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: const Text('Confirm Purchase'),
+              child: Text(AppLocalizations.of(context)!.confirmPurchase),
             ),
           ],
         ),
@@ -546,8 +547,8 @@ class _WishlistCard extends ConsumerWidget {
       if (context.mounted) {
         Navigator.pop(context); // Close Dialog
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Purchase successful! Dream achieved! 🎉'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.purchaseSuccessMessage),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),

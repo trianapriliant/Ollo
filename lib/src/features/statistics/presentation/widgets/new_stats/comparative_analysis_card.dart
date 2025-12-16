@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_text_styles.dart';
 import '../../extended_statistics_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class ComparativeAnalysisCard extends StatelessWidget {
   final ComparativeData data;
@@ -42,7 +43,7 @@ class ComparativeAnalysisCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Monthly Comparison', style: AppTextStyles.h3.copyWith(fontSize: 16)),
+              Text(AppLocalizations.of(context)!.monthlyComparison, style: AppTextStyles.h3.copyWith(fontSize: 16)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -65,8 +66,8 @@ class ComparativeAnalysisCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             isGood 
-              ? 'You are spending less than last month!' 
-              : 'Spending is higher than usual.',
+              ? AppLocalizations.of(context)!.spendingLessNote 
+              : AppLocalizations.of(context)!.spendingMoreNote,
             style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
           ),
           const SizedBox(height: 16),

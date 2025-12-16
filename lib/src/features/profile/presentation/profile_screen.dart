@@ -25,6 +25,7 @@ import 'widgets/profile_menu_item.dart';
 import 'widgets/profile_menu_item.dart';
 import 'widgets/profile_menu_section.dart';
 import '../../profile/application/data_export_service.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -38,7 +39,7 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Profile', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.profile, style: AppTextStyles.h2),
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(
@@ -48,13 +49,13 @@ class ProfileScreen extends ConsumerWidget {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'developer',
                 child: Row(
                   children: [
-                    Icon(Icons.terminal, size: 18, color: Colors.grey),
-                    SizedBox(width: 8),
-                    Text('Developer Options'),
+                    const Icon(Icons.terminal, size: 18, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(AppLocalizations.of(context)!.developerOptions),
                   ],
                 ),
               ),
@@ -81,28 +82,28 @@ class ProfileScreen extends ConsumerWidget {
                 const SizedBox(height: 32),
 
                 // Future Features Section
-                const ProfileMenuSection(title: 'Future Features'),
+                ProfileMenuSection(title: AppLocalizations.of(context)!.futureFeatures),
                 ProfileMenuItem(
                   icon: Icons.cloud_sync_outlined,
-                  title: 'Backup & Recovery',
+                  title: AppLocalizations.of(context)!.backupRecovery,
                   onTap: () => context.push('/backup'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.auto_awesome_outlined,
-                  title: 'AI Automation',
-                  onTap: () => _showComingSoonDialog(context, 'AI Automation', 'Let AI categorize your transactions and provide smart financial insights.'),
+                  title: AppLocalizations.of(context)!.aiAutomation,
+                  onTap: () => _showComingSoonDialog(context, AppLocalizations.of(context)!.aiAutomation, AppLocalizations.of(context)!.comingSoonDesc),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.feedback_outlined,
-                  title: 'Feedback & Roadmap',
+                  title: AppLocalizations.of(context)!.feedbackRoadmap,
                   onTap: () => context.push('/roadmap'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.file_download_outlined,
-                  title: 'Data Export',
+                  title: AppLocalizations.of(context)!.dataExport,
                   onTap: () {
                      context.push('/data-export');
                   },
@@ -110,59 +111,59 @@ class ProfileScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Data Management Section
-                const ProfileMenuSection(title: 'Data Management'),
+                ProfileMenuSection(title: AppLocalizations.of(context)!.dataManagement),
                 ProfileMenuItem(
                   icon: Icons.category,
-                  title: 'Categories',
+                  title: AppLocalizations.of(context)!.categories,
                   onTap: () => context.push('/categories'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.account_balance_wallet,
-                  title: 'Wallets',
+                  title: AppLocalizations.of(context)!.wallets,
                   onTap: () => context.go('/wallet'),
                 ),
                 const SizedBox(height: 24),
 
                 // General Section
-                const ProfileMenuSection(title: 'General'),
+                ProfileMenuSection(title: AppLocalizations.of(context)!.general),
                 ProfileMenuItem(
                   icon: Icons.settings,
-                  title: 'Settings',
+                  title: AppLocalizations.of(context)!.settings,
                   onTap: () => context.push('/settings'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.help_outline,
-                  title: 'Help & Support',
+                  title: AppLocalizations.of(context)!.helpSupport,
                   onTap: () => context.push('/help-support'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.chat_bubble_outline,
-                  title: 'Send Feedback',
+                  title: AppLocalizations.of(context)!.sendFeedback,
                   onTap: () => context.push('/send-feedback'),
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.info_outline,
-                  title: 'About Ollo',
+                  title: AppLocalizations.of(context)!.aboutOllo,
                   onTap: () => context.push('/about-ollo'),
                 ),
                 const SizedBox(height: 24),
 
                 // Account Section
-                const ProfileMenuSection(title: 'Account'),
+                ProfileMenuSection(title: AppLocalizations.of(context)!.account),
                 ProfileMenuItem(
                   icon: Icons.delete_forever,
-                  title: 'Delete Data',
+                  title: AppLocalizations.of(context)!.deleteData,
                   onTap: () => _showDeleteDataDialog(context, ref),
                   isDestructive: true,
                 ),
                 const SizedBox(height: 16),
                 ProfileMenuItem(
                   icon: Icons.logout,
-                  title: 'Logout',
+                  title: AppLocalizations.of(context)!.logout,
                   onTap: () {},
                   isDestructive: true,
                 ),
@@ -220,7 +221,7 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             const Icon(Icons.rocket_launch, color: AppColors.primary),
             const SizedBox(width: 8),
-            Text('Coming Soon', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.comingSoon, style: AppTextStyles.h3),
           ],
         ),
         content: Column(
@@ -235,7 +236,7 @@ class ProfileScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Can\'t Wait!'),
+            child: Text(AppLocalizations.of(context)!.cantWait),
           ),
         ],
       ),
@@ -249,23 +250,22 @@ class ProfileScreen extends ConsumerWidget {
       context: parentContext,
       builder: (dialogContext) => StatefulBuilder(
         builder: (builderContext, setState) {
-          final isMatch = controller.text == 'Delete Data';
+          final confirmationText = AppLocalizations.of(parentContext)!.deleteDataConfirmationText;
+          final isMatch = controller.text == confirmationText;
           
           return AlertDialog(
-            title: const Text('Delete All Data?'),
+            title: Text(AppLocalizations.of(parentContext)!.deleteAllData),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'This action will permanently delete ALL your transactions, wallets, budgets, and notes. This cannot be undone.\n\nTo confirm, please type "Delete Data" below:',
-                ),
+                  Text(AppLocalizations.of(parentContext)!.deleteAllDataConfirm(confirmationText)),
                 const SizedBox(height: 16),
                 TextField(
                   controller: controller,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Delete Data',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: confirmationText,
                   ),
                   onChanged: (_) => setState(() {}),
                 ),
@@ -274,7 +274,7 @@ class ProfileScreen extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(builderContext),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(parentContext)!.cancel),
               ),
               ElevatedButton(
                 onPressed: isMatch 
@@ -289,7 +289,7 @@ class ProfileScreen extends ConsumerWidget {
                   disabledBackgroundColor: Colors.red.withOpacity(0.3),
                   disabledForegroundColor: Colors.white.withOpacity(0.5),
                 ),
-                child: const Text('Delete Data'),
+                child: Text(AppLocalizations.of(parentContext)!.deleteData),
               ),
             ],
           );
@@ -332,8 +332,8 @@ class ProfileScreen extends ConsumerWidget {
         Navigator.of(context, rootNavigator: true).pop(); // Close loading
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All data deleted successfully. Please restart the app.'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.dataDeletedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -342,7 +342,7 @@ class ProfileScreen extends ConsumerWidget {
       if (context.mounted) {
         Navigator.of(context, rootNavigator: true).pop(); // Close loading
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete data: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text(AppLocalizations.of(context)!.dataDeleteFailed(e.toString())), backgroundColor: Colors.red),
         );
       }
     }

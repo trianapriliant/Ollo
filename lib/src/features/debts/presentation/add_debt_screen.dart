@@ -11,6 +11,7 @@ import '../data/debt_repository.dart';
 import '../domain/debt.dart';
 import '../../wallets/presentation/wallet_provider.dart';
 import '../../../common_widgets/modern_wallet_selector.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class AddDebtScreen extends ConsumerStatefulWidget {
   final Debt? debtToEdit;
@@ -61,7 +62,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.debtToEdit != null ? 'Edit Debt/Loan' : 'Add Debt/Loan', style: AppTextStyles.h2),
+        title: Text(widget.debtToEdit != null ? AppLocalizations.of(context)!.editDebt : AppLocalizations.of(context)!.addDebt, style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -104,7 +105,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'I Borrowed',
+                              AppLocalizations.of(context)!.iBorrowed,
                               style: TextStyle(
                                 color: _type == DebtType.borrowing ? Colors.red[900] : Colors.grey[600],
                                 fontWeight: FontWeight.bold,
@@ -126,7 +127,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'I Lent',
+                              AppLocalizations.of(context)!.iLent,
                               style: TextStyle(
                                 color: _type == DebtType.lending ? Colors.blue[900] : Colors.grey[600],
                                 fontWeight: FontWeight.bold,
@@ -142,23 +143,23 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
               const SizedBox(height: 24),
 
               // Person Name
-              Text('Person Name', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.personName, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  hintText: 'Who?',
+                  hintText: AppLocalizations.of(context)!.whoHint,
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                   prefixIcon: const Icon(Icons.person_outline),
                 ),
-                validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) => value == null || value.isEmpty ? AppLocalizations.of(context)!.required : null,
               ),
               const SizedBox(height: 16),
 
               // Amount
-              Text('Amount', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.amount, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _amountController,
@@ -175,7 +176,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
               const SizedBox(height: 16),
 
               // Due Date
-              Text('Due Date', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.dueDateLabel, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () async {
@@ -225,7 +226,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                        return Column(
                          crossAxisAlignment: CrossAxisAlignment.start,
                          children: [
-                           Text('Wallet', style: AppTextStyles.bodySmall),
+                           Text(AppLocalizations.of(context)!.wallet, style: AppTextStyles.bodySmall),
                            const SizedBox(height: 8),
                            ModernWalletSelector(
                               selectedWalletId: _selectedWalletId,
@@ -235,19 +236,19 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                        );
                      },
                      loading: () => const LinearProgressIndicator(),
-                     error: (err, _) => Text('Error loading wallets: $err'),
+                     error: (err, _) => Text('${AppLocalizations.of(context)!.unknown}: $err'),
                    );
                 },
               ),
               const SizedBox(height: 16),
 
               // Note
-              Text('Note', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.note, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _noteController,
                 decoration: InputDecoration(
-                  hintText: 'Optional note...',
+                  hintText: AppLocalizations.of(context)!.addNoteHint,
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -268,7 +269,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                   ),
                   child: _isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(widget.debtToEdit != null ? 'Update Debt' : 'Save Debt', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.debtToEdit != null ? AppLocalizations.of(context)!.updateDebt : AppLocalizations.of(context)!.saveDebt, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -300,7 +301,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
         await debtRepo.updateDebt(debt);
         
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debt updated successfully')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.debtUpdated)));
         }
       } else {
         // CREATE
@@ -354,7 +355,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
         // So the updateDebt above is correct.
         
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debt saved successfully')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.debtSaved)));
         }
       }
 
@@ -376,11 +377,11 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Debt?'),
-        content: const Text('This action cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.deleteDebt),
+        content: Text(AppLocalizations.of(context)!.deleteDebtConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
         ],
       ),
     );
@@ -391,7 +392,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
         await debtRepo.deleteDebt(widget.debtToEdit!.id);
         if (mounted) {
           context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debt deleted')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.debtDeleted)));
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

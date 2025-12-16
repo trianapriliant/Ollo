@@ -4,13 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
-  Future<void> _launchWhatsApp() async {
+  Future<void> _launchWhatsApp(BuildContext context) async {
     const phoneNumber = '6283862181940';
-    const message = 'Halo Tim Support Ollo, saya butuh bantuan terkait...';
+    final message = AppLocalizations.of(context)!.contactSupportMessage;
     final url = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
     
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -20,6 +21,8 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -29,7 +32,7 @@ class HelpSupportScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text('Help & Support', style: AppTextStyles.h2),
+        title: Text(l10n.helpTitle, style: AppTextStyles.h2),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -60,13 +63,13 @@ class HelpSupportScreen extends StatelessWidget {
 
             // Intro Text
             Text(
-              'How can we help you?',
+              l10n.helpIntroTitle,
               style: AppTextStyles.h2.copyWith(color: AppColors.primary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
-              'Find answers to common questions or contact our support team directly.',
+              l10n.helpIntroDesc,
               style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
@@ -75,24 +78,24 @@ class HelpSupportScreen extends StatelessWidget {
             // FAQ Section
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('Frequently Asked Questions', style: AppTextStyles.h3),
+              child: Text(l10n.faqTitle, style: AppTextStyles.h3),
             ),
             const SizedBox(height: 16),
             _buildFAQItem(
-              'How do I add a new wallet?',
-              'Go to the "Wallets" menu and tap the "+" button in the top right corner. Select the wallet type (Cash, Bank, etc.), enter the name and initial balance, then save.',
+              l10n.faqAddWalletQuestion,
+              l10n.faqAddWalletAnswer,
             ),
             _buildFAQItem(
-              'Can I export my data?',
-              'Data export is a Premium feature coming soon. It will allow you to export your transactions to CSV or Excel formats.',
+              l10n.faqExportDataQuestion,
+              l10n.faqExportDataAnswer,
             ),
             _buildFAQItem(
-              'How do I reset my data?',
-              'Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.',
+              l10n.faqResetDataQuestion,
+              l10n.faqResetDataAnswer,
             ),
             _buildFAQItem(
-              'Is my data secure?',
-              'Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.',
+              l10n.faqSecureDataQuestion,
+              l10n.faqSecureDataAnswer,
             ),
 
             const SizedBox(height: 32),
@@ -102,7 +105,7 @@ class HelpSupportScreen extends StatelessWidget {
               width: double.infinity,
               height: 56,
               child: ElevatedButton.icon(
-                onPressed: _launchWhatsApp,
+              onPressed: () => _launchWhatsApp(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
@@ -113,7 +116,7 @@ class HelpSupportScreen extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.support_agent, color: Colors.white),
                 label: Text(
-                  'Contact Support',
+                  l10n.contactSupport,
                   style: AppTextStyles.bodyLarge.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

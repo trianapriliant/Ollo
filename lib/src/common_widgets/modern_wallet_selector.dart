@@ -6,6 +6,7 @@ import '../constants/app_text_styles.dart';
 import '../features/wallets/data/wallet_repository.dart';
 import '../features/wallets/domain/wallet.dart';
 import '../features/settings/presentation/currency_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class ModernWalletSelector extends ConsumerWidget {
   final String? selectedWalletId;
@@ -112,7 +113,7 @@ class ModernWalletSelector extends ConsumerWidget {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Select Wallet',
+      barrierLabel: AppLocalizations.of(context)!.selectWallet,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 250), // Slightly slower for smoothness
       pageBuilder: (context, anim1, anim2) {
@@ -146,7 +147,7 @@ class ModernWalletSelector extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Select Wallet',
+                          AppLocalizations.of(context)!.selectWallet,
                           style: AppTextStyles.h3.copyWith(fontSize: 18),
                         ),
                         InkWell(

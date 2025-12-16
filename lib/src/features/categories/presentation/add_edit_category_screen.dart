@@ -10,7 +10,8 @@ import 'widgets/category_color_selector.dart';
 import 'widgets/category_icon_selector.dart';
 import 'widgets/category_type_selector.dart';
 import 'widgets/sub_category_manager.dart';
-
+import '../../../localization/generated/app_localizations.dart';
+import 'category_localization_helper.dart';
 class AddEditCategoryScreen extends ConsumerStatefulWidget {
   final String? categoryId;
   final CategoryType? initialType;
@@ -65,7 +66,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
 
     if (category != null) {
       setState(() {
-        _nameController.text = category!.name;
+        _nameController.text = CategoryLocalizationHelper.getLocalizedCategoryName(context, category!);
         _type = category!.type;
         _selectedColor = category!.color;
         _selectedIcon = category!.iconPath;
@@ -157,7 +158,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
           icon: const Icon(Icons.close, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: Text(_isNew ? 'New Category' : 'Edit Category', style: AppTextStyles.h2),
+        title: Text(_isNew ? AppLocalizations.of(context)!.newCategory : AppLocalizations.of(context)!.editCategory, style: AppTextStyles.h2),
         actions: [
           if (!_isNew)
             IconButton(
@@ -166,16 +167,16 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Delete Category?'),
-                    content: const Text('This action cannot be undone.'),
+                    title: Text(AppLocalizations.of(context)!.deleteCategory),
+                    content: Text(AppLocalizations.of(context)!.deleteCategoryConfirm),
                     actions: [
-                      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                      TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel)),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                           _deleteCategory();
                         },
-                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                        child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
@@ -184,7 +185,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
             ),
           TextButton(
             onPressed: _saveCategory,
-            child: Text('Save', style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            child: Text(AppLocalizations.of(context)!.save, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -204,12 +205,12 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
                 ),
                 child: TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Category Name',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.categoryName,
                     border: InputBorder.none,
-                    icon: Icon(Icons.label_outline),
+                    icon: const Icon(Icons.label_outline),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter a name' : null,
+                  validator: (value) => value == null || value.isEmpty ? AppLocalizations.of(context)!.enterCategoryName : null,
                 ),
               ),
               const SizedBox(height: 24),

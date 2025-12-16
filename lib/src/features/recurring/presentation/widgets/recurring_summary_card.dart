@@ -5,6 +5,7 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../data/recurring_repository.dart';
 import '../../domain/recurring_transaction.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class RecurringSummaryCard extends ConsumerWidget {
   const RecurringSummaryCard({super.key});
@@ -52,7 +53,7 @@ class RecurringSummaryCard extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Monthly Commitment',
+                              AppLocalizations.of(context)!.monthlyCommitment,
                               style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
                             ),
                             const SizedBox(height: 4),
@@ -75,7 +76,7 @@ class RecurringSummaryCard extends ConsumerWidget {
                     const SizedBox(height: 20),
                     if (nextBill != null) ...[
                       Text(
-                        'Upcoming Bill',
+                        AppLocalizations.of(context)!.upcomingBill,
                         style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
                       ),
                       const SizedBox(height: 8),
@@ -108,7 +109,7 @@ class RecurringSummaryCard extends ConsumerWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    _formatNextDue(nextBill.nextDueDate),
+                                    _formatNextDue(context, nextBill.nextDueDate),
                                     style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.9), fontSize: 11),
                                   ),
                                 ],
@@ -131,7 +132,7 @@ class RecurringSummaryCard extends ConsumerWidget {
                         ),
                         child: Center(
                           child: Text(
-                            'No upcoming bills',
+                            AppLocalizations.of(context)!.noUpcomingBills,
                             style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.7)),
                           ),
                         ),
@@ -159,15 +160,15 @@ class RecurringSummaryCard extends ConsumerWidget {
     return active.first;
   }
 
-  String _formatNextDue(DateTime date) {
+  String _formatNextDue(BuildContext context, DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final due = DateTime(date.year, date.month, date.day);
     final diff = due.difference(today).inDays;
 
-    if (diff == 0) return 'Today';
-    if (diff == 1) return 'Tomorrow';
-    if (diff < 7) return 'In $diff days';
-    return DateFormat('d MMM y').format(date);
+    if (diff == 0) return AppLocalizations.of(context)!.today;
+    if (diff == 1) return AppLocalizations.of(context)!.tomorrow;
+    if (diff < 7) return AppLocalizations.of(context)!.inDays(diff);
+    return DateFormat('d MMM y', Localizations.localeOf(context).toString()).format(date);
   }
 }

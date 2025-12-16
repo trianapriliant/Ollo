@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../settings/presentation/currency_provider.dart';
@@ -36,12 +37,12 @@ class WishlistSummaryCard extends ConsumerWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFFFF80AB), // Pink Accent
-                const Color(0xFFEA80FC), // Purple Accent
+                Color(0xFFFF80AB), // Pink Accent
+                Color(0xFFEA80FC), // Purple Accent
               ],
             ),
             borderRadius: BorderRadius.circular(24),
@@ -60,7 +61,7 @@ class WishlistSummaryCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total Dream Value',
+                    AppLocalizations.of(context)!.totalDreamValue,
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: Colors.white.withOpacity(0.9),
                       fontWeight: FontWeight.w600,
@@ -77,7 +78,7 @@ class WishlistSummaryCard extends ConsumerWidget {
                         const Icon(Icons.stars_rounded, color: Colors.white, size: 14),
                         const SizedBox(width: 4),
                         Text(
-                          '$activeCount Wishes',
+                          AppLocalizations.of(context)!.activeWishesCount(activeCount),
                           style: AppTextStyles.bodySmall.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -111,7 +112,7 @@ class WishlistSummaryCard extends ConsumerWidget {
                       const Icon(Icons.check_circle, size: 14, color: Colors.white),
                       const SizedBox(width: 4),
                       Text(
-                        '$completedCount Dreams Achieved! 🎉',
+                        AppLocalizations.of(context)!.achievedDreamsCount(completedCount),
                         style: AppTextStyles.bodySmall.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

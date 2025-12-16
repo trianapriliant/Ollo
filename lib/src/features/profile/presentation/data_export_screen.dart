@@ -9,6 +9,7 @@ import '../../wallets/presentation/wallet_provider.dart';
 import '../../categories/data/category_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../profile/application/data_export_service.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class DataExportScreen extends ConsumerStatefulWidget {
   const DataExportScreen({super.key});
@@ -79,7 +80,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Export failed: $e'), backgroundColor: Colors.red),
+        SnackBar(content: Text(AppLocalizations.of(context)!.exportFailed(e.toString())), backgroundColor: Colors.red),
       );
     } finally {
       if (mounted) setState(() => _isExporting = false);
@@ -101,7 +102,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
       if (mounted) {
          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-               content: Text('File saved to: $path'), 
+               content: Text(AppLocalizations.of(context)!.fileSavedTo(path)), 
                backgroundColor: Colors.green,
                duration: const Duration(seconds: 4),
             ),
@@ -110,7 +111,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
     } catch (e) {
       if (mounted) {
          ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text('Save failed: $e'), backgroundColor: Colors.red),
+           SnackBar(content: Text(AppLocalizations.of(context)!.saveFailed(e.toString())), backgroundColor: Colors.red),
          );
       }
     } finally {
@@ -161,7 +162,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: Text('Export Data', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.exportDataTitle, style: AppTextStyles.h2),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -170,7 +171,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Date Range Section
-             _buildSectionTitle('Date Range'),
+             _buildSectionTitle(AppLocalizations.of(context)!.dateRange),
             const SizedBox(height: 12),
             GestureDetector(
               onTap: _selectDateRange,
@@ -187,7 +188,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        '${DateFormat('dd MMM yyyy').format(_startDate)} - ${DateFormat('dd MMM yyyy').format(_endDate)}',
+                        '${DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(_startDate)} - ${DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(_endDate)}',
                         style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -202,7 +203,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                   _buildChip('This Month', () {
+                   _buildChip(AppLocalizations.of(context)!.timeFilterThisMonth, () {
                       final now = DateTime.now();
                       setState(() {
                          _startDate = DateTime(now.year, now.month, 1);
@@ -211,7 +212,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                       _refreshCount();
                    }, isSelected: false), // Logic to highlight complex
                    const SizedBox(width: 8),
-                   _buildChip('Last Month', () {
+                   _buildChip(AppLocalizations.of(context)!.lastMonth, () {
                       final now = DateTime.now();
                       final start = DateTime(now.year, now.month - 1, 1);
                       final end = DateTime(now.year, now.month, 0);
@@ -222,7 +223,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                       _refreshCount();
                    }, isSelected: false),
                    const SizedBox(width: 8),
-                   _buildChip('All Time', () {
+                   _buildChip(AppLocalizations.of(context)!.timeFilterAllTime, () {
                       setState(() {
                          _startDate = DateTime(2020);
                          _endDate = DateTime.now();
@@ -236,19 +237,19 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
             const SizedBox(height: 24),
 
             // Type Filter
-            _buildSectionTitle('Transaction Type'),
+            _buildSectionTitle(AppLocalizations.of(context)!.transactionType),
             const SizedBox(height: 12),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildTypeChip('All', null),
+                  _buildTypeChip(AppLocalizations.of(context)!.filterAll, null),
                   const SizedBox(width: 8),
-                  _buildTypeChip('Income', TransactionType.income),
+                  _buildTypeChip(AppLocalizations.of(context)!.income, TransactionType.income),
                   const SizedBox(width: 8),
-                  _buildTypeChip('Expense', TransactionType.expense),
+                  _buildTypeChip(AppLocalizations.of(context)!.expense, TransactionType.expense),
                   const SizedBox(width: 8),
-                  _buildTypeChip('Transfer', TransactionType.transfer),
+                  _buildTypeChip(AppLocalizations.of(context)!.transfer, TransactionType.transfer),
                 ],
               ),
             ),
@@ -256,14 +257,14 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
             const SizedBox(height: 24),
 
             // Wallet Filter
-            _buildSectionTitle('Wallet'),
+            _buildSectionTitle(AppLocalizations.of(context)!.wallet),
             const SizedBox(height: 12),
             walletsAsync.when(
               data: (wallets) => DropdownButtonFormField<String?>(
                 value: _selectedWalletId,
                 decoration: _dropdownDecoration(),
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('All Wallets')),
+                  DropdownMenuItem(value: null, child: Text(AppLocalizations.of(context)!.allWallets)),
                   ...wallets.map((w) => DropdownMenuItem(
                     value: w.externalId ?? w.id.toString(),
                     child: Text(w.name),
@@ -281,14 +282,14 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
             const SizedBox(height: 24),
 
             // Category Filter
-            _buildSectionTitle('Category'),
+            _buildSectionTitle(AppLocalizations.of(context)!.category),
             const SizedBox(height: 12),
             categoriesAsync.when(
               data: (categories) => DropdownButtonFormField<String?>(
                 value: _selectedCategoryId,
                 decoration: _dropdownDecoration(),
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('All Categories')),
+                  DropdownMenuItem(value: null, child: Text(AppLocalizations.of(context)!.allCategories)),
                   // Add special categories manually if desired, or skip
                   ...categories.map((c) => DropdownMenuItem(
                     value: c.externalId ?? c.id.toString(),
@@ -311,7 +312,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                   padding: const EdgeInsets.only(top: 12),
                   child: Center(
                     child: Text(
-                      'No transactions match selected filters.',
+                      AppLocalizations.of(context)!.noTransactionsMatch,
                       style: AppTextStyles.bodySmall.copyWith(color: Colors.red),
                     ),
                   ),
@@ -344,8 +345,8 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                     : const Icon(Icons.share),
                   label: Text(
                         _isLoadingCount 
-                            ? 'Calculating...' 
-                            : 'Share CSV ($_transactionCount items)',
+                            ? AppLocalizations.of(context)!.calculating 
+                            : AppLocalizations.of(context)!.shareCsv(_transactionCount),
                         style: AppTextStyles.bodyLarge.copyWith(
                           color: Colors.white, 
                           fontWeight: FontWeight.bold
@@ -367,9 +368,9 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                    ),
                    icon: const Icon(Icons.download, color: AppColors.primary),
-                   label: const Text(
-                      "Save to Downloads", 
-                      style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)
+                   label: Text(
+                      AppLocalizations.of(context)!.saveToDownloads, 
+                      style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)
                    ),
                 ),
               ),

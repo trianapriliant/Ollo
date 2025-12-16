@@ -7,6 +7,7 @@ import '../../../constants/app_text_styles.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../settings/presentation/currency_provider.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class ReimburseScreen extends ConsumerStatefulWidget {
   const ReimburseScreen({super.key});
@@ -32,10 +33,12 @@ class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Reimbursement', style: AppTextStyles.h2),
+        title: Text(l10n.reimbursementTitle, style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -47,9 +50,9 @@ class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTi
           labelColor: AppColors.primary,
           unselectedLabelColor: Colors.grey,
           indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Pending'),
-            Tab(text: 'Completed'),
+          tabs: [
+            Tab(text: l10n.reimbursementPending),
+            Tab(text: l10n.reimbursementCompleted),
           ],
         ),
       ),
@@ -78,6 +81,7 @@ class _ReimburseList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final transactionsAsync = ref.watch(transactionStreamProvider);
     final currency = ref.watch(currencyProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return transactionsAsync.when(
       data: (transactions) {
@@ -86,7 +90,7 @@ class _ReimburseList extends ConsumerWidget {
         if (reimbursements.isEmpty) {
           return Center(
             child: Text(
-              status == TransactionStatus.pending ? 'No pending reimbursements' : 'No completed reimbursements',
+              status == TransactionStatus.pending ? l10n.noPendingReimbursements : l10n.noCompletedReimbursements,
               style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey),
             ),
           );
@@ -98,7 +102,7 @@ class _ReimburseList extends ConsumerWidget {
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final item = reimbursements[index];
-            return _buildItem(context, ref, item, currency);
+            return _buildItem(context, ref, item, currency, l10n);
           },
         );
       },
@@ -107,7 +111,7 @@ class _ReimburseList extends ConsumerWidget {
     );
   }
 
-  Widget _buildItem(BuildContext context, WidgetRef ref, Transaction item, Currency currency) {
+  Widget _buildItem(BuildContext context, WidgetRef ref, Transaction item, Currency currency, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -162,23 +166,6 @@ class _ReimburseList extends ConsumerWidget {
                   onTap: () async {
                     // Mark as completed
                     final repo = await ref.read(transactionRepositoryProvider.future);
-                    // Create a copy with updated status
-                    final updated = Transaction()
-                      ..id = item.id
-                      ..title = item.title
-                      ..amount = item.amount
-                      ..date = item.date
-                      ..type = item.type
-                      ..status = TransactionStatus.completed // UPDATE STATUS
-                      ..note = item.note
-                      ..walletId = item.walletId
-                      ..categoryId = item.categoryId
-                      ..subCategoryId = item.subCategoryId
-                      ..subCategoryName = item.subCategoryName
-                      ..subCategoryIcon = item.subCategoryIcon;
-                    
-                    // Since ISAR objects are not immutable but we fetch them, sometimes it's safer to just modify the object if it's managed, but here we probably got a detached list or we just modify and put.
-                    // Actually, let's just modify the item we have if it's mutable, but better to use the one from the list.
                     // The safer way is:
                     item.status = TransactionStatus.completed;
                     await repo.updateTransaction(item);
@@ -186,7 +173,7 @@ class _ReimburseList extends ConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      'Mark Paid',
+                      l10n.markPaid,
                       style: AppTextStyles.bodySmall.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
                     ),
                   ),

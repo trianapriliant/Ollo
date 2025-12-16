@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../transactions/data/transaction_repository.dart';
@@ -23,7 +24,7 @@ class SmartNotesScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('My Bundles', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.smartNotesTitle, style: AppTextStyles.h2),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -39,17 +40,17 @@ class SmartNotesScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             children: [
               if (activeNotes.isEmpty && completedNotes.isEmpty)
-                _buildEmptyState('Create your first bundle!', Icons.shopping_basket_outlined),
+                _buildEmptyState(AppLocalizations.of(context)!.emptySmartNotesMessage, Icons.shopping_basket_outlined),
                 
               if (activeNotes.isNotEmpty) ...[
-                Text('Active', style: AppTextStyles.h3),
+                Text(AppLocalizations.of(context)!.activeTab, style: AppTextStyles.h3),
                 const SizedBox(height: 12),
                 ...activeNotes.map((note) => _SmartNoteCard(note: note)),
               ],
 
               if (completedNotes.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                Text('History', style: AppTextStyles.h3.copyWith(color: Colors.grey)),
+                Text(AppLocalizations.of(context)!.historyTitle, style: AppTextStyles.h3.copyWith(color: Colors.grey)),
                 const SizedBox(height: 12),
                 ...completedNotes.map((note) => _SmartNoteCard(note: note)),
               ],
@@ -57,13 +58,13 @@ class SmartNotesScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.errorMessage(err.toString()))),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/smart-notes/add'),
         backgroundColor: Colors.teal,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New Bundle', style: TextStyle(color: Colors.white)),
+        label: Text(AppLocalizations.of(context)!.addSmartNote, style: const TextStyle(color: Colors.white)),
       ),
     );
   }
@@ -188,8 +189,8 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
                     }
                   },
                   itemBuilder: (context) => [
-                    const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                    const PopupMenuItem(value: 'delete', child: Text('Delete', style: TextStyle(color: Colors.red))),
+                    PopupMenuItem(value: 'edit', child: Text(AppLocalizations.of(context)!.edit)),
+                    PopupMenuItem(value: 'delete', child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
                   ],
                 ),
               ],
@@ -235,9 +236,9 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
               },
             )
           else 
-            const Padding(
-               padding: EdgeInsets.all(24),
-               child: Text('No items in this bundle', style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)),
+            Padding(
+               padding: const EdgeInsets.all(24),
+               child: Text(AppLocalizations.of(context)!.noItemsInBundle, style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)),
             ),
 
           const Divider(height: 1),
@@ -264,7 +265,7 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
                       elevation: 0,
                     ),
                     child: Text(
-                      'Pay Rp ${NumberFormat.decimalPattern('id').format(_totalChecked)}',
+                      AppLocalizations.of(context)!.payAmount(NumberFormat.decimalPattern('id').format(_totalChecked)),
                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   )
@@ -277,7 +278,7 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
                           color: Colors.green.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Text('Paid & Completed', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
+                        child: Text(AppLocalizations.of(context)!.paidAndCompleted, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
                       ),
                       const SizedBox(width: 8),
                       TextButton(
@@ -287,7 +288,7 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           visualDensity: VisualDensity.compact,
                         ),
-                        child: const Text('Undo Pay', style: TextStyle(fontSize: 12)),
+                        child: Text(AppLocalizations.of(context)!.undoPay, style: const TextStyle(fontSize: 12)),
                       ),
                     ],
                   ),
@@ -324,13 +325,13 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
      final confirm = await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Delete Bundle?'),
+          title: Text(AppLocalizations.of(context)!.deleteSmartNoteTitle),
           actions: [
-             TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+             TextButton(onPressed: () => Navigator.pop(ctx), child: Text(AppLocalizations.of(context)!.cancel)),
              TextButton(onPressed: () {
                 Navigator.pop(ctx);
                 ref.read(smartNoteRepositoryProvider).deleteNote(_note.id);
-             }, child: const Text('Delete', style: TextStyle(color: Colors.red))),
+             }, child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
           ],
         ),
      );
@@ -340,13 +341,13 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Payment'),
-        content: Text('Create transaction for Rp ${NumberFormat.decimalPattern('id').format(_totalChecked)}?'),
+        title: Text(AppLocalizations.of(context)!.confirmPayment),
+        content: Text(AppLocalizations.of(context)!.confirmPaymentMessage(NumberFormat.decimalPattern('id').format(_totalChecked))),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true), 
-            child: const Text('Confirm', style: TextStyle(color: Colors.teal))
+            child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(color: Colors.teal))
           ),
         ],
       ),
@@ -372,7 +373,7 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
       
       if (mounted) {
          setState(() {});
-         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Paid & Completed!')));
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.paymentSuccess)));
       }
     }
   }
@@ -381,13 +382,13 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Undo Payment?'),
-        content: const Text('This will delete the transaction, refund the wallet, and reopen the bundle.'),
+        title: Text(AppLocalizations.of(context)!.undoPaymentTitle),
+        content: Text(AppLocalizations.of(context)!.undoPaymentConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true), 
-            child: const Text('Undo & Reopen', style: TextStyle(color: Colors.orange))
+            child: Text(AppLocalizations.of(context)!.undoAndReopen, style: const TextStyle(color: Colors.orange))
           ),
         ],
       ),
@@ -407,7 +408,7 @@ class _SmartNoteCardState extends ConsumerState<_SmartNoteCard> {
       
       if (mounted) {
          setState(() {});
-         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Purchase Reopened')));
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.purchaseReopened)));
       }
     }
   }

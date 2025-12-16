@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../constants/app_text_styles.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class StatisticsTypeToggle extends StatelessWidget {
   final bool isExpense;
@@ -32,7 +33,7 @@ class StatisticsTypeToggle extends StatelessWidget {
                   border: !isExpense ? Border.all(color: Colors.green.withOpacity(0.5)) : null,
                 ),
                 child: Text(
-                  'Income',
+                  AppLocalizations.of(context)!.income,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.bold,
@@ -53,7 +54,7 @@ class StatisticsTypeToggle extends StatelessWidget {
                   border: isExpense ? Border.all(color: Colors.red.withOpacity(0.5)) : null,
                 ),
                 child: Text(
-                  'Expense',
+                   AppLocalizations.of(context)!.expense,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.bold,

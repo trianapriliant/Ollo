@@ -8,6 +8,7 @@ import 'widgets/category_pie_chart.dart';
 import 'widgets/monthly_bar_chart.dart';
 import 'widgets/insight_card.dart';
 import 'widgets/daily_stacked_bar_chart.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
@@ -51,7 +52,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Statistics', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.statistics, style: AppTextStyles.h2),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -110,7 +111,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   );
                 },
                 loading: () => const SizedBox(height: 250, child: Center(child: CircularProgressIndicator())),
-                error: (err, stack) => Center(child: Text('Error: $err')),
+                error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error(err.toString()))),
               ),
               
               const SizedBox(height: 16),
@@ -118,7 +119,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
               // 5. Category List
               statisticsAsync.when(
                 data: (data) {
-                  if (data.isEmpty) return const Center(child: Text('No data for this period'));
+                  if (data.isEmpty) return Center(child: Text(AppLocalizations.of(context)!.noDataForPeriod));
                   return ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -222,7 +223,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Monthly Overview', style: AppTextStyles.h3),
+                        Text(AppLocalizations.of(context)!.monthlyOverview, style: AppTextStyles.h3),
                         const SizedBox(height: 16),
                         MonthlyBarChart(
                           data: data,
@@ -312,7 +313,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   currency: currency
                 ),
                 loading: () => const SizedBox(),
-                error: (e,s) => Text('Error: $e'),
+                error: (e,s) => Text(AppLocalizations.of(context)!.error(e.toString())),
               ),
 
 
@@ -391,7 +392,7 @@ class _PremiumLock extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text('Unlock Premium Stats'),
+                  child: Text(AppLocalizations.of(context)!.unlockPremiumStats),
                 ),
               ],
             ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../statistics_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class StatisticsDateFilter extends StatelessWidget {
   final DateTime selectedDate;
@@ -30,8 +32,8 @@ class StatisticsDateFilter extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildToggleBtn('Monthly', TimeRange.month),
-              _buildToggleBtn('Yearly', TimeRange.year),
+              _buildToggleBtn(AppLocalizations.of(context)!.monthly, TimeRange.month),
+              _buildToggleBtn(AppLocalizations.of(context)!.yearly, TimeRange.year),
             ],
           ),
         ),
@@ -45,7 +47,7 @@ class StatisticsDateFilter extends StatelessWidget {
               onPressed: () => onDateChanged(-1),
             ),
             Text(
-              _formatDate(selectedDate),
+              _formatDate(context, selectedDate),
               style: AppTextStyles.h3,
             ),
             IconButton(
@@ -80,16 +82,11 @@ class StatisticsDateFilter extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(BuildContext context, DateTime date) {
     if (timeRange == TimeRange.month) {
-      return '${_getMonthName(date.month)} ${date.year}';
+      return DateFormat('MMMM y', Localizations.localeOf(context).toString()).format(date);
     } else {
       return '${date.year}';
     }
-  }
-
-  String _getMonthName(int month) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    return months[month - 1];
   }
 }

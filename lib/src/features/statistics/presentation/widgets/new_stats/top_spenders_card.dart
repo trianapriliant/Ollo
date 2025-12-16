@@ -3,6 +3,7 @@ import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_text_styles.dart';
 import '../../../../settings/presentation/currency_provider.dart';
 import '../../extended_statistics_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class TopSpendersCard extends StatelessWidget {
   final List<MerchantData> data;
@@ -30,7 +31,7 @@ class TopSpendersCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Top Spenders', style: AppTextStyles.h3.copyWith(fontSize: 16)),
+          Text(AppLocalizations.of(context)!.topSpenders, style: AppTextStyles.h3.copyWith(fontSize: 16)),
           const SizedBox(height: 16),
           ...data.asMap().entries.map((entry) {
             final index = entry.key;
@@ -60,7 +61,7 @@ class TopSpendersCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(item.name, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
-                        Text('${item.count} transactions', style: AppTextStyles.bodySmall),
+                        Text(AppLocalizations.of(context)!.transactionsCount(item.count), style: AppTextStyles.bodySmall),
                       ],
                     ),
                   ),

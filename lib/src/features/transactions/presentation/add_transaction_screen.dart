@@ -13,6 +13,7 @@ import '../../wallets/domain/wallet.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../../settings/presentation/currency_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 import 'category_selection_item.dart';
 import 'widgets/transaction_amount_input.dart';
@@ -106,8 +107,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         ),
         title: Text(
           widget.transactionToEdit != null && widget.transactionToEdit!.id != Isar.autoIncrement
-              ? 'Edit Transaction'
-              : 'Add Transaction',
+              ? AppLocalizations.of(context)!.editTransaction
+              : AppLocalizations.of(context)!.addTransaction,
           style: AppTextStyles.h2,
         ),
         centerTitle: true,
@@ -126,12 +127,12 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             const SizedBox(height: 24),
 
             // 2. Title Input
-            Text('Title', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.titleLabel, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                hintText: isTransfer ? 'Enter description' : 'Enter title (e.g. Breakfast)',
+                hintText: isTransfer ? AppLocalizations.of(context)!.enterDescriptionHint : AppLocalizations.of(context)!.enterTitleHint,
                 hintStyle: AppTextStyles.bodyMedium,
                 filled: true,
                 fillColor: Colors.white,
@@ -177,7 +178,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   items.add(CategorySelectionItem(
                     category: Category(
                       externalId: 'bills',
-                      name: 'Bills',
+                      name: AppLocalizations.of(context)!.bills,
                       iconPath: 'receipt_long',
                       type: CategoryType.expense,
                       colorValue: Colors.orange.value,
@@ -187,7 +188,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   items.add(CategorySelectionItem(
                     category: Category(
                       externalId: 'wishlist',
-                      name: 'Wishlist',
+                      name: AppLocalizations.of(context)!.wishlist,
                       iconPath: 'favorite',
                       type: CategoryType.expense,
                       colorValue: Colors.pink.value,
@@ -197,7 +198,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   items.add(CategorySelectionItem(
                     category: Category(
                       externalId: 'debt',
-                      name: 'Debt',
+                      name: AppLocalizations.of(context)!.debts,
                       iconPath: 'handshake',
                       type: CategoryType.expense,
                       colorValue: Colors.purple.value,
@@ -281,17 +282,17 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   try {
                     final amount = double.tryParse(_amountController.text) ?? 0.0;
                     if (amount <= 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter a valid amount")));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.enterValidAmount)));
                       setState(() { _isSaving = false; });
                       return;
                     }
                     if (_selectedWalletId == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a wallet")));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.selectWalletError)));
                       setState(() { _isSaving = false; });
                       return;
                     }
                     if (isTransfer && _selectedDestinationWalletId == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a destination wallet")));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.selectDestinationWalletError)));
                       setState(() { _isSaving = false; });
                       return;
                     }
@@ -300,14 +301,14 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                         type != TransactionType.transfer &&
                         !(widget.transactionToEdit != null &&
                             ['debt', 'debts', 'saving', 'savings'].contains(widget.transactionToEdit!.categoryId))) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a category")));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.selectCategoryError)));
                       setState(() { _isSaving = false; });
                       return;
                     }
 
                     final title = _titleController.text.isNotEmpty
                         ? _titleController.text
-                        : (_selectedItem?.name ?? (type == TransactionType.transfer ? 'Transfer' : 'System Transaction'));
+                        : (_selectedItem?.name ?? (type == TransactionType.transfer ? AppLocalizations.of(context)!.transferTransaction : 'System Transaction'));
 
                     await _saveTransaction(amount, title, isTransfer);
                   } finally {
@@ -324,7 +325,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 ),
                 child: _isSaving 
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : Text('Save Transaction', style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
+                  : Text(AppLocalizations.of(context)!.saveTransaction, style: AppTextStyles.bodyLarge.copyWith(color: Colors.white)),
               ),
             ),
           ],

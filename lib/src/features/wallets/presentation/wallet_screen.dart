@@ -9,6 +9,7 @@ import '../../../common_widgets/wallet_icon.dart';
 import '../domain/wallet.dart';
 
 import 'widgets/wallet_summary_card.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class WalletScreen extends ConsumerWidget {
   const WalletScreen({super.key});
@@ -23,7 +24,7 @@ class WalletScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Text('My Wallets', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.myWallets, style: AppTextStyles.h2),
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: AppColors.primary),
@@ -41,19 +42,19 @@ class WalletScreen extends ConsumerWidget {
                   const Icon(Icons.account_balance_wallet_outlined, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
                   Text(
-                    'Dompet masih kosong',
+                    AppLocalizations.of(context)!.emptyWalletsTitle,
                     style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Yuk tambahkan dompet atau akun bank-mu untuk mulai mencatat! 💳',
+                    AppLocalizations.of(context)!.emptyWalletsMessage,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => context.push('/add-wallet'),
-                    child: const Text('Tambah Dompet Baru'),
+                    child: Text(AppLocalizations.of(context)!.addWallet),
                   ),
                 ],
               ),
@@ -88,12 +89,12 @@ class WalletScreen extends ConsumerWidget {
 
                   String groupTitle = '';
                   switch (type) {
-                    case WalletType.cash: groupTitle = 'Cash'; break;
-                    case WalletType.bank: groupTitle = 'Bank Accounts'; break;
-                    case WalletType.ewallet: groupTitle = 'E-Wallets'; break;
-                    case WalletType.creditCard: groupTitle = 'Credit Cards'; break;
-                    case WalletType.exchange: groupTitle = 'Exchanges / Investments'; break;
-                    case WalletType.other: groupTitle = 'Others'; break;
+                    case WalletType.cash: groupTitle = AppLocalizations.of(context)!.walletTypeCash; break;
+                    case WalletType.bank: groupTitle = AppLocalizations.of(context)!.walletTypeBank; break;
+                    case WalletType.ewallet: groupTitle = AppLocalizations.of(context)!.walletTypeEWallet; break;
+                    case WalletType.creditCard: groupTitle = AppLocalizations.of(context)!.walletTypeCreditCard; break;
+                    case WalletType.exchange: groupTitle = AppLocalizations.of(context)!.walletTypeExchange; break;
+                    case WalletType.other: groupTitle = AppLocalizations.of(context)!.walletTypeOther; break;
                   }
 
                   return Column(
@@ -138,9 +139,18 @@ class WalletScreen extends ConsumerWidget {
                                     ],
                                   ),
                                 ),
-                                Text(
-                                  ref.watch(currencyProvider).format(wallet.balance),
-                                  style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!.currentBalance,
+                                      style: AppTextStyles.bodySmall.copyWith(fontSize: 10, color: Colors.grey),
+                                    ),
+                                    Text(
+                                      ref.watch(currencyProvider).format(wallet.balance),
+                                      style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

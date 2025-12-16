@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../wallets/data/wallet_repository.dart';
@@ -85,7 +86,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
           onPressed: () => context.pop(),
         ),
         title: Text(
-          isEditing ? 'Edit Bundle' : 'New Bundle',
+          isEditing ? AppLocalizations.of(context)!.editSmartNote : AppLocalizations.of(context)!.newSmartNote,
           style: AppTextStyles.h2,
         ),
         centerTitle: true,
@@ -105,8 +106,8 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                       controller: _titleController,
                       style: AppTextStyles.h3,
                       decoration: InputDecoration(
-                        labelText: 'Bundle Name',
-                        hintText: 'e.g. Monthly Groceries',
+                        labelText: AppLocalizations.of(context)!.smartNoteName,
+                        hintText: AppLocalizations.of(context)!.smartNoteNameHint,
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -115,7 +116,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                         ),
                         prefixIcon: const Icon(Icons.shopping_basket_outlined),
                       ),
-                      validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                      validator: (val) => val == null || val.isEmpty ? AppLocalizations.of(context)!.required : null,
                     ),
                     const SizedBox(height: 16),
                     
@@ -125,7 +126,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                         return DropdownButtonFormField<String>(
                           value: _selectedWalletId,
                           decoration: InputDecoration(
-                            labelText: 'Pay with Wallet',
+                            labelText: AppLocalizations.of(context)!.payWithWallet,
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -152,11 +153,11 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Items List', style: AppTextStyles.h3),
+                        Text(AppLocalizations.of(context)!.itemsList, style: AppTextStyles.h3),
                         TextButton.icon(
                           onPressed: _addItem,
                           icon: const Icon(Icons.add, size: 18),
-                          label: const Text('Add Item'),
+                          label: Text(AppLocalizations.of(context)!.addItem),
                           style: TextButton.styleFrom(foregroundColor: Colors.teal),
                         ),
                       ],
@@ -185,13 +186,13 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                                 flex: 3,
                                 child: TextFormField(
                                   initialValue: item.name,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Item Name',
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.itemName,
                                     border: InputBorder.none,
                                     isDense: true,
                                   ),
                                   onChanged: (val) => item.name = val,
-                                  validator: (val) => val == null || val.isEmpty ? 'Reqd' : null,
+                                  validator: (val) => val == null || val.isEmpty ? AppLocalizations.of(context)!.requiredShort : null,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -201,8 +202,8 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                                 child: TextFormField(
                                   initialValue: item.amount?.toStringAsFixed(0) ?? '',
                                   keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Price',
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.priceLabel,
                                     prefixText: 'Rp ',
                                     border: InputBorder.none,
                                     isDense: true,
@@ -228,7 +229,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                     TextFormField(
                       controller: _notesController,
                       decoration: InputDecoration(
-                        labelText: 'Additional Notes',
+                        labelText: AppLocalizations.of(context)!.additionalNotes,
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -263,7 +264,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Total Estimate', style: TextStyle(color: Colors.grey)),
+                    Text(AppLocalizations.of(context)!.totalEstimate, style: const TextStyle(color: Colors.grey)),
                     Text(
                       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(_totalAmount),
                       style: AppTextStyles.h2.copyWith(color: Colors.teal),
@@ -278,7 +279,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: const Text('Save Bundle', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: Text(AppLocalizations.of(context)!.saveBundle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

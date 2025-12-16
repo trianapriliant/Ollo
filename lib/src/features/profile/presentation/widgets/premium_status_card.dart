@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../subscription/presentation/premium_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class PremiumStatusCard extends ConsumerWidget {
   const PremiumStatusCard({super.key});
@@ -52,12 +53,12 @@ class PremiumStatusCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isPremium ? 'Premium Member' : 'Upgrade to Premium',
+                    isPremium ? AppLocalizations.of(context)!.premiumMember : AppLocalizations.of(context)!.upgradeToPremium,
                     style: AppTextStyles.h3.copyWith(color: Colors.white),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    isPremium ? 'You have unlimited access!' : 'Unlock all features & remove limits.',
+                    isPremium ? AppLocalizations.of(context)!.unlimitedAccess : AppLocalizations.of(context)!.unlockFeatures,
                     style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.9)),
                   ),
                 ],

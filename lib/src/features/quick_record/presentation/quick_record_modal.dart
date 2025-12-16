@@ -5,6 +5,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../presentation/quick_record_controller.dart';
 import '../../transactions/domain/transaction.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 // RE-VERIFYING PATHS:
 // File: lib/src/features/quick_record/presentation/quick_record_modal.dart
@@ -97,10 +98,12 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.initialMode == 'voice' ? 'Ollo AI is Listening...' : 'Quick Record',
-                style: AppTextStyles.h3,
-              ),
+                  Text(
+                    widget.initialMode == 'voice' 
+                        ? AppLocalizations.of(context)!.listeningMessage 
+                        : AppLocalizations.of(context)!.quickRecordTitle,
+                    style: AppTextStyles.h3,
+                  ),
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => Navigator.pop(context),
@@ -169,51 +172,51 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
           ),
         ),
         const SizedBox(height: 24),
-         Text(
-          state.errorMessage ?? (state.recognizedText.isEmpty ? "Say 'Makan 50k'..." : state.recognizedText),
-          style: isError ? AppTextStyles.h3.copyWith(color: Colors.red) : AppTextStyles.h2,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        if (!isError) ...[
-          Container(
-            width: double.infinity,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF1DE9B6), Color(0xFF00BFA5)], // Aquamarine / Teal Accent gradient
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF1DE9B6).withOpacity(0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed: () {
-                ref.read(quickRecordControllerProvider.notifier).stopVoice();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              ),
-              child: const Text(
-                'Stop & Process',
-                style: TextStyle(
-                  color: Colors.white, 
-                  fontSize: 16, 
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          ),
-        ],
+          Text(
+           state.errorMessage ?? (state.recognizedText.isEmpty ? AppLocalizations.of(context)!.saySomethingHint : state.recognizedText),
+           style: isError ? AppTextStyles.h3.copyWith(color: Colors.red) : AppTextStyles.h2,
+           textAlign: TextAlign.center,
+         ),
+         const SizedBox(height: 24),
+         if (!isError) ...[
+           Container(
+             width: double.infinity,
+             height: 56,
+             decoration: BoxDecoration(
+               gradient: const LinearGradient(
+                 colors: [Color(0xFF1DE9B6), Color(0xFF00BFA5)], // Aquamarine / Teal Accent gradient
+                 begin: Alignment.topLeft,
+                 end: Alignment.bottomRight,
+               ),
+               borderRadius: BorderRadius.circular(16),
+               boxShadow: [
+                 BoxShadow(
+                   color: const Color(0xFF1DE9B6).withOpacity(0.3),
+                   blurRadius: 12,
+                   offset: const Offset(0, 6),
+                 ),
+               ],
+             ),
+             child: ElevatedButton(
+               onPressed: () {
+                 ref.read(quickRecordControllerProvider.notifier).stopVoice();
+               },
+               style: ElevatedButton.styleFrom(
+                 backgroundColor: Colors.transparent,
+                 shadowColor: Colors.transparent,
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+               ),
+               child: Text(
+                 AppLocalizations.of(context)!.stopAndProcess,
+                 style: const TextStyle(
+                   color: Colors.white, 
+                   fontSize: 16, 
+                   fontWeight: FontWeight.bold
+                 ),
+               ),
+             ),
+           ),
+         ],
         const SizedBox(height: 60), 
       ],
     );
@@ -222,10 +225,10 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
   Widget _buildInputView(QuickRecordStateData state, BuildContext context) {
     return Column(
       children: [
-        TextField(
+          TextField(
           controller: _textController,
           decoration: InputDecoration(
-            hintText: 'e.g. "Lunch 50k", "Gaji 10jt"',
+            hintText: AppLocalizations.of(context)!.textInputHint,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             suffixIcon: IconButton(
               icon: const Icon(Icons.send, color: AppColors.primary),
@@ -262,45 +265,45 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                  children: [
                    const Icon(Icons.check_circle, color: Colors.green),
                    const SizedBox(width: 8),
-                   Text('Draft Ready', style: AppTextStyles.bodyLarge),
+                   Text(AppLocalizations.of(context)!.draftReady, style: AppTextStyles.bodyLarge),
                  ],
                ),
                const Divider(),
-               _row('Title', txn.title),
-               _row('Amount', 'Rp ${txn.amount.toStringAsFixed(0)}'), // TODO: Format currency
-               _row('Category', state.detectedSubCategoryName != null 
-                   ? '${state.detectedCategoryName} > ${state.detectedSubCategoryName}'
-                   : (state.detectedCategoryName ?? 'Not Found')),
-               _row('Type', txn.type.name.toUpperCase()),
-               _row('Note', txn.note ?? '-'),
-               const SizedBox(height: 16),
-               Row(
-                 children: [
-                   Expanded(
-                     child: OutlinedButton(
-                       onPressed: () {
-                           // Edit - for now just go back to input with text
-                           ref.read(quickRecordControllerProvider.notifier).startChat();
-                       },
-                       child: const Text('Edit'),
-                     ),
-                   ),
-                   const SizedBox(width: 12),
-                   Expanded(
-                     child: ElevatedButton(
-                       onPressed: () {
-                         // Open AddTransactionScreen with pre-filled data
-                         context.pop(); // Close modal
-                         // Navigate to Add Transaction with 'extra'
-                         // NOTE: You need to ensure your Router handles 'extra' transaction object
-                         context.push('/add-transaction', extra: txn);
-                       },
-                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                       child: const Text('Save / Adjust'),
-                     ),
-                   ),
-                 ],
-               )
+                _row(AppLocalizations.of(context)!.titleLabel, txn.title),
+                _row(AppLocalizations.of(context)!.amount, 'Rp ${txn.amount.toStringAsFixed(0)}'), // TODO: Format currency
+                _row(AppLocalizations.of(context)!.category, state.detectedSubCategoryName != null 
+                    ? '${state.detectedCategoryName} > ${state.detectedSubCategoryName}'
+                    : (state.detectedCategoryName ?? AppLocalizations.of(context)!.notFound)),
+                _row('Type', txn.type.name.toUpperCase()),
+                _row(AppLocalizations.of(context)!.note, txn.note ?? '-'),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                            // Edit - for now just go back to input with text
+                            ref.read(quickRecordControllerProvider.notifier).startChat();
+                        },
+                        child: Text(AppLocalizations.of(context)!.edit),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Open AddTransactionScreen with pre-filled data
+                          context.pop(); // Close modal
+                          // Navigate to Add Transaction with 'extra'
+                          // NOTE: You need to ensure your Router handles 'extra' transaction object
+                          context.push('/add-transaction', extra: txn);
+                        },
+                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                        child: Text(AppLocalizations.of(context)!.saveAdjust),
+                      ),
+                    ),
+                  ],
+                )
             ],
           ),
         ),

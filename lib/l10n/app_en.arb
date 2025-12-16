@@ -2,5 +2,886 @@
   "home": "Home",
   "wallet": "Wallet",
   "profile": "Profile",
-  "statistics": "Statistics"
+  "statistics": "Statistics",
+  "expense": "Expense",
+  "income": "Income",
+  "transfer": "Transfer",
+  "amount": "Amount",
+  "to": "To",
+  "addNoteHint": "Add a note...",
+  "cancel": "Cancel",
+  "done": "Done",
+  "errorInvalidAmount": "Please enter a valid amount",
+  "errorSelectWallet": "Please select a wallet",
+  "errorSelectDestinationWallet": "Please select a destination wallet",
+  "errorSameWallets": "Source and destination wallets must be different",
+  "errorSelectCategory": "Please select a category",
+  "transactionDetail": "Transaction Detail",
+  "title": "Title",
+  "category": "Category",
+  "dateTime": "Date Time",
+  "date": "Date",
+  "time": "Time",
+  "note": "Note",
+  "deleteTransaction": "Delete Transaction",
+  "deleteTransactionConfirm": "Are you sure you want to delete this transaction? Wallet balance will be restored.",
+  "delete": "Delete",
+  "edit": "Edit",
+  "markCompleted": "Mark as Completed",
+  "markCompletedConfirm": "Mark this reimbursement as paid/completed?",
+  "confirm": "Confirm",
+  "system": "System",
+  "recentTransactions": "Recent Transactions",
+  "noTransactions": "No transactions yet",
+  "startRecording": "Start recording your expenses and income to keep your finances organized! 🚀",
+  "menu": "Menu",
+  "budget": "Budget",
+  "recurring": "Recurring",
+  "savings": "Savings",
+  "total": "Total",
+  "bills": "Bills",
+  "debts": "Debts",
+  "wishlist": "Wishlist",
+  "cards": "Cards",
+  "notes": "Notes",
+  "reimburse": "Reimburse",
+  "unknown": "Unknown",
+  "welcome": "Hi, {name}!",
+  "@welcome": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "welcomeSimple": "Hi!",
+  "settings": "Settings",
+  "developerOptions": "Developer Options",
+  "futureFeatures": "Future Features",
+  "backupRecovery": "Backup & Recovery",
+  "aiAutomation": "AI Automation",
+  "feedbackRoadmap": "Feedback & Roadmap",
+  "dataExport": "Data Export",
+  "dataManagement": "Data Management",
+  "categories": "Categories",
+  "wallets": "Wallets",
+  "general": "General",
+  "helpSupport": "Help & Support",
+  "sendFeedback": "Send Feedback",
+  "aboutOllo": "About Ollo",
+  "account": "Account",
+  "deleteData": "Delete Data",
+  "logout": "Logout",
+  "comingSoon": "Coming Soon",
+  "comingSoonDesc": "Let AI categorize your transactions and provide smart financial insights.",
+  "cantWait": "Can't Wait!",
+  "deleteAllData": "Delete All Data?",
+  "deleteAllDataConfirm": "This action will permanently delete ALL your transactions, wallets, budgets, and notes. This cannot be undone.\n\nTo confirm, please type \"{confirmationText}\" below:",
+  "@deleteAllDataConfirm": {
+    "placeholders": {
+      "confirmationText": {
+        "type": "String",
+        "example": "Delete Data"
+      }
+    }
+  },
+  "deleteDataConfirmationText": "Delete Data",
+  "dataDeletedSuccess": "All data deleted successfully. Please restart the app.",
+  "dataDeleteFailed": "Failed to delete data: {error}",
+  "@dataDeleteFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "currency": "Currency",
+  "language": "Language",
+  "selectCurrency": "Select Currency",
+  "selectLanguage": "Select Language",
+  "selectCategory": "Select Category",
+  "myWallets": "My Wallets",
+  "emptyWalletsTitle": "No wallets yet",
+  "emptyWalletsMessage": "Add a wallet or bank account to start tracking! 💳",
+  "addWallet": "Add New Wallet",
+  "editWallet": "Edit Wallet",
+  "newWallet": "New Wallet",
+  "walletName": "Wallet Name",
+  "initialBalance": "Initial Balance",
+  "walletDetails": "Wallet Details",
+  "appearance": "Appearance",
+  "icon": "Icon",
+  "color": "Color",
+  "saveWallet": "Save Wallet",
+  "walletTypeCash": "Cash",
+  "walletTypeBank": "Bank Accounts",
+  "walletTypeEWallet": "E-Wallets",
+  "walletTypeCreditCard": "Credit Cards",
+  "walletTypeExchange": "Exchanges / Investments",
+  "walletTypeOther": "Others",
+  "debitCard": "Debit Card",
+  "categoriesTitle": "Categories",
+  "noCategoriesFound": "No categories found",
+  "editCategory": "Edit Category",
+  "newCategory": "New Category",
+  "categoryName": "Category Name",
+  "enterCategoryName": "Please enter a name",
+  "deleteCategory": "Delete Category?",
+  "deleteCategoryConfirm": "This action cannot be undone.",
+  "save": "Save",
+  "systemCategoryTitle": "System Category",
+  "systemCategoryMessage": "This category is managed by the system and cannot be edited or deleted manually.",
+  "sysCatTransfer": "Transfer",
+  "sysCatTransferDesc": "Fund transfers between wallets",
+  "sysCatRecurring": "Recurring",
+  "sysCatRecurringDesc": "Automated recurring transactions",
+  "sysCatWishlist": "Wishlist",
+  "sysCatWishlistDesc": "Automated transactions from Wishlist purchases",
+  "sysCatBills": "Bills",
+  "sysCatBills": "Bills",
+  "sysCatBillsDesc": "Automated transactions from Bill payments",
+  "dueDateLabel": "Due Date",
+  "statusLabel": "Status",
+  "noPaymentsYet": "No payments yet",
+  "sysCatDebts": "Debts",
+  "sysCatDebtsDesc": "Automated transactions from Debt/Loan records",
+  "sysCatSavings": "Savings",
+  "sysCatSavingsDesc": "Automated transactions from Savings deposits/withdrawals",
+  "sysCatSmartNotes": "Bundled Notes",
+  "sysCatSmartNotesDesc": "Automated transactions from Smart Bundles",
+  "sysCatReimburse": "Reimburse",
+  "sysCatReimburseDesc": "Reimbursement tracking system",
+  "budgetsTitle": "Budgets",
+  "noBudgetsYet": "No budgets yet",
+  "createBudget": "Create Budget",
+  "yourBudgets": "Your Budgets",
+  "newBudget": "New Budget",
+  "editBudget": "Edit Budget",
+  "limitAmount": "Limit Amount",
+  "period": "Period",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "yearly": "Yearly",
+  "daily": "Daily",
+  "deleteBudget": "Delete Budget",
+  "deleteBudgetConfirm": "Are you sure you want to delete this budget?",
+  "enterAmount": "Enter amount",
+  "recurringTitle": "Recurring",
+  "activeSubscriptions": "Active Subscriptions",
+  "noActiveSubscriptions": "No active subscriptions",
+  "newRecurring": "New Recurring",
+  "editRecurring": "Edit Recurring",
+  "frequency": "Frequency",
+  "startDate": "Start Date",
+  "payWithWallet": "Pay with Wallet",
+  "updateRecurring": "Update Recurring",
+  "saveRecurring": "Save Recurring",
+  "deleteRecurring": "Delete Recurring?",
+  "deleteRecurringConfirm": "This will stop future auto-payments. Past transactions will remain.",
+  "pleaseSelectWallet": "Please select a wallet",
+  "debtsTitle": "Debts",
+  "iOwe": "I Owe",
+  "owedToMe": "Owed to Me",
+  "netBalance": "Net Balance",
+  "debtFree": "You are debt free!",
+  "noOneOwesYou": "No one owes you money.",
+  "paidStatus": "Paid",
+  "overdue": "Overdue",
+  "dueOnDate": "Due {date}",
+  "@dueOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "amountLeft": "{amount} left",
+  "@amountLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteDebt": "Delete Debt?",
+  "deleteDebtConfirm": "This will remove the debt record.",
+  "sortByDate": "Sort by Date",
+  "sortByAmount": "Sort by Amount",
+  "editDebt": "Edit Debt/Loan",
+  "addDebt": "Add Debt/Loan",
+  "iBorrowed": "I Borrowed",
+  "iLent": "I Lent",
+  "personName": "Person Name",
+  "whoHint": "Who?",
+  "required": "Required",
+  "updateDebt": "Update Debt",
+  "saveDebt": "Save Debt",
+  "debtSaved": "Debt saved successfully",
+  "debtUpdated": "Debt updated successfully",
+  "debtDeleted": "Debt deleted",
+  "debtDetails": "Debt Details",
+  "paymentHistory": "Payment History",
+  "youOweName": "You owe {name}",
+  "@youOweName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nameOwesYou": "{name} owes you",
+  "@nameOwesYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAmount": "Total: {amount}",
+  "@totalAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paidAmount": "Paid: {amount}",
+  "@paidAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activeStatus": "Active",
+  "addPayment": "Add Payment",
+  "noneRecordOnly": "None (Just record)",
+  "confirmPayment": "Confirm Payment",
+  "paymentRecorded": "Payment recorded successfully!",
+  "deleteDebtWarning": "This will remove the debt record. Wallet balances will NOT be reverted automatically.",
+  "billsTitle": "Bills",
+  "unpaid": "Unpaid",
+  "paidTab": "Paid",
+  "allCaughtUp": "All caught up!",
+  "noUnpaidBills": "No unpaid bills at the moment.",
+  "noHistoryYet": "No history yet",
+  "paidOnDate": "Paid {date}",
+  "@paidOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dueToday": "Due Today",
+  "dueInDays": "Due in {days} days",
+  "@dueInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "pay": "Pay",
+  "payBill": "Pay Bill",
+  "payBillTitle": "Pay \"{title}\"?",
+  "@payBillTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "payFrom": "Pay from:",
+  "noWalletsFound": "No wallets found",
+  "billPaidSuccess": "Bill paid successfully!",
+  "editBill": "Edit Bill",
+  "addBill": "Add Bill",
+  "billDetails": "Bill Details",
+  "billName": "Bill Name",
+  "billType": "Bill Type",
+  "repeatBill": "Repeat this bill?",
+  "autoCreateBill": "Automatically create new bills",
+  "updateBill": "Update Bill",
+  "saveBill": "Save Bill",
+  "billSaved": "Bill saved successfully",
+  "billUpdated": "Bill updated successfully",
+  "billDeleted": "Bill deleted",
+  "payBillDescription": "This will create a System transaction and deduct from your wallet.",
+  "deleteBill": "Delete Bill?",
+  "deleteBillConfirm": "This action cannot be undone.",
+  "errorInvalidBill": "Please enter valid title and amount",
+  "wishlistTitle": "Wishlist",
+  "activeTab": "Active",
+  "achievedTab": "Achieved",
+  "emptyActiveWishlistMessage": "Start adding items you want to buy",
+  "emptyAchievedWishlistMessage": "No achieved dreams yet. Keep going!",
+  "noAchievementsYet": "No achievements yet",
+  "wishlistEmpty": "Your wishlist is empty",
+  "deleteItemTitle": "Delete Item?",
+  "deleteItemConfirm": "Are you sure you want to delete \"{title}\"?",
+  "@deleteItemConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "buy": "Buy",
+  "buyItemTitle": "Buy Item",
+  "purchaseItemTitle": "Purchase \"{title}\"?",
+  "@purchaseItemTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "selectWalletLabel": "Select Wallet:",
+  "noWalletsFoundMessage": "No wallets found. Please create a wallet first.",
+  "amountLabel": "Amount:",
+  "confirmPurchase": "Confirm Purchase",
+  "purchaseSuccessMessage": "Purchase successful! Dream achieved! 🎉",
+  "errorLaunchingUrl": "Error launching URL: {error}",
+  "@errorLaunchingUrl": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "editWishlist": "Edit Wishlist",
+  "addWishlist": "Add Wishlist",
+  "addPhoto": "Add Photo",
+  "itemName": "Item Name",
+  "itemNameHint": "e.g. New Laptop",
+  "priceLabel": "Price",
+  "targetDateLabel": "Target Date",
+  "selectDate": "Select Date",
+  "productLinkLabel": "Product Link (Optional)",
+  "productLinkHint": "e.g. https://shopee.co.id/...",
+  "updateWishlist": "Update Wishlist",
+  "saveWishlist": "Save to Wishlist",
+  "errorInvalidWishlist": "Please enter valid title and price",
+  "wishlistUpdated": "Wishlist updated successfully",
+  "wishlistSaved": "Item added to wishlist!",
+  "deleteWishlistTitle": "Delete Wishlist?",
+  "deleteWishlistConfirm": "This action cannot be undone.",
+  "wishlistDeleted": "Wishlist deleted",
+  "errorPickingImage": "Error picking image: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "smartNotesTitle": "My Bundles",
+  "emptySmartNotesMessage": "Create your first bundle!",
+  "historyTitle": "History",
+  "errorMessage": "Error: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "addSmartNote": "New Bundle",
+  "noItemsInBundle": "No items in this bundle",
+  "payAmount": "Pay {amount}",
+  "@payAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paidAndCompleted": "Paid & Completed",
+  "undoPay": "Undo Pay",
+  "deleteSmartNoteTitle": "Delete Bundle?",
+  "confirmPaymentMessage": "Create transaction for {amount}?",
+  "@confirmPaymentMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSuccess": "Paid & Completed!",
+  "undoPaymentTitle": "Undo Payment?",
+  "undoPaymentConfirm": "This will delete the transaction, refund the wallet, and reopen the bundle.",
+  "undoAndReopen": "Undo & Reopen",
+  "purchaseReopened": "Purchase Reopened",
+  "editSmartNote": "Edit Bundle",
+  "newSmartNote": "New Bundle",
+  "smartNoteName": "Bundle Name",
+  "smartNoteNameHint": "e.g. Monthly Groceries",
+  "itemsList": "Items List",
+  "addItem": "Add Item",
+  "requiredShort": "Reqd",
+  "additionalNotes": "Additional Notes",
+  "totalEstimate": "Total Estimate",
+  "saveBundle": "Save Bundle",
+  "checkedTotal": "Checked Total:",
+  "completed": "Completed",
+  "payAndFinish": "Pay & Finish",
+  "payingWith": "Paying with",
+  "noItemsChecked": "No items checked to pay!",
+  "smartNoteTransactionRecorded": "Transaction recorded & Bundle completed!",
+  "totalDreamValue": "Total Dream Value",
+  "activeWishesCount": "{count} Wishes",
+  "@activeWishesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achievedDreamsCount": "{count} Dreams Achieved! 🎉",
+  "@achievedDreamsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionDetail": "Transaction Detail",
+  "deleteTransaction": "Delete Transaction",
+  "deleteTransactionConfirm": "Are you sure you want to delete this transaction?",
+  "markCompleted": "Mark as Completed",
+  "markCompletedConfirm": "Mark this transaction as completed?",
+  "billDataNotFound": "Bill data not found",
+  "wishlistDataNotFound": "Wishlist data not found",
+  "editReimbursementNotSupported": "Edit Reimbursement not fully supported yet",
+  "transactions": "Transactions",
+  "noTransactionsFound": "No transactions found",
+  "noTransactionsInCategory": "No transactions in this category",
+  "statistics": "Statistics",
+  "noDataForPeriod": "No data for this period",
+  "monthlyOverview": "Monthly Overview",
+  "unlockPremiumStats": "Unlock Premium Stats",
+  "totalBalance": "Total Balance",
+  "dailyBudget": "Daily Budget",
+  "weeklyBudget": "Weekly Budget",
+  "monthlyBudget": "Monthly Budget",
+  "yearlyBudget": "Yearly Budget",
+  "wishlistPurchase": "Wishlist Purchase",
+  "billPayment": "Bill Payment",
+  "debtTransaction": "Debt Transaction",
+  "savingsTransaction": "Savings Transaction",
+  "transferTransaction": "Transfer",
+  "pressBackAgainToExit": "Press back again to exit",
+  "quickRecord": "Quick Record",
+  "chatAction": "Chat",
+  "scanAction": "Scan",
+  "voiceAction": "Voice",
+  "filterDay": "Day",
+  "filterWeek": "Week",
+  "filterMonth": "Month",
+  "filterYear": "Year",
+  "filterAll": "All",
+  "editTransaction": "Edit Transaction",
+  "addTransaction": "Add Transaction",
+  "titleLabel": "Title",
+  "enterDescriptionHint": "Enter description",
+  "enterTitleHint": "Enter title (e.g. Breakfast)",
+  "enterValidAmount": "Please enter a valid amount",
+  "selectWalletError": "Please select a wallet",
+  "selectDestinationWalletError": "Please select a destination wallet",
+  "selectCategoryError": "Please select a category",
+  "saveTransaction": "Save Transaction",
+  "loading": "Loading...",
+  "error": "Error: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "expenseDetails": "Expense Details",
+  "incomeDetails": "Income Details",
+  "noExpensesFound": "No expenses found",
+  "noIncomeFound": "No income found",
+  "forThisDate": "for this date",
+  "timeFilterToday": "Today",
+  "timeFilterThisWeek": "This Week",
+  "timeFilterThisMonth": "This Month",
+  "timeFilterThisYear": "This Year",
+  "timeFilterAllTime": "All Time",
+  "dailyAverage": "Daily Average",
+  "projectedTotal": "Projected Total",
+  "spendingHabitsNote": "Based on your spending habits so far this month.",
+  "monthlyComparison": "Monthly Comparison",
+  "spendingLessNote": "You are spending less than last month!",
+  "spendingMoreNote": "Spending is higher than usual.",
+  "topSpenders": "Top Spenders",
+  "transactionsCount": "{count} transactions",
+  "@transactionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activityHeatmap": "Activity Heatmap",
+  "less": "Less",
+  "more": "More",
+  "backupRecoveryTitle": "Backup & Recovery",
+  "backupDescription": "Secure your data by creating a local backup file (JSON). You can restore this file later or on another device.",
+  "createBackup": "Create Backup",
+  "restoreBackup": "Restore Backup",
+  "createBackupSubtitle": "Export all data to a JSON file",
+  "restoreBackupSubtitle": "Import data from a JSON file (Wipes current data)",
+  "creatingBackup": "Creating backup...",
+  "restoringBackup": "Restoring backup...",
+  "backupSuccess": "Backup saved successfully to:\n{path}",
+  "@backupSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreSuccess": "Backup restored successfully!\nPlease restart the app if data doesn't appear immediately.",
+  "backupError": "Failed to create backup: {error}",
+  "@backupError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreError": "Failed to restore backup: {error}",
+  "@restoreError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreWarningTitle": "⚠️ Warning: Restore Data",
+  "restoreWarningMessage": "Restoring a backup will DELETE ALL current data on this device and replace it with the backup content.\n\nThis action cannot be undone. Are you sure?",
+  "yesRestore": "Yes, Restore",
+  "exportDataTitle": "Export Data",
+  "dateRange": "Date Range",
+  "transactionType": "Transaction Type",
+  "allWallets": "All Wallets",
+  "allCategories": "All Categories",
+  "shareCsv": "Share CSV ({count} items)",
+  "@shareCsv": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveToDownloads": "Save to Downloads",
+  "calculating": "Calculating...",
+  "noTransactionsMatch": "No transactions match selected filters.",
+  "exportFailed": "Export failed: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saveFailed": "Save failed: {error}",
+  "@saveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileSavedTo": "File saved to: {path}",
+  "@fileSavedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "lastMonth": "Last Month",
+  "sendFeedbackTitle": "Send Feedback",
+  "weValueYourVoice": "We Value Your Voice",
+  "feedbackDescription": "Have a new feature idea? Found a bug? Or just want to say hi? We are ready to listen! Your feedback means a lot to Ollo's development.",
+  "chatViaWhatsApp": "Chat via WhatsApp",
+  "repliesInHours": "Typically replies within a few hours",
+  "subCategoriesCount": "{count} sub-categories",
+  "@subCategoriesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "Unnamed",
+  "ok": "OK",
+  "errorPrefix": "Error: {error}",
+  "@errorPrefix": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "whatsappMessage": "Hello Ollo Team, I want to provide feedback...",
+  
+  "roadmapTitle": "Product Roadmap",
+  "roadmapInProgress": "In Progress",
+  "roadmapPlanned": "Planned",
+  "roadmapCompleted": "Completed",
+  "roadmapHighPriority": "High Priority",
+  "roadmapBeta": "BETA",
+  "roadmapDev": "Dev",
+  "featureCloudBackupTitle": "Cloud Backup (Google Drive)",
+  "featureCloudBackupDesc": "Sync your data securely to your personal Google Drive.",
+  "featureAiInsightsTitle": "Advanced AI Insights",
+  "featureAiInsightsDesc": "Deeper analysis of your spending habits with personalized tips.",
+  "featureDataExportTitle": "Data Export to CSV/Excel",
+  "featureDataExportDesc": "Export transaction history for external analysis in Excel or Sheets.",
+  "featureBudgetForecastingTitle": "Budget Forecasting",
+  "featureBudgetForecastingDesc": "Predict next month's expenses based on historical data.",
+  "featureMultiCurrencyTitle": "Multi-Currency Support",
+  "featureMultiCurrencyDesc": "Real-time conversion for international transactions.",
+  "featureReceiptScanningTitle": "Receipt Scanning OCR",
+  "featureReceiptScanningDesc": "Scan receipts to automatically input transaction details.",
+  "featureLocalBackupTitle": "Full Local Backup",
+  "featureLocalBackupDesc": "Backup all app data (transactions, wallets, notes, etc.) to a local file.",
+  "featureSmartNotesTitle": "Smart Notes",
+  "featureSmartNotesDesc": "Shopping lists with checklists and total calculation.",
+  "featureRecurringTitle": "Recurring Transactions",
+  "featureRecurringDesc": "Automate bills and salary inputs.",
+
+  "aboutTitle": "About Ollo",
+  "aboutPhilosophyTitle": "Your Financial Companion",
+  "aboutPhilosophyDesc": "Ollo is born from the belief that managing finances shouldn't be complicated. We want to create a smart, friendly financial companion that helps you achieve your financial dreams, one step at a time.",
+  "connectWithUs": "Connect with us",
+  "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+
+  "helpTitle": "Help & Support",
+  "helpIntroTitle": "How can we help you?",
+  "helpIntroDesc": "Find answers to common questions or contact our support team directly.",
+  "faqTitle": "Frequently Asked Questions",
+  "faqAddWalletQuestion": "How do I add a new wallet?",
+  "faqAddWalletAnswer": "Go to the \"Wallets\" menu and tap the \"+\" button in the top right corner. Select the wallet type (Cash, Bank, etc.), enter the name and initial balance, then save.",
+  "faqExportDataQuestion": "Can I export my data?",
+  "faqExportDataAnswer": "Data export is a Premium feature coming soon. It will allow you to export your transactions to CSV or Excel formats.",
+  "faqResetDataQuestion": "How do I reset my data?",
+  "faqResetDataAnswer": "Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.",
+  "faqSecureDataQuestion": "Is my data secure?",
+  "faqSecureDataAnswer": "Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.",
+  "contactSupport": "Contact Support",
+  "reimbursementTitle": "Reimbursement",
+  "reimbursementPending": "Pending",
+  "reimbursementCompleted": "Completed",
+  "noPendingReimbursements": "No pending reimbursements",
+  "noCompletedReimbursements": "No completed reimbursements",
+  "markPaid": "Mark Paid",
+  
+  "totalSavings": "Total Savings",
+  "financialBuckets": "Financial Buckets",
+  "noSavingsYet": "No savings yet",
+  "growthThisMonth": "{percent}% this month",
+  "@growthThisMonth": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+
+  "myCards": "My Cards",
+  "selectedCount": "{count} Selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyNumber": "Copy Number",
+  "copyTemplate": "Copy Template",
+  "cardsCopied": "{count} cards copied!",
+  "@cardsCopied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardNumberCopied": "Card number copied!",
+  "cardTemplateCopied": "Card template copied!",
+  "noCardsYet": "No cards yet",
+  "addCardsMessage": "Add your bank accounts or e-wallets",
+  
+  "premiumTitle": "Unlock Full Potential",
+  "premiumSubtitle": "Upgrade to Premium for advanced features and unlimited access.",
+  "premiumAdvancedStats": "Advanced Statistics",
+  "premiumAdvancedStatsDesc": "Interactive charts & deep insights",
+  "premiumDataExport": "Data Export",
+  "premiumDataExportDesc": "Export to CSV/Excel for backup",
+  "premiumUnlimitedWallets": "Unlimited Wallets",
+  "premiumUnlimitedWalletsDesc": "Create as many wallets as you need",
+  "premiumSmartAlerts": "Smart Alerts",
+  "premiumSmartAlertsDesc": "Get notified before you overspend",
+  "upgradeButton": "Upgrade Now - Rp 29.000 / Lifetime",
+  "restorePurchase": "Restore Purchase",
+  "youArePremium": "You are Premium!",
+  "premiumWelcome": "Welcome to Premium! 🌟",
+  "contactSupportMessage": "Hello Ollo Support Team, I need help regarding...",
+  
+  "category_food": "Food & Drink",
+  "category_transport": "Transport",
+  "category_shopping": "Shopping",
+  "category_housing": "Housing",
+  "category_entertainment": "Entertainment",
+  "category_health": "Health",
+  "category_education": "Education",
+  "category_personal": "Personal",
+  "category_financial": "Financial",
+  "category_family": "Family",
+  "category_salary": "Salary",
+  "category_business": "Business",
+  "category_investments": "Investments",
+  "category_gifts_income": "Gifts",
+  "category_other_income": "Other",
+
+  "subcategory_breakfast": "Breakfast",
+  "subcategory_lunch": "Lunch",
+  "subcategory_dinner": "Dinner",
+  "subcategory_eateries": "Eateries",
+  "subcategory_snacks": "Snacks",
+  "subcategory_drinks": "Drinks",
+  "subcategory_groceries": "Groceries",
+  "subcategory_delivery": "Delivery",
+  "subcategory_alcohol": "Alcohol",
+
+  "subcategory_bus": "Bus",
+  "subcategory_train": "Train",
+  "subcategory_taxi": "Taxi",
+  "subcategory_fuel": "Fuel",
+  "subcategory_parking": "Parking",
+  "subcategory_maintenance": "Maintenance",
+  "subcategory_insurance_car": "Insurance",
+  "subcategory_toll": "Toll",
+
+  "subcategory_clothes": "Clothes",
+  "subcategory_electronics": "Electronics",
+  "subcategory_home": "Home",
+  "subcategory_beauty": "Beauty",
+  "subcategory_gifts": "Gifts",
+  "subcategory_software": "Software",
+  "subcategory_tools": "Tools",
+
+  "subcategory_rent": "Rent",
+  "subcategory_mortgage": "Mortgage",
+  "subcategory_utilities": "Utilities",
+  "subcategory_internet": "Internet",
+  "subcategory_maintenance_home": "Maintenance",
+  "subcategory_furniture": "Furniture",
+  "subcategory_services": "Services",
+
+  "subcategory_movies": "Movies",
+  "subcategory_games": "Games",
+  "subcategory_streaming": "Streaming",
+  "subcategory_events": "Events",
+  "subcategory_hobbies": "Hobbies",
+  "subcategory_travel": "Travel",
+  "monthly": "Monthly",
+  "yearly": "Yearly",
+  "monthlyCommitment": "Monthly Commitment",
+  "upcomingBill": "Upcoming Bill",
+  "noUpcomingBills": "No upcoming bills",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "inDays": "In {days} days",
+  "needTwoWallets": "Need 2+ wallets",
+  "nettBalance": "Nett Balance",
+  "activeDebt": "Active Debt",
+  "last30Days": "last 30 days",
+  "currentBalance": "Current Balance",
+  "premiumMember": "Premium Member",
+  "upgradeToPremium": "Upgrade to Premium",
+  "unlimitedAccess": "You have unlimited access!",
+  "unlockFeatures": "Unlock all features & remove limits.",
+  "from": "From",
+  "wallet": "Wallet",
+  "subcategory_music": "Music",
+
+  "subcategory_doctor": "Doctor",
+  "subcategory_pharmacy": "Pharmacy",
+  "subcategory_gym": "Gym",
+  "subcategory_insurance_health": "Insurance",
+  "subcategory_mental_health": "Mental Health",
+  "subcategory_sports": "Sports",
+
+  "subcategory_tuition": "Tuition",
+  "subcategory_books": "Books",
+  "subcategory_courses": "Courses",
+  "subcategory_supplies": "Supplies",
+
+  "subcategory_haircut": "Haircut",
+  "subcategory_spa": "Spa",
+  "subcategory_cosmetics": "Cosmetics",
+
+  "subcategory_taxes": "Taxes",
+  "subcategory_fees": "Fees",
+  "subcategory_fines": "Fines",
+  "subcategory_insurance_life": "Insurance",
+
+  "subcategory_childcare": "Childcare",
+  "subcategory_toys": "Toys",
+  "subcategory_school_kids": "School",
+  "subcategory_pets": "Pets",
+
+  "subcategory_monthly": "Monthly",
+  "subcategory_weekly": "Weekly",
+  "subcategory_bonus": "Bonus",
+  "subcategory_overtime": "Overtime",
+
+  "subcategory_sales": "Sales",
+  "subcategory_profit": "Profit",
+
+  "subcategory_dividends": "Dividends",
+  "subcategory_interest": "Interest",
+  "subcategory_crypto": "Crypto",
+  "subcategory_stocks": "Stocks",
+  "subcategory_real_estate": "Real Estate",
+
+  "subcategory_birthday": "Birthday",
+  "subcategory_holiday": "Holiday",
+  "subcategory_allowance": "Allowance",
+
+  "subcategory_refunds": "Refunds",
+  "subcategory_grants": "Grants",
+  "subcategory_lottery": "Lottery",
+  "subcategory_selling": "Selling",
+
+  "editProfileTitle": "Edit Profile",
+  "nameLabel": "Name",
+  "emailLabel": "Email (Optional)",
+  "uploadPhoto": "Upload Photo",
+  "saveChanges": "Save Changes",
+
+  "listeningMessage": "Ollo AI is Listening...",
+  "quickRecordTitle": "Quick Record",
+  "saySomethingHint": "Say 'Lunch 50k'...",
+  "stopAndProcess": "Stop & Process",
+  "textInputHint": "e.g. \"Lunch 50k\", \"Salary 10m\"",
+  "draftReady": "Draft Ready",
+  "saveAdjust": "Save / Adjust",
+  "notFound": "Not Found",
+  "selectWallet": "Select Wallet"
 }

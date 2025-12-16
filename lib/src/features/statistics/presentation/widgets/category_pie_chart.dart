@@ -1,5 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import '../../../../localization/generated/app_localizations.dart';
+import '../../../categories/domain/category.dart';
+import '../../../categories/presentation/category_localization_helper.dart';
+
 import '../../../../constants/app_text_styles.dart';
 import '../../domain/category_data.dart';
 
@@ -53,8 +57,22 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             Text(
-              touchedIndex == -1 ? 'Total' : widget.data[touchedIndex].categoryName,
+              touchedIndex == -1
+                  ? AppLocalizations.of(context)!.total
+                  : CategoryLocalizationHelper.getLocalizedCategoryName(
+                      context,
+                      Category(
+                          name: widget.data[touchedIndex].categoryName,
+                          colorValue: widget.data[touchedIndex].color.value,
+                          iconPath: widget.data[touchedIndex].iconPath,
+                          type: CategoryType.expense, // Dummy type for localization lookup
+                          externalId: int.tryParse(widget.data[touchedIndex].categoryId) == null
+                              ? widget.data[touchedIndex].categoryId
+                              : null,
+                      )..id = int.tryParse(widget.data[touchedIndex].categoryId) ?? -1
+                    ),
               style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
               textAlign: TextAlign.center,
             ),

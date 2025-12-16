@@ -19,6 +19,7 @@ import 'num_pad.dart';
 import '../../../../common_widgets/modern_wallet_selector.dart';
 import '../../../wallets/domain/wallet.dart';
 import '../../../dashboard/presentation/transaction_provider.dart';
+import '../../../../localization/generated/app_localizations.dart';
 
 class AddTransactionBottomSheet extends ConsumerStatefulWidget {
   const AddTransactionBottomSheet({super.key});
@@ -87,26 +88,26 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
     final amount = double.tryParse(_amountStr) ?? 0.0;
     
     if (amount <= 0) {
-      _showError("Please enter a valid amount");
+      _showError(AppLocalizations.of(context)!.errorInvalidAmount);
       return;
     }
     if (_selectedWalletId == null) {
-      _showError("Please select a wallet");
+      _showError(AppLocalizations.of(context)!.errorSelectWallet);
       return;
     }
 
     if (_selectedType == TransactionType.transfer) {
       if (_selectedDestinationWalletId == null) {
-        _showError("Please select a destination wallet");
+        _showError(AppLocalizations.of(context)!.errorSelectDestinationWallet);
         return;
       }
       if (_selectedWalletId == _selectedDestinationWalletId) {
-        _showError("Source and destination wallets must be different");
+        _showError(AppLocalizations.of(context)!.errorSameWallets);
         return;
       }
     } else {
       if (_selectedCategory == null) {
-        _showError("Please select a category");
+        _showError(AppLocalizations.of(context)!.errorSelectCategory);
         return;
       }
     }
@@ -117,7 +118,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
       // 1. Create Transaction
       final newTransaction = Transaction()
         ..title = _selectedType == TransactionType.transfer 
-            ? 'Transfer' 
+            ? AppLocalizations.of(context)!.transfer 
             : (_selectedSubCategory?.name ?? _selectedCategory!.name)
         ..date = _selectedDate
         ..amount = amount
@@ -222,9 +223,9 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    _buildTypeButton('Expense', TransactionType.expense),
-                                    _buildTypeButton('Income', TransactionType.income),
-                                    _buildTypeButton('Transfer', TransactionType.transfer),
+                                    _buildTypeButton(AppLocalizations.of(context)!.expense, TransactionType.expense),
+                                    _buildTypeButton(AppLocalizations.of(context)!.income, TransactionType.income),
+                                    _buildTypeButton(AppLocalizations.of(context)!.transfer, TransactionType.transfer),
                                   ],
                                 ),
                               ),
@@ -259,7 +260,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 8.0, left: 4),
-                                      child: Text("To", style: AppTextStyles.bodySmall),
+                                      child: Text(AppLocalizations.of(context)!.to, style: AppTextStyles.bodySmall),
                                     ),
                                     ModernWalletSelector(
                                       selectedWalletId: _selectedDestinationWalletId,
@@ -327,7 +328,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
 
                         // Amount Display
                         Text(
-                          'Amount',
+                          AppLocalizations.of(context)!.amount,
                           style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                         ),
                         const SizedBox(height: 8),
@@ -375,10 +376,10 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                           ),
                           child: TextField(
                             controller: _noteController,
-                            decoration: const InputDecoration(
-                              hintText: 'Add a note...',
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.addNoteHint,
                               border: InputBorder.none,
-                              icon: Icon(Icons.edit_note, color: Colors.grey),
+                              icon: const Icon(Icons.edit_note, color: Colors.grey),
                             ),
                             style: AppTextStyles.bodyMedium,
                           ),
@@ -444,11 +445,11 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     CupertinoButton(
-                                      child: const Text('Cancel'),
+                                      child: Text(AppLocalizations.of(context)!.cancel),
                                       onPressed: () => Navigator.of(context).pop(),
                                     ),
                                     CupertinoButton(
-                                      child: const Text('Done'),
+                                      child: Text(AppLocalizations.of(context)!.done),
                                       onPressed: () => Navigator.of(context).pop(),
                                     ),
                                   ],

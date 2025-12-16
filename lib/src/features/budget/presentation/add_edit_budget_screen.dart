@@ -8,6 +8,7 @@ import '../domain/budget.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../../transactions/presentation/widgets/category_selector.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class AddEditBudgetScreen extends ConsumerStatefulWidget {
   final Budget? budget;
@@ -60,7 +61,7 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorSelectCategory)),
       );
       return;
     }
@@ -97,11 +98,11 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
           icon: const Icon(Icons.close, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: Text(widget.budget == null ? 'New Budget' : 'Edit Budget', style: AppTextStyles.h2),
+        title: Text(widget.budget == null ? AppLocalizations.of(context)!.newBudget : AppLocalizations.of(context)!.editBudget, style: AppTextStyles.h2),
         actions: [
           TextButton(
             onPressed: _saveBudget,
-            child: Text('Save', style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            child: Text(AppLocalizations.of(context)!.save, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -113,7 +114,7 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Amount Input
-              Text('Limit Amount', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.limitAmount, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -134,7 +135,7 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
                           border: InputBorder.none,
                           hintText: '0',
                         ),
-                        validator: (val) => val == null || val.isEmpty ? 'Enter amount' : null,
+                        validator: (val) => val == null || val.isEmpty ? AppLocalizations.of(context)!.enterAmount : null,
                       ),
                     ),
                   ],
@@ -143,7 +144,7 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
               const SizedBox(height: 24),
 
               // Period Selector
-              Text('Period', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.period, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.all(4),
@@ -153,15 +154,15 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
                 ),
                 child: Row(
                   children: [
-                    Expanded(child: _buildPeriodTab('Weekly', BudgetPeriod.weekly)),
-                    Expanded(child: _buildPeriodTab('Monthly', BudgetPeriod.monthly)),
+                    Expanded(child: _buildPeriodTab(AppLocalizations.of(context)!.weekly, BudgetPeriod.weekly)),
+                    Expanded(child: _buildPeriodTab(AppLocalizations.of(context)!.monthly, BudgetPeriod.monthly)),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
 
               // Category Selector
-              Text('Category', style: AppTextStyles.bodySmall),
+              Text(AppLocalizations.of(context)!.category, style: AppTextStyles.bodySmall),
               const SizedBox(height: 8),
               Consumer(
                 builder: (context, ref, child) {
@@ -188,7 +189,7 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
                   child: TextButton.icon(
                     onPressed: _deleteBudget,
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    label: const Text('Delete Budget', style: TextStyle(color: Colors.red)),
+                    label: Text(AppLocalizations.of(context)!.deleteBudget, style: const TextStyle(color: Colors.red)),
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: Colors.red.withOpacity(0.05),
@@ -234,13 +235,13 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Budget?'),
-        content: const Text('Are you sure you want to delete this budget?'),
+        title: Text(AppLocalizations.of(context)!.deleteBudget),
+        content: Text(AppLocalizations.of(context)!.deleteBudgetConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),

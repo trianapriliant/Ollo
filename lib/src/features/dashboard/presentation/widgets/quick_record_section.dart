@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../quick_record/presentation/quick_record_modal.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class QuickRecordSection extends StatelessWidget {
   const QuickRecordSection({super.key});
@@ -11,7 +12,7 @@ class QuickRecordSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Quick Record', style: AppTextStyles.h2),
+        Text(AppLocalizations.of(context)!.quickRecord, style: AppTextStyles.h2),
         const SizedBox(height: 16),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -21,21 +22,21 @@ class QuickRecordSection extends StatelessWidget {
               _buildQuickActionItem(
                 context,
                 Icons.chat_bubble_outline,
-                'Chat',
+                AppLocalizations.of(context)!.chatAction,
                 'chat',
               ),
               const SizedBox(width: 24),
               _buildQuickActionItem(
                 context,
                 Icons.camera_alt_outlined,
-                'Scan',
+                AppLocalizations.of(context)!.scanAction,
                 'scan',
               ),
               const SizedBox(width: 24),
               _buildQuickActionItem(
                 context,
                 Icons.mic_none_outlined,
-                'Voice',
+                AppLocalizations.of(context)!.voiceAction,
                 'voice',
               ),
             ],

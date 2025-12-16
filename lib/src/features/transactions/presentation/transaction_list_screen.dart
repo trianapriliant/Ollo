@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/presentation/widgets/transaction_list_item.dart';
@@ -17,21 +18,21 @@ class TransactionListScreen extends ConsumerWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Transactions', style: AppTextStyles.h2),
-          bottom: const TabBar(
+          title: Text(AppLocalizations.of(context)!.transactions, style: AppTextStyles.h2),
+          bottom: TabBar(
             isScrollable: true,
             tabs: [
-              Tab(text: 'Expense'),
-              Tab(text: 'Income'),
-              Tab(text: 'Transfer'),
-              Tab(text: 'System'),
+              Tab(text: AppLocalizations.of(context)!.expense),
+              Tab(text: AppLocalizations.of(context)!.income),
+              Tab(text: AppLocalizations.of(context)!.transfer),
+              Tab(text: AppLocalizations.of(context)!.system),
             ],
           ),
         ),
         body: transactionsAsync.when(
           data: (transactions) {
             if (transactions.isEmpty) {
-              return const Center(child: Text('No transactions found'));
+              return Center(child: Text(AppLocalizations.of(context)!.noTransactionsFound));
             }
 
             final expenseTransactions = transactions.where((t) => t.type == TransactionType.expense).toList();
@@ -49,7 +50,7 @@ class TransactionListScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
+          error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error(err.toString()))),
         ),
       ),
     );
@@ -64,7 +65,7 @@ class _TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (transactions.isEmpty) {
-      return const Center(child: Text('No transactions in this category'));
+      return Center(child: Text(AppLocalizations.of(context)!.noTransactionsInCategory));
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16),

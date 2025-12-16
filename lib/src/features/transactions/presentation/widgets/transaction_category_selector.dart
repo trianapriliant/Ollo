@@ -5,25 +5,14 @@ import '../../../categories/domain/category.dart';
 import '../../../transactions/domain/transaction.dart';
 import '../category_selection_item.dart';
 
+import '../../../categories/presentation/category_localization_helper.dart';
+import '../../../../localization/generated/app_localizations.dart';
+
 class TransactionCategorySelector extends StatelessWidget {
   final TransactionType type;
   final CategorySelectionItem? selectedItem;
   final Transaction? transactionToEdit;
-  final List<CategorySelectionItem> items; // Pass pre-calculated items or calculate inside?
-  // passing items is better but items depend on categoriesAsync.
-  // Let's pass the list of items to keep it pure if possible, OR make it ConsumerWidget.
-  // Given the complexity of generating "System Categories", keeping logic here might be better.
-  // But parent needs the items to auto-select.
-  // Let's assume parent passes `items` or this widget is a ConsumerWidget that fetches categories.
-  // Ideally, decoupling data fetching: pass `items` as List<CategorySelectionItem>.
-  // BUT `items` creation logic is complex (virtual categories).
-  // Let's stick to ConsumerWidget for now to encapsulate the "Virtual Category" logic,
-  // OR just accept the items list.
-  // Check original code: It builds `items` inside `categoriesAsync.when`.
-  // To keep it clean, let's accept `items` and let the parent handle the `AsyncValue` or
-  // make this widget handle the `AsyncValue`.
-  // Decision: Make it handle the list of items. Parent handles fetching.
-  
+  final List<CategorySelectionItem> items; 
   final Function(CategorySelectionItem?) onChanged;
 
   const TransactionCategorySelector({
@@ -42,13 +31,13 @@ class TransactionCategorySelector extends StatelessWidget {
         (transactionToEdit != null &&
             ['debt', 'debts', 'saving', 'savings', 'notes', 'bills', 'wishlist']
                 .contains(transactionToEdit!.categoryId))) {
-      return _buildReadonlySystemCategory();
+      return _buildReadonlySystemCategory(context);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Category', style: AppTextStyles.bodyMedium),
+        Text(AppLocalizations.of(context)!.category, style: AppTextStyles.bodyMedium),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -60,7 +49,7 @@ class TransactionCategorySelector extends StatelessWidget {
             child: DropdownButton<CategorySelectionItem>(
               value: selectedItem,
               isExpanded: true,
-              hint: const Text("Select Category"),
+              hint: Text(AppLocalizations.of(context)!.selectCategory),
               items: items.map((item) {
                 return DropdownMenuItem(
                   value: item,
@@ -80,7 +69,9 @@ class TransactionCategorySelector extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        item.name,
+                        item.subCategory != null
+                          ? CategoryLocalizationHelper.getLocalizedSubCategoryName(context, item.subCategory!)
+                          : CategoryLocalizationHelper.getLocalizedCategoryName(context, item.category),
                         style: item.subCategory != null
                             ? AppTextStyles.bodyMedium
                             : AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
@@ -97,11 +88,11 @@ class TransactionCategorySelector extends StatelessWidget {
     );
   }
 
-  Widget _buildReadonlySystemCategory() {
+  Widget _buildReadonlySystemCategory(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Category', style: AppTextStyles.bodyMedium),
+        Text(AppLocalizations.of(context)!.category, style: AppTextStyles.bodyMedium),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(16),
@@ -126,7 +117,7 @@ class TransactionCategorySelector extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  _getSystemLabel(),
+                  _getSystemLabel(context),
                   style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[700]),
                 ),
               ),
@@ -160,14 +151,15 @@ class TransactionCategorySelector extends StatelessWidget {
     return Icons.settings;
   }
 
-  String _getSystemLabel() {
-    if (type == TransactionType.transfer) return 'TRANSFER';
+  String _getSystemLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (type == TransactionType.transfer) return l10n.sysCatTransfer.toUpperCase();
     final catId = transactionToEdit?.categoryId;
-    if (catId == 'debt' || catId == 'debts') return 'DEBT';
-    if (catId == 'saving' || catId == 'savings') return 'SAVINGS';
-    if (catId == 'notes') return 'BUNDLED NOTES';
-    if (catId == 'bills') return 'BILLS';
-    if (catId == 'wishlist') return 'WISHLIST';
+    if (catId == 'debt' || catId == 'debts') return l10n.sysCatDebts.toUpperCase();
+    if (catId == 'saving' || catId == 'savings') return l10n.sysCatSavings.toUpperCase();
+    if (catId == 'notes') return l10n.sysCatSmartNotes.toUpperCase();
+    if (catId == 'bills') return l10n.sysCatBills.toUpperCase();
+    if (catId == 'wishlist') return l10n.sysCatWishlist.toUpperCase();
     return catId?.toUpperCase() ?? 'SYSTEM';
   }
 }

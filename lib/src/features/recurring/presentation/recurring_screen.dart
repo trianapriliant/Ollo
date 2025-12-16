@@ -8,6 +8,7 @@ import '../../settings/presentation/currency_provider.dart';
 import '../../recurring/data/recurring_repository.dart';
 import '../../recurring/domain/recurring_transaction.dart';
 import 'widgets/recurring_summary_card.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class RecurringScreen extends ConsumerWidget {
   const RecurringScreen({super.key});
@@ -22,7 +23,7 @@ class RecurringScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Recurring', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.recurringTitle, style: AppTextStyles.h2),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -38,13 +39,13 @@ class RecurringScreen extends ConsumerWidget {
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'home',
                   child: Row(
                     children: [
-                      Icon(Icons.home, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text('Home'),
+                      const Icon(Icons.home, color: Colors.black),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context)!.home),
                     ],
                   ),
                 ),
@@ -61,12 +62,12 @@ class RecurringScreen extends ConsumerWidget {
             children: [
               const RecurringSummaryCard(),
               const SizedBox(height: 24),
-              Text('Active Subscriptions', style: AppTextStyles.h3),
+              Text(AppLocalizations.of(context)!.activeSubscriptions, style: AppTextStyles.h3),
               const SizedBox(height: 16),
               recurringAsync.when(
                 data: (transactions) {
                   if (transactions.isEmpty) {
-                    return const Center(child: Text('No active subscriptions'));
+                    return Center(child: Text(AppLocalizations.of(context)!.noActiveSubscriptions));
                   }
                   return ListView.separated(
                     shrinkWrap: true,
@@ -127,7 +128,7 @@ class RecurringScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tx.note ?? 'Recurring',
+                    tx.note ?? AppLocalizations.of(context)!.recurring,
                     style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(

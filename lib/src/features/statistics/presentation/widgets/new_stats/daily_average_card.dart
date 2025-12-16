@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../constants/app_text_styles.dart';
 import '../../../../settings/presentation/currency_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class DailyAverageCard extends StatelessWidget {
   final double average;
@@ -39,7 +40,7 @@ class DailyAverageCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Daily Average', style: AppTextStyles.bodySmall),
+                    Text(AppLocalizations.of(context)!.dailyAverage, style: AppTextStyles.bodySmall),
                     const SizedBox(height: 4),
                     Text(
                       '${currency.symbol}${average.toStringAsFixed(2)}',
@@ -53,7 +54,7 @@ class DailyAverageCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('Projected Total', style: AppTextStyles.bodySmall),
+                    Text(AppLocalizations.of(context)!.projectedTotal, style: AppTextStyles.bodySmall),
                     const SizedBox(height: 4),
                     Text(
                       '${currency.symbol}${projected.toStringAsFixed(0)}',
@@ -73,11 +74,11 @@ class DailyAverageCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, size: 16, color: Colors.blue),
+                const Icon(Icons.info_outline, size: 16, color: Colors.blue),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Based on your spending habits so far this month.',
+                    AppLocalizations.of(context)!.spendingHabitsNote,
                     style: AppTextStyles.bodySmall.copyWith(color: Colors.blue[800]),
                   ),
                 ),

@@ -5,6 +5,7 @@ import 'package:ollo/src/constants/app_colors.dart';
 import 'package:ollo/src/constants/app_text_styles.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../application/backup_service.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class BackupScreen extends ConsumerStatefulWidget {
   const BackupScreen({super.key});
@@ -21,7 +22,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
   Future<void> _createBackup() async {
     setState(() {
       _isLoading = true;
-      _statusMessage = "Creating backup...";
+      _statusMessage = AppLocalizations.of(context)!.creatingBackup;
       _isError = false;
     });
 
@@ -45,12 +46,12 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
       final path = await ref.read(backupServiceProvider).createBackup();
       if (mounted) {
         setState(() {
-          _statusMessage = "Backup saved successfully to:\n$path";
+          _statusMessage = AppLocalizations.of(context)!.backupSuccess(path);
           _isError = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Backup created at $path"),
+            content: Text(AppLocalizations.of(context)!.backupSuccess(path)), // Using same message
             backgroundColor: Colors.green,
           ),
         );
@@ -58,7 +59,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _statusMessage = "Failed to create backup: $e";
+          _statusMessage = AppLocalizations.of(context)!.backupError(e.toString());
           _isError = true;
         });
       }
@@ -74,19 +75,19 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("⚠️ Warning: Restore Data"),
-        content: const Text(
-          "Restoring a backup will DELETE ALL current data on this device and replace it with the backup content.\n\nThis action cannot be undone. Are you sure?",
+        title: Text(AppLocalizations.of(context)!.restoreWarningTitle),
+        content: Text(
+          AppLocalizations.of(context)!.restoreWarningMessage,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel"),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("Yes, Restore", style: TextStyle(color: Colors.white)),
+            child: Text(AppLocalizations.of(context)!.yesRestore, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -96,7 +97,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
 
     setState(() {
       _isLoading = true;
-      _statusMessage = "Restoring backup...";
+      _statusMessage = AppLocalizations.of(context)!.restoringBackup;
       _isError = false;
     });
 
@@ -104,12 +105,12 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
       await ref.read(backupServiceProvider).restoreBackup();
       if (mounted) {
         setState(() {
-          _statusMessage = "Backup restored successfully!\nPlease restart the app if data doesn't appear immediately.";
+          _statusMessage = AppLocalizations.of(context)!.restoreSuccess;
           _isError = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-           const SnackBar(
-            content: Text("Restore successful!"),
+           SnackBar(
+            content: Text(AppLocalizations.of(context)!.restoreSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -119,7 +120,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     } catch (e) {
       if (mounted) {
          setState(() {
-          _statusMessage = "Failed to restore backup: $e";
+          _statusMessage = AppLocalizations.of(context)!.restoreError(e.toString());
           _isError = true;
         });
       }
@@ -135,7 +136,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Backup & Recovery'),
+        title: Text(AppLocalizations.of(context)!.backupRecoveryTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -145,9 +146,9 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "Secure your data by creating a local backup file (JSON). You can restore this file later or on another device.",
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+            Text(
+              AppLocalizations.of(context)!.backupDescription,
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 32),
             
@@ -185,8 +186,8 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
 
             // CREATE BACKUP BUTTON
             _buildActionButton(
-              title: "Create Backup",
-              subtitle: "Export all data to a JSON file",
+              title: AppLocalizations.of(context)!.createBackup,
+              subtitle: AppLocalizations.of(context)!.createBackupSubtitle,
               icon: Icons.save_alt,
               color: AppColors.primary,
               onTap: _isLoading ? null : _createBackup,
@@ -196,8 +197,8 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
 
             // RESTORE BACKUP BUTTON
             _buildActionButton(
-              title: "Restore Backup",
-              subtitle: "Import data from a JSON file (Wipes current data)",
+              title: AppLocalizations.of(context)!.restoreBackup,
+              subtitle: AppLocalizations.of(context)!.restoreBackupSubtitle,
               icon: Icons.restore_page,
               color: Colors.orange,
               onTap: _isLoading ? null : _restoreBackup,

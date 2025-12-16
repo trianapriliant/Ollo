@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../data/wishlist_repository.dart';
@@ -46,7 +47,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.wishlistToEdit != null ? 'Edit Wishlist' : 'Add Wishlist', style: AppTextStyles.h2),
+        title: Text(widget.wishlistToEdit != null ? AppLocalizations.of(context)!.editWishlist : AppLocalizations.of(context)!.addWishlist, style: AppTextStyles.h2),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -91,7 +92,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
                           children: [
                             Icon(Icons.add_a_photo_outlined, size: 32, color: AppColors.primary.withOpacity(0.5)),
                             const SizedBox(height: 8),
-                            Text('Add Photo', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+                            Text(AppLocalizations.of(context)!.addPhoto, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
                           ],
                         )
                       : null,
@@ -101,17 +102,17 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
             const SizedBox(height: 32),
 
             // Title
-            Text('Item Name', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.itemName, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildTextField(
               controller: _titleController,
-              hint: 'e.g. New Laptop',
+              hint: AppLocalizations.of(context)!.itemNameHint,
               icon: Icons.shopping_bag_outlined,
             ),
             const SizedBox(height: 24),
 
             // Price
-            Text('Price', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.priceLabel, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildTextField(
               controller: _priceController,
@@ -123,7 +124,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
             const SizedBox(height: 24),
 
             // Target Date
-            Text('Target Date', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.targetDateLabel, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             InkWell(
               onTap: _pickDate,
@@ -149,7 +150,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
                     Text(
                       _targetDate != null
                           ? DateFormat('EEE, d MMM yyyy').format(_targetDate!)
-                          : 'Select Date',
+                          : AppLocalizations.of(context)!.selectDate,
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: _targetDate != null ? AppColors.textPrimary : AppColors.textSecondary,
                       ),
@@ -163,11 +164,11 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
             const SizedBox(height: 24),
 
             // Product Link
-            Text('Product Link (Optional)', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.productLinkLabel, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildTextField(
               controller: _linkController,
-              hint: 'e.g. https://shopee.co.id/...',
+              hint: AppLocalizations.of(context)!.productLinkHint,
               icon: Icons.link,
               keyboardType: TextInputType.url,
             ),
@@ -186,7 +187,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: Text(widget.wishlistToEdit != null ? 'Update Wishlist' : 'Save to Wishlist', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text(widget.wishlistToEdit != null ? AppLocalizations.of(context)!.updateWishlist : AppLocalizations.of(context)!.saveWishlist, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -238,7 +239,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: $e')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorPickingImage(e.toString()))),
       );
     }
   }
@@ -274,7 +275,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
 
     if (title.isEmpty || price == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter valid title and price')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorInvalidWishlist)),
       );
       return;
     }
@@ -294,7 +295,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
         await wishlistRepo.updateWishlist(wishlist);
         
         if (mounted) {
-           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wishlist updated successfully')));
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.wishlistUpdated)));
         }
       } else {
         // CREATE
@@ -310,7 +311,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
         await wishlistRepo.addWishlist(newWishlist);
         
         if (mounted) {
-           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item added to wishlist!')));
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.wishlistSaved)));
         }
       }
 
@@ -328,11 +329,11 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Wishlist?'),
-        content: const Text('This action cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.deleteWishlistTitle),
+        content: Text(AppLocalizations.of(context)!.deleteWishlistConfirm),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
         ],
       ),
     );
@@ -343,7 +344,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
         await wishlistRepo.deleteWishlist(widget.wishlistToEdit!.id);
         if (mounted) {
           context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wishlist deleted')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.wishlistDeleted)));
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

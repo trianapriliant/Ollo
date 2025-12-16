@@ -46,9 +46,9 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
               now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
             _lastPressedAt = now;
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Press back again to exit'),
-                duration: Duration(seconds: 2),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.pressBackAgainToExit),
+                duration: const Duration(seconds: 2),
               ),
             );
             return;

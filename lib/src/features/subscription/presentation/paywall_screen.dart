@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'premium_provider.dart';
@@ -11,6 +12,7 @@ class PaywallScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPremium = ref.watch(isPremiumProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -47,25 +49,25 @@ class PaywallScreen extends ConsumerWidget {
                   
                   // Header
                   Text(
-                    'Unlock Full Potential',
+                    l10n.premiumTitle,
                     style: AppTextStyles.h1.copyWith(color: Colors.white, fontSize: 32),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Upgrade to Premium for advanced features and unlimited access.',
+                    l10n.premiumSubtitle,
                     style: AppTextStyles.bodyLarge.copyWith(color: Colors.white.withOpacity(0.9)),
                   ),
                   
                   const Spacer(),
                   
                   // Features List
-                  _buildFeatureItem(Icons.bar_chart, 'Advanced Statistics', 'Interactive charts & deep insights'),
+                  _buildFeatureItem(Icons.bar_chart, l10n.premiumAdvancedStats, l10n.premiumAdvancedStatsDesc),
                   const SizedBox(height: 16),
-                  _buildFeatureItem(Icons.file_download, 'Data Export', 'Export to CSV/Excel for backup'),
+                  _buildFeatureItem(Icons.file_download, l10n.premiumDataExport, l10n.premiumDataExportDesc),
                   const SizedBox(height: 16),
-                  _buildFeatureItem(Icons.all_inclusive, 'Unlimited Wallets', 'Create as many wallets as you need'),
+                  _buildFeatureItem(Icons.all_inclusive, l10n.premiumUnlimitedWallets, l10n.premiumUnlimitedWalletsDesc),
                   const SizedBox(height: 16),
-                  _buildFeatureItem(Icons.notifications_active, 'Smart Alerts', 'Get notified before you overspend'),
+                  _buildFeatureItem(Icons.notifications_active, l10n.premiumSmartAlerts, l10n.premiumSmartAlertsDesc),
                   
                   const Spacer(),
                   
@@ -84,7 +86,7 @@ class PaywallScreen extends ConsumerWidget {
                           children: [
                             const Icon(Icons.check_circle, color: Colors.green),
                             const SizedBox(width: 8),
-                            Text('You are Premium!', style: AppTextStyles.h3.copyWith(color: Colors.green)),
+                            Text(l10n.youArePremium, style: AppTextStyles.h3.copyWith(color: Colors.green)),
                           ],
                         ),
                       ),
@@ -98,7 +100,7 @@ class PaywallScreen extends ConsumerWidget {
                           await ref.read(isPremiumProvider.notifier).setPremium(true);
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Welcome to Premium! 🌟')),
+                              SnackBar(content: Text(l10n.premiumWelcome)),
                             );
                             context.pop();
                           }
@@ -113,7 +115,7 @@ class PaywallScreen extends ConsumerWidget {
                           elevation: 4,
                         ),
                         child: Text(
-                          'Upgrade Now - Rp 29.000 / Lifetime',
+                          l10n.upgradeButton,
                           style: AppTextStyles.h3.copyWith(color: AppColors.primary),
                         ),
                       ),
@@ -129,7 +131,7 @@ class PaywallScreen extends ConsumerWidget {
                            context.pop();
                         },
                         child: Text(
-                          'Restore Purchase',
+                          l10n.restorePurchase,
                           style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
                         ),
                       ),

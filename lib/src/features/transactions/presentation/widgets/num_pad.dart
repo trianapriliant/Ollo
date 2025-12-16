@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import 'package:intl/intl.dart';
 
 class NumPad extends StatelessWidget {
   final Function(String) onNumberTap;
@@ -56,6 +57,7 @@ class NumPad extends StatelessWidget {
                 const SizedBox(height: 8),
                 // Date Button
                 _buildDateButton(
+                  context: context,
                   date: selectedDate,
                   onTap: onDateTap,
                   height: (55 * 3 + 16 - 8) / 2, // Half of the remaining space
@@ -130,10 +132,10 @@ class NumPad extends StatelessWidget {
     );
   }
 
-  Widget _buildDateButton({required DateTime date, required VoidCallback onTap, required double height}) {
+  Widget _buildDateButton({required BuildContext context, required DateTime date, required VoidCallback onTap, required double height}) {
     // Format: "Nov 30"
     //          "10:30"
-    final month = _getMonthName(date.month);
+    final month = DateFormat.MMM(Localizations.localeOf(context).toString()).format(date);
     final day = date.day.toString();
     final time = "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
 
@@ -190,11 +192,5 @@ class NumPad extends StatelessWidget {
     );
   }
 
-  String _getMonthName(int month) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return months[month - 1];
-  }
+
 }

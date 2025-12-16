@@ -19,4 +19,1900 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get statistics => 'Statistik';
+
+  @override
+  String get expense => 'Pengeluaran';
+
+  @override
+  String get income => 'Pemasukan';
+
+  @override
+  String get transfer => 'Transfer';
+
+  @override
+  String get amount => 'Jumlah';
+
+  @override
+  String get to => 'Ke';
+
+  @override
+  String get addNoteHint => 'Tambah catatan...';
+
+  @override
+  String get cancel => 'Batal';
+
+  @override
+  String get done => 'Selesai';
+
+  @override
+  String get errorInvalidAmount => 'Mohon masukkan jumlah yang valid';
+
+  @override
+  String get errorSelectWallet => 'Mohon pilih dompet';
+
+  @override
+  String get errorSelectDestinationWallet => 'Mohon pilih dompet tujuan';
+
+  @override
+  String get errorSameWallets => 'Dompet asal dan tujuan harus berbeda';
+
+  @override
+  String get errorSelectCategory => 'Mohon pilih kategori';
+
+  @override
+  String get transactionDetail => 'Detail Transaksi';
+
+  @override
+  String get title => 'Judul';
+
+  @override
+  String get category => 'Kategori';
+
+  @override
+  String get dateTime => 'Waktu';
+
+  @override
+  String get date => 'Tanggal';
+
+  @override
+  String get time => 'Jam';
+
+  @override
+  String get note => 'Catatan';
+
+  @override
+  String get deleteTransaction => 'Hapus Transaksi';
+
+  @override
+  String get deleteTransactionConfirm =>
+      'Apakah Anda yakin ingin menghapus transaksi ini?';
+
+  @override
+  String get delete => 'Hapus';
+
+  @override
+  String get edit => 'Ubah';
+
+  @override
+  String get markCompleted => 'Tandai Selesai';
+
+  @override
+  String get markCompletedConfirm => 'Tandai transaksi ini sebagai selesai?';
+
+  @override
+  String get confirm => 'Konfirmasi';
+
+  @override
+  String get system => 'Sistem';
+
+  @override
+  String get recentTransactions => 'Transaksi Terakhir';
+
+  @override
+  String get noTransactions => 'Belum ada transaksi';
+
+  @override
+  String get startRecording =>
+      'Ayo mulai catat pengeluaran dan pemasukanmu agar keuangan lebih rapi! 🚀';
+
+  @override
+  String get menu => 'Menu';
+
+  @override
+  String get budget => 'Anggaran';
+
+  @override
+  String get recurring => 'Berulang';
+
+  @override
+  String get savings => 'Tabungan';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get bills => 'Tagihan';
+
+  @override
+  String get debts => 'Utang';
+
+  @override
+  String get wishlist => 'Keinginan';
+
+  @override
+  String get cards => 'Kartu';
+
+  @override
+  String get notes => 'Catatan';
+
+  @override
+  String get reimburse => 'Reimburse';
+
+  @override
+  String get unknown => 'Tidak Diketahui';
+
+  @override
+  String welcome(String name) {
+    return 'Hai, $name!';
+  }
+
+  @override
+  String get welcomeSimple => 'Hai!';
+
+  @override
+  String get settings => 'Pengaturan';
+
+  @override
+  String get developerOptions => 'Opsi Pengembang';
+
+  @override
+  String get futureFeatures => 'Fitur Masa Depan';
+
+  @override
+  String get backupRecovery => 'Cadangan & Pemulihan';
+
+  @override
+  String get aiAutomation => 'Otomatisasi AI';
+
+  @override
+  String get feedbackRoadmap => 'Masukan & Peta Jalan';
+
+  @override
+  String get dataExport => 'Ekspor Data';
+
+  @override
+  String get dataManagement => 'Manajemen Data';
+
+  @override
+  String get categories => 'Kategori';
+
+  @override
+  String get wallets => 'Dompet';
+
+  @override
+  String get general => 'Umum';
+
+  @override
+  String get helpSupport => 'Bantuan & Dukungan';
+
+  @override
+  String get sendFeedback => 'Kirim Masukan';
+
+  @override
+  String get aboutOllo => 'Tentang Ollo';
+
+  @override
+  String get account => 'Akun';
+
+  @override
+  String get deleteData => 'Hapus Data';
+
+  @override
+  String get logout => 'Keluar';
+
+  @override
+  String get comingSoon => 'Segera Hadir';
+
+  @override
+  String get comingSoonDesc =>
+      'Biarkan AI mengkategorikan transaksi Anda dan memberikan wawasan keuangan yang cerdas.';
+
+  @override
+  String get cantWait => 'Tak Sabar!';
+
+  @override
+  String get deleteAllData => 'Hapus Semua Data?';
+
+  @override
+  String deleteAllDataConfirm(String confirmationText) {
+    return 'Tindakan ini akan menghapus SEMUA transaksi, dompet, anggaran, dan catatan Anda secara permanen. Ini tidak dapat dibatalkan.\n\nUntuk mengonfirmasi, ketik \"$confirmationText\" di bawah ini:';
+  }
+
+  @override
+  String get deleteDataConfirmationText => 'Hapus Data';
+
+  @override
+  String get dataDeletedSuccess =>
+      'Semua data berhasil dihapus. Silakan mulai ulang aplikasi.';
+
+  @override
+  String dataDeleteFailed(String error) {
+    return 'Gagal menghapus data: $error';
+  }
+
+  @override
+  String get currency => 'Mata Uang';
+
+  @override
+  String get language => 'Bahasa';
+
+  @override
+  String get selectCurrency => 'Pilih Mata Uang';
+
+  @override
+  String get selectLanguage => 'Pilih Bahasa';
+
+  @override
+  String get selectCategory => 'Pilih Kategori';
+
+  @override
+  String get myWallets => 'Dompet Saya';
+
+  @override
+  String get emptyWalletsTitle => 'Dompet masih kosong';
+
+  @override
+  String get emptyWalletsMessage =>
+      'Yuk tambahkan dompet atau akun bank-mu untuk mulai mencatat! 💳';
+
+  @override
+  String get addWallet => 'Tambah Dompet Baru';
+
+  @override
+  String get editWallet => 'Ubah Dompet';
+
+  @override
+  String get newWallet => 'Dompet Baru';
+
+  @override
+  String get walletName => 'Nama Dompet';
+
+  @override
+  String get initialBalance => 'Saldo Awal';
+
+  @override
+  String get walletDetails => 'Detail Dompet';
+
+  @override
+  String get appearance => 'Tampilan';
+
+  @override
+  String get icon => 'Ikon';
+
+  @override
+  String get color => 'Warna';
+
+  @override
+  String get saveWallet => 'Simpan Dompet';
+
+  @override
+  String get walletTypeCash => 'Tunai';
+
+  @override
+  String get walletTypeBank => 'Akun Bank';
+
+  @override
+  String get walletTypeEWallet => 'E-Wallet';
+
+  @override
+  String get walletTypeCreditCard => 'Kartu Kredit';
+
+  @override
+  String get walletTypeExchange => 'Investasi';
+
+  @override
+  String get walletTypeOther => 'Lainnya';
+
+  @override
+  String get debitCard => 'Kartu Debit';
+
+  @override
+  String get categoriesTitle => 'Kategori';
+
+  @override
+  String get noCategoriesFound => 'Kategori tidak ditemukan';
+
+  @override
+  String get editCategory => 'Ubah Kategori';
+
+  @override
+  String get newCategory => 'Kategori Baru';
+
+  @override
+  String get categoryName => 'Nama Kategori';
+
+  @override
+  String get enterCategoryName => 'Mohon masukkan nama';
+
+  @override
+  String get deleteCategory => 'Hapus Kategori?';
+
+  @override
+  String get deleteCategoryConfirm => 'Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get save => 'Simpan';
+
+  @override
+  String get systemCategoryTitle => 'Kategori Sistem';
+
+  @override
+  String get systemCategoryMessage =>
+      'Kategori ini dikelola oleh sistem dan tidak dapat diubah atau dihapus secara manual.';
+
+  @override
+  String get sysCatTransfer => 'Transfer';
+
+  @override
+  String get sysCatTransferDesc => 'Transfer dana antar dompet';
+
+  @override
+  String get sysCatRecurring => 'Berulang';
+
+  @override
+  String get sysCatRecurringDesc => 'Transaksi berulang otomatis';
+
+  @override
+  String get sysCatWishlist => 'Keinginan';
+
+  @override
+  String get sysCatWishlistDesc =>
+      'Transaksi otomatis dari pembelian Keinginan';
+
+  @override
+  String get sysCatBills => 'Tagihan';
+
+  @override
+  String get sysCatBillsDesc => 'Transaksi otomatis dari pembayaran Tagihan';
+
+  @override
+  String get dueDateLabel => 'Jatuh Tempo';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String get noPaymentsYet => 'Belum ada pembayaran';
+
+  @override
+  String get sysCatDebts => 'Hutang Piutang';
+
+  @override
+  String get sysCatDebtsDesc =>
+      'Transaksi otomatis dari catatan Utang/Pinjaman';
+
+  @override
+  String get sysCatSavings => 'Tabungan';
+
+  @override
+  String get sysCatSavingsDesc =>
+      'Transaksi otomatis dari setor/tarik Tabungan';
+
+  @override
+  String get sysCatSmartNotes => 'Catatan Terbundle';
+
+  @override
+  String get sysCatSmartNotesDesc => 'Transaksi otomatis dari Bundle Cerdas';
+
+  @override
+  String get sysCatReimburse => 'Reimburse';
+
+  @override
+  String get sysCatReimburseDesc => 'Sistem pelacakan reimbursement';
+
+  @override
+  String get budgetsTitle => 'Anggaran';
+
+  @override
+  String get noBudgetsYet => 'Belum ada anggaran';
+
+  @override
+  String get createBudget => 'Buat Anggaran';
+
+  @override
+  String get yourBudgets => 'Anggaran Anda';
+
+  @override
+  String get newBudget => 'Anggaran Baru';
+
+  @override
+  String get editBudget => 'Ubah Anggaran';
+
+  @override
+  String get limitAmount => 'Batas Jumlah';
+
+  @override
+  String get period => 'Periode';
+
+  @override
+  String get weekly => 'Mingguan';
+
+  @override
+  String get monthly => 'Bulanan';
+
+  @override
+  String get yearly => 'Tahunan';
+
+  @override
+  String get daily => 'Harian';
+
+  @override
+  String get deleteBudget => 'Hapus Anggaran';
+
+  @override
+  String get deleteBudgetConfirm =>
+      'Apakah Anda yakin ingin menghapus anggaran ini?';
+
+  @override
+  String get enterAmount => 'Masukkan jumlah';
+
+  @override
+  String get recurringTitle => 'Berulang';
+
+  @override
+  String get activeSubscriptions => 'Langganan Aktif';
+
+  @override
+  String get noActiveSubscriptions => 'Tidak ada langganan aktif';
+
+  @override
+  String get newRecurring => 'Transaksi Berulang Baru';
+
+  @override
+  String get editRecurring => 'Ubah Transaksi Berulang';
+
+  @override
+  String get frequency => 'Frekuensi';
+
+  @override
+  String get startDate => 'Tanggal Mulai';
+
+  @override
+  String get payWithWallet => 'Bayar dengan Dompet';
+
+  @override
+  String get updateRecurring => 'Perbarui';
+
+  @override
+  String get saveRecurring => 'Simpan';
+
+  @override
+  String get deleteRecurring => 'Hapus Transaksi Berulang?';
+
+  @override
+  String get deleteRecurringConfirm =>
+      'Ini akan menghentikan pembayaran otomatis di masa depan. Transaksi masa lalu akan tetap ada.';
+
+  @override
+  String get pleaseSelectWallet => 'Mohon pilih dompet';
+
+  @override
+  String get debtsTitle => 'Hutang Piutang';
+
+  @override
+  String get iOwe => 'Hutang Saya';
+
+  @override
+  String get owedToMe => 'Piutang Saya';
+
+  @override
+  String get netBalance => 'Saldo Bersih';
+
+  @override
+  String get debtFree => 'Anda bebas hutang!';
+
+  @override
+  String get noOneOwesYou => 'Tidak ada yang berhutang pada Anda.';
+
+  @override
+  String get paidStatus => 'Lunas';
+
+  @override
+  String get overdue => 'Terlambat';
+
+  @override
+  String dueOnDate(String date) {
+    return 'Jatuh tempo $date';
+  }
+
+  @override
+  String amountLeft(String amount) {
+    return 'Sisa $amount';
+  }
+
+  @override
+  String get deleteDebt => 'Hapus Catatan?';
+
+  @override
+  String get deleteDebtConfirm => 'Ini akan menghapus catatan hutang.';
+
+  @override
+  String get sortByDate => 'Urut Tanggal';
+
+  @override
+  String get sortByAmount => 'Urut Jumlah';
+
+  @override
+  String get editDebt => 'Ubah Hutang/Piutang';
+
+  @override
+  String get addDebt => 'Tambah Hutang/Piutang';
+
+  @override
+  String get iBorrowed => 'Saya Berhutang';
+
+  @override
+  String get iLent => 'Saya Meminjamkan';
+
+  @override
+  String get personName => 'Nama Orang';
+
+  @override
+  String get whoHint => 'Siapa?';
+
+  @override
+  String get required => 'Wajib diisi';
+
+  @override
+  String get updateDebt => 'Perbarui';
+
+  @override
+  String get saveDebt => 'Simpan';
+
+  @override
+  String get debtSaved => 'Berhasil disimpan';
+
+  @override
+  String get debtUpdated => 'Berhasil diperbarui';
+
+  @override
+  String get debtDeleted => 'Berhasil dihapus';
+
+  @override
+  String get debtDetails => 'Rincian Hutang/Piutang';
+
+  @override
+  String get paymentHistory => 'Riwayat Pembayaran';
+
+  @override
+  String youOweName(String name) {
+    return 'Anda berhutang pada $name';
+  }
+
+  @override
+  String nameOwesYou(String name) {
+    return '$name berhutang pada Anda';
+  }
+
+  @override
+  String totalAmount(String amount) {
+    return 'Total: $amount';
+  }
+
+  @override
+  String paidAmount(String amount) {
+    return 'Terbayar: $amount';
+  }
+
+  @override
+  String get activeStatus => 'Aktif';
+
+  @override
+  String get addPayment => 'Catat Pembayaran';
+
+  @override
+  String get noneRecordOnly => 'Tanpa Dompet (Hanya catat)';
+
+  @override
+  String get confirmPayment => 'Konfirmasi Pembayaran';
+
+  @override
+  String get paymentRecorded => 'Pembayaran berhasil dicatat!';
+
+  @override
+  String get deleteDebtWarning =>
+      'Ini akan menghapus catatan. Saldo dompet TIDAK akan dikembalikan otomatis.';
+
+  @override
+  String get billsTitle => 'Tagihan';
+
+  @override
+  String get unpaid => 'Belum Bayar';
+
+  @override
+  String get paidTab => 'Lunas';
+
+  @override
+  String get allCaughtUp => 'Semua beres!';
+
+  @override
+  String get noUnpaidBills => 'Tidak ada tagihan saat ini.';
+
+  @override
+  String get noHistoryYet => 'Belum ada riwayat';
+
+  @override
+  String paidOnDate(String date) {
+    return 'Lunas $date';
+  }
+
+  @override
+  String get dueToday => 'Hari Ini';
+
+  @override
+  String dueInDays(int days) {
+    return 'Dlm $days hari';
+  }
+
+  @override
+  String get pay => 'Bayar';
+
+  @override
+  String get payBill => 'Bayar Tagihan';
+
+  @override
+  String payBillTitle(String title) {
+    return 'Bayar \"$title\"?';
+  }
+
+  @override
+  String get payFrom => 'Bayar dari:';
+
+  @override
+  String get noWalletsFound => 'Dompet tidak ditemukan';
+
+  @override
+  String get billPaidSuccess => 'Tagihan berhasil dibayar!';
+
+  @override
+  String get editBill => 'Ubah Tagihan';
+
+  @override
+  String get addBill => 'Tambah Tagihan';
+
+  @override
+  String get billDetails => 'Rincian Tagihan';
+
+  @override
+  String get billName => 'Nama Tagihan';
+
+  @override
+  String get billType => 'Tipe Tagihan';
+
+  @override
+  String get repeatBill => 'Ulangi tagihan ini?';
+
+  @override
+  String get autoCreateBill => 'Otomatis buat tagihan baru';
+
+  @override
+  String get updateBill => 'Perbarui';
+
+  @override
+  String get saveBill => 'Simpan';
+
+  @override
+  String get billSaved => 'Berhasil disimpan';
+
+  @override
+  String get billUpdated => 'Berhasil diperbarui';
+
+  @override
+  String get billDeleted => 'Berhasil dihapus';
+
+  @override
+  String get payBillDescription =>
+      'Ini akan membuat transaksi Sistem dan memotong saldo dompet Anda.';
+
+  @override
+  String get deleteBill => 'Hapus Tagihan?';
+
+  @override
+  String get deleteBillConfirm => 'Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get errorInvalidBill => 'Mohon masukkan nama dan jumlah yang valid';
+
+  @override
+  String get wishlistTitle => 'Keinginan';
+
+  @override
+  String get activeTab => 'Aktif';
+
+  @override
+  String get achievedTab => 'Tercapai';
+
+  @override
+  String get emptyActiveWishlistMessage => 'Mulai tambahkan barang impian Anda';
+
+  @override
+  String get emptyAchievedWishlistMessage =>
+      'Belum ada mimpi tercapai. Semangat!';
+
+  @override
+  String get noAchievementsYet => 'Belum ada pencapaian';
+
+  @override
+  String get wishlistEmpty => 'Daftar keinginan kosong';
+
+  @override
+  String get deleteItemTitle => 'Hapus Item?';
+
+  @override
+  String deleteItemConfirm(String title) {
+    return 'Anda yakin ingin menghapus \"$title\"?';
+  }
+
+  @override
+  String get buy => 'Beli';
+
+  @override
+  String get buyItemTitle => 'Beli Barang';
+
+  @override
+  String purchaseItemTitle(String title) {
+    return 'Beli \"$title\"?';
+  }
+
+  @override
+  String get selectWalletLabel => 'Pilih Dompet:';
+
+  @override
+  String get noWalletsFoundMessage =>
+      'Dompet tidak ditemukan. Buat dompet dulu.';
+
+  @override
+  String get amountLabel => 'Jumlah:';
+
+  @override
+  String get confirmPurchase => 'Konfirmasi Pembelian';
+
+  @override
+  String get purchaseSuccessMessage => 'Pembelian berhasil! Mimpi tercapai! 🎉';
+
+  @override
+  String errorLaunchingUrl(String error) {
+    return 'Gagal membuka URL: $error';
+  }
+
+  @override
+  String get editWishlist => 'Ubah Keinginan';
+
+  @override
+  String get addWishlist => 'Tambah Keinginan';
+
+  @override
+  String get addPhoto => 'Tambah Foto';
+
+  @override
+  String get itemName => 'Nama Barang';
+
+  @override
+  String get itemNameHint => 'cth. Laptop Baru';
+
+  @override
+  String get priceLabel => 'Harga';
+
+  @override
+  String get targetDateLabel => 'Target Tanggal';
+
+  @override
+  String get selectDate => 'Pilih Tanggal';
+
+  @override
+  String get productLinkLabel => 'Link Produk (Opsional)';
+
+  @override
+  String get productLinkHint => 'cth. https://shopee.co.id/...';
+
+  @override
+  String get updateWishlist => 'Perbarui';
+
+  @override
+  String get saveWishlist => 'Simpan';
+
+  @override
+  String get errorInvalidWishlist => 'Mohon masukkan nama dan harga yang valid';
+
+  @override
+  String get wishlistUpdated => 'Berhasil diperbarui';
+
+  @override
+  String get wishlistSaved => 'Berhasil disimpan!';
+
+  @override
+  String get deleteWishlistTitle => 'Hapus Keinginan?';
+
+  @override
+  String get deleteWishlistConfirm => 'Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get wishlistDeleted => 'Berhasil dihapus';
+
+  @override
+  String errorPickingImage(String error) {
+    return 'Gagal mengambil gambar: $error';
+  }
+
+  @override
+  String get smartNotesTitle => 'Bundle Saya';
+
+  @override
+  String get emptySmartNotesMessage => 'Buat bundle pertama Anda!';
+
+  @override
+  String get historyTitle => 'Riwayat';
+
+  @override
+  String errorMessage(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get addSmartNote => 'Bundle Baru';
+
+  @override
+  String get noItemsInBundle => 'Tidak ada item dalam bundle ini';
+
+  @override
+  String payAmount(String amount) {
+    return 'Bayar $amount';
+  }
+
+  @override
+  String get paidAndCompleted => 'Lunas & Selesai';
+
+  @override
+  String get undoPay => 'Batal Bayar';
+
+  @override
+  String get deleteSmartNoteTitle => 'Hapus Bundle?';
+
+  @override
+  String confirmPaymentMessage(String amount) {
+    return 'Buat transaksi sejumlah $amount?';
+  }
+
+  @override
+  String get paymentSuccess => 'Lunas & Selesai!';
+
+  @override
+  String get undoPaymentTitle => 'Batalkan Pembayaran?';
+
+  @override
+  String get undoPaymentConfirm =>
+      'Ini akan menghapus transaksi, mengembalikan saldo, dan membuka kembali bundle.';
+
+  @override
+  String get undoAndReopen => 'Batal & Buka Kembali';
+
+  @override
+  String get purchaseReopened => 'Pembelian Dibuka Kembali';
+
+  @override
+  String get editSmartNote => 'Ubah Bundle';
+
+  @override
+  String get newSmartNote => 'Bundle Baru';
+
+  @override
+  String get smartNoteName => 'Nama Bundle';
+
+  @override
+  String get smartNoteNameHint => 'cth. Belanja Bulanan';
+
+  @override
+  String get itemsList => 'Daftar Item';
+
+  @override
+  String get addItem => 'Tambah Item';
+
+  @override
+  String get requiredShort => 'Wajib';
+
+  @override
+  String get additionalNotes => 'Catatan Tambahan';
+
+  @override
+  String get totalEstimate => 'Estimasi Total';
+
+  @override
+  String get saveBundle => 'Simpan Bundle';
+
+  @override
+  String get checkedTotal => 'Total Dipilih:';
+
+  @override
+  String get completed => 'Selesai';
+
+  @override
+  String get payAndFinish => 'Bayar & Selesai';
+
+  @override
+  String get payingWith => 'Bayar dengan';
+
+  @override
+  String get noItemsChecked => 'Tidak ada item yang dipilih!';
+
+  @override
+  String get smartNoteTransactionRecorded =>
+      'Transaksi dicatat & Bundle selesai!';
+
+  @override
+  String get totalDreamValue => 'Total Nilai Mimpi';
+
+  @override
+  String activeWishesCount(int count) {
+    return '$count Keinginan';
+  }
+
+  @override
+  String achievedDreamsCount(int count) {
+    return '$count Mimpi Tercapai! 🎉';
+  }
+
+  @override
+  String get billDataNotFound => 'Data Tagihan tidak ditemukan';
+
+  @override
+  String get wishlistDataNotFound => 'Data Wishlist tidak ditemukan';
+
+  @override
+  String get editReimbursementNotSupported =>
+      'Edit Reimbursement belum didukung sepenuhnya';
+
+  @override
+  String get transactions => 'Transaksi';
+
+  @override
+  String get noTransactionsFound => 'Tidak ada transaksi ditemukan';
+
+  @override
+  String get noTransactionsInCategory => 'Tidak ada transaksi di kategori ini';
+
+  @override
+  String get noDataForPeriod => 'Tidak ada data untuk periode ini';
+
+  @override
+  String get monthlyOverview => 'Ringkasan Bulanan';
+
+  @override
+  String get unlockPremiumStats => 'Buka Statistik Premium';
+
+  @override
+  String get totalBalance => 'Total Saldo';
+
+  @override
+  String get dailyBudget => 'Anggaran Harian';
+
+  @override
+  String get weeklyBudget => 'Anggaran Mingguan';
+
+  @override
+  String get monthlyBudget => 'Anggaran Bulanan';
+
+  @override
+  String get yearlyBudget => 'Anggaran Tahunan';
+
+  @override
+  String get wishlistPurchase => 'Pembelian Keinginan';
+
+  @override
+  String get billPayment => 'Pembayaran Tagihan';
+
+  @override
+  String get debtTransaction => 'Transaksi Utang';
+
+  @override
+  String get savingsTransaction => 'Transaksi Tabungan';
+
+  @override
+  String get transferTransaction => 'Transfer';
+
+  @override
+  String get pressBackAgainToExit => 'Tekan kembali lagi untuk keluar';
+
+  @override
+  String get quickRecord => 'Rekam Cepat';
+
+  @override
+  String get chatAction => 'Chat';
+
+  @override
+  String get scanAction => 'Pindai';
+
+  @override
+  String get voiceAction => 'Suara';
+
+  @override
+  String get filterDay => 'Hari';
+
+  @override
+  String get filterWeek => 'Minggu';
+
+  @override
+  String get filterMonth => 'Bulan';
+
+  @override
+  String get filterYear => 'Tahun';
+
+  @override
+  String get filterAll => 'Semua';
+
+  @override
+  String get editTransaction => 'Edit Transaksi';
+
+  @override
+  String get addTransaction => 'Tambah Transaksi';
+
+  @override
+  String get titleLabel => 'Judul';
+
+  @override
+  String get enterDescriptionHint => 'Masukkan deskripsi';
+
+  @override
+  String get enterTitleHint => 'Masukkan judul (contoh: Sarapan)';
+
+  @override
+  String get enterValidAmount => 'Mohon masukkan jumlah yang valid';
+
+  @override
+  String get selectWalletError => 'Mohon pilih dompet';
+
+  @override
+  String get selectDestinationWalletError => 'Mohon pilih dompet tujuan';
+
+  @override
+  String get selectCategoryError => 'Mohon pilih kategori';
+
+  @override
+  String get saveTransaction => 'Simpan Transaksi';
+
+  @override
+  String get loading => 'Memuat...';
+
+  @override
+  String error(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get expenseDetails => 'Detail Pengeluaran';
+
+  @override
+  String get incomeDetails => 'Detail Pemasukan';
+
+  @override
+  String get noExpensesFound => 'Tidak ada pengeluaran';
+
+  @override
+  String get noIncomeFound => 'Tidak ada pemasukan';
+
+  @override
+  String get forThisDate => 'untuk tanggal ini';
+
+  @override
+  String get timeFilterToday => 'Hari Ini';
+
+  @override
+  String get timeFilterThisWeek => 'Minggu Ini';
+
+  @override
+  String get timeFilterThisMonth => 'Bulan Ini';
+
+  @override
+  String get timeFilterThisYear => 'Tahun Ini';
+
+  @override
+  String get timeFilterAllTime => 'Semua Waktu';
+
+  @override
+  String get dailyAverage => 'Rata-rata Harian';
+
+  @override
+  String get projectedTotal => 'Total Proyeksi';
+
+  @override
+  String get spendingHabitsNote =>
+      'Berdasarkan kebiasaan belanja Anda bulan ini.';
+
+  @override
+  String get monthlyComparison => 'Perbandingan Bulanan';
+
+  @override
+  String get spendingLessNote =>
+      'Anda menghabiskan lebih sedikit dari bulan lalu!';
+
+  @override
+  String get spendingMoreNote => 'Pengeluaran lebih tinggi dari biasanya.';
+
+  @override
+  String get topSpenders => 'Pengeluaran Terbesar';
+
+  @override
+  String transactionsCount(int count) {
+    return '$count transaksi';
+  }
+
+  @override
+  String get activityHeatmap => 'Peta Aktivitas';
+
+  @override
+  String get less => 'Sedikit';
+
+  @override
+  String get more => 'Banyak';
+
+  @override
+  String get backupRecoveryTitle => 'Cadangan & Pemulihan';
+
+  @override
+  String get backupDescription =>
+      'Amankan data Anda dengan membuat file cadangan lokal (JSON). Anda dapat memulihkan file ini nanti.';
+
+  @override
+  String get createBackup => 'Buat Cadangan';
+
+  @override
+  String get restoreBackup => 'Pulihkan Cadangan';
+
+  @override
+  String get createBackupSubtitle => 'Ekspor semua data ke file JSON';
+
+  @override
+  String get restoreBackupSubtitle =>
+      'Impor data dari file JSON (Hapus data saat ini)';
+
+  @override
+  String get creatingBackup => 'Membuat cadangan...';
+
+  @override
+  String get restoringBackup => 'Memulihkan cadangan...';
+
+  @override
+  String backupSuccess(String path) {
+    return 'Cadangan berhasil disimpan ke:\n$path';
+  }
+
+  @override
+  String get restoreSuccess =>
+      'Cadangan berhasil dipulihkan!\nSilakan restart aplikasi jika data tidak muncul.';
+
+  @override
+  String backupError(String error) {
+    return 'Gagal membuat cadangan: $error';
+  }
+
+  @override
+  String restoreError(String error) {
+    return 'Gagal memulihkan cadangan: $error';
+  }
+
+  @override
+  String get restoreWarningTitle => '⚠️ Peringatan: Pulihkan Data';
+
+  @override
+  String get restoreWarningMessage =>
+      'Memulihkan cadangan akan MENGHAPUS SEMUA data saat ini di perangkat ini dan menggantinya dengan konten cadangan.\n\nTindakan ini tidak dapat dibatalkan. Apakah Anda yakin?';
+
+  @override
+  String get yesRestore => 'Ya, Pulihkan';
+
+  @override
+  String get exportDataTitle => 'Ekspor Data';
+
+  @override
+  String get dateRange => 'Rentang Tanggal';
+
+  @override
+  String get transactionType => 'Tipe Transaksi';
+
+  @override
+  String get allWallets => 'Semua Dompet';
+
+  @override
+  String get allCategories => 'Semua Kategori';
+
+  @override
+  String shareCsv(int count) {
+    return 'Bagikan CSV ($count item)';
+  }
+
+  @override
+  String get saveToDownloads => 'Simpan ke Unduhan';
+
+  @override
+  String get calculating => 'Menghitung...';
+
+  @override
+  String get noTransactionsMatch => 'Tidak ada transaksi yang sesuai filter.';
+
+  @override
+  String exportFailed(String error) {
+    return 'Ekspor gagal: $error';
+  }
+
+  @override
+  String saveFailed(String error) {
+    return 'Penyimpanan gagal: $error';
+  }
+
+  @override
+  String fileSavedTo(String path) {
+    return 'File disimpan ke: $path';
+  }
+
+  @override
+  String get lastMonth => 'Bulan Lalu';
+
+  @override
+  String get sendFeedbackTitle => 'Kirim Masukan';
+
+  @override
+  String get weValueYourVoice => 'Suara Anda Berharga';
+
+  @override
+  String get feedbackDescription =>
+      'Punya ide fitur baru? Menemukan bug? Atau sekadar ingin menyapa? Kami siap mendengarkan! Masukan Anda sangat berarti bagi perkembangan Ollo.';
+
+  @override
+  String get chatViaWhatsApp => 'Chat via WhatsApp';
+
+  @override
+  String get repliesInHours => 'Biasanya membalas dalam beberapa jam';
+
+  @override
+  String subCategoriesCount(int count) {
+    return '$count sub-kategori';
+  }
+
+  @override
+  String get unnamed => 'Tanpa Nama';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String errorPrefix(String error) {
+    return 'Kesalahan: $error';
+  }
+
+  @override
+  String get whatsappMessage =>
+      'Halo Tim Ollo, saya ingin memberikan masukan...';
+
+  @override
+  String get roadmapTitle => 'Peta Jalan Produk';
+
+  @override
+  String get roadmapInProgress => 'Sedang Dikerjakan';
+
+  @override
+  String get roadmapPlanned => 'Direncanakan';
+
+  @override
+  String get roadmapCompleted => 'Selesai';
+
+  @override
+  String get roadmapHighPriority => 'Prioritas Tinggi';
+
+  @override
+  String get roadmapBeta => 'BETA';
+
+  @override
+  String get roadmapDev => 'Dev';
+
+  @override
+  String get featureCloudBackupTitle => 'Cadangan Cloud (Google Drive)';
+
+  @override
+  String get featureCloudBackupDesc =>
+      'Sinkronkan data Anda dengan aman ke Google Drive pribadi.';
+
+  @override
+  String get featureAiInsightsTitle => 'Wawasan AI Tingkat Lanjut';
+
+  @override
+  String get featureAiInsightsDesc =>
+      'Analisis lebih mendalam tentang kebiasaan belanja Anda dengan tips yang dipersonalisasi.';
+
+  @override
+  String get featureDataExportTitle => 'Ekspor Data ke CSV/Excel';
+
+  @override
+  String get featureDataExportDesc =>
+      'Ekspor riwayat transaksi untuk analisis eksternal di Excel atau Sheets.';
+
+  @override
+  String get featureBudgetForecastingTitle => 'Perkiraan Anggaran';
+
+  @override
+  String get featureBudgetForecastingDesc =>
+      'Prediksi pengeluaran bulan depan berdasarkan data historis.';
+
+  @override
+  String get featureMultiCurrencyTitle => 'Dukungan Multi-Mata Uang';
+
+  @override
+  String get featureMultiCurrencyDesc =>
+      'Konversi waktu nyata untuk transaksi internasional.';
+
+  @override
+  String get featureReceiptScanningTitle => 'Pindai Struk OCR';
+
+  @override
+  String get featureReceiptScanningDesc =>
+      'Pindai struk untuk memasukkan detail transaksi secara otomatis.';
+
+  @override
+  String get featureLocalBackupTitle => 'Cadangan Lokal Penuh';
+
+  @override
+  String get featureLocalBackupDesc =>
+      'Cadangkan semua data aplikasi (transaksi, dompet, catatan, dll.) ke file lokal.';
+
+  @override
+  String get featureSmartNotesTitle => 'Catatan Cerdas';
+
+  @override
+  String get featureSmartNotesDesc =>
+      'Daftar belanja dengan daftar periksa dan perhitungan total.';
+
+  @override
+  String get featureRecurringTitle => 'Transaksi Berulang';
+
+  @override
+  String get featureRecurringDesc => 'Otomatiskan tagihan dan input gaji.';
+
+  @override
+  String get aboutTitle => 'Tentang Ollo';
+
+  @override
+  String get aboutPhilosophyTitle => 'Teman Finansial Anda';
+
+  @override
+  String get aboutPhilosophyDesc =>
+      'Ollo lahir dari keyakinan bahwa mengelola keuangan seharusnya tidak rumit. Kami ingin menciptakan teman finansial yang cerdas, ramah, dan membantu Anda mencapai impian finansial Anda, satu langkah demi satu langkah.';
+
+  @override
+  String get connectWithUs => 'Terhubung dengan kami';
+
+  @override
+  String version(String version) {
+    return 'Versi $version';
+  }
+
+  @override
+  String get helpTitle => 'Bantuan & Dukungan';
+
+  @override
+  String get helpIntroTitle => 'Ada yang bisa kami bantu?';
+
+  @override
+  String get helpIntroDesc =>
+      'Temukan jawaban atas pertanyaan umum atau hubungi tim dukungan kami secara langsung.';
+
+  @override
+  String get faqTitle => 'Pertanyaan yang Sering Diajukan (FAQ)';
+
+  @override
+  String get faqAddWalletQuestion => 'Bagaimana cara menambah dompet baru?';
+
+  @override
+  String get faqAddWalletAnswer =>
+      'Buka menu \"Dompet\" dan ketuk tombol \"+\" di pojok kanan atas. Pilih jenis dompet (Tunai, Bank, dll.), masukkan nama dan saldo awal, lalu simpan.';
+
+  @override
+  String get faqExportDataQuestion => 'Bisakah saya mengekspor data saya?';
+
+  @override
+  String get faqExportDataAnswer =>
+      'Ekspor data adalah fitur Premium yang akan segera hadir. Ini akan memungkinkan Anda mengekspor transaksi ke format CSV atau Excel.';
+
+  @override
+  String get faqResetDataQuestion => 'Bagaimana cara mereset data saya?';
+
+  @override
+  String get faqResetDataAnswer =>
+      'Saat ini, Anda dapat menghapus transaksi atau dompet satu per satu. Opsi reset pabrik penuh akan tersedia di menu Pengaturan pada pembaruan mendatang.';
+
+  @override
+  String get faqSecureDataQuestion => 'Apakah data saya aman?';
+
+  @override
+  String get faqSecureDataAnswer =>
+      'Ya, semua data Anda disimpan secara lokal di perangkat Anda. Kami tidak mengunggah data keuangan pribadi Anda ke server eksternal mana pun.';
+
+  @override
+  String get contactSupport => 'Hubungi Dukungan';
+
+  @override
+  String get reimbursementTitle => 'Reimbursement';
+
+  @override
+  String get reimbursementPending => 'Tertunda';
+
+  @override
+  String get reimbursementCompleted => 'Selesai';
+
+  @override
+  String get noPendingReimbursements => 'Tidak ada reimbursement tertunda';
+
+  @override
+  String get noCompletedReimbursements => 'Tidak ada reimbursement selesai';
+
+  @override
+  String get markPaid => 'Tandai Lunas';
+
+  @override
+  String get totalSavings => 'Total Tabungan';
+
+  @override
+  String get financialBuckets => 'Kantong Keuangan';
+
+  @override
+  String get noSavingsYet => 'Belum ada tabungan';
+
+  @override
+  String growthThisMonth(String percent) {
+    return '$percent% bulan ini';
+  }
+
+  @override
+  String get myCards => 'Kartu Saya';
+
+  @override
+  String selectedCount(int count) {
+    return '$count Dipilih';
+  }
+
+  @override
+  String get copyNumber => 'Salin Nomor';
+
+  @override
+  String get copyTemplate => 'Salin Template';
+
+  @override
+  String cardsCopied(int count) {
+    return '$count kartu disalin!';
+  }
+
+  @override
+  String get cardNumberCopied => 'Nomor kartu disalin!';
+
+  @override
+  String get cardTemplateCopied => 'Template kartu disalin!';
+
+  @override
+  String get noCardsYet => 'Belum ada kartu';
+
+  @override
+  String get addCardsMessage => 'Tambahkan akun bank atau e-wallet Anda';
+
+  @override
+  String get premiumTitle => 'Buka Potensi Penuh';
+
+  @override
+  String get premiumSubtitle =>
+      'Upgrade ke Premium untuk fitur canggih dan akses tanpa batas.';
+
+  @override
+  String get premiumAdvancedStats => 'Statistik Canggih';
+
+  @override
+  String get premiumAdvancedStatsDesc => 'Grafik interaktif & wawasan mendalam';
+
+  @override
+  String get premiumDataExport => 'Ekspor Data';
+
+  @override
+  String get premiumDataExportDesc => 'Ekspor ke CSV/Excel untuk cadangan';
+
+  @override
+  String get premiumUnlimitedWallets => 'Dompet Tanpa Batas';
+
+  @override
+  String get premiumUnlimitedWalletsDesc =>
+      'Buat dompet sebanyak yang Anda butuhkan';
+
+  @override
+  String get premiumSmartAlerts => 'Notifikasi Pintar';
+
+  @override
+  String get premiumSmartAlertsDesc => 'Dapatkan notifikasi sebelum boros';
+
+  @override
+  String get upgradeButton => 'Upgrade Sekarang - Rp 29.000 / Seumur Hidup';
+
+  @override
+  String get restorePurchase => 'Pulihkan Pembelian';
+
+  @override
+  String get youArePremium => 'Anda sudah Premium!';
+
+  @override
+  String get premiumWelcome => 'Selamat datang di Premium! 🌟';
+
+  @override
+  String get contactSupportMessage =>
+      'Halo Tim Support Ollo, saya butuh bantuan terkait...';
+
+  @override
+  String get category_food => 'Makan & Minum';
+
+  @override
+  String get category_transport => 'Transportasi';
+
+  @override
+  String get category_shopping => 'Belanja';
+
+  @override
+  String get category_housing => 'Tempat Tinggal';
+
+  @override
+  String get category_entertainment => 'Hiburan';
+
+  @override
+  String get category_health => 'Kesehatan';
+
+  @override
+  String get category_education => 'Pendidikan';
+
+  @override
+  String get category_personal => 'Pribadi';
+
+  @override
+  String get category_financial => 'Keuangan';
+
+  @override
+  String get category_family => 'Keluarga';
+
+  @override
+  String get category_salary => 'Gaji';
+
+  @override
+  String get category_business => 'Bisnis';
+
+  @override
+  String get category_investments => 'Investasi';
+
+  @override
+  String get category_gifts_income => 'Hadiah';
+
+  @override
+  String get category_other_income => 'Lainnya';
+
+  @override
+  String get subcategory_breakfast => 'Sarapan';
+
+  @override
+  String get subcategory_lunch => 'Makan Siang';
+
+  @override
+  String get subcategory_dinner => 'Makan Malam';
+
+  @override
+  String get subcategory_eateries => 'Tempat Makan';
+
+  @override
+  String get subcategory_snacks => 'Camilan';
+
+  @override
+  String get subcategory_drinks => 'Minuman';
+
+  @override
+  String get subcategory_groceries => 'Sembako';
+
+  @override
+  String get subcategory_delivery => 'Pesan Antar';
+
+  @override
+  String get subcategory_alcohol => 'Alkohol';
+
+  @override
+  String get subcategory_bus => 'Bus';
+
+  @override
+  String get subcategory_train => 'Kereta';
+
+  @override
+  String get subcategory_taxi => 'Taksi';
+
+  @override
+  String get subcategory_fuel => 'Bensin';
+
+  @override
+  String get subcategory_parking => 'Parkir';
+
+  @override
+  String get subcategory_maintenance => 'Perawatan';
+
+  @override
+  String get subcategory_insurance_car => 'Asuransi';
+
+  @override
+  String get subcategory_toll => 'Tol';
+
+  @override
+  String get subcategory_clothes => 'Pakaian';
+
+  @override
+  String get subcategory_electronics => 'Elektronik';
+
+  @override
+  String get subcategory_home => 'Rumah';
+
+  @override
+  String get subcategory_beauty => 'Kecantikan';
+
+  @override
+  String get subcategory_gifts => 'Hadiah';
+
+  @override
+  String get subcategory_software => 'Perangkat Lunak';
+
+  @override
+  String get subcategory_tools => 'Peralatan';
+
+  @override
+  String get subcategory_rent => 'Sewa';
+
+  @override
+  String get subcategory_mortgage => 'KPR';
+
+  @override
+  String get subcategory_utilities => 'Tagihan';
+
+  @override
+  String get subcategory_internet => 'Internet';
+
+  @override
+  String get subcategory_maintenance_home => 'Perawatan';
+
+  @override
+  String get subcategory_furniture => 'Perabotan';
+
+  @override
+  String get subcategory_services => 'Jasa';
+
+  @override
+  String get subcategory_movies => 'Bioskop';
+
+  @override
+  String get subcategory_games => 'Game';
+
+  @override
+  String get subcategory_streaming => 'Streaming';
+
+  @override
+  String get subcategory_events => 'Acara';
+
+  @override
+  String get subcategory_hobbies => 'Hobi';
+
+  @override
+  String get subcategory_travel => 'Travel';
+
+  @override
+  String get monthlyCommitment => 'Komitmen Bulanan';
+
+  @override
+  String get upcomingBill => 'Tagihan Mendatang';
+
+  @override
+  String get noUpcomingBills => 'Tidak ada tagihan mendatang';
+
+  @override
+  String get today => 'Hari Ini';
+
+  @override
+  String get tomorrow => 'Besok';
+
+  @override
+  String inDays(Object days) {
+    return 'Dalam $days hari';
+  }
+
+  @override
+  String get needTwoWallets => 'Perlu 2+ dompet';
+
+  @override
+  String get nettBalance => 'Saldo Bersih';
+
+  @override
+  String get activeDebt => 'Hutang Aktif';
+
+  @override
+  String get last30Days => '30 hari terakhir';
+
+  @override
+  String get currentBalance => 'Saldo Saat Ini';
+
+  @override
+  String get premiumMember => 'Anggota Premium';
+
+  @override
+  String get upgradeToPremium => 'Upgrade ke Premium';
+
+  @override
+  String get unlimitedAccess => 'Anda punya akses tanpa batas!';
+
+  @override
+  String get unlockFeatures => 'Buka semua fitur & hapus batas.';
+
+  @override
+  String get from => 'Dari';
+
+  @override
+  String get subcategory_music => 'Musik';
+
+  @override
+  String get subcategory_doctor => 'Dokter';
+
+  @override
+  String get subcategory_pharmacy => 'Apotek';
+
+  @override
+  String get subcategory_gym => 'Gym';
+
+  @override
+  String get subcategory_insurance_health => 'Asuransi';
+
+  @override
+  String get subcategory_mental_health => 'Kesehatan Mental';
+
+  @override
+  String get subcategory_sports => 'Olahraga';
+
+  @override
+  String get subcategory_tuition => 'SPP';
+
+  @override
+  String get subcategory_books => 'Buku';
+
+  @override
+  String get subcategory_courses => 'Kursus';
+
+  @override
+  String get subcategory_supplies => 'Perlengkapan';
+
+  @override
+  String get subcategory_haircut => 'Potong Rambut';
+
+  @override
+  String get subcategory_spa => 'Spa';
+
+  @override
+  String get subcategory_cosmetics => 'Kosmetik';
+
+  @override
+  String get subcategory_taxes => 'Pajak';
+
+  @override
+  String get subcategory_fees => 'Biaya Admin';
+
+  @override
+  String get subcategory_fines => 'Denda';
+
+  @override
+  String get subcategory_insurance_life => 'Asuransi';
+
+  @override
+  String get subcategory_childcare => 'Pengasuhan Anak';
+
+  @override
+  String get subcategory_toys => 'Mainan';
+
+  @override
+  String get subcategory_school_kids => 'Sekolah';
+
+  @override
+  String get subcategory_pets => 'Hewan Peliharaan';
+
+  @override
+  String get subcategory_monthly => 'Bulanan';
+
+  @override
+  String get subcategory_weekly => 'Mingguan';
+
+  @override
+  String get subcategory_bonus => 'Bonus';
+
+  @override
+  String get subcategory_overtime => 'Lembur';
+
+  @override
+  String get subcategory_sales => 'Penjualan';
+
+  @override
+  String get subcategory_profit => 'Keuntungan';
+
+  @override
+  String get subcategory_dividends => 'Dividen';
+
+  @override
+  String get subcategory_interest => 'Bunga';
+
+  @override
+  String get subcategory_crypto => 'Kripto';
+
+  @override
+  String get subcategory_stocks => 'Saham';
+
+  @override
+  String get subcategory_real_estate => 'Properti';
+
+  @override
+  String get subcategory_birthday => 'Ulang Tahun';
+
+  @override
+  String get subcategory_holiday => 'Hari Raya';
+
+  @override
+  String get subcategory_allowance => 'Uang Saku';
+
+  @override
+  String get subcategory_refunds => 'Pengembalian Dana';
+
+  @override
+  String get subcategory_grants => 'Hibah';
+
+  @override
+  String get subcategory_lottery => 'Lotere';
+
+  @override
+  String get subcategory_selling => 'Penjualan Barang';
+
+  @override
+  String get editProfileTitle => 'Edit Profil';
+
+  @override
+  String get nameLabel => 'Nama';
+
+  @override
+  String get emailLabel => 'Email (Opsional)';
+
+  @override
+  String get uploadPhoto => 'Unggah Foto';
+
+  @override
+  String get saveChanges => 'Simpan Perubahan';
+
+  @override
+  String get listeningMessage => 'Ollo AI Mendengarkan...';
+
+  @override
+  String get quickRecordTitle => 'Catat Cepat';
+
+  @override
+  String get saySomethingHint => 'Katakan \'Makan 50rb\'...';
+
+  @override
+  String get stopAndProcess => 'Stop & Proses';
+
+  @override
+  String get textInputHint => 'cth. \"Makan Siang 50rb\", \"Gaji 10jt\"';
+
+  @override
+  String get draftReady => 'Draf Siap';
+
+  @override
+  String get saveAdjust => 'Simpan / Sesuaikan';
+
+  @override
+  String get notFound => 'Tidak Ditemukan';
+
+  @override
+  String get selectWallet => 'Pilih Dompet';
 }

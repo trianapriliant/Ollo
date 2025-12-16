@@ -7,6 +7,7 @@ import '../wallet_summary_provider.dart';
 
 import '../../../debts/data/debt_repository.dart';
 import '../../../debts/domain/debt.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class WalletSummaryCard extends ConsumerWidget {
   const WalletSummaryCard({super.key});
@@ -66,7 +67,7 @@ class WalletSummaryCard extends ConsumerWidget {
           return Column(
             children: [
               Text(
-                'Total Balance',
+                AppLocalizations.of(context)!.totalBalance,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.white.withOpacity(0.8),
                   fontWeight: FontWeight.w500,
@@ -90,7 +91,7 @@ class WalletSummaryCard extends ConsumerWidget {
                   // Nett Balance
                   _buildGlassBadge(
                     context,
-                    label: 'Nett: ${currency.format(nettBalance)}',
+                    label: '${AppLocalizations.of(context)!.nettBalance}: ${currency.format(nettBalance)}',
                     color: Colors.white,
                   ),
                   
@@ -99,7 +100,7 @@ class WalletSummaryCard extends ConsumerWidget {
                     const SizedBox(width: 8),
                     _buildGlassBadge(
                       context,
-                      label: 'Debt: ${currency.format(totalDebt)}',
+                      label: '${AppLocalizations.of(context)!.activeDebt}: ${currency.format(totalDebt)}',
                       color: Colors.white,
                     ),
                   ],
@@ -119,7 +120,7 @@ class WalletSummaryCard extends ConsumerWidget {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    '($sign${currency.format(state.periodChange.abs())}) last 30 days',
+                    '($sign${currency.format(state.periodChange.abs())}) ${AppLocalizations.of(context)!.last30Days}',
                     style: AppTextStyles.bodySmall.copyWith(
                       color: Colors.white.withOpacity(0.9),
                     ),
@@ -134,7 +135,7 @@ class WalletSummaryCard extends ConsumerWidget {
         ),
         error: (error, stack) => Center(
           child: Text(
-            'Error loading summary',
+            AppLocalizations.of(context)!.error(error.toString()),
             style: AppTextStyles.bodySmall.copyWith(color: Colors.white),
           ),
         ),

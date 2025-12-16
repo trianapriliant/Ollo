@@ -8,6 +8,7 @@ import '../../settings/presentation/currency_provider.dart';
 import '../../savings/data/saving_repository.dart';
 import '../../savings/domain/saving_goal.dart';
 import '../../savings/domain/saving_log.dart';
+import '../../../localization/generated/app_localizations.dart';
 import 'add_edit_saving_screen.dart';
 
 class SavingsScreen extends ConsumerWidget {
@@ -17,6 +18,7 @@ class SavingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final savingsAsync = ref.watch(savingListProvider);
     final currency = ref.watch(currencyProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -27,7 +29,7 @@ class SavingsScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: Text('Savings', style: AppTextStyles.h2),
+        title: Text(l10n.savings, style: AppTextStyles.h2),
         centerTitle: true,
         actions: [
           IconButton(
@@ -98,7 +100,7 @@ class SavingsScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Total Savings',
+                              l10n.totalSavings,
                               style: AppTextStyles.bodyMedium.copyWith(color: Colors.white.withOpacity(0.8)),
                             ),
                             const SizedBox(height: 8),
@@ -124,7 +126,7 @@ class SavingsScreen extends ConsumerWidget {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        '${growthPercent >= 0 ? '+' : ''}${growthPercent.toStringAsFixed(1)}% this month',
+                                        '${growthPercent >= 0 ? '+' : ''}${l10n.growthThisMonth(growthPercent.toStringAsFixed(1))}',
                                         style: AppTextStyles.bodySmall.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -137,7 +139,7 @@ class SavingsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 24),
                       
-                      Text('Financial Buckets', style: AppTextStyles.h3),
+                      Text(l10n.financialBuckets, style: AppTextStyles.h3),
                       const SizedBox(height: 16),
 
                       if (savings.isEmpty)
@@ -148,7 +150,7 @@ class SavingsScreen extends ConsumerWidget {
                               children: [
                                 Icon(Icons.savings_outlined, size: 64, color: Colors.grey[300]),
                                 const SizedBox(height: 16),
-                                Text('No savings yet', style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey)),
+                                Text(l10n.noSavingsYet, style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey)),
                               ],
                             ),
                           ),
