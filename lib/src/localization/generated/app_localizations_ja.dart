@@ -9,6 +9,15 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get customizeMenu => 'Customize Menu';
+
+  @override
+  String get menuOrder => 'Menu Order';
+
+  @override
+  String get resetMenu => 'Reset Menu';
+
+  @override
   String get home => 'ホーム';
 
   @override

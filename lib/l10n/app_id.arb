@@ -1,4 +1,7 @@
 {
+  "customizeMenu": "Atur Menu",
+  "menuOrder": "Urutan Menu",
+  "resetMenu": "Reset Menu",
   "home": "Beranda",
   "wallet": "Dompet",
   "profile": "Profil",

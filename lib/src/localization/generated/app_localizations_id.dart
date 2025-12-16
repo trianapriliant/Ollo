@@ -9,6 +9,15 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get customizeMenu => 'Atur Menu';
+
+  @override
+  String get menuOrder => 'Urutan Menu';
+
+  @override
+  String get resetMenu => 'Reset Menu';
+
+  @override
   String get home => 'Beranda';
 
   @override

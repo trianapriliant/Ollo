@@ -1,4 +1,7 @@
 {
+  "customizeMenu": "Customize Menu",
+  "menuOrder": "Menu Order",
+  "resetMenu": "Reset Menu",
   "home": "Home",
   "wallet": "Wallet",
   "profile": "Profile",

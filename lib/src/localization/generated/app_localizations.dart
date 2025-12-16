@@ -106,6 +106,24 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
+  /// No description provided for @customizeMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Menu'**
+  String get customizeMenu;
+
+  /// No description provided for @menuOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Order'**
+  String get menuOrder;
+
+  /// No description provided for @resetMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Menu'**
+  String get resetMenu;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:

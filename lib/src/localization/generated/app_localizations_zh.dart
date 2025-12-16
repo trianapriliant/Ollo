@@ -9,6 +9,15 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get customizeMenu => 'Customize Menu';
+
+  @override
+  String get menuOrder => 'Menu Order';
+
+  @override
+  String get resetMenu => 'Reset Menu';
+
+  @override
   String get home => '首页';
 
   @override

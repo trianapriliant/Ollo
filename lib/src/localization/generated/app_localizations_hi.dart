@@ -9,6 +9,15 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get customizeMenu => 'Customize Menu';
+
+  @override
+  String get menuOrder => 'Menu Order';
+
+  @override
+  String get resetMenu => 'Reset Menu';
+
+  @override
   String get home => 'होम';
 
   @override
