@@ -65,10 +65,7 @@ class _OlloAppState extends ConsumerState<OlloApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('id'), // Indonesian
-      ],
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

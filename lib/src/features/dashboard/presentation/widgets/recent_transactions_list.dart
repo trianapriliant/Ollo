@@ -14,10 +14,7 @@ import '../dashboard_filter_provider.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
 import '../../../../localization/generated/app_localizations.dart';
-
-// Removed local walletsListProvider to use global one from wallet_provider.dart
-
-
+import '../../../categories/presentation/category_localization_helper.dart';
 
 class RecentTransactionsList extends ConsumerWidget {
   final List<Transaction> transactions;
@@ -201,6 +198,33 @@ class RecentTransactionsList extends ConsumerWidget {
                       // System defaults to expense, UNLESS it's a debt income OR savings withdraw
                       final isExpense = (transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw;
 
+                      // --- New Localization Logic ---
+                      
+                      // Find SubCategory object if exists
+                      SubCategory? subCategory;
+                      if (category != null && transaction.subCategoryId != null && category.subCategories != null) {
+                         try {
+                           subCategory = category.subCategories!.firstWhere((s) => s.id == transaction.subCategoryId);
+                         } catch (_) {}
+                      }
+
+                      // Determine Display Title (Localization Logic)
+                      String displayTitle = transaction.title;
+                      
+                      if (subCategory != null) {
+                        // If title matches the original subcategory name (likely English/Default), use localized name
+                        if (transaction.title.toLowerCase() == (subCategory.name ?? '').toLowerCase()) {
+                          displayTitle = CategoryLocalizationHelper.getLocalizedSubCategoryName(context, subCategory);
+                        }
+                      } else if (category != null) {
+                        // If title matches the original category name, use localized name
+                        if (transaction.title.toLowerCase() == (category.name ?? '').toLowerCase()) {
+                          displayTitle = CategoryLocalizationHelper.getLocalizedCategoryName(context, category);
+                        }
+                      }
+                      
+                      // -------------------------------
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: GestureDetector(
@@ -209,7 +233,7 @@ class RecentTransactionsList extends ConsumerWidget {
                           },
                           child: _buildActivityItem(
                             context,
-                            transaction.title,
+                            displayTitle,
                             walletName,
                             transaction.amount,
                             category,
@@ -267,6 +291,7 @@ class RecentTransactionsList extends ConsumerWidget {
 
   Widget _buildDateHeader(BuildContext context, DateTime date, double dailyTotal, Currency currency) {
     final now = DateTime.now();
+    // ignore: unused_local_variable
     final today = DateTime(now.year, now.month, now.day);
 
     String dateLabel = DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString()).format(date);
