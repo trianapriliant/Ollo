@@ -171,6 +171,8 @@
   "sysCatSmartNotesDesc": "Automated transactions from Smart Bundles",
   "sysCatReimburse": "Reimburse",
   "sysCatReimburseDesc": "Reimbursement tracking system",
+  "sysCatAdjustment": "Balance Adjustment",
+  "sysCatAdjustmentDesc": "Manual wallet balance corrections",
   "budgetsTitle": "Budgets",
   "noBudgetsYet": "No budgets yet",
   "createBudget": "Create Budget",
@@ -278,6 +280,19 @@
   "noneRecordOnly": "None (Just record)",
   "confirmPayment": "Confirm Payment",
   "paymentRecorded": "Payment recorded successfully!",
+  "balanceUpdateDetected": "Balance Update Detected",
+  "recordAsTransaction": "Record as Transaction?",
+  "recordAsTransactionDesc": "The balance has changed by {amount}. Do you want to record this difference as a transaction?",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustmentTitle": "Balance Adjustment",
+  "skip": "No, Adjust Only",
+  "record": "Yes, Record",
   "deleteDebtWarning": "This will remove the debt record. Wallet balances will NOT be reverted automatically.",
   "billsTitle": "Bills",
   "unpaid": "Unpaid",

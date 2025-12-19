@@ -9,6 +9,8 @@ import '../../wallets/data/wallet_repository.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
+import '../../transactions/data/transaction_repository.dart';
+import '../../transactions/domain/transaction.dart';
 
 class AddEditWalletScreen extends ConsumerStatefulWidget {
   final Wallet? wallet;
@@ -338,28 +340,104 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
 
   Future<void> _saveWallet() async {
     final name = _nameController.text;
-    final balance = double.tryParse(_balanceController.text) ?? 0.0;
+    final newBalance = double.tryParse(_balanceController.text) ?? 0.0;
 
     if (name.isEmpty) return;
 
-    final repo = await ref.read(walletRepositoryProvider.future);
+    final walletRepo = await ref.read(walletRepositoryProvider.future);
+    final transactionRepo = await ref.read(transactionRepositoryProvider.future);
     
     if (widget.wallet != null) {
-      final updatedWallet = widget.wallet!
-        ..name = name
-        ..balance = balance
-        ..colorValue = _selectedColor.value
-        ..iconPath = _selectedIcon;
-      await repo.addWallet(updatedWallet);
+      final oldBalance = widget.wallet!.balance;
+      final difference = newBalance - oldBalance;
+
+      if (difference.abs() > 0.01) { // Floating point comparison
+        final l10n = AppLocalizations.of(context)!;
+        final currency = ref.read(currencyProvider);
+        
+        final shouldRecord = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(l10n.balanceUpdateDetected),
+            content: Text(l10n.recordAsTransactionDesc(currency.format(difference.abs()))),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(l10n.skip),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(l10n.record),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldRecord == true) {
+           // 1. Create Transaction (Balance is updated automatically by repo)
+           final transaction = Transaction.create(
+            title: l10n.adjustmentTitle,
+            amount: difference.abs(),
+            type: difference > 0 ? TransactionType.income : TransactionType.expense,
+            date: DateTime.now(),
+            walletId: widget.wallet!.externalId ?? widget.wallet!.id.toString(),
+            note: 'Manual balance adjustment',
+            categoryId: 'system',
+            subCategoryId: 'adjustment',
+            subCategoryName: 'Adjustment',
+            subCategoryIcon: 'tune',
+          );
+          
+          await transactionRepo.addTransaction(transaction);
+
+          // 2. Update other wallet details safely (Name, Color, Icon)
+          // We fetch fresh to avoid race conditions or overwriting the balance update from transaction
+          // But since isar is synchronous-ish for this flow, we can just update the object
+          // EXCEPT: if we update widget.wallet directly, we might overwrite the balance change made by addTransaction?
+          // TransactionRepository updates the wallet balance looking up by ID.
+          // So we should re-fetch or just update the non-balance fields.
+          
+          // Better approach: Let transaction update balance.
+          // Then update the REST of the wallet fields (name, color, icon) but NOT balance.
+          
+          final freshWallet = (await walletRepo.watchWallets().first).firstWhere((w) => w.id == widget.wallet!.id);
+          
+          freshWallet
+            ..name = name
+            ..colorValue = _selectedColor.value
+            ..iconPath = _selectedIcon;
+            // Do NOT set freshWallet.balance = newBalance, acts as double update or conflict
+          
+          await walletRepo.addWallet(freshWallet);
+
+        } else {
+          // Skip recording: Just force update everything including balance
+          final updatedWallet = widget.wallet!
+            ..name = name
+            ..balance = newBalance
+            ..colorValue = _selectedColor.value
+            ..iconPath = _selectedIcon;
+          await walletRepo.addWallet(updatedWallet);
+        }
+      } else {
+         // No significant balance change
+         final updatedWallet = widget.wallet!
+            ..name = name
+            ..balance = newBalance
+            ..colorValue = _selectedColor.value
+            ..iconPath = _selectedIcon;
+          await walletRepo.addWallet(updatedWallet);
+      }
     } else {
+      // New Wallet
       final newWallet = Wallet.create(
         name: name,
-        balance: balance,
+        balance: newBalance,
         colorValue: _selectedColor.value,
         iconPath: _selectedIcon,
         externalId: DateTime.now().millisecondsSinceEpoch.toString(),
       );
-      await repo.addWallet(newWallet);
+      await walletRepo.addWallet(newWallet);
     }
 
     if (mounted) context.pop();

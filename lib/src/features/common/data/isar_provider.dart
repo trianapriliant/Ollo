@@ -58,6 +58,25 @@ final isarProvider = FutureProvider<Isar>((ref) async {
         });
       }
     }
+
+    // Migration: Add System Category if missing
+    final systemCatCheck = await isar.categorys.filter().externalIdEqualTo('system').findFirst();
+    if (systemCatCheck == null) {
+      final newSystemCat = Category(
+        externalId: 'system',
+        name: 'System',
+        iconPath: 'settings',
+        type: CategoryType.expense,
+        colorValue: 0xFF9E9E9E, // Grey
+        subCategories: [
+          SubCategory(id: 'adjustment', name: 'Adjustment', iconPath: 'tune'),
+          SubCategory(id: 'fee_sys', name: 'Fees', iconPath: 'payments'),
+        ],
+      );
+      await isar.writeTxn(() async {
+        await isar.categorys.put(newSystemCat);
+      });
+    }
   }
 
   return isar;
@@ -297,6 +316,17 @@ final defaultCategories = [
         SubCategory(id: 'grants', name: 'Grants', iconPath: 'school'),
         SubCategory(id: 'lottery', name: 'Lottery', iconPath: 'casino'),
         SubCategory(id: 'selling', name: 'Selling', iconPath: 'storefront'),
+      ],
+    ),
+    Category(
+      externalId: 'system',
+      name: 'System',
+      iconPath: 'settings',
+      type: CategoryType.expense,
+      colorValue: 0xFF9E9E9E, // Grey
+      subCategories: [
+        SubCategory(id: 'adjustment', name: 'Adjustment', iconPath: 'tune'),
+        SubCategory(id: 'fee_sys', name: 'Fees', iconPath: 'payments'),
       ],
     ),
 ];

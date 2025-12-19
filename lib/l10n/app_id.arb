@@ -147,6 +147,8 @@
   "sysCatSmartNotesDesc": "Transaksi otomatis dari Bundle Cerdas",
   "sysCatReimburse": "Reimburse",
   "sysCatReimburseDesc": "Sistem pelacakan reimbursement",
+  "sysCatAdjustment": "Penyesuaian Saldo",
+  "sysCatAdjustmentDesc": "Koreksi saldo dompet manual",
   "budgetsTitle": "Anggaran",
   "noBudgetsYet": "Belum ada anggaran",
   "createBudget": "Buat Anggaran",
@@ -212,6 +214,19 @@
   "noneRecordOnly": "Tanpa Dompet (Hanya catat)",
   "confirmPayment": "Konfirmasi Pembayaran",
   "paymentRecorded": "Pembayaran berhasil dicatat!",
+  "balanceUpdateDetected": "Perubahan Saldo Terdeteksi",
+  "recordAsTransaction": "Catat sebagai Transaksi?",
+  "recordAsTransactionDesc": "Saldo berubah sejumlah {amount}. Apakah Anda ingin mencatat selisih ini sebagai transaksi?",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustmentTitle": "Penyesuaian Saldo",
+  "skip": "Tidak, Ubah Saja",
+  "record": "Ya, Catat",
   "deleteDebtWarning": "Ini akan menghapus catatan. Saldo dompet TIDAK akan dikembalikan otomatis.",
   "billsTitle": "Tagihan",
   "unpaid": "Belum Bayar",

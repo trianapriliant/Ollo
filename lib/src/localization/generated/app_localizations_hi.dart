@@ -467,6 +467,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sysCatReimburseDesc => 'प्रतिपूर्ति ट्रैकिंग प्रणाली';
 
   @override
+  String get sysCatAdjustment => 'Balance Adjustment';
+
+  @override
+  String get sysCatAdjustmentDesc => 'Manual wallet balance corrections';
+
+  @override
   String get budgetsTitle => 'बजट';
 
   @override
@@ -673,6 +679,26 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get paymentRecorded => 'भुगतान दर्ज किया गया!';
+
+  @override
+  String get balanceUpdateDetected => 'Balance Update Detected';
+
+  @override
+  String get recordAsTransaction => 'Record as Transaction?';
+
+  @override
+  String recordAsTransactionDesc(String amount) {
+    return 'The balance has changed by $amount. Do you want to record this difference as a transaction?';
+  }
+
+  @override
+  String get adjustmentTitle => 'Balance Adjustment';
+
+  @override
+  String get skip => 'No, Adjust Only';
+
+  @override
+  String get record => 'Yes, Record';
 
   @override
   String get deleteDebtWarning =>

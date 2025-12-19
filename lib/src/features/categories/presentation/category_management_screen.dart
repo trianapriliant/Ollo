@@ -296,6 +296,12 @@ class _SystemCategoryList extends StatelessWidget {
         'color': Colors.orangeAccent,
         'description': AppLocalizations.of(context)!.sysCatReimburseDesc,
       },
+      {
+        'name': AppLocalizations.of(context)!.sysCatAdjustment,
+        'icon': Icons.tune_rounded,
+        'color': Colors.blueGrey,
+        'description': AppLocalizations.of(context)!.sysCatAdjustmentDesc,
+      },
     ];
 
     return ListView.separated(

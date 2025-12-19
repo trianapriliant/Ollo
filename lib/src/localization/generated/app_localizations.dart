@@ -994,6 +994,18 @@ abstract class AppLocalizations {
   /// **'Reimbursement tracking system'**
   String get sysCatReimburseDesc;
 
+  /// No description provided for @sysCatAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Adjustment'**
+  String get sysCatAdjustment;
+
+  /// No description provided for @sysCatAdjustmentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual wallet balance corrections'**
+  String get sysCatAdjustmentDesc;
+
   /// No description provided for @budgetsTitle.
   ///
   /// In en, this message translates to:
@@ -1383,6 +1395,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment recorded successfully!'**
   String get paymentRecorded;
+
+  /// No description provided for @balanceUpdateDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Update Detected'**
+  String get balanceUpdateDetected;
+
+  /// No description provided for @recordAsTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Record as Transaction?'**
+  String get recordAsTransaction;
+
+  /// No description provided for @recordAsTransactionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The balance has changed by {amount}. Do you want to record this difference as a transaction?'**
+  String recordAsTransactionDesc(String amount);
+
+  /// No description provided for @adjustmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Adjustment'**
+  String get adjustmentTitle;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'No, Adjust Only'**
+  String get skip;
+
+  /// No description provided for @record.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Record'**
+  String get record;
 
   /// No description provided for @deleteDebtWarning.
   ///

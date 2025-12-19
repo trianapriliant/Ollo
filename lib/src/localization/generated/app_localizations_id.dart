@@ -468,6 +468,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get sysCatReimburseDesc => 'Sistem pelacakan reimbursement';
 
   @override
+  String get sysCatAdjustment => 'Penyesuaian Saldo';
+
+  @override
+  String get sysCatAdjustmentDesc => 'Koreksi saldo dompet manual';
+
+  @override
   String get budgetsTitle => 'Anggaran';
 
   @override
@@ -675,6 +681,26 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get paymentRecorded => 'Pembayaran berhasil dicatat!';
+
+  @override
+  String get balanceUpdateDetected => 'Perubahan Saldo Terdeteksi';
+
+  @override
+  String get recordAsTransaction => 'Catat sebagai Transaksi?';
+
+  @override
+  String recordAsTransactionDesc(String amount) {
+    return 'Saldo berubah sejumlah $amount. Apakah Anda ingin mencatat selisih ini sebagai transaksi?';
+  }
+
+  @override
+  String get adjustmentTitle => 'Penyesuaian Saldo';
+
+  @override
+  String get skip => 'Tidak, Ubah Saja';
+
+  @override
+  String get record => 'Ya, Catat';
 
   @override
   String get deleteDebtWarning =>

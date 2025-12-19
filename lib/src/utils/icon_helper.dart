@@ -261,6 +261,11 @@ class IconHelper {
       case 'selling': return Icons.storefront;
       case 'storefront': return Icons.storefront; // Match seed: storefront
       
+      case 'settings': return Icons.settings;
+      case 'system': return Icons.settings_applications;
+      case 'adjustment': return Icons.tune;
+      case 'tune': return Icons.tune;
+      
       case 'undo': return Icons.undo; // Refunds
       case 'casino': return Icons.casino; // Lottery
 

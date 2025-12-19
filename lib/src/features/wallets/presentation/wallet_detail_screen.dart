@@ -204,11 +204,65 @@ class WalletDetailScreen extends ConsumerWidget {
             onPressed: () async {
               final newBalance = double.tryParse(controller.text);
               if (newBalance != null) {
-                final updatedWallet = wallet..balance = newBalance;
-                final repository = await ref.read(walletRepositoryProvider.future);
-                await repository.updateWallet(updatedWallet);
-                if (context.mounted) {
-                  context.pop();
+                final oldBalance = wallet.balance;
+                final difference = newBalance - oldBalance;
+                
+                // If there is a difference, ask to record
+                if (difference.abs() > 0.01) {
+                  // Initial dialog close
+                  context.pop(); 
+                  
+                  final l10n = AppLocalizations.of(context)!;
+                  final currency = ref.read(currencyProvider);
+                  
+                  // Show confirmation/tracking dialog
+                  final shouldRecord = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(l10n.balanceUpdateDetected),
+                      content: Text(l10n.recordAsTransactionDesc(currency.format(difference.abs()))),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false), // Skip
+                          child: Text(l10n.skip),
+                        ),
+                        FilledButton(
+                          onPressed: () => Navigator.pop(context, true), // Record
+                          child: Text(l10n.record),
+                        ),
+                      ],
+                    ),
+                  );
+                  
+                  if (shouldRecord == true) {
+                    final transactionRepo = await ref.read(transactionRepositoryProvider.future);
+                    
+                    final transaction = Transaction.create(
+                      title: l10n.adjustmentTitle,
+                      amount: difference.abs(),
+                      type: difference > 0 ? TransactionType.income : TransactionType.expense,
+                      date: DateTime.now(),
+                      walletId: wallet.externalId ?? wallet.id.toString(),
+                      note: 'Manual balance adjustment',
+                      categoryId: 'system',
+                      subCategoryId: 'adjustment',
+                      subCategoryName: 'Adjustment',
+                      subCategoryIcon: 'tune',
+                    );
+                    
+                    // This adds transaction AND updates wallet balance logic in repo
+                    await transactionRepo.addTransaction(transaction);
+                    
+                  } else {
+                    // Update directly without recording transaction
+                    final updatedWallet = wallet..balance = newBalance;
+                    final repository = await ref.read(walletRepositoryProvider.future);
+                    await repository.updateWallet(updatedWallet);
+                  }
+                  
+                } else {
+                   // No change, just close
+                   if (context.mounted) context.pop();
                 }
               }
             },

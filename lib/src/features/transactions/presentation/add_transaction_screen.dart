@@ -244,22 +244,55 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     }
                 }
 
-                return TransactionCategorySelector(
-                  type: type,
-                  selectedItem: _selectedItem,
-                  transactionToEdit: widget.transactionToEdit,
-                  items: items,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedItem = value;
-                      if (value != null && _titleController.text.isEmpty) {
-                         // Only auto-fill title if empty. 
-                         // Refinement: If user manually changes category, they might want title updated IF it was previously the category name.
-                         // But for Quick Record integration, we want to keep the parsed title "Gaji".
-                        _titleController.text = value.name;
-                      }
-                    });
-                  },
+                return Column(
+                  children: [
+                    if (widget.transactionToEdit?.categoryId == 'system')
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.lock, color: Colors.grey),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.systemCategoryTitle,
+                                    style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
+                                  ),
+                                  Text(
+                                    _selectedItem?.name ?? 'System',
+                                    style: AppTextStyles.bodyLarge.copyWith(color: Colors.grey[800]),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      TransactionCategorySelector(
+                        type: type,
+                        selectedItem: _selectedItem,
+                        transactionToEdit: widget.transactionToEdit,
+                        items: items,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedItem = value;
+                            if (value != null && _titleController.text.isEmpty) {
+                              _titleController.text = value.name;
+                            }
+                          });
+                        },
+                      ),
+                  ],
                 );
               },
               loading: () => const CircularProgressIndicator(),

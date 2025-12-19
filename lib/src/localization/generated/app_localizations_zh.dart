@@ -459,6 +459,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sysCatReimburseDesc => '报销追踪系统';
 
   @override
+  String get sysCatAdjustment => 'Balance Adjustment';
+
+  @override
+  String get sysCatAdjustmentDesc => 'Manual wallet balance corrections';
+
+  @override
   String get budgetsTitle => '预算';
 
   @override
@@ -664,6 +670,26 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get paymentRecorded => '已记录！';
+
+  @override
+  String get balanceUpdateDetected => 'Balance Update Detected';
+
+  @override
+  String get recordAsTransaction => 'Record as Transaction?';
+
+  @override
+  String recordAsTransactionDesc(String amount) {
+    return 'The balance has changed by $amount. Do you want to record this difference as a transaction?';
+  }
+
+  @override
+  String get adjustmentTitle => 'Balance Adjustment';
+
+  @override
+  String get skip => 'No, Adjust Only';
+
+  @override
+  String get record => 'Yes, Record';
 
   @override
   String get deleteDebtWarning => '钱包余额不会自动恢复。';
