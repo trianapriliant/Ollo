@@ -356,6 +356,8 @@
   "debtTransaction": "Transaksi Utang",
   "savingsTransaction": "Transaksi Tabungan",
   "transferTransaction": "Transfer",
+  "transferFee": "Biaya Transfer",
+  "transferFeeHint": "Biaya (Opsional)",
   "pressBackAgainToExit": "Tekan kembali lagi untuk keluar",
   "quickRecord": "Rekam Cepat",
   "chatAction": "Chat",

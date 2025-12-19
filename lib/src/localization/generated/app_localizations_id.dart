@@ -1103,6 +1103,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get transferTransaction => 'Transfer';
 
   @override
+  String get transferFee => 'Biaya Transfer';
+
+  @override
+  String get transferFeeHint => 'Biaya (Opsional)';
+
+  @override
   String get pressBackAgainToExit => 'Tekan kembali lagi untuk keluar';
 
   @override

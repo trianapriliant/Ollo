@@ -506,6 +506,8 @@
   "debtTransaction": "Debt Transaction",
   "savingsTransaction": "Savings Transaction",
   "transferTransaction": "Transfer",
+  "transferFee": "Transfer Fee",
+  "transferFeeHint": "Fee (Optional)",
   "pressBackAgainToExit": "Press back again to exit",
   "quickRecord": "Quick Record",
   "chatAction": "Chat",

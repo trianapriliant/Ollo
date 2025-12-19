@@ -1106,6 +1106,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transferTransaction => 'Transfer';
 
   @override
+  String get transferFee => 'Transfer Fee';
+
+  @override
+  String get transferFeeHint => 'Fee (Optional)';
+
+  @override
   String get pressBackAgainToExit => 'Press back again to exit';
 
   @override

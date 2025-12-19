@@ -35,6 +35,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   final _titleController = TextEditingController();
+  final _feeController = TextEditingController(); // New Fee Controller
 
   String? _selectedWalletId;
   String? _selectedDestinationWalletId;
@@ -166,6 +167,18 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             ),
 
             const SizedBox(height: 24),
+
+            // 3b. Transfer Fee (Only if Transfer)
+            if (isTransfer) ...[ 
+               TransactionAmountInput(
+                  controller: _feeController,
+                  currencySymbol: ref.watch(currencyProvider).symbol,
+                  primaryColor: Colors.orange, // Distinct color for fee
+                  title: AppLocalizations.of(context)!.transferFee,
+                  showSign: false, 
+               ),
+               const SizedBox(height: 24),
+            ],
 
             // 4. Category Selection
             categoriesAsync.when(
@@ -449,6 +462,48 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           ..note = _noteController.text;
 
         await transactionRepo.addTransaction(newTransaction);
+        
+        // TRANSFER FEE LOGIC (Create separate expense)
+        if (isTransfer) {
+            final feeAmount = double.tryParse(_feeController.text) ?? 0.0;
+            if (feeAmount > 0) {
+                // Find "Financial" > "Fees" Category
+                // Ideally this should be robust, but for now we search by known IDs
+                final categories = await ref.read(categoryListProvider(CategoryType.expense).future);
+                
+                Category? feeCategory;
+                SubCategory? feeSubCategory;
+                
+                // Try looking for Financial category first
+                // Based on seeding: externalId: 'financial', subId: 'fees'
+                try {
+                  final financialCat = categories.firstWhere((c) => c.externalId == 'financial', orElse: () => categories.first);
+                  if (financialCat.subCategories != null) {
+                     feeSubCategory = financialCat.subCategories!.firstWhere((s) => s.id == 'fees' || s.id == 'fee', orElse: () => financialCat.subCategories!.first);
+                     feeCategory = financialCat;
+                  } else {
+                     feeCategory = financialCat;
+                  }
+                } catch (e) {
+                   // Fallback to first expense category if structure changed
+                   if (categories.isNotEmpty) feeCategory = categories.first;
+                }
+                
+                final feeTransaction = Transaction()
+                  ..title = '${AppLocalizations.of(context)!.transferFee} (${AppLocalizations.of(context)!.transfer})'
+                  ..date = DateTime.now()
+                  ..amount = feeAmount
+                  ..type = TransactionType.expense
+                  ..walletId = _selectedWalletId // Fee deducted from Source Wallet
+                  ..categoryId = feeCategory?.externalId ?? feeCategory?.id.toString()
+                  ..subCategoryId = feeSubCategory?.id
+                  ..subCategoryName = feeSubCategory?.name
+                  ..subCategoryIcon = feeSubCategory?.iconPath
+                  ..note = 'Fee for transfer: $title'; // Link to transfer
+                  
+                await transactionRepo.addTransaction(feeTransaction);
+            }
+        }
 
 
       }

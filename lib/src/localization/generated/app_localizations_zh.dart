@@ -1085,6 +1085,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferTransaction => '转账';
 
   @override
+  String get transferFee => 'Transfer Fee';
+
+  @override
+  String get transferFeeHint => 'Fee (Optional)';
+
+  @override
   String get pressBackAgainToExit => '再按一次退出';
 
   @override

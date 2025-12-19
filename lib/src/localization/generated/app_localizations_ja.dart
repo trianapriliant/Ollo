@@ -1085,6 +1085,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get transferTransaction => '振替';
 
   @override
+  String get transferFee => 'Transfer Fee';
+
+  @override
+  String get transferFeeHint => 'Fee (Optional)';
+
+  @override
   String get pressBackAgainToExit => 'もう一度押して終了';
 
   @override

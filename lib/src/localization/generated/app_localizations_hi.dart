@@ -1099,6 +1099,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferTransaction => 'ट्रांसफर';
 
   @override
+  String get transferFee => 'Transfer Fee';
+
+  @override
+  String get transferFeeHint => 'Fee (Optional)';
+
+  @override
   String get pressBackAgainToExit => 'बाहर निकलने के लिए फिर से दबाएं';
 
   @override

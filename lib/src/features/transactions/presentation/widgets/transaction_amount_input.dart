@@ -7,11 +7,16 @@ class TransactionAmountInput extends StatelessWidget {
   final String currencySymbol;
   final Color primaryColor;
 
+  final String? title;
+  final bool showSign;
+
   const TransactionAmountInput({
     super.key,
     required this.controller,
     required this.currencySymbol,
     required this.primaryColor,
+    this.title,
+    this.showSign = true,
   });
 
   @override
@@ -19,7 +24,7 @@ class TransactionAmountInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppLocalizations.of(context)!.amount, style: AppTextStyles.bodyMedium),
+        Text(title ?? AppLocalizations.of(context)!.amount, style: AppTextStyles.bodyMedium),
         const SizedBox(height: 8),
         TextField(
           controller: controller,

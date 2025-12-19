@@ -2170,6 +2170,18 @@ abstract class AppLocalizations {
   /// **'Transfer'**
   String get transferTransaction;
 
+  /// No description provided for @transferFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer Fee'**
+  String get transferFee;
+
+  /// No description provided for @transferFeeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fee (Optional)'**
+  String get transferFeeHint;
+
   /// No description provided for @pressBackAgainToExit.
   ///
   /// In en, this message translates to:

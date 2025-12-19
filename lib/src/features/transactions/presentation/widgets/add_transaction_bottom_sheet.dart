@@ -37,6 +37,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
   String? _selectedDestinationWalletId; // For Transfer
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _feeController = TextEditingController();
   bool _isSaving = false;
 
   @override
@@ -59,6 +60,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
   @override
   void dispose() {
     _noteController.dispose();
+    _feeController.dispose();
     super.dispose();
   }
 
@@ -134,6 +136,43 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
       // 2. Save Transaction (Repository automatically handles balance updates)
       final transactionRepo = await ref.read(transactionRepositoryProvider.future);
       await transactionRepo.addTransaction(newTransaction);
+      
+      // TRANSFER FEE LOGIC (Create separate expense)
+      if (_selectedType == TransactionType.transfer) {
+          final feeAmount = double.tryParse(_feeController.text) ?? 0.0;
+          if (feeAmount > 0) {
+              // Find "Financial" > "Fees" Category
+              final categories = await ref.read(categoryListProvider(CategoryType.expense).future);
+              Category? feeCategory;
+              SubCategory? feeSubCategory;
+              
+              try {
+                final financialCat = categories.firstWhere((c) => c.externalId == 'financial', orElse: () => categories.first);
+                if (financialCat.subCategories != null) {
+                   feeSubCategory = financialCat.subCategories!.firstWhere((s) => s.id == 'fees' || s.id == 'fee', orElse: () => financialCat.subCategories!.first);
+                   feeCategory = financialCat;
+                } else {
+                   feeCategory = financialCat;
+                }
+              } catch (e) {
+                 if (categories.isNotEmpty) feeCategory = categories.first;
+              }
+              
+              final feeTransaction = Transaction()
+                ..title = '${AppLocalizations.of(context)!.transferFee} (${AppLocalizations.of(context)!.transfer})'
+                ..date = _selectedDate
+                ..amount = feeAmount
+                ..type = TransactionType.expense
+                ..walletId = _selectedWalletId
+                ..categoryId = feeCategory?.externalId ?? feeCategory?.id.toString()
+                ..subCategoryId = feeSubCategory?.id
+                ..subCategoryName = feeSubCategory?.name
+                ..subCategoryIcon = feeSubCategory?.iconPath
+                ..note = 'Fee for transfer: ${newTransaction.title}';
+                
+              await transactionRepo.addTransaction(feeTransaction);
+          }
+      }
       
       // Explicitly invalidate providers to ensure UI refreshes immediately
       ref.invalidate(walletListProvider);
@@ -271,6 +310,44 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                               },
                               loading: () => const SizedBox(),
                               error: (_, __) => const SizedBox(),
+                            ),
+                          ),
+                        ],
+
+                        // Transfer Fee Input (Transfer Only)
+                        if (_selectedType == TransactionType.transfer) ...[
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Icon(Icons.monetization_on_outlined, color: Colors.orange),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _feeController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: AppLocalizations.of(context)!.transferFee,
+                                      hintText: AppLocalizations.of(context)!.transferFeeHint,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.grey[100],
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
