@@ -8,7 +8,7 @@ enum MainCardTheme {
     LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF00C6FF), Color(0xFF0072FF)], // Bright Blue -> Deep Blue
+      colors: [Color(0xFF4A90E2), Color(0xFF50E3C2)], // Blue -> Teal (Original restored)
     ),
   ),
   sunset(
