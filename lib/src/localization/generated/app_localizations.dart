@@ -3987,6 +3987,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Wallet'**
   String get selectWallet;
+
+  /// No description provided for @exitAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit App'**
+  String get exitAppTitle;
+
+  /// No description provided for @exitAppConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit the application?'**
+  String get exitAppConfirm;
 }
 
 class _AppLocalizationsDelegate

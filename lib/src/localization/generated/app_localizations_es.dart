@@ -2057,4 +2057,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selectWallet => 'Seleccionar Billetera';
+
+  @override
+  String get exitAppTitle => 'Salir de la aplicación';
+
+  @override
+  String get exitAppConfirm =>
+      '¿Estás seguro de que quieres salir de la aplicación?';
 }

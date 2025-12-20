@@ -6,6 +6,9 @@ import '../../../constants/app_text_styles.dart';
 import '../../savings/data/saving_repository.dart';
 import '../../savings/domain/saving_goal.dart';
 
+import 'package:intl/intl.dart';
+import '../../../utils/currency_input_formatter.dart';
+
 class AddEditSavingScreen extends ConsumerStatefulWidget {
   final SavingGoal? goal;
 
@@ -27,7 +30,14 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
     super.initState();
     final goal = widget.goal;
     _nameController = TextEditingController(text: goal?.name ?? '');
-    _targetController = TextEditingController(text: goal?.targetAmount.toStringAsFixed(0) ?? '');
+    
+    // Format initial value
+    String formattedTarget = '';
+    if (goal != null) {
+      formattedTarget = NumberFormat.decimalPattern('en_US').format(goal.targetAmount);
+    }
+    _targetController = TextEditingController(text: formattedTarget);
+    
     _type = goal?.type ?? SavingType.standard;
   }
 
@@ -77,6 +87,9 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
                     TextFormField(
                       controller: _targetController,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        CurrencyInputFormatter(),
+                      ],
                       style: AppTextStyles.h1.copyWith(fontSize: 40, color: AppColors.primary),
                       decoration: InputDecoration(
                         prefixText: 'Rp ',
@@ -87,8 +100,8 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) return 'Please enter a target';
-                        final amount = double.tryParse(val);
-                        if (amount == null || amount <= 0) return 'Invalid amount';
+                        final amount = CurrencyInputFormatter.parse(val);
+                        if (amount <= 0) return 'Invalid amount';
                         return null;
                       },
                     ),
@@ -213,7 +226,7 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
 
   Future<void> _saveGoal() async {
     if (_formKey.currentState!.validate()) {
-      final target = double.parse(_targetController.text);
+      final target = CurrencyInputFormatter.parse(_targetController.text);
       
       if (widget.goal != null) {
         final updated = widget.goal!;

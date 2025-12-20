@@ -2049,4 +2049,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get selectWallet => 'वॉलेट चुनें';
+
+  @override
+  String get exitAppTitle => 'बाहर निकलें';
+
+  @override
+  String get exitAppConfirm => 'क्या आप वाकई ऐप से बाहर निकलना चाहते हैं?';
 }

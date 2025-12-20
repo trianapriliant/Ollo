@@ -11,6 +11,9 @@ import '../../recurring/domain/recurring_transaction.dart';
 import '../../../common_widgets/modern_wallet_selector.dart';
 import '../../../localization/generated/app_localizations.dart';
 
+import 'package:intl/intl.dart';
+import '../../../utils/currency_input_formatter.dart';
+
 class AddEditRecurringScreen extends ConsumerStatefulWidget {
   final RecurringTransaction? transaction;
 
@@ -34,7 +37,14 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
     super.initState();
     final tx = widget.transaction;
     _nameController = TextEditingController(text: tx?.note ?? '');
-    _amountController = TextEditingController(text: tx?.amount.toString() ?? '');
+    
+    // Format initial amount
+    String formattedAmount = '';
+    if (tx != null) {
+      formattedAmount = NumberFormat.decimalPattern('en_US').format(tx.amount);
+    }
+    _amountController = TextEditingController(text: formattedAmount);
+
     _frequency = tx?.frequency ?? RecurringFrequency.monthly;
     _selectedWalletId = tx?.walletId;
     _startDate = tx?.startDate ?? DateTime.now();
@@ -92,6 +102,9 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
+                        inputFormatters: [
+                          CurrencyInputFormatter(),
+                        ],
                         style: AppTextStyles.amountLarge.copyWith(color: AppColors.primary),
                         decoration: InputDecoration(
                           prefixText: 'Rp ',
@@ -102,7 +115,9 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                         ),
                         validator: (val) {
                           if (val == null || val.isEmpty) return AppLocalizations.of(context)!.enterAmount;
-                          if (double.tryParse(val) == null) return AppLocalizations.of(context)!.errorInvalidAmount;
+                          
+                          final amount = CurrencyInputFormatter.parse(val);
+                          if (amount == 0 && val != '0') return AppLocalizations.of(context)!.errorInvalidAmount;
                           return null;
                         },
                       ),
@@ -259,7 +274,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
 
   Future<void> _saveRecurring() async {
     if (_formKey.currentState!.validate() && _selectedWalletId != null) {
-      final amount = double.parse(_amountController.text);
+      final amount = CurrencyInputFormatter.parse(_amountController.text);
       
       // Calculate next due date logic...
       DateTime nextDue = _startDate;

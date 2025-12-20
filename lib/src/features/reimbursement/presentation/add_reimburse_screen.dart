@@ -7,6 +7,9 @@ import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../settings/presentation/currency_provider.dart';
 
+import 'package:flutter/services.dart';
+import '../../../utils/currency_input_formatter.dart';
+
 class AddReimburseScreen extends ConsumerStatefulWidget {
   const AddReimburseScreen({super.key});
 
@@ -45,6 +48,9 @@ class _AddReimburseScreenState extends ConsumerState<AddReimburseScreen> {
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                CurrencyInputFormatter(),
+              ],
               style: AppTextStyles.amountLarge.copyWith(color: Colors.orange),
               decoration: InputDecoration(
                 prefixText: '${currency.symbol} ',
@@ -113,7 +119,7 @@ class _AddReimburseScreenState extends ConsumerState<AddReimburseScreen> {
 
   Future<void> _saveReimbursement() async {
     final title = _titleController.text;
-    final amount = double.tryParse(_amountController.text) ?? 0.0;
+    final amount = CurrencyInputFormatter.parse(_amountController.text);
     
     if (title.isEmpty || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter valid title and amount')));

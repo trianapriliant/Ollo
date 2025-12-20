@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../transactions/data/transaction_repository.dart';
@@ -14,6 +15,7 @@ import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../../settings/presentation/currency_provider.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
+import '../../../utils/currency_input_formatter.dart';
 
 import 'category_selection_item.dart';
 import 'widgets/transaction_amount_input.dart';
@@ -47,7 +49,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     super.initState();
     if (widget.transactionToEdit != null) {
       final t = widget.transactionToEdit!;
-      _amountController.text = t.amount.toString();
+      _amountController.text = NumberFormat.decimalPattern('en_US').format(t.amount);
       _noteController.text = t.note ?? '';
       _titleController.text = t.title;
       _selectedWalletId = t.walletId;
@@ -326,7 +328,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 onPressed: _isSaving ? null : () async {
                   setState(() { _isSaving = true; });
                   try {
-                    final amount = double.tryParse(_amountController.text) ?? 0.0;
+                    final amount = CurrencyInputFormatter.parse(_amountController.text);
                     if (amount <= 0) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.enterValidAmount)));
                       setState(() { _isSaving = false; });
@@ -465,7 +467,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         
         // TRANSFER FEE LOGIC (Create separate expense)
         if (isTransfer) {
-            final feeAmount = double.tryParse(_feeController.text) ?? 0.0;
+            final feeAmount = CurrencyInputFormatter.parse(_feeController.text);
             if (feeAmount > 0) {
                 // Find "Financial" > "Fees" Category
                 // Ideally this should be robust, but for now we search by known IDs

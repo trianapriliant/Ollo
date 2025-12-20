@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../settings/presentation/currency_provider.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../budget/data/budget_repository.dart';
 import '../../../budget/domain/budget.dart';
@@ -18,6 +19,7 @@ class DashboardBudgetCard extends ConsumerWidget {
     final filterState = ref.watch(dashboardFilterProvider);
     // Watch transactions to trigger rebuild when they change
     ref.watch(transactionListProvider);
+    final currency = ref.watch(currencyProvider);
 
     return budgetsAsync.when(
       data: (budgets) {
@@ -76,11 +78,11 @@ class DashboardBudgetCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Rp ${totalSpent.toStringAsFixed(0)}',
+                        currency.format(totalSpent),
                         style: AppTextStyles.bodySmall,
                       ),
                       Text(
-                        'Rp ${totalBudget.toStringAsFixed(0)}',
+                        currency.format(totalBudget),
                         style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                       ),
                     ],

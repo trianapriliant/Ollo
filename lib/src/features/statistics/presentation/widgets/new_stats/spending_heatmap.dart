@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_text_styles.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
+import '../../../../settings/presentation/currency_provider.dart';
 
-class SpendingHeatmap extends StatelessWidget {
+class SpendingHeatmap extends ConsumerWidget {
   final List<double> dailyAmounts;
   final int daysInMonth;
   final DateTime monthStartDate;
@@ -19,8 +21,9 @@ class SpendingHeatmap extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (dailyAmounts.isEmpty) return const SizedBox();
+    final currency = ref.watch(currencyProvider);
 
     double maxAmount = 0;
     for (var amount in dailyAmounts) {
@@ -46,7 +49,7 @@ class SpendingHeatmap extends StatelessWidget {
         currentRowChildren.add(
             Expanded(
               child: Tooltip(
-                  message: 'Day $day: ${amount.toStringAsFixed(0)}',
+                  message: 'Day $day: ${currency.format(amount)}',
                   child: InkWell(
                     onTap: () {
                       final specificDate = DateTime(monthStartDate.year, monthStartDate.month, day);

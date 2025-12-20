@@ -2034,4 +2034,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get selectWallet => 'ウォレットを選択';
+
+  @override
+  String get exitAppTitle => 'アプリを終了';
+
+  @override
+  String get exitAppConfirm => '本当にアプリを終了しますか？';
 }

@@ -1,4 +1,6 @@
 {
+  "exitAppTitle": "Salir de la aplicación",
+  "exitAppConfirm": "¿Estás seguro de que quieres salir de la aplicación?",
   "home": "Inicio",
   "wallet": "Billetera",
   "profile": "Perfil",

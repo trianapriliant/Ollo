@@ -66,7 +66,7 @@ class TopSpendersCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${currency.symbol}${item.amount.toStringAsFixed(0)}', // Simplified formatting
+                    currency.format(item.amount),
                     style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],

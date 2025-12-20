@@ -43,7 +43,7 @@ class DailyAverageCard extends StatelessWidget {
                     Text(AppLocalizations.of(context)!.dailyAverage, style: AppTextStyles.bodySmall),
                     const SizedBox(height: 4),
                     Text(
-                      '${currency.symbol}${average.toStringAsFixed(2)}',
+                      currency.format(average),
                       style: AppTextStyles.h3.copyWith(fontSize: 20),
                     ),
                   ],
@@ -57,7 +57,7 @@ class DailyAverageCard extends StatelessWidget {
                     Text(AppLocalizations.of(context)!.projectedTotal, style: AppTextStyles.bodySmall),
                     const SizedBox(height: 4),
                     Text(
-                      '${currency.symbol}${projected.toStringAsFixed(0)}',
+                      currency.format(projected),
                       style: AppTextStyles.h3.copyWith(fontSize: 20, color: Colors.grey[600]),
                     ),
                   ],

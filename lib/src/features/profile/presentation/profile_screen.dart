@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -195,7 +196,28 @@ class ProfileScreen extends ConsumerWidget {
                 ProfileMenuItem(
                   icon: Icons.logout,
                   title: AppLocalizations.of(context)!.logout,
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(AppLocalizations.of(context)!.exitAppTitle),
+                        content: Text(AppLocalizations.of(context)!.exitAppConfirm),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(AppLocalizations.of(context)!.cancel),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close dialog
+                              SystemNavigator.pop(); // Exit app
+                            },
+                            child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                   isDestructive: true,
                 ),
 

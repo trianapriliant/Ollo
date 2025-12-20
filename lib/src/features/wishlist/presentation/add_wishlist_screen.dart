@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,8 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../data/wishlist_repository.dart';
 import '../domain/wishlist.dart';
+
+import '../../../utils/currency_input_formatter.dart';
 
 class AddWishlistScreen extends ConsumerStatefulWidget {
   final Wishlist? wishlistToEdit;
@@ -35,7 +38,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
     if (widget.wishlistToEdit != null) {
       final w = widget.wishlistToEdit!;
       _titleController.text = w.title;
-      _priceController.text = w.price.toStringAsFixed(0);
+      _priceController.text = NumberFormat.decimalPattern('en_US').format(w.price);
       _linkController.text = w.linkUrl ?? '';
       _targetDate = w.targetDate;
       _imagePath = w.imagePath;
@@ -120,6 +123,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
               prefix: 'Rp ',
               icon: Icons.attach_money,
               keyboardType: TextInputType.number,
+              formatter: CurrencyInputFormatter(),
             ),
             const SizedBox(height: 24),
 
@@ -202,6 +206,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
     required IconData icon,
     String? prefix,
     TextInputType keyboardType = TextInputType.text,
+    TextInputFormatter? formatter,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -212,6 +217,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        inputFormatters: formatter != null ? [formatter] : null,
         style: AppTextStyles.bodyMedium,
         decoration: InputDecoration(
           hintText: hint,
@@ -270,8 +276,7 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
 
   Future<void> _saveWishlist() async {
     final title = _titleController.text.trim();
-    final priceText = _priceController.text.replaceAll(',', '').trim();
-    final price = double.tryParse(priceText);
+    final price = CurrencyInputFormatter.parse(_priceController.text);
 
     if (title.isEmpty || price == null) {
       ScaffoldMessenger.of(context).showSnackBar(

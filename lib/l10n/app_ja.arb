@@ -1,4 +1,6 @@
 {
+  "exitAppTitle": "アプリを終了",
+  "exitAppConfirm": "本当にアプリを終了しますか？",
   "home": "ホーム",
   "wallet": "ウォレット",
   "profile": "プロフィール",

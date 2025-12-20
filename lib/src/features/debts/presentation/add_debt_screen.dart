@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../wallets/data/wallet_repository.dart';
@@ -11,7 +12,7 @@ import '../data/debt_repository.dart';
 import '../domain/debt.dart';
 import '../../wallets/presentation/wallet_provider.dart';
 import '../../../common_widgets/modern_wallet_selector.dart';
-import '../../../localization/generated/app_localizations.dart';
+import '../../../utils/currency_input_formatter.dart';
 
 class AddDebtScreen extends ConsumerStatefulWidget {
   final Debt? debtToEdit;
@@ -39,7 +40,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
     if (widget.debtToEdit != null) {
       final d = widget.debtToEdit!;
       _nameController.text = d.personName;
-      _amountController.text = d.amount.toStringAsFixed(0);
+      _amountController.text = NumberFormat.decimalPattern('en_US').format(d.amount);
       _noteController.text = d.note ?? '';
       _type = d.type;
       _dueDate = d.dueDate;
@@ -164,6 +165,9 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
               TextFormField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  CurrencyInputFormatter(),
+                ],
                 decoration: InputDecoration(
                   hintText: '0',
                   filled: true,
@@ -216,9 +220,9 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
                          // Auto-select first wallet
                          WidgetsBinding.instance.addPostFrameCallback((_) {
                            if (mounted && _selectedWalletId == null) {
-                              setState(() {
-                                _selectedWalletId = wallets.first.externalId ?? wallets.first.id.toString();
-                              });
+                               setState(() {
+                                 _selectedWalletId = wallets.first.externalId ?? wallets.first.id.toString();
+                               });
                            }
                          });
                        }
@@ -285,7 +289,7 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final amount = double.parse(_amountController.text);
+      final amount = CurrencyInputFormatter.parse(_amountController.text);
       final debtRepo = ref.read(debtRepositoryProvider);
       
       if (widget.debtToEdit != null) {
@@ -321,6 +325,9 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
           
           final wallet = await walletRepo.getWallet(_selectedWalletId!);
           if (wallet != null) {
+            // First add the debt to get an ID (if needed, though updateDebt handles it, explicit add is clearer or update works for new too)
+            await debtRepo.addDebt(debt);
+
             // If I borrow, I get money (Income). If I lend, I lose money (Expense).
             final isIncome = _type == DebtType.borrowing;
             
@@ -347,6 +354,9 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
             debt.transactionId = transaction.id;
             await debtRepo.updateDebt(debt); // Persist the link
           }
+        } else {
+            // If no wallet selected, just add the debt
+            await debtRepo.addDebt(debt);
         }
         
         // If wallet was NOT selected, we already added the debt above.

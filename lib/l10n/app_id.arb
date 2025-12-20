@@ -772,5 +772,7 @@
   "changeIcon": "Ganti Ikon",
   "typeLabel": "Tipe",
   "preferences": "Preferensi",
-  "weeklyActivityHeatmap": "Aktivitas Mingguan"
+  "weeklyActivityHeatmap": "Aktivitas Mingguan",
+  "exitAppTitle": "Keluar Aplikasi",
+  "exitAppConfirm": "Apakah Anda yakin ingin keluar dari aplikasi?"
 }

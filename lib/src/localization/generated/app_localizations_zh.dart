@@ -2030,4 +2030,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectWallet => '选择钱包';
+
+  @override
+  String get exitAppTitle => '退出应用';
+
+  @override
+  String get exitAppConfirm => '您确定要退出应用程序吗？';
 }

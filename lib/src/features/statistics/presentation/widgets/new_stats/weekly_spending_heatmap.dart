@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_text_styles.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../statistics_provider.dart';
+import '../../../../settings/presentation/currency_provider.dart';
 
-class WeeklySpendingHeatmap extends StatelessWidget {
+class WeeklySpendingHeatmap extends ConsumerWidget {
   final List<WeeklyData> weeklyData;
   final bool isExpense;
 
@@ -16,8 +18,9 @@ class WeeklySpendingHeatmap extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (weeklyData.isEmpty) return const SizedBox();
+    final currency = ref.watch(currencyProvider);
 
     double maxAmount = 0;
     for (var item in weeklyData) {
@@ -41,7 +44,7 @@ class WeeklySpendingHeatmap extends StatelessWidget {
         currentRowChildren.add(
             Expanded(
               child: Tooltip(
-                message: 'Week ${data.week}: ${data.amount.toStringAsFixed(0)}',
+                message: 'Week ${data.week}: ${currency.format(data.amount)}',
                 child: InkWell(
                   onTap: () {
                     context.push(

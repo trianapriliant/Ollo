@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,9 @@ import '../../../utils/icon_helper.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../../../localization/generated/app_localizations.dart';
+
+import 'package:intl/intl.dart';
+import '../../../utils/currency_input_formatter.dart';
 
 class AddBillScreen extends ConsumerStatefulWidget {
   final Bill? billToEdit;
@@ -50,10 +54,9 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
     if (widget.billToEdit != null) {
       final b = widget.billToEdit!;
       _titleController.text = b.title;
-      _amountController.text = b.amount.toString();
+      _amountController.text = NumberFormat.decimalPattern('en_US').format(b.amount); // Format initial logic
       _dueDate = b.dueDate;
       _selectedCategoryId = b.categoryId;
-      // Recurring logic for edit is complex, maybe disable for now or fetch linked recurring
     }
   }
 
@@ -105,6 +108,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
               prefix: 'Rp ',
               icon: Icons.attach_money,
               keyboardType: TextInputType.number,
+              formatter: CurrencyInputFormatter(), // Pass formatter
             ),
             const SizedBox(height: 24),
 
@@ -273,6 +277,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
     required IconData icon,
     String? prefix,
     TextInputType keyboardType = TextInputType.text,
+    TextInputFormatter? formatter, // Added optional formatter parameter
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -283,6 +288,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        inputFormatters: formatter != null ? [formatter] : null,
         style: AppTextStyles.bodyMedium,
         decoration: InputDecoration(
           labelText: label,
@@ -323,18 +329,16 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
 
   Future<void> _saveBill() async {
     final title = _titleController.text.trim();
-    final amountText = _amountController.text.replaceAll(',', '').trim();
-    final amount = double.tryParse(amountText);
+    // Use parse helper instead of manual replace
+    final amount = CurrencyInputFormatter.parse(_amountController.text);
 
-    if (title.isEmpty || amount == null) {
+    if (title.isEmpty || amount == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.errorInvalidBill)),
       );
       return;
     }
     
-
-
     try {
       final billRepo = ref.read(billRepositoryProvider);
 
@@ -344,7 +348,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         bill.title = title;
         bill.amount = amount;
         bill.dueDate = _dueDate;
-        bill.categoryId = 'bills'; // Force 'bills' category
+        bill.categoryId = 'bills'; 
         
         await billRepo.updateBill(bill);
         
@@ -358,8 +362,8 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
           final recurringRepo = ref.read(recurringRepositoryProvider);
           final newRecurring = RecurringTransaction(
             amount: amount,
-            categoryId: 'bills', // Force 'bills' category
-            walletId: '1', // Default wallet for now
+            categoryId: 'bills',
+            walletId: '1', 
             note: title,
             frequency: _frequency,
             startDate: _dueDate,
@@ -372,7 +376,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             title: title,
             amount: amount,
             dueDate: _dueDate,
-            categoryId: 'bills', // Force 'bills' category
+            categoryId: 'bills', 
             status: BillStatus.unpaid,
             recurringTransactionId: newRecurring.id,
           );
@@ -384,7 +388,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             title: title,
             amount: amount,
             dueDate: _dueDate,
-            categoryId: 'bills', // Force 'bills' category
+            categoryId: 'bills',
             status: BillStatus.unpaid,
           );
           await billRepo.addBill(newBill);

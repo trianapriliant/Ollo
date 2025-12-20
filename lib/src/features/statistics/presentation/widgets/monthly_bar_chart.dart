@@ -1,11 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../settings/presentation/currency_provider.dart';
 import '../statistics_provider.dart';
 
-class MonthlyBarChart extends StatelessWidget {
+class MonthlyBarChart extends ConsumerWidget {
   final List<MonthlyData> data;
   final double avgIncome;
   final double avgExpense;
@@ -18,7 +20,9 @@ class MonthlyBarChart extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currency = ref.watch(currencyProvider);
+
     // Find max value for Y-axis scaling
     double maxY = 0;
     for (var item in data) {
@@ -54,7 +58,7 @@ class MonthlyBarChart extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: rod.toY.toStringAsFixed(0),
+                      text: currency.format(rod.toY),
                       style: const TextStyle(
                         color: Colors.yellow,
                         fontSize: 12,

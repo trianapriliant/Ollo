@@ -2074,4 +2074,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get selectWallet => 'Pilih Dompet';
+
+  @override
+  String get exitAppTitle => 'Keluar Aplikasi';
+
+  @override
+  String get exitAppConfirm => 'Apakah Anda yakin ingin keluar dari aplikasi?';
 }

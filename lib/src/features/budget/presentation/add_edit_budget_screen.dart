@@ -10,6 +10,9 @@ import '../../categories/domain/category.dart';
 import '../../transactions/presentation/widgets/category_selector.dart';
 import '../../../localization/generated/app_localizations.dart';
 
+import 'package:intl/intl.dart';
+import '../../../utils/currency_input_formatter.dart';
+
 class AddEditBudgetScreen extends ConsumerStatefulWidget {
   final Budget? budget;
 
@@ -29,11 +32,14 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
   void initState() {
     super.initState();
     if (widget.budget != null) {
-      _amountController.text = widget.budget!.amount.toStringAsFixed(0);
+      // Format existing amount with commas
+      _amountController.text = CurrencyInputFormatter.parse(widget.budget!.amount.toString()).toString();
+      // Wait, parse returns double. We want to formatting it TO string.
+      // Actually simpler:
+      final number = widget.budget!.amount;
+      _amountController.text = NumberFormat.decimalPattern('en_US').format(number);
+
       _selectedPeriod = widget.budget!.period;
-      // We need to load the category... this is async.
-      // For simplicity, we'll just let the user re-select if editing, 
-      // or we could load it. Let's load it.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _loadCategory(widget.budget!.categoryId);
       });
@@ -66,13 +72,14 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
       return;
     }
 
-    final amount = double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0;
+    // Strip commas before parsing
+    final amount = CurrencyInputFormatter.parse(_amountController.text);
     
     final budget = Budget()
       ..categoryId = _selectedCategory!.externalId ?? _selectedCategory!.id.toString()
       ..amount = amount
       ..period = _selectedPeriod
-      ..startDate = DateTime.now(); // Or keep existing if editing?
+      ..startDate = DateTime.now();
 
     if (widget.budget != null) {
       budget.id = widget.budget!.id;
@@ -130,6 +137,9 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
                       child: TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          CurrencyInputFormatter(),
+                        ],
                         style: AppTextStyles.h2,
                         decoration: const InputDecoration(
                           border: InputBorder.none,

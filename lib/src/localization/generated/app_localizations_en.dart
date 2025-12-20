@@ -2077,4 +2077,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectWallet => 'Select Wallet';
+
+  @override
+  String get exitAppTitle => 'Exit App';
+
+  @override
+  String get exitAppConfirm => 'Are you sure you want to exit the application?';
 }
