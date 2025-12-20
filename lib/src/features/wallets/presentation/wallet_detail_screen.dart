@@ -65,13 +65,13 @@ class WalletDetailScreen extends ConsumerWidget {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Delete Wallet?'),
-                    content: Text('Are you sure you want to delete "${currentWallet.name}"? This action cannot be undone.'),
+                    title: Text(AppLocalizations.of(context)!.deleteWalletTitle),
+                    content: Text(AppLocalizations.of(context)!.deleteWalletConfirm(currentWallet.name)),
                     actions: [
-                      TextButton(onPressed: () => context.pop(false), child: const Text('Cancel')),
+                      TextButton(onPressed: () => context.pop(false), child: Text(AppLocalizations.of(context)!.cancel)),
                       TextButton(
                         onPressed: () => context.pop(true),
-                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                        child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
@@ -88,33 +88,33 @@ class WalletDetailScreen extends ConsumerWidget {
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'update_balance',
                   child: Row(
                     children: [
                       Icon(Icons.account_balance_wallet, size: 20, color: Colors.grey),
                       SizedBox(width: 8),
-                      Text('Update Balance'),
+                      Text(AppLocalizations.of(context)!.updateBalance),
                     ],
                   ),
                 ),
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'edit_wallet',
                   child: Row(
                     children: [
                       Icon(Icons.edit, size: 20, color: Colors.grey),
                       SizedBox(width: 8),
-                      Text('Edit Wallet'),
+                      Text(AppLocalizations.of(context)!.editWallet),
                     ],
                   ),
                 ),
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'delete_wallet',
                   child: Row(
                     children: [
                       Icon(Icons.delete, size: 20, color: Colors.red),
                       SizedBox(width: 8),
-                      Text('Delete Wallet', style: TextStyle(color: Colors.red)),
+                      Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
                     ],
                   ),
                 ),
@@ -180,7 +180,7 @@ class WalletDetailScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Update Balance', style: AppTextStyles.h3),
+        title: Text(AppLocalizations.of(context)!.updateBalance, style: AppTextStyles.h3),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -188,7 +188,7 @@ class WalletDetailScreen extends ConsumerWidget {
               controller: controller,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'New Balance',
+                labelText: AppLocalizations.of(context)!.newBalance,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 prefixText: '${ref.read(currencyProvider).symbol} ',
               ),
@@ -198,7 +198,7 @@ class WalletDetailScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -238,7 +238,7 @@ class WalletDetailScreen extends ConsumerWidget {
                     final transactionRepo = await ref.read(transactionRepositoryProvider.future);
                     
                     final transaction = Transaction.create(
-                      title: l10n.adjustmentTitle,
+                      title: 'Balance Adjustment',
                       amount: difference.abs(),
                       type: difference > 0 ? TransactionType.income : TransactionType.expense,
                       date: DateTime.now(),
@@ -271,7 +271,7 @@ class WalletDetailScreen extends ConsumerWidget {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: const Text('Save'),
+            child: Text(AppLocalizations.of(context)!.save),
           ),
         ],
       ),

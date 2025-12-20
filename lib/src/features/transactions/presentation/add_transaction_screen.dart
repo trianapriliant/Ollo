@@ -490,7 +490,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 }
                 
                 final feeTransaction = Transaction()
-                  ..title = '${AppLocalizations.of(context)!.transferFee} (${AppLocalizations.of(context)!.transfer})'
+                  ..title = 'Transfer Fee'
                   ..date = DateTime.now()
                   ..amount = feeAmount
                   ..type = TransactionType.expense

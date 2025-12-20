@@ -579,5 +579,92 @@
   "draftReady": "ドラフト準備完了",
   "saveAdjust": "保存 / 調整",
   "notFound": "見つかりません",
-  "selectWallet": "ウォレットを選択"
+  "selectWallet": "ウォレットを選択",
+  "transferFee": "振込手数料",
+  "transferFeeHint": "手数料（任意）",
+  "importData": "データのインポート",
+  "importDataTitle": "取引のインポート",
+  "downloadTemplate": "テンプレートをダウンロード",
+  "uploadCsv": "CSVをアップロード",
+  "importSuccess": "{count}件の取引を正常にインポートしました！",
+  "importPartialSuccess": "{success}件インポートしました。失敗: {failed}件。",
+  "templateSaved": "テンプレートをダウンロードフォルダに保存しました",
+  "importInfoText": "データを正しくインポートするにはテンプレートを使用してください。列名が正確に一致していることを確認してください。",
+  "pressBackAgainToExit": "もう一度戻るを押して終了",
+  "updateBalance": "残高更新",
+  "newBalance": "新しい残高",
+  "deleteWalletTitle": "ウォレットを削除？",
+  "deleteWalletConfirm": "「{name}」を削除してもよろしいですか？この操作は元に戻せません。",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customizeMenu": "メニューのカスタマイズ",
+  "menuOrder": "メニューの順序",
+  "resetMenu": "メニューをリセット",
+  "cardAppearance": "カードの外観",
+  "selectTheme": "テーマを選択",
+  "themeClassic": "クラシックブルー",
+  "themeSunset": "サンセットオレンジ",
+  "themeOcean": "オーシャンティール",
+  "themeBerry": "ベリーパープル",
+  "themeForest": "ネイチャーグリーン",
+  "themeMidnight": "ミッドナイトダーク",
+  "themeOasis": "カームオアシス",
+  "themeLavender": "ソフトラベンダー",
+  "themeCottonCandy": "パステルドリーム",
+  "themeMint": "シンプリーミント",
+  "themePeach": "シンプリーピーチ",
+  "themeSoftBlue": "シンプリーブルー",
+  "themeLilac": "シンプリーライラック",
+  "themeLemon": "シンプリーレモン",
+  "sysCatAdjustment": "残高調整",
+  "sysCatAdjustmentDesc": "手動による残高修正",
+  "balanceUpdateDetected": "残高の更新を検出",
+  "recordAsTransaction": "取引として記録しますか？",
+  "recordAsTransactionDesc": "残高が {amount} 変更されました。この差額を取引として記録しますか？",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+        "amount": {"type": "String"}
+    }
+  },
+  "adjustmentTitle": "残高調整",
+  "skip": "いいえ、調整のみ",
+  "record": "はい、記録する",
+  "faqResetDataQuestion": "データをリセットするには？",
+  "faqResetDataAnswer": "現在、個々の取引やウォレットを削除できます。完全なリセットオプションは近日公開予定です。",
+  "faqSecureDataQuestion": "データは安全ですか？",
+  "faqSecureDataAnswer": "はい、すべてのデータはデバイス内にローカルに保存されます。外部サーバーにはアップロードされません。",
+  "monthlyCommitment": "月次コミットメント",
+  "upcomingBill": "次回の請求",
+  "noUpcomingBills": "次回の請求はありません",
+  "today": "今日",
+  "tomorrow": "明日",
+  "inDays": "{days}日後",
+    "@inDays": {
+    "placeholders": {
+        "days": {"type": "int"}
+    }
+  },
+  "needTwoWallets": "最低2つのウォレットが必要です",
+  "nettBalance": "純残高",
+  "activeDebt": "アクティブな借金",
+  "last30Days": "過去30日間",
+  "currentBalance": "現在の残高",
+  "premiumMember": "プレミアムメンバー",
+  "upgradeToPremium": "プレミアムにアップグレード",
+  "unlimitedAccess": "無制限アクセス",
+  "unlockFeatures": "すべての機能を解除",
+  "from": "から",
+  "dailyOverview": "日次概要",
+  "popularBanks": "人気の銀行",
+  "eWallets": "電子マネー",
+  "bankEWalletLogos": "銀行と電子マネーのロゴ",
+  "genericIcons": "一般的なアイコン",
+  "changeIcon": "アイコンを変更",
+  "typeLabel": "タイプ",
+  "preferences": "設定"
 }

@@ -26,6 +26,8 @@ import 'widgets/profile_menu_item.dart';
 import 'widgets/profile_menu_section.dart';
 import '../../profile/application/data_export_service.dart';
 import '../../../localization/generated/app_localizations.dart';
+import '../../settings/presentation/reorder_menu_screen.dart';
+import '../../settings/presentation/card_theme_selection_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -128,6 +130,29 @@ class ProfileScreen extends ConsumerWidget {
                   icon: Icons.account_balance_wallet,
                   title: AppLocalizations.of(context)!.wallets,
                   onTap: () => context.go('/wallet'),
+                ),
+                const SizedBox(height: 24),
+
+                // Preferences Section
+                ProfileMenuSection(title: AppLocalizations.of(context)!.preferences),
+                ProfileMenuItem(
+                  icon: Icons.grid_view_rounded,
+                  title: AppLocalizations.of(context)!.customizeMenu,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ReorderMenuScreen(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ProfileMenuItem(
+                  icon: Icons.palette,
+                  title: AppLocalizations.of(context)!.cardAppearance,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CardThemeSelectionScreen(),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 24),
 

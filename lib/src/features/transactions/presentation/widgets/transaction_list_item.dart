@@ -8,6 +8,7 @@ import '../../domain/transaction.dart';
 import '../../../../utils/icon_helper.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class TransactionListItem extends ConsumerWidget {
   final Transaction transaction;
@@ -130,6 +131,11 @@ class TransactionListItem extends ConsumerWidget {
     final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
     final isExpenseDisplay = (transaction.isExpense || isSystem) && !isDebtIncome && !isSavingsWithdraw;
 
+    String displayTitle = transaction.title;
+    if (transaction.type == TransactionType.transfer) {
+      displayTitle = AppLocalizations.of(context)!.transferTransaction;
+    }
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -140,7 +146,7 @@ class TransactionListItem extends ConsumerWidget {
           backgroundColor: backgroundColor,
           child: Icon(iconData, color: iconColor),
         ),
-        title: Text(transaction.title, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
+        title: Text(displayTitle, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
         subtitle: Text(
           isBill ? 'Bill Payment' : (isDebt ? 'Debt Transaction' : (isSavings ? 'Savings Transaction' : (isWishlist ? 'Wishlist Purchase' : dateFormat.format(transaction.date)))), 
           style: AppTextStyles.bodySmall

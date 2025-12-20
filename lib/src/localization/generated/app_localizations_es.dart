@@ -9,64 +9,64 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get customizeMenu => 'Customize Menu';
+  String get customizeMenu => 'Personalizar Menú';
 
   @override
-  String get menuOrder => 'Menu Order';
+  String get menuOrder => 'Orden del Menú';
 
   @override
-  String get resetMenu => 'Reset Menu';
+  String get resetMenu => 'Restablecer Menú';
 
   @override
   String get home => 'Inicio';
 
   @override
-  String get cardAppearance => 'Card Appearance';
+  String get cardAppearance => 'Apariencia de Tarjeta';
 
   @override
-  String get selectTheme => 'Select Theme';
+  String get selectTheme => 'Seleccionar Tema';
 
   @override
-  String get themeClassic => 'Classic Blue';
+  String get themeClassic => 'Azul Clásico';
 
   @override
-  String get themeSunset => 'Sunset Orange';
+  String get themeSunset => 'Atardecer Naranja';
 
   @override
-  String get themeOcean => 'Ocean Teal';
+  String get themeOcean => 'Verde Azulado';
 
   @override
-  String get themeBerry => 'Berry Purple';
+  String get themeBerry => 'Baya Púrpura';
 
   @override
-  String get themeForest => 'Nature Green';
+  String get themeForest => 'Verde Bosque';
 
   @override
-  String get themeMidnight => 'Midnight Dark';
+  String get themeMidnight => 'Medianoche Oscura';
 
   @override
-  String get themeOasis => 'Calm Oasis';
+  String get themeOasis => 'Oasis de Calma';
 
   @override
-  String get themeLavender => 'Soft Lavender';
+  String get themeLavender => 'Lavanda Suave';
 
   @override
-  String get themeCottonCandy => 'Pastel Dream';
+  String get themeCottonCandy => 'Sueño Pastel';
 
   @override
-  String get themeMint => 'Simply Mint';
+  String get themeMint => 'Menta Simple';
 
   @override
-  String get themePeach => 'Simply Peach';
+  String get themePeach => 'Melocotón Simple';
 
   @override
-  String get themeSoftBlue => 'Simply Blue';
+  String get themeSoftBlue => 'Azul Simple';
 
   @override
-  String get themeLilac => 'Simply Lilac';
+  String get themeLilac => 'Lila Simple';
 
   @override
-  String get themeLemon => 'Simply Lemon';
+  String get themeLemon => 'Limón Simple';
 
   @override
   String get wallet => 'Billetera';
@@ -469,10 +469,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sysCatReimburseDesc => 'Sistema de seguimiento de reembolsos';
 
   @override
-  String get sysCatAdjustment => 'Balance Adjustment';
+  String get sysCatAdjustment => 'Ajuste de Saldo';
 
   @override
-  String get sysCatAdjustmentDesc => 'Manual wallet balance corrections';
+  String get sysCatAdjustmentDesc => 'Correcciones manuales de saldo';
 
   @override
   String get budgetsTitle => 'Presupuestos';
@@ -684,24 +684,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paymentRecorded => '¡Pago registrado!';
 
   @override
-  String get balanceUpdateDetected => 'Balance Update Detected';
+  String get balanceUpdateDetected => 'Actualización de Saldo Detectada';
 
   @override
-  String get recordAsTransaction => 'Record as Transaction?';
+  String get recordAsTransaction => '¿Registrar como Transacción?';
 
   @override
   String recordAsTransactionDesc(String amount) {
-    return 'The balance has changed by $amount. Do you want to record this difference as a transaction?';
+    return 'El saldo ha cambiado en $amount. ¿Desea registrar esta diferencia como una transacción?';
   }
 
   @override
-  String get adjustmentTitle => 'Balance Adjustment';
+  String get adjustmentTitle => 'Ajuste de Saldo';
 
   @override
-  String get skip => 'No, Adjust Only';
+  String get skip => 'No, Solo Ajustar';
 
   @override
-  String get record => 'Yes, Record';
+  String get record => 'Sí, Registrar';
+
+  @override
+  String get updateBalance => 'Actualizar Saldo';
+
+  @override
+  String get newBalance => 'Nuevo Saldo';
+
+  @override
+  String get deleteWalletTitle => '¿Eliminar Billetera?';
+
+  @override
+  String deleteWalletConfirm(String name) {
+    return '¿Seguro que desea eliminar \"$name\"? No se puede deshacer.';
+  }
 
   @override
   String get deleteDebtWarning =>
@@ -1103,38 +1117,42 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferTransaction => 'Transferencia';
 
   @override
-  String get transferFee => 'Transfer Fee';
+  String get transferFee => 'Comisión de transferencia';
 
   @override
-  String get transferFeeHint => 'Fee (Optional)';
+  String get transferFeeHint => 'Comisión (Opcional)';
 
   @override
-  String get importData => 'Import Data';
+  String get importData => 'Importar datos';
 
   @override
-  String get importDataTitle => 'Import Transactions';
+  String get importDataTitle => 'Importar transacciones';
 
   @override
-  String get downloadTemplate => 'Download Template';
+  String get downloadTemplate => 'Descargar plantilla';
 
   @override
-  String get uploadCsv => 'Upload CSV';
+  String get uploadCsv => 'Subir CSV';
 
   @override
   String importSuccess(Object count) {
-    return 'Successfully imported $count transactions!';
+    return '¡Se importaron $count transacciones exitosamente!';
   }
 
   @override
   String importPartialSuccess(Object success, Object failed) {
-    return 'Imported $success transactions. Failed: $failed.';
+    return 'Se importaron $success transacciones. Fallidas: $failed.';
   }
 
   @override
-  String get templateSaved => 'Template saved to downloads folder';
+  String get templateSaved => 'Plantilla guardada en descargas';
 
   @override
-  String get pressBackAgainToExit => 'Presione atrás de nuevo para salir';
+  String get importInfoText =>
+      'Use la plantilla para importar sus datos correctamente. Asegúrese de que los nombres de las columnas coincidan exactamente.';
+
+  @override
+  String get pressBackAgainToExit => 'Presione atrás nuevamente para salir';
 
   @override
   String get quickRecord => 'Registro Rápido';
@@ -1232,6 +1250,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get timeFilterAllTime => 'Todo el Tiempo';
 
   @override
+  String get dailyOverview => 'Resumen Diario';
+
+  @override
   String get dailyAverage => 'Promedio Diario';
 
   @override
@@ -1274,6 +1295,24 @@ class AppLocalizationsEs extends AppLocalizations {
       'Asegure sus datos creando un archivo de respaldo local (JSON).';
 
   @override
+  String get popularBanks => 'Bancos Populares';
+
+  @override
+  String get eWallets => 'Billeteras Digitales';
+
+  @override
+  String get bankEWalletLogos => 'Logotipos de Bancos y Billeteras';
+
+  @override
+  String get genericIcons => 'Iconos Genéricos';
+
+  @override
+  String get changeIcon => 'Cambiar Icono';
+
+  @override
+  String get typeLabel => 'Tipo';
+
+  @override
   String get createBackup => 'Crear Respaldo';
 
   @override
@@ -1291,6 +1330,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get restoringBackup => 'Restaurando...';
+
+  @override
+  String get preferences => 'Preferencias';
 
   @override
   String backupSuccess(String path) {
@@ -1521,18 +1563,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get faqExportDataAnswer => 'Próximamente como función Premium.';
 
   @override
-  String get faqResetDataQuestion => 'How do I reset my data?';
+  String get faqResetDataQuestion => '¿Cómo reinicio mis datos?';
 
   @override
   String get faqResetDataAnswer =>
-      'Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.';
+      'Actualmente puede eliminar transacciones o billeteras individuales. Una opción de reinicio completo estará disponible pronto.';
 
   @override
-  String get faqSecureDataQuestion => 'Is my data secure?';
+  String get faqSecureDataQuestion => '¿Están seguros mis datos?';
 
   @override
   String get faqSecureDataAnswer =>
-      'Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.';
+      'Sí, todos sus datos se almacenan localmente en su dispositivo. No subimos sus datos financieros a servidores externos.';
 
   @override
   String get contactSupport => 'Contactar Soporte';
@@ -1802,54 +1844,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get subcategory_travel => 'Viajes';
 
   @override
-  String get monthlyCommitment => 'Monthly Commitment';
+  String get monthlyCommitment => 'Compromiso Mensual';
 
   @override
-  String get upcomingBill => 'Upcoming Bill';
+  String get upcomingBill => 'Próxima Factura';
 
   @override
-  String get noUpcomingBills => 'No upcoming bills';
+  String get noUpcomingBills => 'Sin facturas próximas';
 
   @override
-  String get today => 'Today';
+  String get today => 'Hoy';
 
   @override
-  String get tomorrow => 'Tomorrow';
+  String get tomorrow => 'Mañana';
 
   @override
-  String inDays(Object days) {
-    return 'In $days days';
+  String inDays(int days) {
+    return 'En $days días';
   }
 
   @override
-  String get needTwoWallets => 'Need 2+ wallets';
+  String get needTwoWallets => 'Se necesitan al menos 2 billeteras';
 
   @override
-  String get nettBalance => 'Nett Balance';
+  String get nettBalance => 'Saldo Neto';
 
   @override
-  String get activeDebt => 'Active Debt';
+  String get activeDebt => 'Deuda Activa';
 
   @override
-  String get last30Days => 'last 30 days';
+  String get last30Days => 'Últimos 30 días';
 
   @override
-  String get currentBalance => 'Current Balance';
+  String get currentBalance => 'Saldo Actual';
 
   @override
-  String get premiumMember => 'Premium Member';
+  String get premiumMember => 'Miembro Premium';
 
   @override
-  String get upgradeToPremium => 'Upgrade to Premium';
+  String get upgradeToPremium => 'Mejorar a Premium';
 
   @override
-  String get unlimitedAccess => 'You have unlimited access!';
+  String get unlimitedAccess => 'Acceso Ilimitado';
 
   @override
-  String get unlockFeatures => 'Unlock all features & remove limits.';
+  String get unlockFeatures => 'Desbloquear todo';
 
   @override
-  String get from => 'From';
+  String get from => 'De';
 
   @override
   String get subcategory_music => 'Música';

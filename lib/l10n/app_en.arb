@@ -293,6 +293,17 @@
   "adjustmentTitle": "Balance Adjustment",
   "skip": "No, Adjust Only",
   "record": "Yes, Record",
+  "updateBalance": "Update Balance",
+  "newBalance": "New Balance",
+  "deleteWalletTitle": "Delete Wallet?",
+  "deleteWalletConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "deleteDebtWarning": "This will remove the debt record. Wallet balances will NOT be reverted automatically.",
   "billsTitle": "Bills",
   "unpaid": "Unpaid",
@@ -526,6 +537,7 @@
     }
   },
   "templateSaved": "Template saved to downloads folder",
+  "importInfoText": "Use the template to import your data correctly. Ensure column names match exactly.",
   "pressBackAgainToExit": "Press back again to exit",
   "quickRecord": "Quick Record",
   "chatAction": "Chat",
@@ -565,6 +577,7 @@
   "timeFilterThisMonth": "This Month",
   "timeFilterThisYear": "This Year",
   "timeFilterAllTime": "All Time",
+  "dailyOverview": "Daily Overview",
   "dailyAverage": "Daily Average",
   "projectedTotal": "Projected Total",
   "spendingHabitsNote": "Based on your spending habits so far this month.",
@@ -585,12 +598,19 @@
   "more": "More",
   "backupRecoveryTitle": "Backup & Recovery",
   "backupDescription": "Secure your data by creating a local backup file (JSON). You can restore this file later or on another device.",
+  "popularBanks": "Popular Banks",
+  "eWallets": "E-Wallets",
+  "bankEWalletLogos": "Bank & E-Wallet Logos",
+  "genericIcons": "Generic Icons",
+  "changeIcon": "Change Icon",
+  "typeLabel": "Type",
   "createBackup": "Create Backup",
   "restoreBackup": "Restore Backup",
   "createBackupSubtitle": "Export all data to a JSON file",
   "restoreBackupSubtitle": "Import data from a JSON file (Wipes current data)",
   "creatingBackup": "Creating backup...",
   "restoringBackup": "Restoring backup...",
+  "preferences": "Preferences",
   "backupSuccess": "Backup saved successfully to:\n{path}",
   "@backupSuccess": {
     "placeholders": {
@@ -861,6 +881,13 @@
   "today": "Today",
   "tomorrow": "Tomorrow",
   "inDays": "In {days} days",
+  "@inDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "needTwoWallets": "Need 2+ wallets",
   "nettBalance": "Nett Balance",
   "activeDebt": "Active Debt",

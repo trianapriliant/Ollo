@@ -575,5 +575,92 @@
   "draftReady": "ड्राफ्ट तैयार",
   "saveAdjust": "सहेजें / समायोजित करें",
   "notFound": "नहीं मिला",
-  "selectWallet": "वॉलेट चुनें"
+  "selectWallet": "वॉलेट चुनें",
+  "transferFee": "स्थानांतरण शुल्क",
+  "transferFeeHint": "शुल्क (वैकल्पिक)",
+  "importData": "डेटा आयात करें",
+  "importDataTitle": "लेनदेन आयात करें",
+  "downloadTemplate": "टेम्पलेट डाउनलोड करें",
+  "uploadCsv": "CSV अपलोड करें",
+  "importSuccess": "{count} लेनदेन सफलतापूर्वक आयात किए गए!",
+  "importPartialSuccess": "{success} लेनदेन आयात किए गए। विफल: {failed}.",
+  "templateSaved": "टेम्पलेट डाउनलोड फ़ोल्डर में सहेजा गया",
+  "importInfoText": "अपने डेटा को सही ढंग से आयात करने के लिए टेम्पलेट का उपयोग करें। सुनिश्चित करें कि कॉलम के नाम बिल्कुल मेल खाते हैं।",
+  "pressBackAgainToExit": "बाहर निकलने के लिए फिर से वापस दबाएं",
+  "updateBalance": "शेष राशि अपडेट करें",
+  "newBalance": "नया शेष",
+  "deleteWalletTitle": "वॉलेट हटाएं?",
+  "deleteWalletConfirm": "क्या आप वाकई \"{name}\" को हटाना चाहते हैं? इसे पूर्ववत नहीं किया जा सकता।",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customizeMenu": "मेनू अनुकूलit करें",
+  "menuOrder": "मेनू क्रम",
+  "resetMenu": "मेनू रीसेट करें",
+  "cardAppearance": "कार्ड की दिखावट",
+  "selectTheme": "थीम चुनें",
+  "themeClassic": "क्लासिक ब्लू",
+  "themeSunset": "सनसेट ऑरेंज",
+  "themeOcean": "ओशन टील",
+  "themeBerry": "बेरी पर्पल",
+  "themeForest": "नेचर ग्रीन",
+  "themeMidnight": "मिडनाइट डार्क",
+  "themeOasis": "काम ओएसिस",
+  "themeLavender": "सॉफ्ट लवेंडर",
+  "themeCottonCandy": "पेस्टल ड्रीम",
+  "themeMint": "सिंपली मिंट",
+  "themePeach": "सिंपली पीच",
+  "themeSoftBlue": "सिंपली ब्लू",
+  "themeLilac": "सिंपली लिलाक",
+  "themeLemon": "सिंपली लेमन",
+  "sysCatAdjustment": "शेष राशि समायोजन",
+  "sysCatAdjustmentDesc": "मैनुअल शेष सुधार",
+  "balanceUpdateDetected": "शेष राशि अद्यतन का पता चला",
+  "recordAsTransaction": "लेन-देन के रूप में रिकॉर्ड करें?",
+  "recordAsTransactionDesc": "शेष राशि में {amount} का परिवर्तन हुआ है। क्या आप इस अंतर को लेन-देन के रूप में रिकॉर्ड करना चाहते हैं?",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+        "amount": {"type": "String"}
+    }
+  },
+  "adjustmentTitle": "शेष राशि समायोजन",
+  "skip": "नहीं, केवल समायोजित करें",
+  "record": "हाँ, रिकॉर्ड करें",
+  "faqResetDataQuestion": "मैं अपना डेटा कैसे रीसेट करूँ?",
+  "faqResetDataAnswer": "वर्तमान में आप व्यक्तिगत लेनदेन या वॉलेट हटा सकते हैं। पूर्ण रीसेट विकल्प जल्द ही उपलब्ध होगा।",
+  "faqSecureDataQuestion": "क्या मेरा डेटा सुरक्षित है?",
+  "faqSecureDataAnswer": "हाँ, आपका सारा डेटा आपके डिवाइस पर स्थानीय रूप से संग्रहीत है। हम आपके वित्तीय डेटा को किसी बाहरी सर्वर पर अपलोड नहीं करते हैं।",
+  "monthlyCommitment": "मासिक प्रतिबद्धता",
+  "upcomingBill": "आगामी बिल",
+  "noUpcomingBills": "कोई आगामी बिल नहीं",
+  "today": "आज",
+  "tomorrow": "कल",
+  "inDays": "{days} दिनों में",
+    "@inDays": {
+    "placeholders": {
+        "days": {"type": "int"}
+    }
+  },
+  "needTwoWallets": "कम से कम 2 वॉलेट चाहिए",
+  "nettBalance": "शुद्ध शेष",
+  "activeDebt": "सक्रिय ऋण",
+  "last30Days": "पिछले 30 दिन",
+  "currentBalance": "वर्तमान शेष",
+  "premiumMember": "प्रीमियम सदस्य",
+  "upgradeToPremium": "प्रीमियम में अपग्रेड करें",
+  "unlimitedAccess": "असीमित पहुँच",
+  "unlockFeatures": "सभी सुविधाएँ अनलॉक करें",
+  "from": "से",
+  "dailyOverview": "दैनिक अवलोकन",
+  "popularBanks": "लोकप्रिय बैंक",
+  "eWallets": "ई-वॉलेट्स",
+  "bankEWalletLogos": "बैंक और ई-वॉलेट लोगो",
+  "genericIcons": "सामान्य चिह्न",
+  "changeIcon": "आइकन बदलें",
+  "typeLabel": "प्रकार",
+  "preferences": "प्राथमिकताएं"
 }

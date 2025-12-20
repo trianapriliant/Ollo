@@ -1432,6 +1432,30 @@ abstract class AppLocalizations {
   /// **'Yes, Record'**
   String get record;
 
+  /// No description provided for @updateBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Balance'**
+  String get updateBalance;
+
+  /// No description provided for @newBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'New Balance'**
+  String get newBalance;
+
+  /// No description provided for @deleteWalletTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Wallet?'**
+  String get deleteWalletTitle;
+
+  /// No description provided for @deleteWalletConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"? This action cannot be undone.'**
+  String deleteWalletConfirm(String name);
+
   /// No description provided for @deleteDebtWarning.
   ///
   /// In en, this message translates to:
@@ -2224,6 +2248,12 @@ abstract class AppLocalizations {
   /// **'Template saved to downloads folder'**
   String get templateSaved;
 
+  /// No description provided for @importInfoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the template to import your data correctly. Ensure column names match exactly.'**
+  String get importInfoText;
+
   /// No description provided for @pressBackAgainToExit.
   ///
   /// In en, this message translates to:
@@ -2416,6 +2446,12 @@ abstract class AppLocalizations {
   /// **'All Time'**
   String get timeFilterAllTime;
 
+  /// No description provided for @dailyOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Overview'**
+  String get dailyOverview;
+
   /// No description provided for @dailyAverage.
   ///
   /// In en, this message translates to:
@@ -2494,6 +2530,42 @@ abstract class AppLocalizations {
   /// **'Secure your data by creating a local backup file (JSON). You can restore this file later or on another device.'**
   String get backupDescription;
 
+  /// No description provided for @popularBanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Banks'**
+  String get popularBanks;
+
+  /// No description provided for @eWallets.
+  ///
+  /// In en, this message translates to:
+  /// **'E-Wallets'**
+  String get eWallets;
+
+  /// No description provided for @bankEWalletLogos.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank & E-Wallet Logos'**
+  String get bankEWalletLogos;
+
+  /// No description provided for @genericIcons.
+  ///
+  /// In en, this message translates to:
+  /// **'Generic Icons'**
+  String get genericIcons;
+
+  /// No description provided for @changeIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Icon'**
+  String get changeIcon;
+
+  /// No description provided for @typeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get typeLabel;
+
   /// No description provided for @createBackup.
   ///
   /// In en, this message translates to:
@@ -2529,6 +2601,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restoring backup...'**
   String get restoringBackup;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
 
   /// No description provided for @backupSuccess.
   ///
@@ -3518,7 +3596,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'In {days} days'**
-  String inDays(Object days);
+  String inDays(int days);
 
   /// No description provided for @needTwoWallets.
   ///

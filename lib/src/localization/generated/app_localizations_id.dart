@@ -703,6 +703,20 @@ class AppLocalizationsId extends AppLocalizations {
   String get record => 'Ya, Catat';
 
   @override
+  String get updateBalance => 'Perbarui Saldo';
+
+  @override
+  String get newBalance => 'Saldo Baru';
+
+  @override
+  String get deleteWalletTitle => 'Hapus Dompet?';
+
+  @override
+  String deleteWalletConfirm(String name) {
+    return 'Yakin ingin menghapus \"$name\"? Tindakan ini tidak dapat dibatalkan.';
+  }
+
+  @override
   String get deleteDebtWarning =>
       'Ini akan menghapus catatan. Saldo dompet TIDAK akan dikembalikan otomatis.';
 
@@ -1134,6 +1148,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get templateSaved => 'Template disimpan ke folder unduhan';
 
   @override
+  String get importInfoText =>
+      'Gunakan template untuk mengimpor data dengan benar. Pastikan nama kolom sama persis.';
+
+  @override
   String get pressBackAgainToExit => 'Tekan kembali lagi untuk keluar';
 
   @override
@@ -1232,6 +1250,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get timeFilterAllTime => 'Semua Waktu';
 
   @override
+  String get dailyOverview => 'Ringkasan Harian';
+
+  @override
   String get dailyAverage => 'Rata-rata Harian';
 
   @override
@@ -1276,6 +1297,24 @@ class AppLocalizationsId extends AppLocalizations {
       'Amankan data Anda dengan membuat file cadangan lokal (JSON). Anda dapat memulihkan file ini nanti.';
 
   @override
+  String get popularBanks => 'Bank Populer';
+
+  @override
+  String get eWallets => 'E-Wallet';
+
+  @override
+  String get bankEWalletLogos => 'Logo Bank & E-Wallet';
+
+  @override
+  String get genericIcons => 'Ikon Umum';
+
+  @override
+  String get changeIcon => 'Ganti Ikon';
+
+  @override
+  String get typeLabel => 'Tipe';
+
+  @override
   String get createBackup => 'Buat Cadangan';
 
   @override
@@ -1293,6 +1332,9 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get restoringBackup => 'Memulihkan cadangan...';
+
+  @override
+  String get preferences => 'Preferensi';
 
   @override
   String backupSuccess(String path) {
@@ -1816,7 +1858,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get subcategory_hobbies => 'Hobi';
 
   @override
-  String get subcategory_travel => 'Travel';
+  String get subcategory_travel => 'Perjalanan';
 
   @override
   String get monthlyCommitment => 'Komitmen Bulanan';
@@ -1834,7 +1876,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get tomorrow => 'Besok';
 
   @override
-  String inDays(Object days) {
+  String inDays(int days) {
     return 'Dalam $days hari';
   }
 

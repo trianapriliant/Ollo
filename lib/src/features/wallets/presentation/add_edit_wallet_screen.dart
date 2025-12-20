@@ -376,7 +376,7 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
         if (shouldRecord == true) {
            // 1. Create Transaction (Balance is updated automatically by repo)
            final transaction = Transaction.create(
-            title: l10n.adjustmentTitle,
+            title: 'Balance Adjustment',
             amount: difference.abs(),
             type: difference > 0 ? TransactionType.income : TransactionType.expense,
             date: DateTime.now(),

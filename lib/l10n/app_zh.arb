@@ -575,5 +575,92 @@
   "draftReady": "草稿就绪",
   "saveAdjust": "保存/调整",
   "notFound": "未找到",
-  "selectWallet": "选择钱包"
+  "selectWallet": "选择钱包",
+  "transferFee": "转账手续费",
+  "transferFeeHint": "手续费（可选）",
+  "importData": "导入数据",
+  "importDataTitle": "导入交易",
+  "downloadTemplate": "下载模板",
+  "uploadCsv": "上传 CSV",
+  "importSuccess": "成功导入 {count} 笔交易！",
+  "importPartialSuccess": "导入 {success} 笔交易。失败：{failed}。",
+  "templateSaved": "模板已保存到下载文件夹",
+  "importInfoText": "请使用模板正确导入数据。确保列名完全匹配。",
+  "pressBackAgainToExit": "再按一次返回退出",
+  "updateBalance": "更新余额",
+  "newBalance": "新余额",
+  "deleteWalletTitle": "删除钱包？",
+  "deleteWalletConfirm": "确定要删除“{name}”吗？此操作无法撤销。",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customizeMenu": "自定义菜单",
+  "menuOrder": "菜单顺序",
+  "resetMenu": "重置菜单",
+  "cardAppearance": "卡片外观",
+  "selectTheme": "选择主题",
+  "themeClassic": "经典蓝",
+  "themeSunset": "日落橙",
+  "themeOcean": "海洋青",
+  "themeBerry": "浆果紫",
+  "themeForest": "自然绿",
+  "themeMidnight": "午夜黑",
+  "themeOasis": "宁静绿洲",
+  "themeLavender": "柔和薰衣草",
+  "themeCottonCandy": "粉彩梦境",
+  "themeMint": "薄荷绿",
+  "themePeach": "蜜桃粉",
+  "themeSoftBlue": "柔和蓝",
+  "themeLilac": "淡紫",
+  "themeLemon": "柠檬黄",
+  "sysCatAdjustment": "余额调整",
+  "sysCatAdjustmentDesc": "手动余额修正",
+  "balanceUpdateDetected": "检测到余额更新",
+  "recordAsTransaction": "记录为交易？",
+  "recordAsTransactionDesc": "余额已变动 {amount}。是否将此差额记录为交易？",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+        "amount": {"type": "String"}
+    }
+  },
+  "adjustmentTitle": "余额调整",
+  "skip": "否，仅调整",
+  "record": "是，记录",
+  "faqResetDataQuestion": "如何重置数据？",
+  "faqResetDataAnswer": "目前您可以删除单个交易或钱包。完全重置选项即将推出。",
+  "faqSecureDataQuestion": "我的数据安全吗？",
+  "faqSecureDataAnswer": "是的，所有数据都存储在您的设备本地。我们不会将您的财务数据上传到任何外部服务器。",
+  "monthlyCommitment": "每月承诺",
+  "upcomingBill": "即将到来的账单",
+  "noUpcomingBills": "没有即将到来的账单",
+  "today": "今天",
+  "tomorrow": "明天",
+  "inDays": "{days} 天后",
+    "@inDays": {
+    "placeholders": {
+        "days": {"type": "int"}
+    }
+  },
+  "needTwoWallets": "至少需要两个钱包",
+  "nettBalance": "净余额",
+  "activeDebt": "当前债务",
+  "last30Days": "过去30天",
+  "currentBalance": "当前余额",
+  "premiumMember": "高级会员",
+  "upgradeToPremium": "升级至高级版",
+  "unlimitedAccess": "无限访问",
+  "unlockFeatures": "解锁所有功能",
+  "from": "来自于",
+  "dailyOverview": "每日概览",
+  "popularBanks": "热门银行",
+  "eWallets": "电子钱包",
+  "bankEWalletLogos": "银行和电子钱包徽标",
+  "genericIcons": "通用图标",
+  "changeIcon": "更改图标",
+  "typeLabel": "类型",
+  "preferences": "首选项"
 }

@@ -9,64 +9,64 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get customizeMenu => 'Customize Menu';
+  String get customizeMenu => '自定义菜单';
 
   @override
-  String get menuOrder => 'Menu Order';
+  String get menuOrder => '菜单顺序';
 
   @override
-  String get resetMenu => 'Reset Menu';
+  String get resetMenu => '重置菜单';
 
   @override
   String get home => '首页';
 
   @override
-  String get cardAppearance => 'Card Appearance';
+  String get cardAppearance => '卡片外观';
 
   @override
-  String get selectTheme => 'Select Theme';
+  String get selectTheme => '选择主题';
 
   @override
-  String get themeClassic => 'Classic Blue';
+  String get themeClassic => '经典蓝';
 
   @override
-  String get themeSunset => 'Sunset Orange';
+  String get themeSunset => '日落橙';
 
   @override
-  String get themeOcean => 'Ocean Teal';
+  String get themeOcean => '海洋青';
 
   @override
-  String get themeBerry => 'Berry Purple';
+  String get themeBerry => '浆果紫';
 
   @override
-  String get themeForest => 'Nature Green';
+  String get themeForest => '自然绿';
 
   @override
-  String get themeMidnight => 'Midnight Dark';
+  String get themeMidnight => '午夜黑';
 
   @override
-  String get themeOasis => 'Calm Oasis';
+  String get themeOasis => '宁静绿洲';
 
   @override
-  String get themeLavender => 'Soft Lavender';
+  String get themeLavender => '柔和薰衣草';
 
   @override
-  String get themeCottonCandy => 'Pastel Dream';
+  String get themeCottonCandy => '粉彩梦境';
 
   @override
-  String get themeMint => 'Simply Mint';
+  String get themeMint => '薄荷绿';
 
   @override
-  String get themePeach => 'Simply Peach';
+  String get themePeach => '蜜桃粉';
 
   @override
-  String get themeSoftBlue => 'Simply Blue';
+  String get themeSoftBlue => '柔和蓝';
 
   @override
-  String get themeLilac => 'Simply Lilac';
+  String get themeLilac => '淡紫';
 
   @override
-  String get themeLemon => 'Simply Lemon';
+  String get themeLemon => '柠檬黄';
 
   @override
   String get wallet => '钱包';
@@ -459,10 +459,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sysCatReimburseDesc => '报销追踪系统';
 
   @override
-  String get sysCatAdjustment => 'Balance Adjustment';
+  String get sysCatAdjustment => '余额调整';
 
   @override
-  String get sysCatAdjustmentDesc => 'Manual wallet balance corrections';
+  String get sysCatAdjustmentDesc => '手动余额修正';
 
   @override
   String get budgetsTitle => '预算';
@@ -672,24 +672,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paymentRecorded => '已记录！';
 
   @override
-  String get balanceUpdateDetected => 'Balance Update Detected';
+  String get balanceUpdateDetected => '检测到余额更新';
 
   @override
-  String get recordAsTransaction => 'Record as Transaction?';
+  String get recordAsTransaction => '记录为交易？';
 
   @override
   String recordAsTransactionDesc(String amount) {
-    return 'The balance has changed by $amount. Do you want to record this difference as a transaction?';
+    return '余额已变动 $amount。是否将此差额记录为交易？';
   }
 
   @override
-  String get adjustmentTitle => 'Balance Adjustment';
+  String get adjustmentTitle => '余额调整';
 
   @override
-  String get skip => 'No, Adjust Only';
+  String get skip => '否，仅调整';
 
   @override
-  String get record => 'Yes, Record';
+  String get record => '是，记录';
+
+  @override
+  String get updateBalance => '更新余额';
+
+  @override
+  String get newBalance => '新余额';
+
+  @override
+  String get deleteWalletTitle => '删除钱包？';
+
+  @override
+  String deleteWalletConfirm(String name) {
+    return '确定要删除“$name”吗？此操作无法撤销。';
+  }
 
   @override
   String get deleteDebtWarning => '钱包余额不会自动恢复。';
@@ -1085,38 +1099,41 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferTransaction => '转账';
 
   @override
-  String get transferFee => 'Transfer Fee';
+  String get transferFee => '转账手续费';
 
   @override
-  String get transferFeeHint => 'Fee (Optional)';
+  String get transferFeeHint => '手续费（可选）';
 
   @override
-  String get importData => 'Import Data';
+  String get importData => '导入数据';
 
   @override
-  String get importDataTitle => 'Import Transactions';
+  String get importDataTitle => '导入交易';
 
   @override
-  String get downloadTemplate => 'Download Template';
+  String get downloadTemplate => '下载模板';
 
   @override
-  String get uploadCsv => 'Upload CSV';
+  String get uploadCsv => '上传 CSV';
 
   @override
   String importSuccess(Object count) {
-    return 'Successfully imported $count transactions!';
+    return '成功导入 $count 笔交易！';
   }
 
   @override
   String importPartialSuccess(Object success, Object failed) {
-    return 'Imported $success transactions. Failed: $failed.';
+    return '导入 $success 笔交易。失败：$failed。';
   }
 
   @override
-  String get templateSaved => 'Template saved to downloads folder';
+  String get templateSaved => '模板已保存到下载文件夹';
 
   @override
-  String get pressBackAgainToExit => '再按一次退出';
+  String get importInfoText => '请使用模板正确导入数据。确保列名完全匹配。';
+
+  @override
+  String get pressBackAgainToExit => '再按一次返回退出';
 
   @override
   String get quickRecord => '快速记账';
@@ -1214,6 +1231,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timeFilterAllTime => '全部';
 
   @override
+  String get dailyOverview => '每日概览';
+
+  @override
   String get dailyAverage => '日均';
 
   @override
@@ -1255,6 +1275,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backupDescription => '创建本地备份文件 (JSON)。';
 
   @override
+  String get popularBanks => '热门银行';
+
+  @override
+  String get eWallets => '电子钱包';
+
+  @override
+  String get bankEWalletLogos => '银行和电子钱包徽标';
+
+  @override
+  String get genericIcons => '通用图标';
+
+  @override
+  String get changeIcon => '更改图标';
+
+  @override
+  String get typeLabel => '类型';
+
+  @override
   String get createBackup => '创建备份';
 
   @override
@@ -1271,6 +1309,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get restoringBackup => '恢复中...';
+
+  @override
+  String get preferences => '首选项';
 
   @override
   String backupSuccess(String path) {
@@ -1497,18 +1538,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get faqExportDataAnswer => '即将推出（高级版）。';
 
   @override
-  String get faqResetDataQuestion => 'How do I reset my data?';
+  String get faqResetDataQuestion => '如何重置数据？';
 
   @override
-  String get faqResetDataAnswer =>
-      'Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.';
+  String get faqResetDataAnswer => '目前您可以删除单个交易或钱包。完全重置选项即将推出。';
 
   @override
-  String get faqSecureDataQuestion => 'Is my data secure?';
+  String get faqSecureDataQuestion => '我的数据安全吗？';
 
   @override
-  String get faqSecureDataAnswer =>
-      'Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.';
+  String get faqSecureDataAnswer => '是的，所有数据都存储在您的设备本地。我们不会将您的财务数据上传到任何外部服务器。';
 
   @override
   String get contactSupport => '联系支持';
@@ -1778,54 +1817,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subcategory_travel => '旅行';
 
   @override
-  String get monthlyCommitment => 'Monthly Commitment';
+  String get monthlyCommitment => '每月承诺';
 
   @override
-  String get upcomingBill => 'Upcoming Bill';
+  String get upcomingBill => '即将到来的账单';
 
   @override
-  String get noUpcomingBills => 'No upcoming bills';
+  String get noUpcomingBills => '没有即将到来的账单';
 
   @override
-  String get today => 'Today';
+  String get today => '今天';
 
   @override
-  String get tomorrow => 'Tomorrow';
+  String get tomorrow => '明天';
 
   @override
-  String inDays(Object days) {
-    return 'In $days days';
+  String inDays(int days) {
+    return '$days 天后';
   }
 
   @override
-  String get needTwoWallets => 'Need 2+ wallets';
+  String get needTwoWallets => '至少需要两个钱包';
 
   @override
-  String get nettBalance => 'Nett Balance';
+  String get nettBalance => '净余额';
 
   @override
-  String get activeDebt => 'Active Debt';
+  String get activeDebt => '当前债务';
 
   @override
-  String get last30Days => 'last 30 days';
+  String get last30Days => '过去30天';
 
   @override
-  String get currentBalance => 'Current Balance';
+  String get currentBalance => '当前余额';
 
   @override
-  String get premiumMember => 'Premium Member';
+  String get premiumMember => '高级会员';
 
   @override
-  String get upgradeToPremium => 'Upgrade to Premium';
+  String get upgradeToPremium => '升级至高级版';
 
   @override
-  String get unlimitedAccess => 'You have unlimited access!';
+  String get unlimitedAccess => '无限访问';
 
   @override
-  String get unlockFeatures => 'Unlock all features & remove limits.';
+  String get unlockFeatures => '解锁所有功能';
 
   @override
-  String get from => 'From';
+  String get from => '来自于';
 
   @override
   String get subcategory_music => '音乐';

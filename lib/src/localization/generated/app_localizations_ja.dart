@@ -9,64 +9,64 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get customizeMenu => 'Customize Menu';
+  String get customizeMenu => 'メニューのカスタマイズ';
 
   @override
-  String get menuOrder => 'Menu Order';
+  String get menuOrder => 'メニューの順序';
 
   @override
-  String get resetMenu => 'Reset Menu';
+  String get resetMenu => 'メニューをリセット';
 
   @override
   String get home => 'ホーム';
 
   @override
-  String get cardAppearance => 'Card Appearance';
+  String get cardAppearance => 'カードの外観';
 
   @override
-  String get selectTheme => 'Select Theme';
+  String get selectTheme => 'テーマを選択';
 
   @override
-  String get themeClassic => 'Classic Blue';
+  String get themeClassic => 'クラシックブルー';
 
   @override
-  String get themeSunset => 'Sunset Orange';
+  String get themeSunset => 'サンセットオレンジ';
 
   @override
-  String get themeOcean => 'Ocean Teal';
+  String get themeOcean => 'オーシャンティール';
 
   @override
-  String get themeBerry => 'Berry Purple';
+  String get themeBerry => 'ベリーパープル';
 
   @override
-  String get themeForest => 'Nature Green';
+  String get themeForest => 'ネイチャーグリーン';
 
   @override
-  String get themeMidnight => 'Midnight Dark';
+  String get themeMidnight => 'ミッドナイトダーク';
 
   @override
-  String get themeOasis => 'Calm Oasis';
+  String get themeOasis => 'カームオアシス';
 
   @override
-  String get themeLavender => 'Soft Lavender';
+  String get themeLavender => 'ソフトラベンダー';
 
   @override
-  String get themeCottonCandy => 'Pastel Dream';
+  String get themeCottonCandy => 'パステルドリーム';
 
   @override
-  String get themeMint => 'Simply Mint';
+  String get themeMint => 'シンプリーミント';
 
   @override
-  String get themePeach => 'Simply Peach';
+  String get themePeach => 'シンプリーピーチ';
 
   @override
-  String get themeSoftBlue => 'Simply Blue';
+  String get themeSoftBlue => 'シンプリーブルー';
 
   @override
-  String get themeLilac => 'Simply Lilac';
+  String get themeLilac => 'シンプリーライラック';
 
   @override
-  String get themeLemon => 'Simply Lemon';
+  String get themeLemon => 'シンプリーレモン';
 
   @override
   String get wallet => 'ウォレット';
@@ -459,10 +459,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sysCatReimburseDesc => '立替管理システム';
 
   @override
-  String get sysCatAdjustment => 'Balance Adjustment';
+  String get sysCatAdjustment => '残高調整';
 
   @override
-  String get sysCatAdjustmentDesc => 'Manual wallet balance corrections';
+  String get sysCatAdjustmentDesc => '手動による残高修正';
 
   @override
   String get budgetsTitle => '予算';
@@ -672,24 +672,38 @@ class AppLocalizationsJa extends AppLocalizations {
   String get paymentRecorded => '記録しました！';
 
   @override
-  String get balanceUpdateDetected => 'Balance Update Detected';
+  String get balanceUpdateDetected => '残高の更新を検出';
 
   @override
-  String get recordAsTransaction => 'Record as Transaction?';
+  String get recordAsTransaction => '取引として記録しますか？';
 
   @override
   String recordAsTransactionDesc(String amount) {
-    return 'The balance has changed by $amount. Do you want to record this difference as a transaction?';
+    return '残高が $amount 変更されました。この差額を取引として記録しますか？';
   }
 
   @override
-  String get adjustmentTitle => 'Balance Adjustment';
+  String get adjustmentTitle => '残高調整';
 
   @override
-  String get skip => 'No, Adjust Only';
+  String get skip => 'いいえ、調整のみ';
 
   @override
-  String get record => 'Yes, Record';
+  String get record => 'はい、記録する';
+
+  @override
+  String get updateBalance => '残高更新';
+
+  @override
+  String get newBalance => '新しい残高';
+
+  @override
+  String get deleteWalletTitle => 'ウォレットを削除？';
+
+  @override
+  String deleteWalletConfirm(String name) {
+    return '「$name」を削除してもよろしいですか？この操作は元に戻せません。';
+  }
 
   @override
   String get deleteDebtWarning => '記録を削除します。ウォレットの残高は自動的に戻りません。';
@@ -1085,38 +1099,42 @@ class AppLocalizationsJa extends AppLocalizations {
   String get transferTransaction => '振替';
 
   @override
-  String get transferFee => 'Transfer Fee';
+  String get transferFee => '振込手数料';
 
   @override
-  String get transferFeeHint => 'Fee (Optional)';
+  String get transferFeeHint => '手数料（任意）';
 
   @override
-  String get importData => 'Import Data';
+  String get importData => 'データのインポート';
 
   @override
-  String get importDataTitle => 'Import Transactions';
+  String get importDataTitle => '取引のインポート';
 
   @override
-  String get downloadTemplate => 'Download Template';
+  String get downloadTemplate => 'テンプレートをダウンロード';
 
   @override
-  String get uploadCsv => 'Upload CSV';
+  String get uploadCsv => 'CSVをアップロード';
 
   @override
   String importSuccess(Object count) {
-    return 'Successfully imported $count transactions!';
+    return '$count件の取引を正常にインポートしました！';
   }
 
   @override
   String importPartialSuccess(Object success, Object failed) {
-    return 'Imported $success transactions. Failed: $failed.';
+    return '$success件インポートしました。失敗: $failed件。';
   }
 
   @override
-  String get templateSaved => 'Template saved to downloads folder';
+  String get templateSaved => 'テンプレートをダウンロードフォルダに保存しました';
 
   @override
-  String get pressBackAgainToExit => 'もう一度押して終了';
+  String get importInfoText =>
+      'データを正しくインポートするにはテンプレートを使用してください。列名が正確に一致していることを確認してください。';
+
+  @override
+  String get pressBackAgainToExit => 'もう一度戻るを押して終了';
 
   @override
   String get quickRecord => 'クイック記録';
@@ -1214,6 +1232,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get timeFilterAllTime => '全期間';
 
   @override
+  String get dailyOverview => '日次概要';
+
+  @override
   String get dailyAverage => '日次平均';
 
   @override
@@ -1255,6 +1276,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get backupDescription => 'データをJSONファイルとしてエクスポートし、安全に保管できます。';
 
   @override
+  String get popularBanks => '人気の銀行';
+
+  @override
+  String get eWallets => '電子マネー';
+
+  @override
+  String get bankEWalletLogos => '銀行と電子マネーのロゴ';
+
+  @override
+  String get genericIcons => '一般的なアイコン';
+
+  @override
+  String get changeIcon => 'アイコンを変更';
+
+  @override
+  String get typeLabel => 'タイプ';
+
+  @override
   String get createBackup => 'バックアップ作成';
 
   @override
@@ -1271,6 +1310,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get restoringBackup => '復元中...';
+
+  @override
+  String get preferences => '設定';
 
   @override
   String backupSuccess(String path) {
@@ -1501,13 +1543,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get faqResetDataQuestion => 'データをリセットするには？';
 
   @override
-  String get faqResetDataAnswer => '現在は個別に削除可能です。完全リセットは将来のアップデートで追加されます。';
+  String get faqResetDataAnswer =>
+      '現在、個々の取引やウォレットを削除できます。完全なリセットオプションは近日公開予定です。';
 
   @override
   String get faqSecureDataQuestion => 'データは安全ですか？';
 
   @override
-  String get faqSecureDataAnswer => 'はい、すべてのデータは端末内にのみ保存されます。';
+  String get faqSecureDataAnswer =>
+      'はい、すべてのデータはデバイス内にローカルに保存されます。外部サーバーにはアップロードされません。';
 
   @override
   String get contactSupport => 'サポートへ連絡';
@@ -1777,54 +1821,54 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subcategory_travel => '旅行';
 
   @override
-  String get monthlyCommitment => 'Monthly Commitment';
+  String get monthlyCommitment => '月次コミットメント';
 
   @override
-  String get upcomingBill => 'Upcoming Bill';
+  String get upcomingBill => '次回の請求';
 
   @override
-  String get noUpcomingBills => 'No upcoming bills';
+  String get noUpcomingBills => '次回の請求はありません';
 
   @override
-  String get today => 'Today';
+  String get today => '今日';
 
   @override
-  String get tomorrow => 'Tomorrow';
+  String get tomorrow => '明日';
 
   @override
-  String inDays(Object days) {
-    return 'In $days days';
+  String inDays(int days) {
+    return '$days日後';
   }
 
   @override
-  String get needTwoWallets => 'Need 2+ wallets';
+  String get needTwoWallets => '最低2つのウォレットが必要です';
 
   @override
-  String get nettBalance => 'Nett Balance';
+  String get nettBalance => '純残高';
 
   @override
-  String get activeDebt => 'Active Debt';
+  String get activeDebt => 'アクティブな借金';
 
   @override
-  String get last30Days => 'last 30 days';
+  String get last30Days => '過去30日間';
 
   @override
-  String get currentBalance => 'Current Balance';
+  String get currentBalance => '現在の残高';
 
   @override
-  String get premiumMember => 'Premium Member';
+  String get premiumMember => 'プレミアムメンバー';
 
   @override
-  String get upgradeToPremium => 'Upgrade to Premium';
+  String get upgradeToPremium => 'プレミアムにアップグレード';
 
   @override
-  String get unlimitedAccess => 'You have unlimited access!';
+  String get unlimitedAccess => '無制限アクセス';
 
   @override
-  String get unlockFeatures => 'Unlock all features & remove limits.';
+  String get unlockFeatures => 'すべての機能を解除';
 
   @override
-  String get from => 'From';
+  String get from => 'から';
 
   @override
   String get subcategory_music => '音楽';

@@ -129,7 +129,7 @@ class _DataImportScreenState extends ConsumerState<DataImportScreen> {
                    const SizedBox(width: 12),
                    Expanded(
                      child: Text(
-                        'Use the template to import your data correctly. Ensure column names match exactly.',
+                        AppLocalizations.of(context)!.importInfoText,
                         style: AppTextStyles.bodySmall.copyWith(color: Colors.blue[800]),
                      ),
                    ),

@@ -4,6 +4,7 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../settings/presentation/currency_provider.dart';
 import '../statistics_provider.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class DailyStackedBarChart extends StatefulWidget {
   final List<DailyData> data;
@@ -123,7 +124,7 @@ class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Daily Overview', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.dailyOverview, style: AppTextStyles.h3),
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
               child: Column(
@@ -214,15 +215,15 @@ class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
                       Color color;
                       
                       if (rodIndex == 0) {
-                        label = 'Income';
+                        label = AppLocalizations.of(context)!.income;
                         value = dayData.income;
                         color = const Color(0xFF4ADE80);
                       } else if (rodIndex == 1) {
-                        label = 'Expense';
+                        label = AppLocalizations.of(context)!.expense;
                         value = dayData.expense;
                         color = const Color(0xFFF87171);
                       } else {
-                        label = 'Savings';
+                        label = AppLocalizations.of(context)!.savings;
                         value = dayData.savings;
                         color = const Color(0xFF60A5FA);
                       }
@@ -308,11 +309,11 @@ class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildLegendItem(const Color(0xFF4ADE80), 'Income'),
+            _buildLegendItem(const Color(0xFF4ADE80), AppLocalizations.of(context)!.income),
             const SizedBox(width: 16),
-            _buildLegendItem(const Color(0xFFF87171), 'Expense'),
+            _buildLegendItem(const Color(0xFFF87171), AppLocalizations.of(context)!.expense),
             const SizedBox(width: 16),
-            _buildLegendItem(const Color(0xFF60A5FA), 'Savings'),
+            _buildLegendItem(const Color(0xFF60A5FA), AppLocalizations.of(context)!.savings),
           ],
         ),
       ],

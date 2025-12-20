@@ -75,6 +75,10 @@ class DataImportService {
 
   Future<Map<String, int>> importCsv(File file) async {
     final input = await file.readAsString();
+    return importCsvContent(input);
+  }
+
+  Future<Map<String, int>> importCsvContent(String input) async {
     final List<List<dynamic>> rows = const CsvToListConverter().convert(input, eol: '\n');
     
     if (rows.isEmpty || rows.length < 2) {
@@ -226,7 +230,7 @@ class DataImportService {
              ..subCategoryId = feeSubCategory?.id
              ..subCategoryName = feeSubCategory?.name
              ..subCategoryIcon = feeSubCategory?.iconPath
-             ..note = 'Fee for imported transfer';
+             ..note = 'Fee for transfer (Imported)';
              
            await transactionRepo.addTransaction(feeTx);
         }

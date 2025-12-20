@@ -575,5 +575,92 @@
   "draftReady": "Borrador Listo",
   "saveAdjust": "Guardar / Ajustar",
   "notFound": "No encontrado",
-  "selectWallet": "Seleccionar Billetera"
+  "selectWallet": "Seleccionar Billetera",
+  "transferFee": "Comisión de transferencia",
+  "transferFeeHint": "Comisión (Opcional)",
+  "importData": "Importar datos",
+  "importDataTitle": "Importar transacciones",
+  "downloadTemplate": "Descargar plantilla",
+  "uploadCsv": "Subir CSV",
+  "importSuccess": "¡Se importaron {count} transacciones exitosamente!",
+  "importPartialSuccess": "Se importaron {success} transacciones. Fallidas: {failed}.",
+  "templateSaved": "Plantilla guardada en descargas",
+  "importInfoText": "Use la plantilla para importar sus datos correctamente. Asegúrese de que los nombres de las columnas coincidan exactamente.",
+  "pressBackAgainToExit": "Presione atrás nuevamente para salir",
+  "updateBalance": "Actualizar Saldo",
+  "newBalance": "Nuevo Saldo",
+  "deleteWalletTitle": "¿Eliminar Billetera?",
+  "deleteWalletConfirm": "¿Seguro que desea eliminar \"{name}\"? No se puede deshacer.",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customizeMenu": "Personalizar Menú",
+  "menuOrder": "Orden del Menú",
+  "resetMenu": "Restablecer Menú",
+  "cardAppearance": "Apariencia de Tarjeta",
+  "selectTheme": "Seleccionar Tema",
+  "themeClassic": "Azul Clásico",
+  "themeSunset": "Atardecer Naranja",
+  "themeOcean": "Verde Azulado",
+  "themeBerry": "Baya Púrpura",
+  "themeForest": "Verde Bosque",
+  "themeMidnight": "Medianoche Oscura",
+  "themeOasis": "Oasis de Calma",
+  "themeLavender": "Lavanda Suave",
+  "themeCottonCandy": "Sueño Pastel",
+  "themeMint": "Menta Simple",
+  "themePeach": "Melocotón Simple",
+  "themeSoftBlue": "Azul Simple",
+  "themeLilac": "Lila Simple",
+  "themeLemon": "Limón Simple",
+  "sysCatAdjustment": "Ajuste de Saldo",
+  "sysCatAdjustmentDesc": "Correcciones manuales de saldo",
+  "balanceUpdateDetected": "Actualización de Saldo Detectada",
+  "recordAsTransaction": "¿Registrar como Transacción?",
+  "recordAsTransactionDesc": "El saldo ha cambiado en {amount}. ¿Desea registrar esta diferencia como una transacción?",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+        "amount": {"type": "String"}
+    }
+  },
+  "adjustmentTitle": "Ajuste de Saldo",
+  "skip": "No, Solo Ajustar",
+  "record": "Sí, Registrar",
+  "faqResetDataQuestion": "¿Cómo reinicio mis datos?",
+  "faqResetDataAnswer": "Actualmente puede eliminar transacciones o billeteras individuales. Una opción de reinicio completo estará disponible pronto.",
+  "faqSecureDataQuestion": "¿Están seguros mis datos?",
+  "faqSecureDataAnswer": "Sí, todos sus datos se almacenan localmente en su dispositivo. No subimos sus datos financieros a servidores externos.",
+  "monthlyCommitment": "Compromiso Mensual",
+  "upcomingBill": "Próxima Factura",
+  "noUpcomingBills": "Sin facturas próximas",
+  "today": "Hoy",
+  "tomorrow": "Mañana",
+  "inDays": "En {days} días",
+    "@inDays": {
+    "placeholders": {
+        "days": {"type": "int"}
+    }
+  },
+  "needTwoWallets": "Se necesitan al menos 2 billeteras",
+  "nettBalance": "Saldo Neto",
+  "activeDebt": "Deuda Activa",
+  "last30Days": "Últimos 30 días",
+  "currentBalance": "Saldo Actual",
+  "premiumMember": "Miembro Premium",
+  "upgradeToPremium": "Mejorar a Premium",
+  "unlimitedAccess": "Acceso Ilimitado",
+  "unlockFeatures": "Desbloquear todo",
+  "from": "De",
+  "dailyOverview": "Resumen Diario",
+  "popularBanks": "Bancos Populares",
+  "eWallets": "Billeteras Digitales",
+  "bankEWalletLogos": "Logotipos de Bancos y Billeteras",
+  "genericIcons": "Iconos Genéricos",
+  "changeIcon": "Cambiar Icono",
+  "typeLabel": "Tipo",
+  "preferences": "Preferencias"
 }

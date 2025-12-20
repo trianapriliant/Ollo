@@ -223,7 +223,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(AppLocalizations.of(context)!.monthlyOverview, style: AppTextStyles.h3),
+                        Text(AppLocalizations.of(context)!.dailyOverview, style: AppTextStyles.h3),
                         const SizedBox(height: 16),
                         MonthlyBarChart(
                           data: data,

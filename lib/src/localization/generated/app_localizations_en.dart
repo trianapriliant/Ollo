@@ -705,6 +705,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get record => 'Yes, Record';
 
   @override
+  String get updateBalance => 'Update Balance';
+
+  @override
+  String get newBalance => 'New Balance';
+
+  @override
+  String get deleteWalletTitle => 'Delete Wallet?';
+
+  @override
+  String deleteWalletConfirm(String name) {
+    return 'Are you sure you want to delete \"$name\"? This action cannot be undone.';
+  }
+
+  @override
   String get deleteDebtWarning =>
       'This will remove the debt record. Wallet balances will NOT be reverted automatically.';
 
@@ -1137,6 +1151,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateSaved => 'Template saved to downloads folder';
 
   @override
+  String get importInfoText =>
+      'Use the template to import your data correctly. Ensure column names match exactly.';
+
+  @override
   String get pressBackAgainToExit => 'Press back again to exit';
 
   @override
@@ -1236,6 +1254,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeFilterAllTime => 'All Time';
 
   @override
+  String get dailyOverview => 'Daily Overview';
+
+  @override
   String get dailyAverage => 'Daily Average';
 
   @override
@@ -1279,6 +1300,24 @@ class AppLocalizationsEn extends AppLocalizations {
       'Secure your data by creating a local backup file (JSON). You can restore this file later or on another device.';
 
   @override
+  String get popularBanks => 'Popular Banks';
+
+  @override
+  String get eWallets => 'E-Wallets';
+
+  @override
+  String get bankEWalletLogos => 'Bank & E-Wallet Logos';
+
+  @override
+  String get genericIcons => 'Generic Icons';
+
+  @override
+  String get changeIcon => 'Change Icon';
+
+  @override
+  String get typeLabel => 'Type';
+
+  @override
   String get createBackup => 'Create Backup';
 
   @override
@@ -1296,6 +1335,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoringBackup => 'Restoring backup...';
+
+  @override
+  String get preferences => 'Preferences';
 
   @override
   String backupSuccess(String path) {
@@ -1837,7 +1879,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tomorrow => 'Tomorrow';
 
   @override
-  String inDays(Object days) {
+  String inDays(int days) {
     return 'In $days days';
   }
 

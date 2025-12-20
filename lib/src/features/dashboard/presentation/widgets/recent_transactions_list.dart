@@ -222,6 +222,25 @@ class RecentTransactionsList extends ConsumerWidget {
                           displayTitle = CategoryLocalizationHelper.getLocalizedCategoryName(context, category);
                         }
                       }
+
+                      // Check for Transfer Fee
+                      if (category?.externalId == 'financial' && 
+                          (subCategory?.id == 'fees' || subCategory?.id == 'fee') && 
+                          (transaction.note != null && transaction.note!.startsWith('Fee for transfer'))) {
+                          displayTitle = AppLocalizations.of(context)!.transferFee;
+                      }
+
+                      // Check for Balance Adjustment
+                      if (category?.externalId == 'system' && 
+                          subCategory?.id == 'adjustment' &&
+                          transaction.title == 'Balance Adjustment') {
+                          displayTitle = AppLocalizations.of(context)!.adjustmentTitle;
+                      }
+
+                      // Check for Transfer
+                      if (transaction.type == TransactionType.transfer) {
+                          displayTitle = AppLocalizations.of(context)!.transferTransaction;
+                      }
                       
                       // -------------------------------
 

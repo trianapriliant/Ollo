@@ -227,6 +227,17 @@
   "adjustmentTitle": "Penyesuaian Saldo",
   "skip": "Tidak, Ubah Saja",
   "record": "Ya, Catat",
+  "updateBalance": "Perbarui Saldo",
+  "newBalance": "Saldo Baru",
+  "deleteWalletTitle": "Hapus Dompet?",
+  "deleteWalletConfirm": "Yakin ingin menghapus \"{name}\"? Tindakan ini tidak dapat dibatalkan.",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "deleteDebtWarning": "Ini akan menghapus catatan. Saldo dompet TIDAK akan dikembalikan otomatis.",
   "billsTitle": "Tagihan",
   "unpaid": "Belum Bayar",
@@ -365,6 +376,7 @@
   "importSuccess": "Berhasil mengimpor {count} transaksi!",
   "importPartialSuccess": "Berhasil mengimpor {success} transaksi. Gagal: {failed}.",
   "templateSaved": "Template disimpan ke folder unduhan",
+  "importInfoText": "Gunakan template untuk mengimpor data dengan benar. Pastikan nama kolom sama persis.",
   "pressBackAgainToExit": "Tekan kembali lagi untuk keluar",
   "quickRecord": "Rekam Cepat",
   "chatAction": "Chat",
@@ -750,5 +762,14 @@
   "unlimitedAccess": "Anda punya akses tanpa batas!",
   "unlockFeatures": "Buka semua fitur & hapus batas.",
   "from": "Dari",
-  "wallet": "Dompet"
+  "wallet": "Dompet",
+  "subcategory_travel": "Perjalanan",
+  "dailyOverview": "Ringkasan Harian",
+  "popularBanks": "Bank Populer",
+  "eWallets": "E-Wallet",
+  "bankEWalletLogos": "Logo Bank & E-Wallet",
+  "genericIcons": "Ikon Umum",
+  "changeIcon": "Ganti Ikon",
+  "typeLabel": "Tipe",
+  "preferences": "Preferensi"
 }

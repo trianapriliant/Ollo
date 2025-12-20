@@ -9,6 +9,7 @@ import '../domain/wallet_template.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../../../utils/icon_helper.dart';
 import '../../../common_widgets/wallet_icon.dart';
+import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class AddWalletScreen extends ConsumerStatefulWidget {
   final Wallet? walletToEdit;
@@ -212,7 +213,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Templates Section
-            Text('Popular Banks', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.popularBanks, style: AppTextStyles.h3),
             const SizedBox(height: 12),
             SizedBox(
               height: 100,
@@ -227,7 +228,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            Text('E-Wallets', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.eWallets, style: AppTextStyles.h3),
             const SizedBox(height: 12),
             SizedBox(
               height: 100,
@@ -246,10 +247,10 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
             const SizedBox(height: 16),
             
             // Manual Input Section
-            Text('Wallet Details', style: AppTextStyles.h3),
+            Text(AppLocalizations.of(context)!.walletDetails, style: AppTextStyles.h3),
             const SizedBox(height: 16),
             
-            Text('Wallet Name', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.walletName, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
             TextField(
               controller: _nameController,
@@ -264,7 +265,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Text('Initial Balance', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.initialBalance, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
             TextField(
               controller: _balanceController,
@@ -281,7 +282,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Text('Type', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.typeLabel, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -310,7 +311,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            Text('Icon', style: AppTextStyles.bodyMedium),
+            Text(AppLocalizations.of(context)!.icon, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 12),
             
             // Selected Icon Preview (if asset)
@@ -326,14 +327,14 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                           _selectedIcon = 'account_balance_wallet'; // Reset
                         });
                       },
-                      child: const Text('Change Icon'),
+                      child: Text(AppLocalizations.of(context)!.changeIcon),
                     ),
                   ],
                 ),
               ),
             ] else ...[
               // Custom Asset Icons
-              Text('Bank & E-Wallet Logos', style: AppTextStyles.bodyMedium),
+              Text(AppLocalizations.of(context)!.bankEWalletLogos, style: AppTextStyles.bodyMedium),
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -376,7 +377,7 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
               ),
               const SizedBox(height: 24),
 
-              Text('Generic Icons', style: AppTextStyles.bodyMedium),
+              Text(AppLocalizations.of(context)!.genericIcons, style: AppTextStyles.bodyMedium),
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(16),

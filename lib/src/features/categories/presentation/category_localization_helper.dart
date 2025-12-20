@@ -56,6 +56,16 @@ class CategoryLocalizationHelper {
       'investments': l10n.category_investments,
       'gifts_income': l10n.category_gifts_income,
       'other_income': l10n.category_other_income,
+      
+      // System Categories
+      'system': l10n.system,
+      'wishlist': l10n.wishlist,
+      'bills': l10n.bills,
+      'debts': l10n.debts,
+      'savings': l10n.savings,
+      'recurring': l10n.recurring,
+      'reimburse': l10n.reimburse,
+      'smartNotes': l10n.smartNotesTitle,
     };
   }
 

@@ -9,64 +9,64 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get customizeMenu => 'Customize Menu';
+  String get customizeMenu => 'मेनू अनुकूलit करें';
 
   @override
-  String get menuOrder => 'Menu Order';
+  String get menuOrder => 'मेनू क्रम';
 
   @override
-  String get resetMenu => 'Reset Menu';
+  String get resetMenu => 'मेनू रीसेट करें';
 
   @override
   String get home => 'होम';
 
   @override
-  String get cardAppearance => 'Card Appearance';
+  String get cardAppearance => 'कार्ड की दिखावट';
 
   @override
-  String get selectTheme => 'Select Theme';
+  String get selectTheme => 'थीम चुनें';
 
   @override
-  String get themeClassic => 'Classic Blue';
+  String get themeClassic => 'क्लासिक ब्लू';
 
   @override
-  String get themeSunset => 'Sunset Orange';
+  String get themeSunset => 'सनसेट ऑरेंज';
 
   @override
-  String get themeOcean => 'Ocean Teal';
+  String get themeOcean => 'ओशन टील';
 
   @override
-  String get themeBerry => 'Berry Purple';
+  String get themeBerry => 'बेरी पर्पल';
 
   @override
-  String get themeForest => 'Nature Green';
+  String get themeForest => 'नेचर ग्रीन';
 
   @override
-  String get themeMidnight => 'Midnight Dark';
+  String get themeMidnight => 'मिडनाइट डार्क';
 
   @override
-  String get themeOasis => 'Calm Oasis';
+  String get themeOasis => 'काम ओएसिस';
 
   @override
-  String get themeLavender => 'Soft Lavender';
+  String get themeLavender => 'सॉफ्ट लवेंडर';
 
   @override
-  String get themeCottonCandy => 'Pastel Dream';
+  String get themeCottonCandy => 'पेस्टल ड्रीम';
 
   @override
-  String get themeMint => 'Simply Mint';
+  String get themeMint => 'सिंपली मिंट';
 
   @override
-  String get themePeach => 'Simply Peach';
+  String get themePeach => 'सिंपली पीच';
 
   @override
-  String get themeSoftBlue => 'Simply Blue';
+  String get themeSoftBlue => 'सिंपली ब्लू';
 
   @override
-  String get themeLilac => 'Simply Lilac';
+  String get themeLilac => 'सिंपली लिलाक';
 
   @override
-  String get themeLemon => 'Simply Lemon';
+  String get themeLemon => 'सिंपली लेमन';
 
   @override
   String get wallet => 'वॉलेट';
@@ -467,10 +467,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sysCatReimburseDesc => 'प्रतिपूर्ति ट्रैकिंग प्रणाली';
 
   @override
-  String get sysCatAdjustment => 'Balance Adjustment';
+  String get sysCatAdjustment => 'शेष राशि समायोजन';
 
   @override
-  String get sysCatAdjustmentDesc => 'Manual wallet balance corrections';
+  String get sysCatAdjustmentDesc => 'मैनुअल शेष सुधार';
 
   @override
   String get budgetsTitle => 'बजट';
@@ -681,24 +681,38 @@ class AppLocalizationsHi extends AppLocalizations {
   String get paymentRecorded => 'भुगतान दर्ज किया गया!';
 
   @override
-  String get balanceUpdateDetected => 'Balance Update Detected';
+  String get balanceUpdateDetected => 'शेष राशि अद्यतन का पता चला';
 
   @override
-  String get recordAsTransaction => 'Record as Transaction?';
+  String get recordAsTransaction => 'लेन-देन के रूप में रिकॉर्ड करें?';
 
   @override
   String recordAsTransactionDesc(String amount) {
-    return 'The balance has changed by $amount. Do you want to record this difference as a transaction?';
+    return 'शेष राशि में $amount का परिवर्तन हुआ है। क्या आप इस अंतर को लेन-देन के रूप में रिकॉर्ड करना चाहते हैं?';
   }
 
   @override
-  String get adjustmentTitle => 'Balance Adjustment';
+  String get adjustmentTitle => 'शेष राशि समायोजन';
 
   @override
-  String get skip => 'No, Adjust Only';
+  String get skip => 'नहीं, केवल समायोजित करें';
 
   @override
-  String get record => 'Yes, Record';
+  String get record => 'हाँ, रिकॉर्ड करें';
+
+  @override
+  String get updateBalance => 'शेष राशि अपडेट करें';
+
+  @override
+  String get newBalance => 'नया शेष';
+
+  @override
+  String get deleteWalletTitle => 'वॉलेट हटाएं?';
+
+  @override
+  String deleteWalletConfirm(String name) {
+    return 'क्या आप वाकई \"$name\" को हटाना चाहते हैं? इसे पूर्ववत नहीं किया जा सकता।';
+  }
 
   @override
   String get deleteDebtWarning =>
@@ -1099,38 +1113,42 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transferTransaction => 'ट्रांसफर';
 
   @override
-  String get transferFee => 'Transfer Fee';
+  String get transferFee => 'स्थानांतरण शुल्क';
 
   @override
-  String get transferFeeHint => 'Fee (Optional)';
+  String get transferFeeHint => 'शुल्क (वैकल्पिक)';
 
   @override
-  String get importData => 'Import Data';
+  String get importData => 'डेटा आयात करें';
 
   @override
-  String get importDataTitle => 'Import Transactions';
+  String get importDataTitle => 'लेनदेन आयात करें';
 
   @override
-  String get downloadTemplate => 'Download Template';
+  String get downloadTemplate => 'टेम्पलेट डाउनलोड करें';
 
   @override
-  String get uploadCsv => 'Upload CSV';
+  String get uploadCsv => 'CSV अपलोड करें';
 
   @override
   String importSuccess(Object count) {
-    return 'Successfully imported $count transactions!';
+    return '$count लेनदेन सफलतापूर्वक आयात किए गए!';
   }
 
   @override
   String importPartialSuccess(Object success, Object failed) {
-    return 'Imported $success transactions. Failed: $failed.';
+    return '$success लेनदेन आयात किए गए। विफल: $failed.';
   }
 
   @override
-  String get templateSaved => 'Template saved to downloads folder';
+  String get templateSaved => 'टेम्पलेट डाउनलोड फ़ोल्डर में सहेजा गया';
 
   @override
-  String get pressBackAgainToExit => 'बाहर निकलने के लिए फिर से दबाएं';
+  String get importInfoText =>
+      'अपने डेटा को सही ढंग से आयात करने के लिए टेम्पलेट का उपयोग करें। सुनिश्चित करें कि कॉलम के नाम बिल्कुल मेल खाते हैं।';
+
+  @override
+  String get pressBackAgainToExit => 'बाहर निकलने के लिए फिर से वापस दबाएं';
 
   @override
   String get quickRecord => 'त्वरित रिकॉर्ड';
@@ -1228,6 +1246,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get timeFilterAllTime => 'सभी समय';
 
   @override
+  String get dailyOverview => 'दैनिक अवलोकन';
+
+  @override
   String get dailyAverage => 'दैनिक औसत';
 
   @override
@@ -1269,6 +1290,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String get backupDescription => 'स्थानीय बैकअप फ़ाइल (JSON) बनाएं।';
 
   @override
+  String get popularBanks => 'लोकप्रिय बैंक';
+
+  @override
+  String get eWallets => 'ई-वॉलेट्स';
+
+  @override
+  String get bankEWalletLogos => 'बैंक और ई-वॉलेट लोगो';
+
+  @override
+  String get genericIcons => 'सामान्य चिह्न';
+
+  @override
+  String get changeIcon => 'आइकन बदलें';
+
+  @override
+  String get typeLabel => 'प्रकार';
+
+  @override
   String get createBackup => 'बैकअप बनाएं';
 
   @override
@@ -1285,6 +1324,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get restoringBackup => 'बहाल कर रहा है...';
+
+  @override
+  String get preferences => 'प्राथमिकताएं';
 
   @override
   String backupSuccess(String path) {
@@ -1513,18 +1555,18 @@ class AppLocalizationsHi extends AppLocalizations {
   String get faqExportDataAnswer => 'जल्द आ रहा है (प्रीमियम)।';
 
   @override
-  String get faqResetDataQuestion => 'How do I reset my data?';
+  String get faqResetDataQuestion => 'मैं अपना डेटा कैसे रीसेट करूँ?';
 
   @override
   String get faqResetDataAnswer =>
-      'Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.';
+      'वर्तमान में आप व्यक्तिगत लेनदेन या वॉलेट हटा सकते हैं। पूर्ण रीसेट विकल्प जल्द ही उपलब्ध होगा।';
 
   @override
-  String get faqSecureDataQuestion => 'Is my data secure?';
+  String get faqSecureDataQuestion => 'क्या मेरा डेटा सुरक्षित है?';
 
   @override
   String get faqSecureDataAnswer =>
-      'Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.';
+      'हाँ, आपका सारा डेटा आपके डिवाइस पर स्थानीय रूप से संग्रहीत है। हम आपके वित्तीय डेटा को किसी बाहरी सर्वर पर अपलोड नहीं करते हैं।';
 
   @override
   String get contactSupport => 'संपर्क करें';
@@ -1794,54 +1836,54 @@ class AppLocalizationsHi extends AppLocalizations {
   String get subcategory_travel => 'यात्रा';
 
   @override
-  String get monthlyCommitment => 'Monthly Commitment';
+  String get monthlyCommitment => 'मासिक प्रतिबद्धता';
 
   @override
-  String get upcomingBill => 'Upcoming Bill';
+  String get upcomingBill => 'आगामी बिल';
 
   @override
-  String get noUpcomingBills => 'No upcoming bills';
+  String get noUpcomingBills => 'कोई आगामी बिल नहीं';
 
   @override
-  String get today => 'Today';
+  String get today => 'आज';
 
   @override
-  String get tomorrow => 'Tomorrow';
+  String get tomorrow => 'कल';
 
   @override
-  String inDays(Object days) {
-    return 'In $days days';
+  String inDays(int days) {
+    return '$days दिनों में';
   }
 
   @override
-  String get needTwoWallets => 'Need 2+ wallets';
+  String get needTwoWallets => 'कम से कम 2 वॉलेट चाहिए';
 
   @override
-  String get nettBalance => 'Nett Balance';
+  String get nettBalance => 'शुद्ध शेष';
 
   @override
-  String get activeDebt => 'Active Debt';
+  String get activeDebt => 'सक्रिय ऋण';
 
   @override
-  String get last30Days => 'last 30 days';
+  String get last30Days => 'पिछले 30 दिन';
 
   @override
-  String get currentBalance => 'Current Balance';
+  String get currentBalance => 'वर्तमान शेष';
 
   @override
-  String get premiumMember => 'Premium Member';
+  String get premiumMember => 'प्रीमियम सदस्य';
 
   @override
-  String get upgradeToPremium => 'Upgrade to Premium';
+  String get upgradeToPremium => 'प्रीमियम में अपग्रेड करें';
 
   @override
-  String get unlimitedAccess => 'You have unlimited access!';
+  String get unlimitedAccess => 'असीमित पहुँच';
 
   @override
-  String get unlockFeatures => 'Unlock all features & remove limits.';
+  String get unlockFeatures => 'सभी सुविधाएँ अनलॉक करें';
 
   @override
-  String get from => 'From';
+  String get from => 'से';
 
   @override
   String get subcategory_music => 'संगीत';
