@@ -29,6 +29,8 @@ class Bill {
   
   // Link to payment transaction
   int? transactionId;
+  
+  List<int>? reminderOffsets; // Minutes before due date
 
   Bill({
     required this.title,
@@ -41,6 +43,7 @@ class Bill {
     this.paidAt,
     this.recurringTransactionId,
     this.transactionId,
+    this.reminderOffsets,
   });
   Map<String, dynamic> toJson() {
     return {
@@ -55,6 +58,7 @@ class Bill {
       'paidAt': paidAt?.toIso8601String(),
       'recurringTransactionId': recurringTransactionId,
       'transactionId': transactionId,
+      'reminderOffsets': reminderOffsets,
     };
   }
 
@@ -70,6 +74,7 @@ class Bill {
       paidAt: json['paidAt'] != null ? DateTime.parse(json['paidAt']) : null,
       recurringTransactionId: json['recurringTransactionId'] as int?,
       transactionId: json['transactionId'] as int?,
+      reminderOffsets: (json['reminderOffsets'] as List<dynamic>?)?.map((e) => e as int).toList(),
     )..id = json['id'] as int;
   }
 }

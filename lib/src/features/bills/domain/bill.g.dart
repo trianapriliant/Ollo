@@ -47,24 +47,29 @@ const BillSchema = CollectionSchema(
       name: r'recurringTransactionId',
       type: IsarType.long,
     ),
-    r'status': PropertySchema(
+    r'reminderOffsets': PropertySchema(
       id: 6,
+      name: r'reminderOffsets',
+      type: IsarType.longList,
+    ),
+    r'status': PropertySchema(
+      id: 7,
       name: r'status',
       type: IsarType.byte,
       enumMap: _BillstatusEnumValueMap,
     ),
     r'title': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'title',
       type: IsarType.string,
     ),
     r'transactionId': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'transactionId',
       type: IsarType.long,
     ),
     r'walletId': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'walletId',
       type: IsarType.string,
     )
@@ -96,6 +101,12 @@ int _billEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.reminderOffsets;
+    if (value != null) {
+      bytesCount += 3 + value.length * 8;
+    }
+  }
   bytesCount += 3 + object.title.length * 3;
   {
     final value = object.walletId;
@@ -118,10 +129,11 @@ void _billSerialize(
   writer.writeString(offsets[3], object.note);
   writer.writeDateTime(offsets[4], object.paidAt);
   writer.writeLong(offsets[5], object.recurringTransactionId);
-  writer.writeByte(offsets[6], object.status.index);
-  writer.writeString(offsets[7], object.title);
-  writer.writeLong(offsets[8], object.transactionId);
-  writer.writeString(offsets[9], object.walletId);
+  writer.writeLongList(offsets[6], object.reminderOffsets);
+  writer.writeByte(offsets[7], object.status.index);
+  writer.writeString(offsets[8], object.title);
+  writer.writeLong(offsets[9], object.transactionId);
+  writer.writeString(offsets[10], object.walletId);
 }
 
 Bill _billDeserialize(
@@ -137,11 +149,12 @@ Bill _billDeserialize(
     note: reader.readStringOrNull(offsets[3]),
     paidAt: reader.readDateTimeOrNull(offsets[4]),
     recurringTransactionId: reader.readLongOrNull(offsets[5]),
-    status: _BillstatusValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+    reminderOffsets: reader.readLongList(offsets[6]),
+    status: _BillstatusValueEnumMap[reader.readByteOrNull(offsets[7])] ??
         BillStatus.unpaid,
-    title: reader.readString(offsets[7]),
-    transactionId: reader.readLongOrNull(offsets[8]),
-    walletId: reader.readStringOrNull(offsets[9]),
+    title: reader.readString(offsets[8]),
+    transactionId: reader.readLongOrNull(offsets[9]),
+    walletId: reader.readStringOrNull(offsets[10]),
   );
   object.id = id;
   return object;
@@ -167,13 +180,15 @@ P _billDeserializeProp<P>(
     case 5:
       return (reader.readLongOrNull(offset)) as P;
     case 6:
+      return (reader.readLongList(offset)) as P;
+    case 7:
       return (_BillstatusValueEnumMap[reader.readByteOrNull(offset)] ??
           BillStatus.unpaid) as P;
-    case 7:
-      return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 9:
+      return (reader.readLongOrNull(offset)) as P;
+    case 10:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -859,6 +874,162 @@ extension BillQueryFilter on QueryBuilder<Bill, Bill, QFilterCondition> {
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'reminderOffsets',
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'reminderOffsets',
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsElementEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'reminderOffsets',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition>
+      reminderOffsetsElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'reminderOffsets',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition>
+      reminderOffsetsElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'reminderOffsets',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'reminderOffsets',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reminderOffsets',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reminderOffsets',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reminderOffsets',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reminderOffsets',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition>
+      reminderOffsetsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reminderOffsets',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Bill, Bill, QAfterFilterCondition> reminderOffsetsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'reminderOffsets',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -1557,6 +1728,12 @@ extension BillQueryWhereDistinct on QueryBuilder<Bill, Bill, QDistinct> {
     });
   }
 
+  QueryBuilder<Bill, Bill, QDistinct> distinctByReminderOffsets() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'reminderOffsets');
+    });
+  }
+
   QueryBuilder<Bill, Bill, QDistinct> distinctByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'status');
@@ -1624,6 +1801,12 @@ extension BillQueryProperty on QueryBuilder<Bill, Bill, QQueryProperty> {
   QueryBuilder<Bill, int?, QQueryOperations> recurringTransactionIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'recurringTransactionId');
+    });
+  }
+
+  QueryBuilder<Bill, List<int>?, QQueryOperations> reminderOffsetsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'reminderOffsets');
     });
   }
 

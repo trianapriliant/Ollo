@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../onboarding/data/onboarding_repository.dart';
 import '../splash_preview_screen.dart';
+import '../../../notifications/application/notification_service.dart';
 
 class DeveloperOptionsHelper {
   static void showLoginDialog(BuildContext context, WidgetRef ref) {
@@ -75,6 +76,21 @@ class DeveloperOptionsHelper {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const SplashPreviewScreen()),
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.notifications_active, color: Colors.blue),
+              title: const Text('Test Notification'),
+              subtitle: const Text('Trigger an immediate test notification.'),
+              onTap: () async {
+                Navigator.pop(context); // Close dialog
+                final notificationService = ref.read(notificationServiceProvider);
+                await notificationService.showNotification(
+                  id: 999,
+                  title: 'Ollo Test',
+                  body: 'This is a test notification! The system is working.',
                 );
               },
             ),

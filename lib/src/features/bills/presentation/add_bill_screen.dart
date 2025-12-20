@@ -14,6 +14,7 @@ import '../../../utils/icon_helper.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import '../../../localization/generated/app_localizations.dart';
+import '../../notifications/application/notification_service.dart';
 
 import 'package:intl/intl.dart';
 import '../../../utils/currency_input_formatter.dart';
@@ -35,6 +36,15 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
   bool _isRecurring = false;
   RecurringFrequency _frequency = RecurringFrequency.monthly;
   String _selectedBillType = 'Internet';
+  
+  // Reminders state
+  final List<int> _selectedReminders = []; // Minutes offsets
+  final Map<int, String> _reminderOptions = {
+    0: 'On due date',
+    1440: '1 day before',
+    4320: '3 days before',
+    10080: '1 week before',
+  };
 
   final List<Map<String, dynamic>> _billTypes = [
     {'name': 'Internet', 'icon': Icons.wifi, 'color': Colors.blue},
@@ -56,7 +66,14 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       _titleController.text = b.title;
       _amountController.text = NumberFormat.decimalPattern('en_US').format(b.amount); // Format initial logic
       _dueDate = b.dueDate;
+      _dueDate = b.dueDate;
       _selectedCategoryId = b.categoryId;
+      if (b.reminderOffsets != null) {
+        _selectedReminders.addAll(b.reminderOffsets!);
+      }
+    } else {
+      // Default reminders for new bill
+      _selectedReminders.add(1440); // 1 day before by default
     }
   }
 
@@ -194,6 +211,43 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
                   },
                 ),
               ),
+            ),
+            const SizedBox(height: 24),
+
+            const SizedBox(height: 24),
+
+            // Reminders Section
+            Text('Reminders', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ..._selectedReminders.map((offset) {
+                  return Chip(
+                    label: Text(_reminderOptions[offset] ?? '$offset min before'),
+                    deleteIcon: const Icon(Icons.close, size: 18),
+                    onDeleted: () {
+                      setState(() {
+                        _selectedReminders.remove(offset);
+                      });
+                    },
+                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                    labelStyle: const TextStyle(color: AppColors.primary),
+                    deleteIconColor: AppColors.primary,
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  );
+                }),
+                ActionChip(
+                  label: const Text('Add Reminder'),
+                  avatar: const Icon(Icons.add, size: 18),
+                  onPressed: _showAddReminderDialog,
+                  backgroundColor: Colors.grey.withOpacity(0.1),
+                  side: BorderSide.none,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
 
@@ -349,6 +403,15 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         bill.amount = amount;
         bill.dueDate = _dueDate;
         bill.categoryId = 'bills'; 
+        bill.reminderOffsets = _selectedReminders;
+        
+        await billRepo.updateBill(bill);
+        
+        // Schedule Notifications
+        if (mounted) {
+          final notificationService = ref.read(notificationServiceProvider);
+          await notificationService.scheduleBillReminders(bill);
+        }
         
         await billRepo.updateBill(bill);
         
@@ -379,8 +442,15 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             categoryId: 'bills', 
             status: BillStatus.unpaid,
             recurringTransactionId: newRecurring.id,
+            reminderOffsets: _selectedReminders,
           );
           await billRepo.addBill(newBill);
+          
+          // Schedule Notifications
+          if (mounted) {
+            final notificationService = ref.read(notificationServiceProvider);
+            await notificationService.scheduleBillReminders(newBill);
+          }
 
         } else {
           // One-time Bill
@@ -390,8 +460,15 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             dueDate: _dueDate,
             categoryId: 'bills',
             status: BillStatus.unpaid,
+            reminderOffsets: _selectedReminders,
           );
           await billRepo.addBill(newBill);
+
+          // Schedule Notifications
+          if (mounted) {
+            final notificationService = ref.read(notificationServiceProvider);
+            await notificationService.scheduleBillReminders(newBill);
+          }
         }
         
         if (mounted) {
@@ -427,6 +504,9 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         final billRepo = ref.read(billRepositoryProvider);
         await billRepo.deleteBill(widget.billToEdit!.id);
         if (mounted) {
+          final notificationService = ref.read(notificationServiceProvider);
+          await notificationService.cancelBillReminders(widget.billToEdit!.id);
+          
           context.pop();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.billDeleted)));
         }
@@ -434,5 +514,43 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
+  }
+
+  void _showAddReminderDialog() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Add Reminder', style: AppTextStyles.h3),
+              const SizedBox(height: 16),
+              ..._reminderOptions.entries.map((entry) {
+                final isSelected = _selectedReminders.contains(entry.key);
+                return ListTile(
+                  title: Text(entry.value),
+                  trailing: isSelected ? const Icon(Icons.check, color: AppColors.primary) : null,
+                  onTap: () {
+                    if (!isSelected) {
+                      setState(() {
+                         _selectedReminders.add(entry.key);
+                         _selectedReminders.sort(); // Sort so they appear in order
+                      });
+                    }
+                    Navigator.pop(context);
+                  },
+                );
+              }),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
