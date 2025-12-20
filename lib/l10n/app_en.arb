@@ -508,6 +508,24 @@
   "transferTransaction": "Transfer",
   "transferFee": "Transfer Fee",
   "transferFeeHint": "Fee (Optional)",
+  "importData": "Import Data",
+  "importDataTitle": "Import Transactions",
+  "downloadTemplate": "Download Template",
+  "uploadCsv": "Upload CSV",
+  "importSuccess": "Successfully imported {count} transactions!",
+  "@importSuccess": {
+    "placeholders": {
+        "count": {}
+    }
+  },
+  "importPartialSuccess": "Imported {success} transactions. Failed: {failed}.",
+   "@importPartialSuccess": {
+    "placeholders": {
+        "success": {},
+        "failed": {}
+    }
+  },
+  "templateSaved": "Template saved to downloads folder",
   "pressBackAgainToExit": "Press back again to exit",
   "quickRecord": "Quick Record",
   "chatAction": "Chat",

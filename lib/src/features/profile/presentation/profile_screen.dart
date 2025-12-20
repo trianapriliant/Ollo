@@ -108,6 +108,12 @@ class ProfileScreen extends ConsumerWidget {
                      context.push('/data-export');
                   },
                 ),
+                const SizedBox(height: 16),
+                ProfileMenuItem(
+                  icon: Icons.file_upload_outlined,
+                  title: AppLocalizations.of(context)!.importData,
+                  onTap: () => context.push('/data-import'),
+                ),
                 const SizedBox(height: 24),
 
                 // Data Management Section

@@ -1109,6 +1109,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transferFeeHint => 'Fee (Optional)';
 
   @override
+  String get importData => 'Import Data';
+
+  @override
+  String get importDataTitle => 'Import Transactions';
+
+  @override
+  String get downloadTemplate => 'Download Template';
+
+  @override
+  String get uploadCsv => 'Upload CSV';
+
+  @override
+  String importSuccess(Object count) {
+    return 'Successfully imported $count transactions!';
+  }
+
+  @override
+  String importPartialSuccess(Object success, Object failed) {
+    return 'Imported $success transactions. Failed: $failed.';
+  }
+
+  @override
+  String get templateSaved => 'Template saved to downloads folder';
+
+  @override
   String get pressBackAgainToExit => 'Presione atrás de nuevo para salir';
 
   @override

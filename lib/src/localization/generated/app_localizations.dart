@@ -2182,6 +2182,48 @@ abstract class AppLocalizations {
   /// **'Fee (Optional)'**
   String get transferFeeHint;
 
+  /// No description provided for @importData.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importData;
+
+  /// No description provided for @importDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Transactions'**
+  String get importDataTitle;
+
+  /// No description provided for @downloadTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Template'**
+  String get downloadTemplate;
+
+  /// No description provided for @uploadCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload CSV'**
+  String get uploadCsv;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully imported {count} transactions!'**
+  String importSuccess(Object count);
+
+  /// No description provided for @importPartialSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {success} transactions. Failed: {failed}.'**
+  String importPartialSuccess(Object success, Object failed);
+
+  /// No description provided for @templateSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Template saved to downloads folder'**
+  String get templateSaved;
+
   /// No description provided for @pressBackAgainToExit.
   ///
   /// In en, this message translates to:

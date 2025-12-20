@@ -1109,6 +1109,31 @@ class AppLocalizationsId extends AppLocalizations {
   String get transferFeeHint => 'Biaya (Opsional)';
 
   @override
+  String get importData => 'Impor Data';
+
+  @override
+  String get importDataTitle => 'Impor Transaksi';
+
+  @override
+  String get downloadTemplate => 'Unduh Template';
+
+  @override
+  String get uploadCsv => 'Unggah CSV';
+
+  @override
+  String importSuccess(Object count) {
+    return 'Berhasil mengimpor $count transaksi!';
+  }
+
+  @override
+  String importPartialSuccess(Object success, Object failed) {
+    return 'Berhasil mengimpor $success transaksi. Gagal: $failed.';
+  }
+
+  @override
+  String get templateSaved => 'Template disimpan ke folder unduhan';
+
+  @override
   String get pressBackAgainToExit => 'Tekan kembali lagi untuk keluar';
 
   @override
