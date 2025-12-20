@@ -9,6 +9,39 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get quickRecordHelpTitle => 'Coba ucapkan:';
+
+  @override
+  String get quickRecordHelp1 => '\"Kemarin beli kopi 25rb pakai BCA\"';
+
+  @override
+  String get quickRecordHelp2 => '\"Terima gaji 10 juta masuk BCA\"';
+
+  @override
+  String get quickRecordHelp3 => '\"Makan siang 25rb pakai OVO\"';
+
+  @override
+  String get quickRecordHelp4 => '\"Beli bensin 50rb pakai Mandiri\"';
+
+  @override
+  String get quickRecordHelp5 => '\"Bayar kost 1.5 juta pakai Jago tanggal 1\"';
+
+  @override
+  String get quickRecordHelp6 => '\"Beli kopi 20rb pakai BCA\"';
+
+  @override
+  String get quickRecordHelp7 => '\"Bayar wifi 300rb pakai OVO tanggal 20\"';
+
+  @override
+  String get quickRecordHelp8 => '\"Nonton bioskop 100rb pakai Dana\"';
+
+  @override
+  String get quickRecordHelp9 => '\"Bayar hutang Budi 50rb pakai Tunai\"';
+
+  @override
+  String get quickRecordHelp10 => '\"Transfer Mama 1 juta pakai Mandiri\"';
+
+  @override
   String get customizeMenu => 'Atur Menu';
 
   @override

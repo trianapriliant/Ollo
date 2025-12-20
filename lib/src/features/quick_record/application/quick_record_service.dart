@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../transactions/domain/transaction.dart';
+import '../../wallets/domain/wallet.dart';
 import '../../categories/domain/category.dart';
 import '../data/quick_record_repository.dart';
 import '../domain/category_patterns.dart';
@@ -10,8 +11,9 @@ class QuickRecordService {
   QuickRecordService(this._repository);
 
   /// Parses a natural language string into a potential Transaction.
-  Future<({Transaction transaction, String? categoryName, String? subCategoryName})> parseTransaction(String input) async {
+  Future<({Transaction transaction, String? categoryName, String? subCategoryName, String? walletName})> parseTransaction(String input) async {
     final categories = await _repository.getAllCategories();
+    final wallets = await _repository.getAllWallets();
     
     // 1. Extract Amount
     double amount = _extractAmount(input);
@@ -22,12 +24,16 @@ class QuickRecordService {
     SubCategory? matchedSubCategory = result.subCategory;
     String matchedKeyword = result.keyword ?? '';
     
-    // 3. Determine Title
-    String title = matchedKeyword.isNotEmpty 
-        ? matchedKeyword[0].toUpperCase() + matchedKeyword.substring(1) 
-        : (matchedSubCategory?.name ?? matchedCategory?.name ?? 'Unknown Transaction');
+    // 3. Extract Wallet
+    Wallet? matchedWallet = _extractWallet(input, wallets);
 
-    // 4. Determine Type
+    // 4. Extract Date
+    DateTime date = _extractDate(input);
+
+    // 5. Determine Title (Cleaned)
+    String title = _cleanTitle(input, matchedKeyword, matchedSubCategory?.name ?? matchedCategory?.name);
+
+    // 6. Determine Type
     TransactionType type = _determineType(input);
     
     // Override type if matched category has a specific type preference
@@ -39,26 +45,111 @@ class QuickRecordService {
        }
     }
 
-    // 5. Note
+    // 7. Note (Original input)
     String note = input;
 
     final transaction = Transaction.create(
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: date,
       type: type,
       categoryId: matchedCategory?.externalId ?? matchedCategory?.id.toString(),
       subCategoryId: matchedSubCategory?.id,
       subCategoryName: matchedSubCategory?.name,
       subCategoryIcon: matchedSubCategory?.iconPath,
+      walletId: matchedWallet?.externalId ?? matchedWallet?.id.toString() ?? '1', // Default to ID 1 or passed wallet
       note: note,
     );
 
     return (
       transaction: transaction, 
       categoryName: matchedCategory?.name, 
-      subCategoryName: matchedSubCategory?.name
+      subCategoryName: matchedSubCategory?.name,
+      walletName: matchedWallet?.name
     );
+  }
+
+  Wallet? _extractWallet(String input, List<Wallet> wallets) {
+    String text = input.toLowerCase();
+    
+    // 1. Strict Match (Full Name)
+    for (var wallet in wallets) {
+      if (text.contains(wallet.name.toLowerCase())) {
+        return wallet;
+      }
+    }
+
+    // 2. Partial Word Match (Smart Fuzzy)
+    // Example: "Bank Mandiri" -> user says "Mandiri" -> Match!
+    // We split wallet name into words, and check if any *distinctive* word exists in text.
+    
+    // Sort wallets by length descending to prioritize specific matches? 
+    // Actually, maybe not needed if we check words.
+    
+    final commonWords = ['bank', 'wallet', 'account', 'dompet', 'rekening', 'the', 'my'];
+
+    for (var wallet in wallets) {
+       List<String> walletWords = wallet.name.toLowerCase().split(' ');
+       for (String word in walletWords) {
+          // Filter out too short or common words to avoid false positives (e.g. "My")
+          if (word.length < 3 || commonWords.contains(word)) continue;
+          
+          // Check exact word boundary would be ideal, but contains is usually fine for these keywords
+          if (text.contains(word)) {
+             return wallet;
+          }
+       }
+    }
+
+    return null;
+  }
+
+  DateTime _extractDate(String input) {
+    String text = input.toLowerCase();
+    final now = DateTime.now();
+    
+    if (text.contains('kemarin') || text.contains('yesterday')) {
+      return now.subtract(const Duration(days: 1));
+    } else if (text.contains('besok') || text.contains('tomorrow')) {
+      return now.add(const Duration(days: 1));
+    } else if (text.contains('lusa')) { // The day after tomorrow
+       return now.add(const Duration(days: 2));
+    }
+    // Default to today
+    return now;
+  }
+
+  String _cleanTitle(String input, String matchedKeyword, String? categoryName) {
+     // If we found a specific keyword (e.g. "Bakso" from input "Beli Bakso"), use that.
+     // But we want to preserve other context words if they exist.
+     // Example: "Beli Bakso Pakai BCA" -> "Bakso" (if Bakso is keyword)
+     
+     // Simple Strategy:
+     // 1. Remove "Action Verbs"
+     // 2. Remove "Wallet Context"
+     // 3. Remove "Date Context"
+     // 4. Remove "Amount"
+     // What remains is the Title.
+     
+     String text = input.toLowerCase();
+     
+     // Remove Verbs
+     final verbs = ['beli', 'purchase', 'bayar', 'pay', 'spend', 'makan', 'minum', 'jajan'];
+     for (var v in verbs) {
+       text = text.replaceAll(v, ''); // Naive replace
+     }
+     
+     // Remove Wallet Keywords (Naive)
+     // To do this properly, we should strip the extracted parts. 
+     // For now, let's just fallback to:
+     // If we have a Matched Keyword (e.g. "Cinema"), Title = "Cinema" capitalized.
+     // If no keyword, use Category Name.
+     
+     if (matchedKeyword.isNotEmpty) {
+        return matchedKeyword[0].toUpperCase() + matchedKeyword.substring(1);
+     }
+     
+     return categoryName ?? 'Unknown Transaction';
   }
 
   double _extractAmount(String input) {

@@ -9,6 +9,39 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get quickRecordHelpTitle => '言ってみて：';
+
+  @override
+  String get quickRecordHelp1 => '\"昨日コーヒー2万5千 BCAで\"';
+
+  @override
+  String get quickRecordHelp2 => '\"給料1000万 BCAに入金\"';
+
+  @override
+  String get quickRecordHelp3 => '\"ランチ2万5千 OVOで\"';
+
+  @override
+  String get quickRecordHelp4 => '\"ガソリン5万 Mandiriで\"';
+
+  @override
+  String get quickRecordHelp5 => '\"家賃150万 Jagoで 1日に\"';
+
+  @override
+  String get quickRecordHelp6 => '\"コーヒー買う 2万 BCAで\"';
+
+  @override
+  String get quickRecordHelp7 => '\"Wifi代30万 OVOで 20日に\"';
+
+  @override
+  String get quickRecordHelp8 => '\"映画10万 Danaで 今週日曜\"';
+
+  @override
+  String get quickRecordHelp9 => '\"Budiに借金返す 5万 現金で\"';
+
+  @override
+  String get quickRecordHelp10 => '\"母に送金 100万 Mandiriで\"';
+
+  @override
   String get customizeMenu => 'メニューのカスタマイズ';
 
   @override

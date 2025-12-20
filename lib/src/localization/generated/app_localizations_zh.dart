@@ -9,6 +9,39 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get quickRecordHelpTitle => '尝试说：';
+
+  @override
+  String get quickRecordHelp1 => '\"昨天买咖啡 25k 用 BCA\"';
+
+  @override
+  String get quickRecordHelp2 => '\"收到工资 1000万 入 BCA\"';
+
+  @override
+  String get quickRecordHelp3 => '\"午餐 25k 用 OVO\"';
+
+  @override
+  String get quickRecordHelp4 => '\"汽油 50k 用 Mandiri\"';
+
+  @override
+  String get quickRecordHelp5 => '\"付房租 150万 用 Jago 1号\"';
+
+  @override
+  String get quickRecordHelp6 => '\"买咖啡 20k 用 BCA\"';
+
+  @override
+  String get quickRecordHelp7 => '\"付Wifi费 300k 用 OVO 20号\"';
+
+  @override
+  String get quickRecordHelp8 => '\"看电影 100k 用 Dana 这个周日\"';
+
+  @override
+  String get quickRecordHelp9 => '\"还 Budi 钱 50k 用 现金\"';
+
+  @override
+  String get quickRecordHelp10 => '\"转账给妈妈 100万 用 Mandiri\"';
+
+  @override
   String get customizeMenu => '自定义菜单';
 
   @override

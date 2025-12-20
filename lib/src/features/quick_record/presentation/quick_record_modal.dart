@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
@@ -6,6 +7,7 @@ import '../../../constants/app_text_styles.dart';
 import '../presentation/quick_record_controller.dart';
 import '../../transactions/domain/transaction.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 // RE-VERIFYING PATHS:
 // File: lib/src/features/quick_record/presentation/quick_record_modal.dart
@@ -72,24 +74,24 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
       _textController.text = state.recognizedText;
     }
 
+    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    
     return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+      padding: const EdgeInsets.only(
         left: 16,
         right: 16,
         top: 16,
       ),
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85, // Max 85% screen height
+        maxHeight: MediaQuery.of(context).size.height * 0.85, 
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      // Fixed height for Voice (stability), Auto height for Chat/Review (wrap content up to max)
-      height: (state.state == QuickRecordState.listening || state.state == QuickRecordState.error)
-          ? MediaQuery.of(context).size.height * 0.45
-          : null,
+      height: (state.state == QuickRecordState.listening || state.state == QuickRecordState.error || state.state == QuickRecordState.review)
+          ? MediaQuery.of(context).size.height * 0.60
+          : MediaQuery.of(context).size.height * 0.35,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min, // Moved here
@@ -132,7 +134,49 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
 
            // Add some bottom padding if not full height
            const SizedBox(height: 24),
-        ],
+
+           // Footer Button (Stop & Process) - Fixed at bottom
+           if (state.state == QuickRecordState.listening) ...[
+               Container(
+                 width: double.infinity,
+                 height: 56,
+                 margin: const EdgeInsets.only(bottom: 50), // Clears FAB
+                 decoration: BoxDecoration(
+                   gradient: const LinearGradient(
+                     colors: [Color(0xFF1DE9B6), Color(0xFF00BFA5)], 
+                     begin: Alignment.topLeft,
+                     end: Alignment.bottomRight,
+                   ),
+                   borderRadius: BorderRadius.circular(16),
+                   boxShadow: [
+                     BoxShadow(
+                       color: const Color(0xFF1DE9B6).withOpacity(0.3),
+                       blurRadius: 12,
+                       offset: const Offset(0, 6),
+                     ),
+                   ],
+                 ),
+                 child: ElevatedButton(
+                   onPressed: () {
+                     ref.read(quickRecordControllerProvider.notifier).stopVoice();
+                   },
+                   style: ElevatedButton.styleFrom(
+                     backgroundColor: Colors.transparent,
+                     shadowColor: Colors.transparent,
+                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                   ),
+                   child: Text(
+                     AppLocalizations.of(context)!.stopAndProcess,
+                     style: const TextStyle(
+                       color: Colors.white, 
+                       fontSize: 16, 
+                       fontWeight: FontWeight.bold
+                     ),
+                   ),
+                 ),
+               ),
+           ],
+         ],
       ),
     );
   }
@@ -171,53 +215,20 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
              ],
           ),
         ),
-        const SizedBox(height: 24),
-          Text(
-           state.errorMessage ?? (state.recognizedText.isEmpty ? AppLocalizations.of(context)!.saySomethingHint : state.recognizedText),
-           style: isError ? AppTextStyles.h3.copyWith(color: Colors.red) : AppTextStyles.h2,
-           textAlign: TextAlign.center,
-         ),
-         const SizedBox(height: 24),
-         if (!isError) ...[
-           Container(
-             width: double.infinity,
-             height: 56,
-             decoration: BoxDecoration(
-               gradient: const LinearGradient(
-                 colors: [Color(0xFF1DE9B6), Color(0xFF00BFA5)], // Aquamarine / Teal Accent gradient
-                 begin: Alignment.topLeft,
-                 end: Alignment.bottomRight,
-               ),
-               borderRadius: BorderRadius.circular(16),
-               boxShadow: [
-                 BoxShadow(
-                   color: const Color(0xFF1DE9B6).withOpacity(0.3),
-                   blurRadius: 12,
-                   offset: const Offset(0, 6),
-                 ),
-               ],
-             ),
-             child: ElevatedButton(
-               onPressed: () {
-                 ref.read(quickRecordControllerProvider.notifier).stopVoice();
-               },
-               style: ElevatedButton.styleFrom(
-                 backgroundColor: Colors.transparent,
-                 shadowColor: Colors.transparent,
-                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-               ),
-               child: Text(
-                 AppLocalizations.of(context)!.stopAndProcess,
-                 style: const TextStyle(
-                   color: Colors.white, 
-                   fontSize: 16, 
-                   fontWeight: FontWeight.bold
-                 ),
-               ),
-             ),
+        if (state.errorMessage != null || state.recognizedText.isNotEmpty) ...[
+           const SizedBox(height: 24),
+           Text(
+            state.errorMessage ?? state.recognizedText,
+            style: isError ? AppTextStyles.h3.copyWith(color: Colors.red) : AppTextStyles.h2,
+            textAlign: TextAlign.center,
            ),
-         ],
-        const SizedBox(height: 60), 
+        ],
+      const SizedBox(height: 24),
+      // Always show tips!
+      const _RotatingHelpText(), 
+      const SizedBox(height: 24),
+    
+      const SizedBox(height: 60), 
       ],
     );
   }
@@ -270,11 +281,13 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                ),
                const Divider(),
                 _row(AppLocalizations.of(context)!.titleLabel, txn.title),
-                _row(AppLocalizations.of(context)!.amount, 'Rp ${txn.amount.toStringAsFixed(0)}'), // TODO: Format currency
+                _row(AppLocalizations.of(context)!.amount, NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(txn.amount)),
+                _row(AppLocalizations.of(context)!.date, DateFormat('dd MMM yyyy').format(txn.date)),
+                _row(AppLocalizations.of(context)!.wallet, state.detectedWalletName ?? 'Default'),
                 _row(AppLocalizations.of(context)!.category, state.detectedSubCategoryName != null 
                     ? '${state.detectedCategoryName} > ${state.detectedSubCategoryName}'
                     : (state.detectedCategoryName ?? AppLocalizations.of(context)!.notFound)),
-                _row('Type', txn.type.name.toUpperCase()),
+                _row(AppLocalizations.of(context)!.typeLabel, txn.type.name.toUpperCase()), // Used typeLabel "Type"
                 _row(AppLocalizations.of(context)!.note, txn.note ?? '-'),
                 const SizedBox(height: 16),
                 Row(
@@ -399,6 +412,83 @@ class _PulseAnimationState extends State<PulseAnimation> with SingleTickerProvid
             color: AppColors.primary.withOpacity(0.3),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _RotatingHelpText extends StatefulWidget {
+  const _RotatingHelpText();
+
+  @override
+  State<_RotatingHelpText> createState() => _RotatingHelpTextState();
+}
+
+class _RotatingHelpTextState extends State<_RotatingHelpText> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+  int _index = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+    _controller.forward();
+    
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+      _controller.reverse().then((_) {
+        if (!mounted) return;
+        setState(() {
+          _index++;
+        });
+        _controller.forward();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hints = [
+      AppLocalizations.of(context)!.quickRecordHelp1,
+      AppLocalizations.of(context)!.quickRecordHelp2,
+      AppLocalizations.of(context)!.quickRecordHelp3,
+      AppLocalizations.of(context)!.quickRecordHelp4,
+      AppLocalizations.of(context)!.quickRecordHelp5,
+      AppLocalizations.of(context)!.quickRecordHelp6,
+      AppLocalizations.of(context)!.quickRecordHelp7,
+      AppLocalizations.of(context)!.quickRecordHelp8,
+      AppLocalizations.of(context)!.quickRecordHelp9,
+      AppLocalizations.of(context)!.quickRecordHelp10,
+    ];
+
+    return FadeTransition(
+      opacity: _opacity,
+      child: Column(
+        children: [
+            Text(
+              AppLocalizations.of(context)!.quickRecordHelpTitle,
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              hints[_index % hints.length], // Safe modulo
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.primary, 
+                fontStyle: FontStyle.italic
+              ),
+              textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

@@ -9,6 +9,40 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get quickRecordHelpTitle => 'Intenta decir:';
+
+  @override
+  String get quickRecordHelp1 => '\"Ayer café 25k usando BCA\"';
+
+  @override
+  String get quickRecordHelp2 => '\"Recibir salario 10 millones en BCA\"';
+
+  @override
+  String get quickRecordHelp3 => '\"Almuerzo 25k usando OVO\"';
+
+  @override
+  String get quickRecordHelp4 => '\"Gasolina 50k usando Mandiri\"';
+
+  @override
+  String get quickRecordHelp5 => '\"Pagar renta 1.5 millones con Jago el 1\"';
+
+  @override
+  String get quickRecordHelp6 => '\"Comprar café 20k usando BCA\"';
+
+  @override
+  String get quickRecordHelp7 => '\"Pagar wifi 300k usando OVO el 20\"';
+
+  @override
+  String get quickRecordHelp8 => '\"Cine 100k usando Dana este domingo\"';
+
+  @override
+  String get quickRecordHelp9 => '\"Pagar deuda a Budi 50k con Efectivo\"';
+
+  @override
+  String get quickRecordHelp10 =>
+      '\"Transferir a Mamá 1 millón usando Mandiri\"';
+
+  @override
   String get customizeMenu => 'Personalizar Menú';
 
   @override

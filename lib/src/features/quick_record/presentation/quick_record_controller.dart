@@ -16,6 +16,7 @@ class QuickRecordStateData {
   final String? errorMessage;
   final String? detectedCategoryName;
   final String? detectedSubCategoryName;
+  final String? detectedWalletName; // New field
 
   QuickRecordStateData({
     this.state = QuickRecordState.initial,
@@ -24,6 +25,7 @@ class QuickRecordStateData {
     this.errorMessage,
     this.detectedCategoryName,
     this.detectedSubCategoryName,
+    this.detectedWalletName,
   });
 
   QuickRecordStateData copyWith({
@@ -33,6 +35,7 @@ class QuickRecordStateData {
     String? errorMessage,
     String? detectedCategoryName,
     String? detectedSubCategoryName,
+    String? detectedWalletName,
   }) {
     return QuickRecordStateData(
       state: state ?? this.state,
@@ -41,6 +44,7 @@ class QuickRecordStateData {
       errorMessage: errorMessage ?? this.errorMessage,
       detectedCategoryName: detectedCategoryName ?? this.detectedCategoryName,
       detectedSubCategoryName: detectedSubCategoryName ?? this.detectedSubCategoryName,
+      detectedWalletName: detectedWalletName ?? this.detectedWalletName,
     );
   }
 }
@@ -67,6 +71,7 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
         draftTransaction: result.transaction,
         detectedCategoryName: result.categoryName,
         detectedSubCategoryName: result.subCategoryName,
+        detectedWalletName: result.walletName, // Map new field
       );
     } catch (e) {
       state = state.copyWith(state: QuickRecordState.error, errorMessage: e.toString());
@@ -109,8 +114,8 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
         },
         localeId: 'id_ID', 
         cancelOnError: true,
-        listenFor: const Duration(seconds: 15),
-        pauseFor: const Duration(seconds: 3), 
+        listenFor: const Duration(seconds: 30),
+        pauseFor: const Duration(seconds: 5), 
       );
     } else {
       state = state.copyWith(state: QuickRecordState.error, errorMessage: 'Speech recognition unavailable');

@@ -9,6 +9,40 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get quickRecordHelpTitle => 'कहने की कोशिश करें:';
+
+  @override
+  String get quickRecordHelp1 => '\"कल कॉफी 25k BCA का उपयोग करके\"';
+
+  @override
+  String get quickRecordHelp2 => '\"वेतन 10 मिलियन BCA में प्राप्त करें\"';
+
+  @override
+  String get quickRecordHelp3 => '\"दोपहर का भोजन 25k OVO का उपयोग करके\"';
+
+  @override
+  String get quickRecordHelp4 => '\"पेट्रोल 50k Mandiri का उपयोग करके\"';
+
+  @override
+  String get quickRecordHelp5 => '\"किराया 1.5 मिलियन Jago से 1 तारीख को दें\"';
+
+  @override
+  String get quickRecordHelp6 => '\"कॉफी खरीदें 20k BCA का उपयोग करके\"';
+
+  @override
+  String get quickRecordHelp7 => '\"Wifi बिल 300k OVO से 20 तारीख को\"';
+
+  @override
+  String get quickRecordHelp8 => '\"सिनेमा 100k Dana से इस रविवार\"';
+
+  @override
+  String get quickRecordHelp9 => '\"बडी का कर्ज 50k नकद से चुकाएं\"';
+
+  @override
+  String get quickRecordHelp10 =>
+      '\"माँ को 1 मिलियन Mandiri से ट्रांसफर करें\"';
+
+  @override
   String get customizeMenu => 'मेनू अनुकूलit करें';
 
   @override

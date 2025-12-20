@@ -9,6 +9,39 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get quickRecordHelpTitle => 'Try saying:';
+
+  @override
+  String get quickRecordHelp1 => '\"Yesterday coffee 25k using BCA\"';
+
+  @override
+  String get quickRecordHelp2 => '\"Receive salary 10 million to BCA\"';
+
+  @override
+  String get quickRecordHelp3 => '\"Lunch 25k using OVO\"';
+
+  @override
+  String get quickRecordHelp4 => '\"Gasoline 50k using Mandiri\"';
+
+  @override
+  String get quickRecordHelp5 => '\"Pay rent 1.5 million using Jago on 1st\"';
+
+  @override
+  String get quickRecordHelp6 => '\"Buy coffee 20k using BCA\"';
+
+  @override
+  String get quickRecordHelp7 => '\"Pay wifi 300k using OVO on 20th\"';
+
+  @override
+  String get quickRecordHelp8 => '\"Cinema 100k using Dana this Sunday\"';
+
+  @override
+  String get quickRecordHelp9 => '\"Pay debt Budi 50k using Cash\"';
+
+  @override
+  String get quickRecordHelp10 => '\"Transfer Mom 1 million using Mandiri\"';
+
+  @override
   String get customizeMenu => 'Customize Menu';
 
   @override

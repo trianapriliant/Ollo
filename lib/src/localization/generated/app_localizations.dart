@@ -106,6 +106,72 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
+  /// No description provided for @quickRecordHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try saying:'**
+  String get quickRecordHelpTitle;
+
+  /// No description provided for @quickRecordHelp1.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Yesterday coffee 25k using BCA\"'**
+  String get quickRecordHelp1;
+
+  /// No description provided for @quickRecordHelp2.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Receive salary 10 million to BCA\"'**
+  String get quickRecordHelp2;
+
+  /// No description provided for @quickRecordHelp3.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Lunch 25k using OVO\"'**
+  String get quickRecordHelp3;
+
+  /// No description provided for @quickRecordHelp4.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Gasoline 50k using Mandiri\"'**
+  String get quickRecordHelp4;
+
+  /// No description provided for @quickRecordHelp5.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Pay rent 1.5 million using Jago on 1st\"'**
+  String get quickRecordHelp5;
+
+  /// No description provided for @quickRecordHelp6.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Buy coffee 20k using BCA\"'**
+  String get quickRecordHelp6;
+
+  /// No description provided for @quickRecordHelp7.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Pay wifi 300k using OVO on 20th\"'**
+  String get quickRecordHelp7;
+
+  /// No description provided for @quickRecordHelp8.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Cinema 100k using Dana this Sunday\"'**
+  String get quickRecordHelp8;
+
+  /// No description provided for @quickRecordHelp9.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Pay debt Budi 50k using Cash\"'**
+  String get quickRecordHelp9;
+
+  /// No description provided for @quickRecordHelp10.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Transfer Mom 1 million using Mandiri\"'**
+  String get quickRecordHelp10;
+
   /// No description provided for @customizeMenu.
   ///
   /// In en, this message translates to:
