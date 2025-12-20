@@ -16,9 +16,9 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
     subCategoryKeywords: {
       'Breakfast': [
         'sarapan', 'bubur', 'nasi uduk', 'roti', 'pagi', 
-        'telur setengah matang', 'lontong sayur', 'nasi kuning',
-        'ketupat', 'sereal', 'oatmeal', 'breakfast', 
-        'pagi hari', 'bubur ayam', 'kopi pagi'
+        'telur setengah matang', 'lontong sayur', 'nasi kuning', 
+        'ketupat', 'sereal', 'oatmeal', 'breakfast',
+        'pagi hari', 'bubur ayam', 'kopi pagi', 'makan pagi'
       ],
 
       'Lunch': [
@@ -38,7 +38,7 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'gacoan', 'mie gacoan', 'mie ayam', 'bakso', 
         'soto', 'nasi goreng', 'gorengan', 'sate',
         'pecel lele', 'ayam penyet', 'bubur ayam', 'warteg',
-        'kaki lima', 'angkringan', 'warung', 'rm', 'rm padang', 
+        'kaki lima', 'angkringan', 'rm', 'rm padang', 
         'ayam geprek', 'ayam bakar', 'ikan bakar',
         'lalapan', 'mie aceh', 'pempek',
 
@@ -79,20 +79,20 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'tisu', 'sabun', 'susu', 'baygon', 'mie instan',
         'supermarket', 'pasar', 'indomaret', 'alfamart',
         'superindo', 'lottemart', 'hypermart', 'fresh market',
-        'grocery', 'groceries', 'belanja dapur'
+        'grocery', 'groceries', 'belanja dapur', 'bahan makanan', 'belanja makanan', 'belanja bahan makanan'
       ],
 
       'Delivery': [
         'gofood', 'grabfood', 'shopeefood', 
         'delivery', 'pesan antar', 'ongkir makanan',
         'food delivery', 'antar makanan', 'kurir makanan',
-        'diantar driver', 'order makanan online'
+        'diantar driver', 'order makanan online', 'order makanan', 'order online', 'order food'
       ],
 
       'Alcohol': [
         'bir', 'wine', 'alkohol', 'vodka', 'soju', 'beer',
         'whiskey', 'whisky', 'gin', 'tequila', 'minuman keras',
-        'minuman beralkohol', 'liquor'
+        'minuman beralkohol', 'liquor', 'alcohol'
       ],
     },
   ),
@@ -157,13 +157,67 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
   'Shopping': CategoryPattern(
     mainKeywords: ['belanja', 'beli', 'shopping'],
     subCategoryKeywords: {
-      'Clothes': ['baju', 'kaos', 'celana', 'kemeja', 'jaket', 'fashion', 'zara', 'uniqlo', 'h&m'],
-      'Electronics': ['hp', 'laptop', 'charger', 'gadget', 'kabel', 'mouse', 'keyboard', 'elektronik'],
-      'Home': ['dekorasi', 'sprei', 'korden', 'karpet', 'peralatan rumah'],
-      'Beauty': ['makeup', 'skincare', 'skin care', 'lipstik', 'bedak', 'serum', 'toner', 'facial', 'salon', 'potong rambut'], // Moved Haircut here if implicit? Or Personal?
-      'Gifts': ['kado', 'hadiah', 'oleh-oleh', 'bingkisan'],
-      'Software': ['aplikasi', 'subscription', 'langganan app', 'adobe', 'office', 'windows'],
-      'Tools': ['obeng', 'palu', 'perkakas', 'bor', 'alat tukang'],
+      'Clothes': [
+        'baju', 'kaos', 'celana', 'kemeja', 'jaket', 
+        'hoodie', 'sweater', 'jeans', 'celana jeans',
+        'rok', 'dress', 'kebaya', 'jas', 'pakaian',
+        'fashion', 'outfit', 'baju kondangan',
+        'zara', 'uniqlo', 'h&m', 'cotton on', 
+        'mango', 'guess', 'giordano', 'brand pakaian',
+        'thrifting', 'baju bekas', 'preloved pakaian'
+      ],
+
+      'Electronics': [
+        'hp', 'laptop', 'pc', 'komputer',
+        'charger', 'gadget', 'kabel', 'powerbank',
+        'earphone', 'headphone', 'speaker',
+        'keyboard', 'mouse', 'monitor', 'elektronik',
+        'tablet', 'ipad', 'processor', 'ssd', 'hdd',
+        'kulkas', 'mesin cuci', 'tv', 'ac',
+        'electronic store', 'service hp', 'repair laptop'
+      ],
+
+      'Home': [
+        'peralatan rumah', 'alat rumah tangga', 'alat rumah',
+        'dekorasi', 'dekor', 'interior rumah',
+        'sprei', 'seprai', 'bed cover', 'sarung bantal',
+        'korden', 'gorden', 'tirai', 'karpet',
+        'keset', 'lemari', 'rak piring', 'perabot kecil',
+        'peralatan kamar mandi', 'dispenser', 'vacuum cleaner'
+      ],
+
+      'Beauty': [
+        'makeup', 'skincare', 'skin care',
+        'lipstik', 'lipstick', 'bedak', 'serum', 'essence',
+        'toner', 'pelembab', 'moisturizer', 'masker wajah',
+        'cream wajah', 'facial', 'perawatan wajah',
+        'salon', 'spa', 'perawatan tubuh',
+        'potong rambut', 'haircut', 'cat rambut', 'hair dye'
+      ],
+
+      'Gifts': [
+        'kado', 'hadiah', 'gift', 'oleh-oleh',
+        'bingkisan', 'souvenir', 'hampers', 'parcel',
+        'kado ulang tahun', 'giftbox', 'premium gift'
+      ],
+
+      'Software': [
+        'aplikasi', 'subscription', 'subscribe',
+        'langganan app', 'pembelian aplikasi',
+        'adobe', 'photoshop', 'illustrator', 'premiere',
+        'office', 'ms office', 'word', 'excel', '365', 
+        'windows', 'license key', 'product key',
+        'spotify', 'youtube premium', 'netflix',
+        'antivirus', 'vpn', 'cloud storage'
+      ],
+
+      'Tools': [
+        'obeng', 'palu', 'perkakas', 'bor',
+        'mesin bor', 'kunci inggris', 'kunci pas',
+        'alat tukang', 'alat bangunan', 'peralatan bengkel',
+        'gergaji', 'tang', 'bor listrik', 'obeng set',
+        'toolkit', 'toolbox'
+      ],
     },
   ),
   'Transport': CategoryPattern(
@@ -230,13 +284,68 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
   'Entertainment': CategoryPattern(
     mainKeywords: ['hiburan', 'fun', 'main'],
     subCategoryKeywords: {
-      'Movies': ['nonton', 'bioskop', 'film', 'xxi', 'cgv', 'netflix', 'disney'],
-      'Games': ['game', 'steam', 'playstation', 'topup', 'pubg', 'ml', 'mobile legend'],
-      'Streaming': ['spotify', 'youtube premium', 'joox', 'apple music', 'vidio'],
-      'Events': ['konser', 'tiket', 'pameran', 'festival', 'event'],
-      'Hobbies': ['hobi', 'mancing', 'sepeda', 'koleksi', 'mainan', 'gundam'],
-      'Travel': ['liburan', 'wisata', 'hotel', 'tiket pesawat', 'traveloka', 'tiket.com', 'healing'],
-      'Music': ['alat musik', 'gitar', 'piano', 'lagu'],
+      'Movies': [
+        'nonton', 'bioskop', 'film', 
+        'xxi', 'cgv', 'cinepolis', 'movimax',
+        'netflix', 'disney', 'disney+', 'disney plus',
+        'prime video', 'amazon prime', 'hbomax', 'hbo', 
+        'viu', 'catchplay', 'tix id', 'tiket nonton',
+        'sewa film', 'movie rental'
+      ],
+
+      'Games': [
+        'game', 'gaming', 'main game', 
+        'steam', 'epic games', 'playstation', 'psn',
+        'nintendo', 'switch', 'xbox', 
+        'topup', 'top up', 'isi diamond', 
+        'pubg', 'ml', 'mobile legend', 'mlbb',
+        'genshin', 'genshin impact', 'roblox', 'valorant',
+        'voucher game', 'koin game', 'chip game'
+      ],
+
+      'Streaming': [
+        'spotify', 'youtube premium', 'youtube+', 
+        'joox', 'apple music', 'apple tv', 'vidio', 
+        'vidio premier', 'hotstar', 'spotify premium',
+        'langganan streaming', 'subscription streaming', 
+        'langganan musik', 'streaming musik'
+      ],
+
+      'Events': [
+        'konser', 'tiket', 'ticket', 
+        'pameran', 'expo', 'exhibition',
+        'festival', 'event', 'acara',
+        'seminar', 'webinar', 'konferensi', 'conference',
+        'presale', 'meet & greet', 'meet and greet'
+      ],
+
+      'Hobbies': [
+        'hobi', 'mancing', 'pancing', 
+        'pancingan', 'umpan', 'joran', 'reel',
+        'sepeda', 'gowes', 'bike',
+        'koleksi', 'collection', 'kolektor',
+        'mainan', 'toy', 'figures', 'action figure',
+        'gundam', 'gunpla', 'lego', 'model kit',
+        'aquarium', 'aquascape', 'bonsai', 'tanaman hias'
+      ],
+
+      'Travel': [
+        'liburan', 'holiday', 'travel',
+        'wisata', 'trip', 'tour', 'tur', 
+        'hotel', 'penginapan', 'guest house', 'villa',
+        'tiket pesawat', 'flight ticket', 
+        'garuda', 'lion air', 'citilink', 'airasia',
+        'traveloka', 'tiket.com', 'agoda', 'booking.com',
+        'tour guide', 'city tour', 'healing'
+      ],
+
+      'Music': [
+        'musik', 'alat musik', 
+        'gitar', 'bass', 'drum', 'piano', 'keyboard', 
+        'ukulele', 'biola', 'saxophone',
+        'les musik', 'les gitar', 'kursus musik',
+        'lagu', 'mp3', 'album musik', 'recording'
+      ],
     },
   ),
   'Health': CategoryPattern(

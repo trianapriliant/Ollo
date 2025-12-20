@@ -31,7 +31,13 @@ class QuickRecordService {
     DateTime date = _extractDate(input);
 
     // 5. Determine Title (Cleaned)
-    String title = _cleanTitle(input, matchedKeyword, matchedSubCategory?.name ?? matchedCategory?.name);
+    String title = _cleanTitle(
+      input: input,
+      matchedKeyword: matchedKeyword,
+      categoryName: matchedSubCategory?.name ?? matchedCategory?.name,
+      walletName: matchedWallet?.name,
+      amount: amount,
+    );
 
     // 6. Determine Type
     TransactionType type = _determineType(input);
@@ -83,18 +89,14 @@ class QuickRecordService {
     // Example: "Bank Mandiri" -> user says "Mandiri" -> Match!
     // We split wallet name into words, and check if any *distinctive* word exists in text.
     
-    // Sort wallets by length descending to prioritize specific matches? 
-    // Actually, maybe not needed if we check words.
-    
-    final commonWords = ['bank', 'wallet', 'account', 'dompet', 'rekening', 'the', 'my'];
+    final commonWords = ['bank', 'wallet', 'account', 'dompet', 'rekening', 'the', 'my', 'cash', 'tunai'];
 
     for (var wallet in wallets) {
        List<String> walletWords = wallet.name.toLowerCase().split(' ');
        for (String word in walletWords) {
-          // Filter out too short or common words to avoid false positives (e.g. "My")
+          // Filter out too short or common words to avoid false positives
           if (word.length < 3 || commonWords.contains(word)) continue;
           
-          // Check exact word boundary would be ideal, but contains is usually fine for these keywords
           if (text.contains(word)) {
              return wallet;
           }
@@ -119,37 +121,79 @@ class QuickRecordService {
     return now;
   }
 
-  String _cleanTitle(String input, String matchedKeyword, String? categoryName) {
-     // If we found a specific keyword (e.g. "Bakso" from input "Beli Bakso"), use that.
-     // But we want to preserve other context words if they exist.
-     // Example: "Beli Bakso Pakai BCA" -> "Bakso" (if Bakso is keyword)
-     
-     // Simple Strategy:
-     // 1. Remove "Action Verbs"
-     // 2. Remove "Wallet Context"
-     // 3. Remove "Date Context"
-     // 4. Remove "Amount"
-     // What remains is the Title.
-     
-     String text = input.toLowerCase();
-     
-     // Remove Verbs
-     final verbs = ['beli', 'purchase', 'bayar', 'pay', 'spend', 'makan', 'minum', 'jajan'];
-     for (var v in verbs) {
-       text = text.replaceAll(v, ''); // Naive replace
-     }
-     
-     // Remove Wallet Keywords (Naive)
-     // To do this properly, we should strip the extracted parts. 
-     // For now, let's just fallback to:
-     // If we have a Matched Keyword (e.g. "Cinema"), Title = "Cinema" capitalized.
-     // If no keyword, use Category Name.
-     
-     if (matchedKeyword.isNotEmpty) {
-        return matchedKeyword[0].toUpperCase() + matchedKeyword.substring(1);
-     }
-     
-     return categoryName ?? 'Unknown Transaction';
+  String _cleanTitle({
+    required String input,
+    required String matchedKeyword,
+    String? categoryName,
+    String? walletName,
+    double? amount,
+  }) {
+    String text = input.toLowerCase();
+
+    // 1. Remove Amounts
+    // Regex to match "15k", "15.000", "Rp 15000", "20rb"
+    // Also matched "total 15000" if we want to be aggressive, but removing numbers is usually safe.
+    // \d+([.,]\d+)*\s*(rb|k|jt|juta|ribu)?
+    final amountRegex = RegExp(r'(rp\.?|rp)?\s*\d+([.,]\d+)*\s*(rb|k|jt|juta|ribu)?', caseSensitive: false);
+    text = text.replaceAll(amountRegex, ' '); // Replace with space
+
+    // 2. Remove Wallet Name if present
+    if (walletName != null) {
+      // Try to remove full wallet name
+      text = text.replaceAll(walletName.toLowerCase(), ' ');
+      
+      // Also try to remove individual logical words of the wallet (e.g. "Mandiri" from "Bank Mandiri")
+      // to avoid "Bayar Pakai [Mandiri]" leaving nothing.
+      final commonWalletWords = ['bank', 'wallet', 'account', 'dompet', 'rekening'];
+      final parts = walletName.toLowerCase().split(' ');
+      for (var p in parts) {
+        if (!commonWalletWords.contains(p) && p.length > 2) {
+          text = text.replaceAll(p, ' ');
+        }
+      }
+    }
+
+    // 3. Remove Date Keywords
+    final dateKeywords = ['kemarin', 'yesterday', 'besok', 'tomorrow', 'lusa', 'hari ini', 'today'];
+    for (var d in dateKeywords) {
+      text = text.replaceAll(d, ' ');
+    }
+
+    // 4. Remove Stop Words / Verbs
+    // Expanded list for better cleanup
+    final stopWords = [
+      'beli', 'purchase', 'bayar', 'pay', 
+      'di', 'ke', 'via', 'pakai', 'pake', 'menggunakan', 'untuk', 'buat', 'sama', 'dan', 'with', 'and',
+      'total', 'sub total', 'jumlah', 'harga', 'price', 'rp', 'idr'
+    ];
+    
+    // Sort stopWords by length descending to remove longest matches first (e.g. "sub total" before "total")
+    stopWords.sort((a, b) => b.length.compareTo(a.length));
+
+    for (var w in stopWords) {
+      // Use word boundary to avoid removing parts of words (e.g. "di" inside "dia")
+      // But for simple indo logic, replaceAll ' word ' is safer than regex boundary sometimes due to punctuation.
+      // Let's use simple replace matches closely.
+      // Better: RegExp(r'\bword\b')
+      text = text.replaceAll(RegExp(r'\b' + RegExp.escape(w) + r'\b'), '');
+    }
+
+    // 5. Remove Punctuation and Extra Spaces
+    text = text.replaceAll(RegExp(r'[^\w\s]'), ' '); // Replace punct with space
+    text = text.replaceAll(RegExp(r'\s+'), ' ').trim(); // Collapse spaces
+
+    // 6. Final Decision
+    if (text.length > 1) {
+       // Serialize to Title Case
+       return text.split(' ').map((str) => str.isNotEmpty ? '${str[0].toUpperCase()}${str.substring(1)}' : '').join(' ');
+    }
+
+    // Fallback logic
+    if (matchedKeyword.isNotEmpty) {
+       return matchedKeyword[0].toUpperCase() + matchedKeyword.substring(1);
+    }
+    
+    return categoryName ?? 'Unknown Transaction';
   }
 
   double _extractAmount(String input) {
