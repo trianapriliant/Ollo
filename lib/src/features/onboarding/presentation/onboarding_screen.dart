@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
-import '../data/onboarding_repository.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -21,24 +20,24 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final List<OnboardingPageData> _pages = [
     OnboardingPageData(
       title: 'Savings',
-      subtitle: 'Grow',
+      subtitle: 'Grow Your Wealth',
       description: 'Start saving more effectively by tracking where your money goes and cutting unnecessary expenses.',
       imagePath: 'assets/images/onboarding_savings.png',
-      color: Colors.white,
+      color: const Color(0xFF4CAF50), // Green shade for savings
     ),
     OnboardingPageData(
       title: 'Statistics',
-      subtitle: 'Insights',
+      subtitle: 'Gain Deep Insights',
       description: 'Analyze your income and expense trends with detailed reports to make smarter financial decisions.',
       imagePath: 'assets/images/onboarding_statistics.png',
-      color: Colors.white,
+      color: const Color(0xFF2196F3), // Blue shade for stats
     ),
     OnboardingPageData(
       title: 'Management',
-      subtitle: 'Control',
+      subtitle: 'Total Control',
       description: 'Manage all your wallets, accounts, and budgets in one simple and intuitive place.',
       imagePath: 'assets/images/onboarding_management.png',
-      color: Colors.white,
+      color: const Color(0xFF9C27B0), // Purple shade for management
     ),
   ];
 
@@ -51,20 +50,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _onNext() {
     if (_currentPage < _pages.length - 1) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.fastEaseInToSlowEaseOut,
       );
     } else {
       _finishOnboarding();
     }
   }
 
-  Future<void> _finishOnboarding() async {
-    final repo = ref.read(onboardingRepositoryProvider);
-    await repo.completeOnboarding();
-    if (mounted) {
-      context.go('/home');
-    }
+  void _finishOnboarding() {
+    // Navigate to preferences setup instead of finishing
+    context.push('/onboarding/preferences');
   }
 
   @override
@@ -78,10 +74,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
+        body: Column(
           children: [
-            const SizedBox(height: 32),
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -96,50 +90,63 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
+            
+            // Bottom Controls Area
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Page Indicators
+                  // Indicators
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       _pages.length,
                       (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        height: 6,
-                        width: _currentPage == index ? 24 : 6,
+                        margin: const EdgeInsets.only(right: 8),
+                        height: 8,
+                        width: _currentPage == index ? 32 : 8,
                         decoration: BoxDecoration(
-                          color: _currentPage == index ? AppColors.primary : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(3),
+                          color: _currentPage == index 
+                              ? _pages[_currentPage].color 
+                              : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  // Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _onNext,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: AppColors.primary,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                          side: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 1),
-                        ),
+
+                  // Next Button
+                  GestureDetector(
+                    onTap: _onNext,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      decoration: BoxDecoration(
+                        color: _pages[_currentPage].color,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _pages[_currentPage].color.withOpacity(0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                      child: Text(
-                        _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
-                        style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                            style: GoogleFonts.outfit(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+                        ],
                       ),
                     ),
                   ),
@@ -148,7 +155,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
           ],
         ),
-      ),
       ),
     );
   }
@@ -161,77 +167,111 @@ class _OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 6,
-            child: Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4.0), // Slight margin from screen edges if needed, or remove if full bleed desired. 
-              // Using horizontal:0 based on "width: double.infinity" in HelpSupport, but help support has padding 24. 
-              // _OnboardingPage already has padding 24. So double.infinity is fine.
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32),
-                color: Colors.white, // Background in case image has transparency
-                image: DecorationImage(
-                  image: AssetImage(data.imagePath),
-                  fit: BoxFit.cover,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Image Area with Background Shape
+        Expanded(
+          flex: 6,
+          child: Stack(
+            children: [
+              // Abstract Background Shape
+              Positioned(
+                top: -50,
+                right: -50,
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    color: data.color.withOpacity(0.05),
+                    shape: BoxShape.circle,
                   ),
-                ],
+                ),
               ),
-            ),
-            ),
+              Positioned(
+                bottom: 20,
+                left: -20,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: data.color.withOpacity(0.05),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              
+              // Main Image
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                         BoxShadow(
+                           color: data.color.withOpacity(0.2),
+                           blurRadius: 20,
+                           offset: const Offset(0, 10),
+                         ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(32),
+                      child: Image.asset(
+                        data.imagePath,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 32),
-          Expanded(
-            flex: 4,
+        ),
+
+        // Text Content
+        Expanded(
+          flex: 4,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  data.subtitle,
-                  style: GoogleFonts.outfit(
-                    color: Colors.amber, 
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  data.title,
-                  style: GoogleFonts.outfit(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  data.description,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                    height: 1.5,
-                  ),
-                ),
+                 Text(
+                   data.title.toUpperCase(),
+                   style: GoogleFonts.outfit(
+                     color: data.color,
+                     fontWeight: FontWeight.bold,
+                     fontSize: 14,
+                     letterSpacing: 2.0,
+                   ),
+                 ),
+                 const SizedBox(height: 12),
+                 Text(
+                   data.subtitle,
+                   style: GoogleFonts.outfit(
+                     fontSize: 40,
+                     fontWeight: FontWeight.bold,
+                     color: AppColors.textPrimary,
+                     height: 1.1,
+                   ),
+                 ),
+                 const SizedBox(height: 16),
+                 Text(
+                   data.description,
+                   style: GoogleFonts.outfit(
+                     fontSize: 16,
+                     color: Colors.grey[600],
+                     height: 1.6,
+                   ),
+                 ),
               ],
             ),
           ),
-
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

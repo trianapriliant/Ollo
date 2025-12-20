@@ -52,6 +52,7 @@ import '../features/profile/presentation/help_support_screen.dart';
 import '../features/profile/presentation/help_support_screen.dart';
 import '../features/onboarding/data/onboarding_repository.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
+import '../features/onboarding/presentation/onboarding_preferences_screen.dart';
 import '../features/reimbursement/presentation/reimburse_screen.dart';
 import '../features/reimbursement/presentation/add_reimburse_screen.dart';
 import '../features/profile/presentation/data_export_screen.dart';
@@ -71,6 +72,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
+        routes: [
+          GoRoute(
+            path: 'preferences',
+            builder: (context, state) => const OnboardingPreferencesScreen(),
+          ),
+        ],
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
