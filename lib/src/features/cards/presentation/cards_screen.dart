@@ -140,6 +140,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
       floatingActionButton: _isMultiSelectMode 
           ? null 
           : FloatingActionButton(
+              heroTag: 'cards_fab',
               onPressed: () => context.push('/cards/add'),
               backgroundColor: AppColors.primary,
               child: const Icon(Icons.add, color: Colors.white),

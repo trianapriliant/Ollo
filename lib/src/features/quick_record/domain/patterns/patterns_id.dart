@@ -1,15 +1,6 @@
-/// Knowledge Base for Smart Pattern Matching with Sub-Category Support
-class CategoryPattern {
-  final List<String> mainKeywords;
-  final Map<String, List<String>> subCategoryKeywords;
+import 'pattern_base.dart';
 
-  const CategoryPattern({
-    this.mainKeywords = const [],
-    this.subCategoryKeywords = const {},
-  });
-}
-
-const Map<String, CategoryPattern> defaultCategoryPatterns = {
+const Map<String, CategoryPattern> indonesianPatterns = {
   // --- EXPENSE ---
   'Food & Drink': CategoryPattern(
     mainKeywords: ['makan', 'minum', 'food', 'drink', 'kuliner', 'lapar', 'haus'],
@@ -18,19 +9,22 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'sarapan', 'bubur', 'nasi uduk', 'roti', 'pagi', 
         'telur setengah matang', 'lontong sayur', 'nasi kuning', 
         'ketupat', 'sereal', 'oatmeal', 'breakfast',
-        'pagi hari', 'bubur ayam', 'kopi pagi', 'makan pagi'
+        'pagi hari', 'bubur ayam', 'kopi pagi', 'makan pagi',
+        'morning coffee', 'cereal', 'toast', 'eggs', 'pancakes'
       ],
 
       'Lunch': [
         'makan siang', 'lunch', 'siang', 'break', 
         'jam makan siang', 'nasi padang', 'warteg siang',
-        'makan di kantor', 'takeaway siang'
+        'makan di kantor', 'takeaway siang',
+        'lunch break', 'noon meal', 'having lunch'
       ],
 
       'Dinner': [
         'makan malam', 'dinner', 'malam', 'late dinner', 
         'makan di luar', 'makan bareng malam', 'malam hari',
-        'makan lesehan', 'makan tengah malam', 'midnight meal'
+        'makan lesehan', 'makan tengah malam', 'midnight meal',
+        'supper', 'evening meal', 'dining out', 'dine out'
       ],
 
       'Eateries': [
@@ -52,14 +46,16 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'hokben', 'rice bowl', 'wingstop', 'burger king',
         'piza hut', 'pizzahut', 'pizzahut', 'pizza', 
         'dominos', 'marugame udon', 'solaria', 'mixue',
-        'seblak', 'dimsum', 'shabu shabu'
+        'seblak', 'dimsum', 'shabu shabu',
+        'restaurant', 'cafe', 'diner', 'bistro', 'food stall', 'street food'
       ],
 
       'Snacks': [
         'cemilan', 'snack', 'jajan', 'coklat', 'keripik', 'roti',
         'kue', 'martabak', 'dimsum', 'basreng', 'macaroni', 
         'kacang', 'permen', 'kue basah', 'kue kering', 
-        'donat', 'donut', 'croissant', 'wafer'
+        'donat', 'donut', 'croissant', 'wafer',
+        'chips', 'chocolate', 'candy', 'cookies', 'cake', 'biscuit'
       ],
 
       'Drinks': [
@@ -70,7 +66,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'mineral water', 'aqua', 'es teh', 'teh botol',
         'starbucks', 'chatime', 'haus', 'janji jiwa',
         'kopi kenangan', 'fore coffee', 'teh poci',
-        'minuman dingin', 'minuman panas'
+        'minuman dingin', 'minuman panas',
+        'water', 'juice', 'milk', 'soft drink', 'soda', 'beverage'
       ],
 
       'Groceries': [
@@ -79,20 +76,23 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'tisu', 'sabun', 'susu', 'baygon', 'mie instan',
         'supermarket', 'pasar', 'indomaret', 'alfamart',
         'superindo', 'lottemart', 'hypermart', 'fresh market',
-        'grocery', 'groceries', 'belanja dapur', 'bahan makanan', 'belanja makanan', 'belanja bahan makanan'
+        'grocery', 'groceries', 'belanja dapur', 'bahan makanan', 'belanja makanan', 'belanja bahan makanan',
+        'market', 'supermarket', 'convenience store', 'vegetables', 'fruits', 'rice', 'oil'
       ],
 
       'Delivery': [
         'gofood', 'grabfood', 'shopeefood', 
         'delivery', 'pesan antar', 'ongkir makanan',
         'food delivery', 'antar makanan', 'kurir makanan',
-        'diantar driver', 'order makanan online', 'order makanan', 'order online', 'order food'
+        'diantar driver', 'order makanan online', 'order makanan', 'order online', 'order food',
+        'delivery fee', 'uber eats', 'door dash'
       ],
 
       'Alcohol': [
         'bir', 'wine', 'alkohol', 'vodka', 'soju', 'beer',
         'whiskey', 'whisky', 'gin', 'tequila', 'minuman keras',
-        'minuman beralkohol', 'liquor', 'alcohol'
+        'minuman beralkohol', 'liquor', 'alcohol',
+        'wine', 'beer'
       ],
     },
   ),
@@ -103,7 +103,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'sewa', 'bayar kost', 'kontrakan', 'kontrak rumah', 
         'bayar kamar', 'bayar tempat tinggal', 'sewa bulanan', 
         'pembayaran kos', 'uang kos', 'uang kontrakan', 
-        'boarding house', 'rent', 'sewa apartemen', 'bayar apart'
+        'boarding house', 'rent', 'sewa apartemen', 'bayar apart',
+        'monthly rent', 'apartment rent', 'lease'
       ],
 
       'Mortgage': [
@@ -117,7 +118,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'listrik', 'bayar listrik', 'air', 'pdam', 'pln', 'token',
         'pulsa listrik', 'gas', 'lpg', 'elpiji', 'pgn', 'meteran',
         'tagihan air', 'tagihan listrik', 'pembayaran pdam',
-        'bayar pln', 'biaya utilitas', 'utilitas'
+        'bayar pln', 'biaya utilitas', 'utilitas',
+        'electricity', 'water bill', 'power bill', 'gas bill', 'utility'
       ],
 
       'Internet': [
@@ -126,7 +128,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'myrepublic', 'cbn fiber', 'oxigen', 'hinet', 
         'indosat', 'telkomsel', 'tri', 'xl', 
         'kabel internet', 'wifi bulanan', 'pemasangan wifi',
-        'tagihan internet'
+        'tagihan internet',
+        'internet bill', 'wifi bill', 'data plan', 'mobile data'
       ],
 
       'Maintenance': [
@@ -164,7 +167,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'fashion', 'outfit', 'baju kondangan',
         'zara', 'uniqlo', 'h&m', 'cotton on', 
         'mango', 'guess', 'giordano', 'brand pakaian',
-        'thrifting', 'baju bekas', 'preloved pakaian'
+        'thrifting', 'baju bekas', 'preloved pakaian',
+        'shirt', 'pants', 'trousers', 'jeans', 'dress', 'jacket', 'hoodie', 'shoes', 'sneakers', 'clothing', 'apparel'
       ],
 
       'Electronics': [
@@ -174,7 +178,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'keyboard', 'mouse', 'monitor', 'elektronik',
         'tablet', 'ipad', 'processor', 'ssd', 'hdd',
         'kulkas', 'mesin cuci', 'tv', 'ac',
-        'electronic store', 'service hp', 'repair laptop'
+        'electronic store', 'service hp', 'repair laptop',
+        'phone', 'mobile', 'computer', 'laptop', 'charger', 'headphones', 'earbuds', 'television', 'washing machine', 'fridge'
       ],
 
       'Home': [
@@ -183,7 +188,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'sprei', 'seprai', 'bed cover', 'sarung bantal',
         'korden', 'gorden', 'tirai', 'karpet',
         'keset', 'lemari', 'rak piring', 'perabot kecil',
-        'peralatan kamar mandi', 'dispenser', 'vacuum cleaner'
+        'peralatan kamar mandi', 'dispenser', 'vacuum cleaner',
+        'furniture', 'decor', 'bed sheet', 'curtain', 'pillow', 'rug', 'carpet', 'shelf', 'cabinet'
       ],
 
       'Beauty': [
@@ -192,7 +198,9 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'toner', 'pelembab', 'moisturizer', 'masker wajah',
         'cream wajah', 'facial', 'perawatan wajah',
         'salon', 'spa', 'perawatan tubuh',
-        'potong rambut', 'haircut', 'cat rambut', 'hair dye'
+        'potong rambut', 'haircut', 'cat rambut', 'hair dye',
+        'sabun', 'shampoo','sampo', 'perawatan rambut', 'parfume', 'parfum', 'perfume',
+        'makeup', 'lipstick', 'foundation', 'powder', 'serum', 'moisturizer', 'facial', 'soap', 'body wash'
       ],
 
       'Gifts': [
@@ -227,14 +235,16 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'bus', 'bis', 'transjakarta', 'tj', 'damri',
         'bst', 'trans jogja', 'suroboyo bus', 'brt', 
         'bus kota', 'bus rapid transit', 'minibus',
-        'busway', 'halte bus', 'bayar bus'
+        'busway', 'halte bus', 'bayar bus',
+        'public bus', 'city bus', 'bus ticket', 'bus fare'
       ],
 
       'Train': [
         'kereta', 'kai', 'mrt', 'lrt', 'krl', 'commuter',
         'stasiun', 'lokal line', 'commuterline', 'prameks',
         'kereta api', 'boarding kereta', 'kai access', 
-        'tiket kereta', 'tap in kereta'
+        'tiket kereta', 'tap in kereta',
+        'train ticket', 'subway', 'metro', 'tube', 'railway', 'train fare'
       ],
 
       'Taxi': [
@@ -242,7 +252,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'gograb', 'uber', 'bluebird', 'maxim',
         'grabcar', 'grabbike', 'go bluebird',
         'taxi meter', 'pick up taxi', 'ojol', 
-        'ojek online', 'angkutan online'
+        'ojek online', 'angkutan online',
+        'cab', 'ride share', 'uber'
       ],
 
       'Fuel': [
@@ -251,13 +262,15 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'pertamina', 'fuel', 'isi bbm', 
         'isi bensin full', 'beli bbm', 
         'e7', // kode transaksi spbu di mutasi bank kadang muncul
-        'mypertamina'
+        'mypertamina',
+        'gas', 'petrol', 'gasoline', 'filling station'
       ],
 
       'Parking': [
         'parkir', 'parkiran', 'valet', 'e-parking',
         'parkir motor', 'parkir mobil', 'lapak parkir',
-        'tiket parkir', 'biaya parkir'
+        'tiket parkir', 'biaya parkir',
+        'parking fee', 'parking ticket', 'valet parking'
       ],
 
       'Maintenance': [
@@ -290,7 +303,8 @@ const Map<String, CategoryPattern> defaultCategoryPatterns = {
         'netflix', 'disney', 'disney+', 'disney plus',
         'prime video', 'amazon prime', 'hbomax', 'hbo', 
         'viu', 'catchplay', 'tix id', 'tiket nonton',
-        'sewa film', 'movie rental'
+        'sewa film', 'movie rental',
+        'cinema', 'movie ticket', 'film rental'
       ],
 
       'Games': [

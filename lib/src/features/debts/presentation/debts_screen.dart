@@ -116,6 +116,7 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'debts_fab',
         onPressed: () {
           context.push('/debts/add');
         },

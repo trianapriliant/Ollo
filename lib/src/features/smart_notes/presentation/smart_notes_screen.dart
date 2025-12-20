@@ -61,6 +61,7 @@ class SmartNotesScreen extends ConsumerWidget {
         error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.errorMessage(err.toString()))),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'notes_fab',
         onPressed: () => context.push('/smart-notes/add'),
         backgroundColor: Colors.teal,
         icon: const Icon(Icons.add, color: Colors.white),

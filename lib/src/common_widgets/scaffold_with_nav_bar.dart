@@ -130,20 +130,24 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
           // Use a threshold to detect keyboard (avoid hiding for small insets like system bars)
           floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 100 
             ? null 
-            : FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => const AddTransactionBottomSheet(),
-              );
-            },
-            backgroundColor: AppColors.primary,
-            elevation: 4,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add, color: Colors.white, size: 32),
-          ),
+            : Transform.translate(
+                offset: const Offset(0, 18), // Lower the FAB further (Total 18)
+                child: FloatingActionButton(
+                heroTag: 'main_fab',
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => const AddTransactionBottomSheet(),
+                  );
+                },
+                backgroundColor: AppColors.primary,
+                elevation: 4,
+                shape: const CircleBorder(),
+                child: const Icon(Icons.add, color: Colors.white, size: 32),
+              ),
+            ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         ),
       ),

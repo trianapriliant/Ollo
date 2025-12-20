@@ -5,6 +5,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'currency_provider.dart';
 import 'language_provider.dart';
+import 'voice_language_provider.dart';
 import '../../../localization/generated/app_localizations.dart';
 
 
@@ -73,6 +74,26 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _showLanguagePicker(context, ref),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.accentBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.mic, color: AppColors.primary),
+                    ),
+                    title: Text('Voice Input Language', style: AppTextStyles.bodyLarge),
+                    subtitle: Consumer(
+                      builder: (context, ref, _) {
+                        final voiceLang = ref.watch(voiceLanguageProvider);
+                        return Text(voiceLang.name);
+                      },
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _showVoiceLanguagePicker(context, ref),
                   ),
                 ],
               ),
@@ -155,5 +176,43 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-
+  void _showVoiceLanguagePicker(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Select Voice Language', style: AppTextStyles.h2),
+               const SizedBox(height: 8),
+              Text('Language used for voice recording', style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
+              const SizedBox(height: 16),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: VoiceLanguage.values.map((language) {
+                      return ListTile(
+                        leading: Text(language.code.split('_').last, style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
+                        title: Text(language.name, style: AppTextStyles.bodyLarge),
+                        onTap: () {
+                          ref.read(voiceLanguageProvider.notifier).setLanguage(language);
+                          context.pop();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

@@ -1,0 +1,968 @@
+{
+  "quickRecordHelpTitle": "다음과 같이 말해보세요:",
+  "quickRecordHelp1": "\"어제 커피 4500원 카카오뱅크\"",
+  "quickRecordHelp2": "\"월급 300만원 국민은행\"",
+  "quickRecordHelp3": "\"점심 8000원 토스\"",
+  "quickRecordHelp4": "\"주유 50000원 신한카드\"",
+  "quickRecordHelp5": "\"월세 50만원 1일에 카카오뱅크\"",
+  "quickRecordHelp6": "\"카페 5000원 현금\"",
+  "quickRecordHelp7": "\"인터넷 3만원 20일에 자동이체\"",
+  "quickRecordHelp8": "\"영화 15000원 이번주 일요일\"",
+  "quickRecordHelp9": "\"친구 갚음 5만원 현금\"",
+  "quickRecordHelp10": "\"엄마 용돈 10만원 국민은행\"",
+  "customizeMenu": "메뉴 사용자 지정",
+  "menuOrder": "메뉴 순서",
+  "resetMenu": "메뉴 초기화",
+  "home": "홈",
+  "cardAppearance": "카드 디자인",
+  "selectTheme": "테마 선택",
+  "themeClassic": "클래식 블루",
+  "themeSunset": "선셋 오렌지",
+  "themeOcean": "오션 틸",
+  "themeBerry": "베리 퍼플",
+  "themeForest": "네이처 그린",
+  "themeMidnight": "미드나잇 다크",
+  "themeOasis": "캄 오아시스",
+  "themeLavender": "소프트 라벤더",
+  "themeCottonCandy": "파스텔 드림",
+  "themeMint": "심플리 민트",
+  "themePeach": "심플리 피치",
+  "themeSoftBlue": "심플리 블루",
+  "themeLilac": "심플리 라일락",
+  "themeLemon": "심플리 레몬",
+  "wallet": "지갑",
+  "profile": "프로필",
+  "statistics": "통계",
+  "expense": "지출",
+  "income": "수입",
+  "transfer": "이체",
+  "amount": "금액",
+  "to": "받는 곳",
+  "addNoteHint": "메모 추가...",
+  "cancel": "취소",
+  "done": "완료",
+  "errorInvalidAmount": "올바른 금액을 입력하세요",
+  "errorSelectWallet": "지갑을 선택해주세요",
+  "errorSelectDestinationWallet": "보낼 지갑을 선택해주세요",
+  "errorSameWallets": "출금 및 입금 지갑은 달라야 합니다",
+  "errorSelectCategory": "카테고리를 선택해주세요",
+  "transactionDetail": "거래 상세",
+  "title": "제목",
+  "category": "카테고리",
+  "dateTime": "일시",
+  "date": "날짜",
+  "time": "시간",
+  "note": "메모",
+  "deleteTransaction": "거래 삭제",
+  "deleteTransactionConfirm": "이 거래를 삭제하시겠습니까? 지갑 잔액이 복구됩니다.",
+  "delete": "삭제",
+  "edit": "편집",
+  "markCompleted": "완료됨으로 표시",
+  "markCompletedConfirm": "이 지출 결의를 완료 처리하시겠습니까?",
+  "confirm": "확인",
+  "system": "시스템",
+  "recentTransactions": "최근 내역",
+  "noTransactions": "내역 없음",
+  "startRecording": "수입과 지출을 기록하여 금융 생활을 체계적으로 관리하세요! 🚀",
+  "menu": "메뉴",
+  "budget": "예산",
+  "recurring": "반복",
+  "savings": "저축",
+  "total": "합계",
+  "bills": "청구서",
+  "debts": "채무",
+  "wishlist": "위시리스트",
+  "cards": "카드",
+  "notes": "메모",
+  "reimburse": "지출 결의",
+  "unknown": "알 수 없음",
+  "welcome": "{name}님, 안녕하세요!",
+  "@welcome": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "welcomeSimple": "안녕하세요!",
+  "settings": "설정",
+  "developerOptions": "개발자 옵션",
+  "futureFeatures": "향후 기능",
+  "backupRecovery": "백업 & 복구",
+  "aiAutomation": "AI 자동화",
+  "feedbackRoadmap": "피드백 & 로드맵",
+  "dataExport": "데이터 내보내기",
+  "dataManagement": "데이터 관리",
+  "categories": "카테고리",
+  "wallets": "지갑 관리",
+  "general": "일반",
+  "helpSupport": "고객 지원",
+  "sendFeedback": "피드백 보내기",
+  "aboutOllo": "Ollo 정보",
+  "account": "계정",
+  "deleteData": "데이터 삭제",
+  "logout": "로그아웃",
+  "comingSoon": "준비 중",
+  "comingSoonDesc": "AI가 거래를 분류하고 스마트한 금융 인사이트를 제공합니다.",
+  "cantWait": "기대됩니다!",
+  "deleteAllData": "모든 데이터 삭제?",
+  "deleteAllDataConfirm": "이 작업을 수행하면 모든 거래, 지갑, 예산 및 메모가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.\n\n확인하려면 아래에 \"{confirmationText}\"를 입력하세요:",
+  "@deleteAllDataConfirm": {
+    "placeholders": {
+      "confirmationText": {
+        "type": "String",
+        "example": "Delete Data"
+      }
+    }
+  },
+  "deleteDataConfirmationText": "데이터 삭제",
+  "dataDeletedSuccess": "모든 데이터가 성공적으로 삭제되었습니다. 앱을 다시 시작하세요.",
+  "dataDeleteFailed": "데이터 삭제 실패: {error}",
+  "@dataDeleteFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "currency": "통화",
+  "language": "언어",
+  "selectCurrency": "통화 선택",
+  "selectLanguage": "언어 선택",
+  "selectCategory": "카테고리 선택",
+  "myWallets": "내 지갑",
+  "emptyWalletsTitle": "지갑이 없습니다",
+  "emptyWalletsMessage": "지갑이나 은행 계좌를 추가하여 기록을 시작하세요! 💳",
+  "addWallet": "새 지갑 추가",
+  "editWallet": "지갑 편집",
+  "newWallet": "새 지갑",
+  "walletName": "지갑 이름",
+  "initialBalance": "초기 잔액",
+  "walletDetails": "지갑 상세",
+  "appearance": "디자인",
+  "icon": "아이콘",
+  "color": "색상",
+  "saveWallet": "지갑 저장",
+  "walletTypeCash": "현금",
+  "walletTypeBank": "은행 계좌",
+  "walletTypeEWallet": "전자지갑",
+  "walletTypeCreditCard": "신용카드",
+  "walletTypeExchange": "거래소 / 투자",
+  "walletTypeOther": "기타",
+  "debitCard": "직불카드",
+  "categoriesTitle": "카테고리",
+  "noCategoriesFound": "카테고리 없음",
+  "editCategory": "카테고리 편집",
+  "newCategory": "새 카테고리",
+  "categoryName": "카테고리 이름",
+  "enterCategoryName": "이름을 입력하세요",
+  "deleteCategory": "카테고리 삭제?",
+  "deleteCategoryConfirm": "이 작업은 되돌릴 수 없습니다.",
+  "save": "저장",
+  "systemCategoryTitle": "시스템 카테고리",
+  "systemCategoryMessage": "이 카테고리는 시스템에서 관리하며 수동으로 편집하거나 삭제할 수 없습니다.",
+  "sysCatTransfer": "이체",
+  "sysCatTransferDesc": "지갑 간 자금 이체",
+  "sysCatRecurring": "반복",
+  "sysCatRecurringDesc": "자동 반복 거래",
+  "sysCatWishlist": "위시리스트",
+  "sysCatWishlistDesc": "위시리스트 구매 내역",
+  "sysCatBills": "청구서",
+  "sysCatBills": "청구서",
+  "sysCatBillsDesc": "청구서 납부 내역",
+  "dueDateLabel": "만기일",
+  "statusLabel": "상태",
+  "noPaymentsYet": "지불 내역 없음",
+  "sysCatDebts": "채무",
+  "sysCatDebtsDesc": "부채/대출 기록",
+  "sysCatSavings": "저축",
+  "sysCatSavingsDesc": "저축 입금/출금 내역",
+  "sysCatSmartNotes": "번들 메모",
+  "sysCatSmartNotesDesc": "스마트 번들 내역",
+  "sysCatReimburse": "지출 결의",
+  "sysCatReimburseDesc": "지출 결의 내역 추적",
+  "sysCatAdjustment": "잔액 조정",
+  "sysCatAdjustmentDesc": "수동 지갑 잔액 수정",
+  "budgetsTitle": "예산",
+  "noBudgetsYet": "예산이 없습니다",
+  "createBudget": "예산 만들기",
+  "yourBudgets": "내 예산",
+  "newBudget": "새 예산",
+  "editBudget": "예산 편집",
+  "limitAmount": "한도 금액",
+  "period": "기간",
+  "weekly": "매주",
+  "monthly": "매월",
+  "yearly": "매년",
+  "daily": "매일",
+  "deleteBudget": "예산 삭제",
+  "deleteBudgetConfirm": "이 예산을 삭제하시겠습니까?",
+  "enterAmount": "금액 입력",
+  "recurringTitle": "반복",
+  "activeSubscriptions": "활성 구독",
+  "noActiveSubscriptions": "활성 구독 없음",
+  "newRecurring": "새 반복 거래",
+  "editRecurring": "반복 거래 편집",
+  "frequency": "주기",
+  "startDate": "시작일",
+  "payWithWallet": "지불 지갑",
+  "updateRecurring": "반복 거래 업데이트",
+  "saveRecurring": "반복 거래 저장",
+  "deleteRecurring": "반복 거래 삭제?",
+  "deleteRecurringConfirm": "이 작업은 향후 자동 결제를 중지합니다. 과거 거래 내역은 유지됩니다.",
+  "pleaseSelectWallet": "지갑을 선택해주세요",
+  "debtsTitle": "채무",
+  "iOwe": "내가 빌린 돈",
+  "owedToMe": "내가 빌려준 돈",
+  "netBalance": "순 잔액",
+  "debtFree": "빚이 없습니다!",
+  "noOneOwesYou": "받을 돈이 없습니다.",
+  "paidStatus": "지불됨",
+  "overdue": "연체",
+  "dueOnDate": "{date} 만기",
+  "@dueOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "amountLeft": "{amount} 남음",
+  "@amountLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteDebt": "채무 삭제?",
+  "deleteDebtConfirm": "채무 기록이 삭제됩니다.",
+  "sortByDate": "날짜순 정렬",
+  "sortByAmount": "금액순 정렬",
+  "editDebt": "채무/대출 편집",
+  "addDebt": "채무/대출 추가",
+  "iBorrowed": "빌림 (부채)",
+  "iLent": "빌려줌 (자산)",
+  "personName": "이름",
+  "whoHint": "누구?",
+  "required": "필수",
+  "updateDebt": "채무 업데이트",
+  "saveDebt": "채무 저장",
+  "debtSaved": "채무가 저장되었습니다",
+  "debtUpdated": "채무가 업데이트되었습니다",
+  "debtDeleted": "채무 삭제됨",
+  "debtDetails": "채무 상세",
+  "paymentHistory": "지불 내역",
+  "youOweName": "{name}님에게 빌림",
+  "@youOweName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nameOwesYou": "{name}님이 빌려감",
+  "@nameOwesYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAmount": "합계: {amount}",
+  "@totalAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paidAmount": "지불됨: {amount}",
+  "@paidAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activeStatus": "활성",
+  "addPayment": "지불 추가",
+  "noneRecordOnly": "없음 (기록만)",
+  "confirmPayment": "지불 확인",
+  "paymentRecorded": "지불이 기록되었습니다!",
+  "balanceUpdateDetected": "잔액 업데이트 감지됨",
+  "recordAsTransaction": "거래로 기록하시겠습니까?",
+  "recordAsTransactionDesc": "잔액이 {amount}만큼 변경되었습니다. 이 차액을 거래로 기록하시겠습니까?",
+  "@recordAsTransactionDesc": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustmentTitle": "잔액 조정",
+  "skip": "아니요, 조정만 함",
+  "record": "네, 기록함",
+  "updateBalance": "잔액 업데이트",
+  "newBalance": "새 잔액",
+  "deleteWalletTitle": "지갑 삭제?",
+  "deleteWalletConfirm": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+  "@deleteWalletConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteDebtWarning": "이 작업은 채무 기록을 삭제합니다. 지갑 잔액은 자동으로 복구되지 않습니다.",
+  "billsTitle": "청구서",
+  "unpaid": "미납",
+  "paidTab": "납부됨",
+  "allCaughtUp": "모두 완료되었습니다!",
+  "noUnpaidBills": "미납된 청구서가 없습니다.",
+  "noHistoryYet": "기록 없음",
+  "paidOnDate": "{date}에 지불됨",
+  "@paidOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dueToday": "오늘 마감",
+  "dueInDays": "{days}일 후 마감",
+  "@dueInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "pay": "지불",
+  "payBill": "청구서 지불",
+  "payBillTitle": "\"{title}\" 지불?",
+  "@payBillTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "payFrom": "지불 출처:",
+  "noWalletsFound": "지갑 없음",
+  "billPaidSuccess": "청구서 지불 완료!",
+  "editBill": "청구서 편집",
+  "addBill": "청구서 추가",
+  "billDetails": "청구서 상세",
+  "billName": "청구서 이름",
+  "billType": "청구서 유형",
+  "repeatBill": "이 청구서 반복?",
+  "autoCreateBill": "새 청구서 자동 생성",
+  "updateBill": "청구서 업데이트",
+  "saveBill": "청구서 저장",
+  "billSaved": "청구서 저장됨",
+  "billUpdated": "청구서 업데이트됨",
+  "billDeleted": "청구서 삭제됨",
+  "payBillDescription": "시스템 거래가 생성되고 지갑에서 차감됩니다.",
+  "deleteBill": "청구서 삭제?",
+  "deleteBillConfirm": "이 작업은 되돌릴 수 없습니다.",
+  "errorInvalidBill": "올바른 제목과 금액을 입력하세요",
+  "wishlistTitle": "위시리스트",
+  "activeTab": "진행 중",
+  "achievedTab": "달성됨",
+  "emptyActiveWishlistMessage": "구매하고 싶은 아이템을 추가하세요",
+  "emptyAchievedWishlistMessage": "아직 달성한 꿈이 없습니다. 계속 노력하세요!",
+  "noAchievementsYet": "달성 기록 없음",
+  "wishlistEmpty": "위시리스트가 비어 있습니다",
+  "deleteItemTitle": "아이템 삭제?",
+  "deleteItemConfirm": "\"{title}\"을(를) 삭제하시겠습니까?",
+  "@deleteItemConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "buy": "구매",
+  "buyItemTitle": "아이템 구매",
+  "purchaseItemTitle": "\"{title}\" 구매?",
+  "@purchaseItemTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "selectWalletLabel": "지갑 선택:",
+  "noWalletsFoundMessage": "지갑이 없습니다. 먼저 지갑을 생성하세요.",
+  "amountLabel": "금액:",
+  "confirmPurchase": "구매 확인",
+  "purchaseSuccessMessage": "구매 성공! 꿈을 이뤘습니다! 🎉",
+  "errorLaunchingUrl": "URL 실행 오류: {error}",
+  "@errorLaunchingUrl": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "editWishlist": "위시리스트 편집",
+  "addWishlist": "위시리스트 추가",
+  "addPhoto": "사진 추가",
+  "itemName": "아이템 이름",
+  "itemNameHint": "예: 새 노트북",
+  "priceLabel": "가격",
+  "targetDateLabel": "목표 날짜",
+  "selectDate": "날짜 선택",
+  "productLinkLabel": "상품 링크 (선택)",
+  "productLinkHint": "예: https://coupang.com/...",
+  "updateWishlist": "위시리스트 업데이트",
+  "saveWishlist": "위시리스트 저장",
+  "errorInvalidWishlist": "올바른 제목과 가격을 입력하세요",
+  "wishlistUpdated": "위시리스트 업데이트됨",
+  "wishlistSaved": "아이템이 위시리스트에 추가되었습니다!",
+  "deleteWishlistTitle": "위시리스트 삭제?",
+  "deleteWishlistConfirm": "이 작업은 되돌릴 수 없습니다.",
+  "wishlistDeleted": "위시리스트 삭제됨",
+  "errorPickingImage": "이미지 선택 오류: {error}",
+  "@errorPickingImage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "smartNotesTitle": "내 번들",
+  "emptySmartNotesMessage": "첫 번째 번들을 만드세요!",
+  "historyTitle": "기록",
+  "errorMessage": "오류: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "addSmartNote": "새 번들",
+  "noItemsInBundle": "번들에 아이템이 없습니다",
+  "payAmount": "{amount} 결제",
+  "@payAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paidAndCompleted": "결제 및 완료",
+  "undoPay": "결제 취소",
+  "deleteSmartNoteTitle": "번들 삭제?",
+  "confirmPaymentMessage": "{amount} 거래를 생성하시겠습니까?",
+  "@confirmPaymentMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSuccess": "결제 및 완료됨!",
+  "undoPaymentTitle": "결제 취소?",
+  "undoPaymentConfirm": "거래를 삭제하고 지갑을 환불하며 번들을 다시 엽니다.",
+  "undoAndReopen": "취소 및 다시 열기",
+  "purchaseReopened": "구매 다시 열림",
+  "editSmartNote": "번들 편집",
+  "newSmartNote": "새 번들",
+  "smartNoteName": "번들 이름",
+  "smartNoteNameHint": "예: 월간 식료품",
+  "itemsList": "아이템 목록",
+  "addItem": "아이템 추가",
+  "requiredShort": "필수",
+  "additionalNotes": "추가 메모",
+  "totalEstimate": "총 예상 금액",
+  "saveBundle": "번들 저장",
+  "checkedTotal": "선택된 합계:",
+  "completed": "완료됨",
+  "payAndFinish": "결제 및 종료",
+  "payingWith": "결제 수단",
+  "noItemsChecked": "결제할 아이템이 선택되지 않았습니다!",
+  "smartNoteTransactionRecorded": "거래 기록 및 번들 완료됨!",
+  "totalDreamValue": "총 꿈의 가치",
+  "activeWishesCount": "{count}개 소망",
+  "@activeWishesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achievedDreamsCount": "{count}개의 꿈 달성! 🎉",
+  "@achievedDreamsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billDataNotFound": "청구서 데이터를 찾을 수 없습니다",
+  "wishlistDataNotFound": "위시리스트 데이터를 찾을 수 없습니다",
+  "editReimbursementNotSupported": "지출 결의 편집은 아직 완벽하게 지원되지 않습니다",
+  "transactions": "거래",
+  "noTransactionsFound": "거래를 찾을 수 없습니다",
+  "noTransactionsInCategory": "이 카테고리에 거래가 없습니다",
+  "noDataForPeriod": "이 기간에 대한 데이터가 없습니다",
+  "monthlyOverview": "월간 개요",
+  "unlockPremiumStats": "프리미엄 통계 잠금 해제",
+  "totalBalance": "총 잔액",
+  "dailyBudget": "일일 예산",
+  "weeklyBudget": "주간 예산",
+  "monthlyBudget": "월간 예산",
+  "yearlyBudget": "연간 예산",
+  "wishlistPurchase": "위시리스트 구매",
+  "billPayment": "청구서 납부",
+  "debtTransaction": "채무 거래",
+  "savingsTransaction": "저축 거래",
+  "transferTransaction": "이체",
+  "transferFee": "이체 수수료",
+  "transferFeeHint": "수수료 (선택)",
+  "importData": "데이터 가져오기",
+  "importDataTitle": "거래 가져오기",
+  "downloadTemplate": "템플릿 다운로드",
+  "uploadCsv": "CSV 업로드",
+  "importSuccess": "{count}개의 거래를 성공적으로 가져왔습니다!",
+  "@importSuccess": {
+    "placeholders": {
+        "count": {}
+    }
+  },
+  "importPartialSuccess": "{success}건 가져오기 성공. 실패: {failed}건.",
+   "@importPartialSuccess": {
+    "placeholders": {
+        "success": {},
+        "failed": {}
+    }
+  },
+  "templateSaved": "템플릿이 다운로드 폴더에 저장되었습니다",
+  "importInfoText": "데이터를 올바르게 가져오려면 템플릿을 사용하세요. 열 이름이 정확히 일치해야 합니다.",
+  "pressBackAgainToExit": "뒤로 버튼을 한 번 더 누르면 종료됩니다",
+  "quickRecord": "빠른 기록",
+  "chatAction": "채팅",
+  "scanAction": "스캔",
+  "voiceAction": "음성",
+  "filterDay": "일",
+  "filterWeek": "주",
+  "filterMonth": "월",
+  "filterYear": "년",
+  "filterAll": "전체",
+  "editTransaction": "거래 편집",
+  "addTransaction": "거래 추가",
+  "titleLabel": "제목",
+  "enterDescriptionHint": "설명 입력",
+  "enterTitleHint": "제목 입력 (예: 아침 식사)",
+  "enterValidAmount": "올바른 금액을 입력하세요",
+  "selectWalletError": "지갑을 선택해주세요",
+  "selectDestinationWalletError": "보낼 지갑을 선택해주세요",
+  "selectCategoryError": "카테고리를 선택해주세요",
+  "saveTransaction": "거래 저장",
+  "loading": "로딩 중...",
+  "error": "오류: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "expenseDetails": "지출 상세",
+  "incomeDetails": "수입 상세",
+  "noExpensesFound": "지출 내역 없음",
+  "noIncomeFound": "수입 내역 없음",
+  "forThisDate": "해당 날짜",
+  "timeFilterToday": "오늘",
+  "timeFilterThisWeek": "이번 주",
+  "timeFilterThisMonth": "이번 달",
+  "timeFilterThisYear": "올해",
+  "timeFilterAllTime": "전체 기간",
+  "dailyOverview": "일일 개요",
+  "dailyAverage": "일일 평균",
+  "projectedTotal": "예상 합계",
+  "spendingHabitsNote": "이번 달 소비 습관을 기반으로 합니다.",
+  "monthlyComparison": "월간 비교",
+  "spendingLessNote": "지난달보다 적게 쓰고 있습니다!",
+  "spendingMoreNote": "평소보다 지출이 많습니다.",
+  "topSpenders": "최고 지출",
+  "transactionsCount": "{count}건의 거래",
+  "@transactionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activityHeatmap": "활동 히트맵",
+  "less": "적음",
+  "more": "많음",
+  "backupRecoveryTitle": "백업 & 복구",
+  "backupDescription": "로컬 백업 파일(JSON)을 생성하여 데이터를 안전하게 보호하세요. 나중에 또는 다른 기기에서 복원할 수 있습니다.",
+  "popularBanks": "인기 은행",
+  "eWallets": "전자지갑",
+  "bankEWalletLogos": "은행 & 전자지갑 로고",
+  "genericIcons": "일반 아이콘",
+  "changeIcon": "아이콘 변경",
+  "typeLabel": "유형",
+  "createBackup": "백업 생성",
+  "restoreBackup": "백업 복원",
+  "createBackupSubtitle": "모든 데이터를 JSON 파일로 내보내기",
+  "restoreBackupSubtitle": "JSON 파일에서 데이터 가져오기 (현재 데이터 삭제됨)",
+  "creatingBackup": "백업 생성 중...",
+  "restoringBackup": "백업 복원 중...",
+  "preferences": "환경설정",
+  "weeklyActivityHeatmap": "주간 활동",
+  "backupSuccess": "백업이 다음 위치에 저장되었습니다:\n{path}",
+  "@backupSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreSuccess": "백업이 성공적으로 복원되었습니다!\n데이터가 즉시 표시되지 않으면 앱을 다시 시작하세요.",
+  "backupError": "백업 생성 실패: {error}",
+  "@backupError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreError": "백업 복원 실패: {error}",
+  "@restoreError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreWarningTitle": "⚠️ 경고: 데이터 복원",
+  "restoreWarningMessage": "백업을 복원하면 이 기기의 현재 모든 데이터가 삭제되고 백업 내용으로 대체됩니다.\n\n이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?",
+  "yesRestore": "네, 복원합니다",
+  "exportDataTitle": "데이터 내보내기",
+  "dateRange": "날짜 범위",
+  "transactionType": "거래 유형",
+  "allWallets": "모든 지갑",
+  "allCategories": "모든 카테고리",
+  "shareCsv": "CSV 공유 ({count}개 항목)",
+  "@shareCsv": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveToDownloads": "다운로드 폴더에 저장",
+  "calculating": "계산 중...",
+  "noTransactionsMatch": "선택한 필터와 일치하는 거래가 없습니다.",
+  "exportFailed": "내보내기 실패: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saveFailed": "저장 실패: {error}",
+  "@saveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileSavedTo": "파일이 저장된 위치: {path}",
+  "@fileSavedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "lastMonth": "지난달",
+  "sendFeedbackTitle": "피드백 보내기",
+  "weValueYourVoice": "여러분의 의견을 소중하게 생각합니다",
+  "feedbackDescription": "새로운 기능 아이디어가 있나요? 버그를 찾으셨나요? 아니면 그냥 인사하고 싶으신가요? 저희는 들을 준비가 되어 있습니다! 여러분의 피드백은 Ollo의 발전에 큰 힘이 됩니다.",
+  "chatViaWhatsApp": "WhatsApp으로 채팅",
+  "repliesInHours": "보통 몇 시간 내에 응답합니다",
+  "subCategoriesCount": "{count}개 하위 카테고리",
+  "@subCategoriesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "이름 없음",
+  "ok": "확인",
+  "errorPrefix": "오류: {error}",
+  "@errorPrefix": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "whatsappMessage": "안녕하세요 Ollo 팀, 피드백을 보내고 싶습니다...",
+  
+  "roadmapTitle": "제품 로드맵",
+  "roadmapInProgress": "진행 중",
+  "roadmapPlanned": "계획됨",
+  "roadmapCompleted": "완료됨",
+  "roadmapHighPriority": "높은 우선순위",
+  "roadmapBeta": "베타",
+  "roadmapDev": "개발",
+  "featureCloudBackupTitle": "클라우드 백업 (Google Drive)",
+  "featureCloudBackupDesc": "데이터를 개인 Google Drive에 안전하게 동기화하세요.",
+  "featureAiInsightsTitle": "고급 AI 인사이트",
+  "featureAiInsightsDesc": "개인 맞춤형 팁과 함께 소비 습관을 심층 분석합니다.",
+  "featureDataExportTitle": "CSV/Excel로 데이터 내보내기",
+  "featureDataExportDesc": "Excel 또는 Sheets에서 외부 분석을 위해 거래 내역을 내보냅니다.",
+  "featureBudgetForecastingTitle": "예산 예측",
+  "featureBudgetForecastingDesc": "과거 데이터를 기반으로 다음 달 지출을 예측합니다.",
+  "featureMultiCurrencyTitle": "다중 통화 지원",
+  "featureMultiCurrencyDesc": "국제 거래를 위한 실시간 환율 변환.",
+  "featureReceiptScanningTitle": "영수증 스캔 OCR",
+  "featureReceiptScanningDesc": "영수증을 스캔하여 거래 세부 정보를 자동으로 입력합니다.",
+  "featureLocalBackupTitle": "전체 로컬 백업",
+  "featureLocalBackupDesc": "모든 앱 데이터(거래, 지갑, 메모 등)를 로컬 파일로 백업합니다.",
+  "featureSmartNotesTitle": "스마트 메모",
+  "featureSmartNotesDesc": "체크리스트와 합계 계산이 포함된 쇼핑 목록.",
+  "featureRecurringTitle": "반복 거래",
+  "featureRecurringDesc": "청구서 및 급여 입력을 자동화합니다.",
+
+  "aboutTitle": "Ollo 정보",
+  "aboutPhilosophyTitle": "당신의 금융 동반자",
+  "aboutPhilosophyDesc": "Ollo는 재정 관리가 복잡하지 않아야 한다는 믿음에서 탄생했습니다. 저희는 당신이 금융 목표를 하나씩 달성할 수 있도록 돕는 스마트하고 친근한 금융 동반자를 만들고자 합니다.",
+  "connectWithUs": "문의하기",
+  "version": "버전 {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+
+  "helpTitle": "도움말 & 지원",
+  "helpIntroTitle": "무엇을 도와드릴까요?",
+  "helpIntroDesc": "자주 묻는 질문에 대한 답변을 찾거나 지원 팀에 직접 문의하세요.",
+  "faqTitle": "자주 묻는 질문 (FAQ)",
+  "faqAddWalletQuestion": "새 지갑을 어떻게 추가하나요?",
+  "faqAddWalletAnswer": "\"지갑\" 메뉴로 이동하여 오른쪽 상단 모서리의 \"+\" 버튼을 누르세요. 지갑 유형(현금, 은행 등)을 선택하고 이름과 초기 잔액을 입력한 다음 저장하세요.",
+  "faqExportDataQuestion": "내 데이터를 내보낼 수 있나요?",
+  "faqExportDataAnswer": "데이터 내보내기는 곧 제공될 프리미엄 기능입니다. 거래 내역을 CSV 또는 Excel 형식으로 내보낼 수 있게 됩니다.",
+  "faqResetDataQuestion": "데이터를 어떻게 초기화하나요?",
+  "faqResetDataAnswer": "현재, 개별 거래나 지갑을 삭제할 수 있습니다. 전체 공장 초기화 옵션은 향후 업데이트의 설정 메뉴에서 제공될 예정입니다.",
+  "faqSecureDataQuestion": "내 데이터는 안전한가요?",
+  "faqSecureDataAnswer": "네, 모든 데이터는 기기에 로컬로 저장됩니다. 저희는 귀하의 개인 금융 데이터를 외부 서버에 업로드하지 않습니다.",
+  "contactSupport": "지원 팀 문의",
+  "reimbursementTitle": "지출 결의",
+  "reimbursementPending": "대기 중",
+  "reimbursementCompleted": "완료됨",
+  "noPendingReimbursements": "대기 중인 지출 결의 없음",
+  "noCompletedReimbursements": "완료된 지출 결의 없음",
+  "markPaid": "지불 완료로 표시",
+  
+  "totalSavings": "총 저축",
+  "financialBuckets": "금융 버킷",
+  "noSavingsYet": "저축 없음",
+  "growthThisMonth": "이번 달 {percent}% 성장",
+  "@growthThisMonth": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+
+  "myCards": "내 카드",
+  "selectedCount": "{count}개 선택됨",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyNumber": "번호 복사",
+  "copyTemplate": "템플릿 복사",
+  "cardsCopied": "{count}개 카드 복사됨!",
+  "@cardsCopied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardNumberCopied": "카드 번호가 복사되었습니다!",
+  "cardTemplateCopied": "카드 템플릿이 복사되었습니다!",
+  "noCardsYet": "카드가 없습니다",
+  "addCardsMessage": "은행 계좌 또는 전자지갑을 추가하세요",
+  
+  "premiumTitle": "잠재력 잠금 해제",
+  "premiumSubtitle": "고급 기능과 무제한 액세스를 위해 프리미엄으로 업그레이드하세요.",
+  "premiumAdvancedStats": "고급 통계",
+  "premiumAdvancedStatsDesc": "대화형 차트 & 심층 분석",
+  "premiumDataExport": "데이터 내보내기",
+  "premiumDataExportDesc": "백업을 위해 CSV/Excel로 내보내기",
+  "premiumUnlimitedWallets": "무제한 지갑",
+  "premiumUnlimitedWalletsDesc": "필요한 만큼 지갑을 생성하세요",
+  "premiumSmartAlerts": "스마트 알림",
+  "premiumSmartAlertsDesc": "과소비하기 전에 알림 받기",
+  "upgradeButton": "지금 업그레이드 - Rp 29.000 / 평생",
+  "restorePurchase": "구매 복원",
+  "youArePremium": "프리미엄 회원입니다!",
+  "premiumWelcome": "프리미엄에 오신 것을 환영합니다! 🌟",
+  "contactSupportMessage": "안녕하세요 Ollo 지원 팀, 도움이 필요합니다...",
+  
+  "category_food": "식비",
+  "category_transport": "교통",
+  "category_shopping": "쇼핑",
+  "category_housing": "주거",
+  "category_entertainment": "문화/여가",
+  "category_health": "건강",
+  "category_education": "교육",
+  "category_personal": "개인",
+  "category_financial": "금융",
+  "category_family": "가족",
+  "category_salary": "여",
+  "category_business": "사업",
+  "category_investments": "투자",
+  "category_gifts_income": "선물",
+  "category_other_income": "기타",
+
+  "subcategory_breakfast": "아침",
+  "subcategory_lunch": "점심",
+  "subcategory_dinner": "저녁",
+  "subcategory_eateries": "외식",
+  "subcategory_snacks": "간식",
+  "subcategory_drinks": "음료",
+  "subcategory_groceries": "식료품",
+  "subcategory_delivery": "배달",
+  "subcategory_alcohol": "술/유흥",
+
+  "subcategory_bus": "버스",
+  "subcategory_train": "지하철/기차",
+  "subcategory_taxi": "택시",
+  "subcategory_fuel": "주유",
+  "subcategory_parking": "주차",
+  "subcategory_maintenance": "정비",
+  "subcategory_insurance_car": "보험 (차량)",
+  "subcategory_toll": "통행료",
+
+  "subcategory_clothes": "의류",
+  "subcategory_electronics": "전자제품",
+  "subcategory_home": "가구/인테리어",
+  "subcategory_beauty": "미용",
+  "subcategory_gifts": "선물",
+  "subcategory_software": "소프트웨어",
+  "subcategory_tools": "공구/장비",
+
+  "subcategory_rent": "월세",
+  "subcategory_mortgage": "대출이자",
+  "subcategory_utilities": "공과금",
+  "subcategory_internet": "인터넷",
+  "subcategory_maintenance_home": "수리/보수",
+  "subcategory_furniture": "가구",
+  "subcategory_services": "서비스",
+
+  "subcategory_movies": "영화",
+  "subcategory_games": "게임",
+  "subcategory_streaming": "스트리밍",
+  "subcategory_events": "공연/이벤트",
+  "subcategory_hobbies": "취미",
+  "subcategory_travel": "여행",
+  "monthly": "매월",
+  "yearly": "매년",
+  "monthlyCommitment": "고정 지출",
+  "upcomingBill": "다가오는 청구서",
+  "noUpcomingBills": "다가오는 청구서 없음",
+  "today": "오늘",
+  "tomorrow": "내일",
+  "inDays": "{days}일 후",
+  "needTwoWallets": "지갑 2개 이상 필요",
+  "nettBalance": "순 잔액",
+  "activeDebt": "활성 부채",
+  "last30Days": "최근 30일",
+  "currentBalance": "현재 잔액",
+  "premiumMember": "프리미엄 회원",
+  "upgradeToPremium": "프리미엄으로 업그레이드",
+  "unlimitedAccess": "무제한 액세스 권한이 있습니다!",
+  "unlockFeatures": "모든 기능을 잠금 해제하고 제한을 제거하세요.",
+  "from": "보내는 곳",
+  "subcategory_music": "음악",
+
+  "subcategory_doctor": "병원",
+  "subcategory_pharmacy": "약국",
+  "subcategory_gym": "헬스장",
+  "subcategory_insurance_health": "건강보험",
+  "subcategory_mental_health": "정신건강",
+  "subcategory_sports": "스포츠",
+
+  "subcategory_tuition": "등록금/학원비",
+  "subcategory_books": "교재/도서",
+  "subcategory_courses": "온라인 강의",
+  "subcategory_supplies": "학용품",
+
+  "subcategory_haircut": "헤어",
+  "subcategory_spa": "스파/마사지",
+  "subcategory_cosmetics": "화장품",
+
+  "subcategory_taxes": "세금",
+  "subcategory_fees": "수수료",
+  "subcategory_fines": "벌금",
+  "subcategory_insurance_life": "생명보험",
+
+  "subcategory_childcare": "육아",
+  "subcategory_toys": "장난감",
+  "subcategory_school_kids": "학교",
+  "subcategory_pets": "반려동물",
+
+  "subcategory_monthly": "월급",
+  "subcategory_weekly": "주급",
+  "subcategory_bonus": "보너스",
+  "subcategory_overtime": "초과근무수당",
+
+  "subcategory_sales": "판매 수익",
+  "subcategory_profit": "사업 이익",
+
+  "subcategory_dividends": "배당금",
+  "subcategory_interest": "이자",
+  "subcategory_crypto": "암호화폐",
+  "subcategory_stocks": "주식",
+  "subcategory_real_estate": "부동산",
+
+  "subcategory_birthday": "생일",
+  "subcategory_holiday": "명절 용돈",
+  "subcategory_allowance": "용돈",
+
+  "subcategory_refunds": "환불",
+  "subcategory_grants": "지원금",
+  "subcategory_lottery": "복권",
+  "subcategory_selling": "중고 판매",
+
+  "editProfileTitle": "프로필 편집",
+  "nameLabel": "이름",
+  "emailLabel": "이메일 (선택)",
+  "uploadPhoto": "사진 업로드",
+  "saveChanges": "변경사항 저장",
+
+  "listeningMessage": "Ollo AI가 듣고 있습니다...",
+  "quickRecordTitle": "빠른 기록",
+  "saySomethingHint": "'점심 5000원' 이라고 말해보세요...",
+  "stopAndProcess": "중지 및 처리",
+  "textInputHint": "예: \"점심 8000원\", \"월급 300만원\"",
+  "draftReady": "초안 준비 완료",
+  "saveAdjust": "저장 및 수정",
+  "notFound": "결과 없음",
+  "selectWallet": "지갑 선택",
+  "exitAppTitle": "앱 종료",
+  "exitAppConfirm": "앱을 종료하시겠습니까?"
+}

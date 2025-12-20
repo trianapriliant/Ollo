@@ -152,12 +152,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), // Reduced top padding
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const DashboardFilterBar(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8), // Reduced from 16
               const MainAccountCard(),
               const SizedBox(height: 16),
               const DashboardMenuGrid(),

@@ -7,7 +7,8 @@ enum AppLanguage {
   japanese('日本語', 'ja'),
   spanish('Español', 'es'),
   hindi('हिन्दी', 'hi'),
-  chinese('中文', 'zh');
+  chinese('中文', 'zh'),
+  korean('한국어', 'ko');
 
   final String name;
   final String code;

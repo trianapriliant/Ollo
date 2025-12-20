@@ -9,6 +9,8 @@ import '../../../debts/data/debt_repository.dart';
 import '../../../debts/domain/debt.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 
+import '../../../dashboard/presentation/main_card_theme_provider.dart';
+
 class WalletSummaryCard extends ConsumerWidget {
   const WalletSummaryCard({super.key});
 
@@ -17,23 +19,17 @@ class WalletSummaryCard extends ConsumerWidget {
     final summaryAsync = ref.watch(walletSummaryProvider);
     final debtsAsync = ref.watch(debtListProvider);
     final currency = ref.watch(currencyProvider);
+    final currentTheme = ref.watch(mainCardThemeProvider);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF4A90E2), // Blue
-            const Color(0xFF50E3C2).withOpacity(0.8), // Teal
-          ],
-        ),
+        gradient: currentTheme.gradient,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF4A90E2).withOpacity(0.3),
+            color: currentTheme.gradient.colors.first.withOpacity(0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

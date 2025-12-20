@@ -117,6 +117,7 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'bills_fab',
         onPressed: () {
           context.push('/bills/add');
         },

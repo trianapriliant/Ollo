@@ -57,6 +57,7 @@ class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTi
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'reimburse_fab',
         onPressed: () => context.push('/reimburse/add'),
         backgroundColor: const Color(0xFF1E1E1E), // Dark background like premium menus
         child: const Icon(Icons.add, color: Colors.white),

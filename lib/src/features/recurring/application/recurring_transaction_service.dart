@@ -23,16 +23,25 @@ class RecurringTransactionService {
     required this.billRepo,
   });
 
-  Future<void> processDueTransactions() async {
-    final activeRecurring = await recurringRepo.getActiveRecurringTransactions();
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+  bool _isProcessing = false;
 
-    for (var recurring in activeRecurring) {
-      // Check if due date is today or in the past
-      if (recurring.nextDueDate.isBefore(today) || recurring.nextDueDate.isAtSameMomentAs(today)) {
-        await _processSingleTransaction(recurring);
+  Future<void> processDueTransactions() async {
+    if (_isProcessing) return;
+    _isProcessing = true;
+    
+    try {
+      final activeRecurring = await recurringRepo.getActiveRecurringTransactions();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+
+      for (var recurring in activeRecurring) {
+        // Check if due date is today or in the past
+        if (recurring.nextDueDate.isBefore(today) || recurring.nextDueDate.isAtSameMomentAs(today)) {
+          await _processSingleTransaction(recurring);
+        }
       }
+    } finally {
+      _isProcessing = false;
     }
   }
 

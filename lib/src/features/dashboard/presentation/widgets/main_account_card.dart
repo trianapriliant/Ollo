@@ -24,7 +24,7 @@ class MainAccountCard extends ConsumerWidget {
     final currentTheme = ref.watch(mainCardThemeProvider);
 
     return Container(
-      padding: const EdgeInsets.all(20), // Reduced from 24
+      padding: const EdgeInsets.all(16), // Reduced from 20
       decoration: BoxDecoration(
         gradient: currentTheme.gradient,
         borderRadius: BorderRadius.circular(24),
@@ -45,7 +45,7 @@ class MainAccountCard extends ConsumerWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 2), // Reduced from 4
+          const SizedBox(height: 0), // Reduced from 2
           Text(
             currency.format(totalBalance),
             style: AppTextStyles.h1.copyWith(
@@ -54,7 +54,7 @@ class MainAccountCard extends ConsumerWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16), // Reduced from 20
+          const SizedBox(height: 12), // Reduced from 16
           Row(
             children: [
               Expanded(
@@ -103,7 +103,7 @@ class MainAccountCard extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(12), // Reduced from 16
+        padding: const EdgeInsets.all(10), // Reduced from 12
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.15),
           borderRadius: BorderRadius.circular(20),

@@ -1,0 +1,169 @@
+import 'pattern_base.dart';
+
+const Map<String, CategoryPattern> koreanPatterns = {
+  // --- EXPENSE ---
+  'Food & Drink': CategoryPattern(
+    mainKeywords: ['음식', '식사', '먹거리', '식음료', '밥'],
+    subCategoryKeywords: {
+      'Breakfast': ['아침', '조식', '모닝', '브렉퍼스트', '아침밥'],
+      'Lunch': ['점심', '중식', '런치', '점심밥'],
+      'Dinner': ['저녁', '석식', '디너', '저녁밥', '야식'],
+      'Eateries': [
+        '식당', '레스토랑', '카페', '분식', '김밥천국', '국밥', '치킨', '피자', '햄버거',
+        '맥도날드', '스타벅스', '버거킹', '맛집', '포장마차', '푸드코트'
+      ],
+      'Snacks': ['간식', '과자', '스낵', '디저트', '아이스크림', '케이크', '초콜릿', '빵'],
+      'Drinks': [
+        '음료', '커피', '차', '주스', '우유', '물', '생수', '카페라떼', '아메리카노',
+        '밀크티', '버블티', '탄산'
+      ],
+      'Groceries': [
+        '장보기', '마트', '슈퍼', '편의점', '식재료', '야채', '과일', '고기', '쌀', '계란',
+        '이마트', '홈플러스', '롯데마트', '코스트코', 'CU', 'Gs25', '세븐일레븐'
+      ],
+      'Delivery': ['배달', '배달의민족', '요기요', '쿠팡이츠', '배달비', '배달팁'],
+      'Alcohol': ['술', '주류', '맥주', '소주', '와인', '막걸리', '치맥', '회식'],
+    },
+  ),
+  'Housing': CategoryPattern(
+    mainKeywords: ['주거', '집'],
+    subCategoryKeywords: {
+      'Rent': ['월세', '임대료', '방세'],
+      'Mortgage': ['대출상환', '주택담보대출', '모기지', '이자'],
+      'Utilities': ['공과금', '관리비', '전기세', '수도세', '가스비', '난방비'],
+      'Internet': ['인터넷', '통신비', '핸드폰요금', '와이파이', '데이터'],
+      'Maintenance': ['수리비', '보수', '인테리어', '청소'],
+      'Furniture': ['가구', '침대', '소파', '책상', '의자', '커튼', '이불'],
+      'Services': ['경비비', '청소비', '방역'],
+    },
+  ),
+  'Shopping': CategoryPattern(
+    mainKeywords: ['쇼핑', '구매'],
+    subCategoryKeywords: {
+      'Clothes': ['옷', '의류', '패션', '티셔츠', '바지', '신발', '양말', '속옷', '원피스', '자켓'],
+      'Electronics': ['전자제품', '가전', '핸드폰', '노트북', '컴퓨터', '충전기', '이어폰', 'TV'],
+      'Home': ['생활용품', '잡화', '다이소', '세제', '휴지', '주방용품'],
+      'Beauty': ['미용', '화장품', '메이크업', '스킨케어', '미용실', '헤어샵', '이발'],
+      'Gifts': ['선물', '기념품'],
+      'Software': ['소프트웨어', '앱', '구독', '넷플릭스', '유튜브', '멜론', '스포티파이'],
+      'Tools': ['공구', '문구', '필기구'],
+    },
+  ),
+  'Transport': CategoryPattern(
+    mainKeywords: ['교통', '이동'],
+    subCategoryKeywords: {
+      'Bus': ['버스', '버스비', '마을버스', '고속버스'],
+      'Train': ['기차', '지하철', '전철', 'KTX', 'SRT', '티머니'],
+      'Taxi': ['택시', '택시비', '카카오택시', '우버'],
+      'Fuel': ['주유', '기름값', '휘발유', '경유', '충전'],
+      'Parking': ['주차', '주차비', '발렛'],
+      'Maintenance': ['차량정비', '세차', '엔진오일', '수리'],
+      'Insurance': ['자동차보험', '운전자보험'],
+      'Toll': ['톨게이트', '하이패스', '통행료'],
+    },
+  ),
+  'Entertainment': CategoryPattern(
+    mainKeywords: ['문화', '여가', '취미'],
+    subCategoryKeywords: {
+      'Movies': ['영화', '극장', '영화관', 'cgv', '롯시', '메가박스'],
+      'Games': ['게임', '현질', '스팀', '플스', '닌텐도', '피시방'],
+      'Streaming': ['스트리밍', '구독료'],
+      'Events': ['공연', '콘서트', '티켓', '전시회', '뮤지컬'],
+      'Hobbies': ['취미', '낚시', '캠핑', '등산', '골프'],
+      'Travel': ['여행', '숙박', '호텔', '펜션', '항공권', '비행기'],
+      'Music': ['음악', '앨범', '노래방', '악기'],
+    },
+  ),
+  'Health': CategoryPattern(
+    mainKeywords: ['건강', '의료'],
+    subCategoryKeywords: {
+      'Doctor': ['병원', '진료', '치과', '내과', '피부과', '안과'],
+      'Pharmacy': ['약국', '약', '영양제', '비타민', '반창고'],
+      'Gym': ['운동', '헬스', '피트니스', '요가', '필라테스', '수영'],
+      'Insurance': ['건강보험', '실비', '보험료'],
+      'Mental Health': ['상담', '심리치료'],
+      'Sports': ['스포츠', '운동기구'],
+    },
+  ),
+  'Education': CategoryPattern(
+    mainKeywords: ['교육', '학습'],
+    subCategoryKeywords: {
+      'Tuition': ['학비', '등록금', '수강료'],
+      'Books': ['책', '도서', '교재', '서점', '문제집', '만화책'],
+      'Courses': ['학원', '인강', '강의', '레슨', '과외'],
+      'Supplies': ['학용품', '노트', '펜', '준비물'],
+    },
+  ),
+  'Family': CategoryPattern(
+    mainKeywords: ['가족'],
+    subCategoryKeywords: {
+      'Childcare': ['육아', '어린이집', '유치원', '베이비시터'],
+      'Toys': ['장난감', '인형', '레고'],
+      'School': ['용돈', '준비물'],
+      'Pets': ['반려동물', '사료', '동물병원', '간식'],
+    },
+  ),
+  'Financial': CategoryPattern(
+    mainKeywords: ['금융', '재정'],
+    subCategoryKeywords: {
+      'Taxes': ['세금', '소득세', '부가세', '재산세'],
+      'Fees': ['수수료', '송금수수료', '연회비'],
+      'Fines': ['벌금', '과태료'],
+      'Insurance': ['보험', '생명보험'],
+    },
+  ),
+  'Personal': CategoryPattern(
+    mainKeywords: ['개인'],
+    subCategoryKeywords: {
+      'Haircut': ['미용실', '이발소', '커트', '파마', '염색'],
+      'Spa': ['마사지', '스파', '목욕탕', '찜질방'],
+      'Cosmetics': ['화장품', '올리브영'],
+    },
+  ),
+
+  // --- INCOME ---
+  'Salary': CategoryPattern(
+    mainKeywords: ['월급', '급여'],
+    subCategoryKeywords: {
+      'Monthly': ['월급', '봉급', '수령액'],
+      'Weekly': ['주급'],
+      'Bonus': ['보너스', '상여금', '성과급'],
+      'Overtime': ['야근수당', '특근수당'],
+    },
+  ),
+  'Business': CategoryPattern(
+    mainKeywords: ['사업', '매출'],
+    subCategoryKeywords: {
+      'Sales': ['매출', '판매수익'],
+      'Services': ['용역', '외주비', '프리랜서'],
+      'Profit': ['수익', '이익'],
+    },
+  ),
+  'Investments': CategoryPattern(
+    mainKeywords: ['투자', '재테크'],
+    subCategoryKeywords: {
+      'Dividends': ['배당금', '배당'],
+      'Interest': ['이자', '예금이자', '적금이자'],
+      'Crypto': ['코인', '비트코인', '가상화폐'],
+      'Stocks': ['주식', '증권', '매매차익'],
+      'Real Estate': ['부동산', '월세수입', '임대수입'],
+    },
+  ),
+  'Gifts': CategoryPattern(
+    mainKeywords: ['선물'],
+    subCategoryKeywords: {
+      'Birthday': ['생일돈', '생일선물'],
+      'Holiday': ['명절', '세뱃돈', '용돈'],
+      'Allowance': ['용돈', '생활비'],
+    },
+  ),
+  'Other': CategoryPattern(
+    mainKeywords: ['기타'],
+    subCategoryKeywords: {
+      'Refunds': ['환불', '반품'],
+      'Grants': ['지원금', '보조금'],
+      'Lottery': ['복권', '로또', '당첨'],
+      'Selling': ['중고거래', '당근마켓', '번개장터', '판매'],
+    },
+  ),
+};

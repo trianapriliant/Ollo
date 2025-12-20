@@ -88,6 +88,7 @@ class RecurringScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'recurring_fab',
         onPressed: () => _showAddRecurringDialog(context, ref),
         backgroundColor: AppColors.primary,
         child: const Icon(Icons.add, color: Colors.white),

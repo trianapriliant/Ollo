@@ -142,6 +142,7 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'wishlist_fab',
         onPressed: () => context.push('/wishlist/add'),
         backgroundColor: AppColors.primary,
         child: const Icon(Icons.add, color: Colors.white),

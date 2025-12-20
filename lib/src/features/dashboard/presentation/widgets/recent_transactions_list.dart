@@ -104,7 +104,7 @@ class RecentTransactionsList extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(AppLocalizations.of(context)!.recentTransactions, style: AppTextStyles.h2),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8), // Reduced from 16
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -316,7 +316,7 @@ class RecentTransactionsList extends ConsumerWidget {
     String dateLabel = DateFormat.yMMMMEEEEd(Localizations.localeOf(context).toString()).format(date);
 
     final isPositive = dailyTotal >= 0;
-    final formattedTotal = '${isPositive ? "+" : ""}${currency.format(dailyTotal.abs())}';
+    final formattedTotal = '${isPositive ? "+" : "-"}${currency.format(dailyTotal.abs())}';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -3,7 +3,8 @@ import '../../transactions/domain/transaction.dart';
 import '../../wallets/domain/wallet.dart';
 import '../../categories/domain/category.dart';
 import '../data/quick_record_repository.dart';
-import '../domain/category_patterns.dart';
+import '../domain/patterns/pattern_manager.dart';
+import '../domain/patterns/pattern_base.dart';
 
 class QuickRecordService {
   final QuickRecordRepository _repository;
@@ -11,7 +12,7 @@ class QuickRecordService {
   QuickRecordService(this._repository);
 
   /// Parses a natural language string into a potential Transaction.
-  Future<({Transaction transaction, String? categoryName, String? subCategoryName, String? walletName})> parseTransaction(String input) async {
+  Future<({Transaction transaction, String? categoryName, String? subCategoryName, String? walletName})> parseTransaction(String input, {String languageCode = 'id_ID'}) async {
     final categories = await _repository.getAllCategories();
     final wallets = await _repository.getAllWallets();
     
@@ -19,7 +20,7 @@ class QuickRecordService {
     double amount = _extractAmount(input);
     
     // 2. Extract Category & matched keyword
-    final result = _extractCategory(input, categories);
+    final result = _extractCategory(input, categories, languageCode);
     Category? matchedCategory = result.category;
     SubCategory? matchedSubCategory = result.subCategory;
     String matchedKeyword = result.keyword ?? '';
@@ -74,6 +75,7 @@ class QuickRecordService {
       walletName: matchedWallet?.name
     );
   }
+
 
   Wallet? _extractWallet(String input, List<Wallet> wallets) {
     String text = input.toLowerCase();
@@ -315,7 +317,7 @@ class QuickRecordService {
      return cleanNum;
   }
 
-  ({Category? category, SubCategory? subCategory, String? keyword}) _extractCategory(String input, List<Category> categories) {
+  ({Category? category, SubCategory? subCategory, String? keyword}) _extractCategory(String input, List<Category> categories, String languageCode) {
     String text = input.toLowerCase();
     
     // Map to track score: Category -> Score
@@ -328,7 +330,9 @@ class QuickRecordService {
     Map<SubCategory, String> bestKwForSub = {};
 
     // 1. Scan ALL patterns and accumulate scores
-    for (var entry in defaultCategoryPatterns.entries) {
+    final patterns = PatternManager.getPatterns(languageCode); // Use Manager
+    
+    for (var entry in patterns.entries) {
       String categoryNameKey = entry.key;
       CategoryPattern pattern = entry.value;
 

@@ -41,7 +41,7 @@ class DashboardBudgetCard extends ConsumerWidget {
             if (filterState.filterType == TimeFilterType.year) title = AppLocalizations.of(context)!.yearlyBudget;
 
             return Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12), // Reduced from 16
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -63,17 +63,17 @@ class DashboardBudgetCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8), // Reduced from 12
                   LinearProgressIndicator(
                     value: percentage,
                     backgroundColor: Colors.grey[100],
                     valueColor: AlwaysStoppedAnimation<Color>(
                       percentage > 0.8 ? Colors.red : AppColors.primary,
                     ),
-                    minHeight: 8,
+                    minHeight: 6, // Reduced from 8
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6), // Reduced from 8
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

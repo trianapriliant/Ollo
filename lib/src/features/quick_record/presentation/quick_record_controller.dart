@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import '../../transactions/domain/transaction.dart';
 import '../application/quick_record_service.dart';
+import '../../settings/presentation/voice_language_provider.dart';
 
 enum QuickRecordState { initial, listening, processing, review, error }
 
@@ -51,11 +52,12 @@ class QuickRecordStateData {
 
 class QuickRecordController extends StateNotifier<QuickRecordStateData> {
   final QuickRecordService _service;
+  final String _localeCode; // Store locale code
   final SpeechToText _speechToText = SpeechToText();
   final _textRecognizer = TextRecognizer();
   final _picker = ImagePicker();
 
-  QuickRecordController(this._service) : super(QuickRecordStateData());
+  QuickRecordController(this._service, this._localeCode) : super(QuickRecordStateData());
 
   Future<void> startChat() async {
     state = state.copyWith(state: QuickRecordState.initial);
@@ -65,13 +67,13 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
     if (text.isEmpty) return;
     state = state.copyWith(state: QuickRecordState.processing, recognizedText: text);
     try {
-      final result = await _service.parseTransaction(text);
+      final result = await _service.parseTransaction(text, languageCode: _localeCode);
       state = state.copyWith(
         state: QuickRecordState.review, 
         draftTransaction: result.transaction,
         detectedCategoryName: result.categoryName,
         detectedSubCategoryName: result.subCategoryName,
-        detectedWalletName: result.walletName, // Map new field
+        detectedWalletName: result.walletName, 
       );
     } catch (e) {
       state = state.copyWith(state: QuickRecordState.error, errorMessage: e.toString());
@@ -91,19 +93,17 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
 
     bool available = await _speechToText.initialize(
       onError: (error) {
-        // Just set error state, let UI show red button. Keep text if any.
         state = state.copyWith(state: QuickRecordState.error);
       },
       onStatus: (status) {
          if (status == 'done' && state.state == QuickRecordState.listening && state.recognizedText.isEmpty) {
-             // Silence/Timeout -> Error state (Red button)
              state = state.copyWith(state: QuickRecordState.error);
          }
       },
     );
 
     if (available) {
-      state = state.copyWith(state: QuickRecordState.listening, recognizedText: '', errorMessage: null); // Clear error
+      state = state.copyWith(state: QuickRecordState.listening, recognizedText: '', errorMessage: null);
       _speechToText.listen(
         onResult: (result) {
           state = state.copyWith(recognizedText: result.recognizedWords);
@@ -112,7 +112,7 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
             _speechToText.stop();
           }
         },
-        localeId: 'id_ID', 
+        localeId: _localeCode, 
         cancelOnError: true,
         listenFor: const Duration(seconds: 30),
         pauseFor: const Duration(seconds: 5), 
@@ -127,7 +127,6 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
     if (state.recognizedText.isNotEmpty) {
       processText(state.recognizedText);
     } else {
-      // Manual stop with no text -> Error state (Red button)
       state = state.copyWith(state: QuickRecordState.error);
     }
   }
@@ -140,20 +139,14 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
 
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-      if (image == null) return; // User canceled
+      if (image == null) return; 
 
       state = state.copyWith(state: QuickRecordState.processing);
       
       final inputImage = InputImage.fromFilePath(image.path);
       final RecognizedText recognizedText = await _textRecognizer.processImage(inputImage);
       
-      // Simple strategy: Join all lines? Or try to find the Total?
-      // For V1 Quick Record "Scan", let's just dump all text and let parser find the number.
-      // A better strategy is needed for Receipts (filtering for largest number etc).
       String fullText = recognizedText.text;
-      
-      // Let's try to pass it to parser.
-      // Let's try to pass it to parser.
       processText(fullText);
       
     } catch (e) {
@@ -174,25 +167,19 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
         final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
         final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
         
-        // --- SMART ROW SORTING LOGIC ---
-        // 1. Collect all lines
         List<TextLine> allLines = [];
         for (TextBlock block in recognizedText.blocks) {
           allLines.addAll(block.lines);
         }
 
-        // 2. Sort primarily by Top (Y), secondarily by Left (X)
-        // Group lines into "rows" based on Y overlapping
-        // Threshold: 10 pixels vertical difference considered same row
         allLines.sort((a, b) {
            double yDiff = (a.boundingBox.top - b.boundingBox.top).abs();
-           if (yDiff < 20) { // Same visual row
+           if (yDiff < 20) { 
               return a.boundingBox.left.compareTo(b.boundingBox.left);
            }
            return a.boundingBox.top.compareTo(b.boundingBox.top);
         });
 
-        // 3. Join textual content
         String fullText = allLines.map((e) => e.text).join('\n');
         
         await textRecognizer.close();
@@ -211,5 +198,6 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
 
 final quickRecordControllerProvider = StateNotifierProvider<QuickRecordController, QuickRecordStateData>((ref) {
   final service = ref.watch(quickRecordServiceProvider);
-  return QuickRecordController(service);
+  final voiceLanguage = ref.watch(voiceLanguageProvider); // Watch setting
+  return QuickRecordController(service, voiceLanguage.code); // Pass code
 });

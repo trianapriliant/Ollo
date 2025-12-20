@@ -13,7 +13,7 @@ class QuickRecordSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(AppLocalizations.of(context)!.quickRecord, style: AppTextStyles.h2),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8), // Reduced from 16
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
