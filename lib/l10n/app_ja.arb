@@ -666,5 +666,6 @@
   "genericIcons": "一般的なアイコン",
   "changeIcon": "アイコンを変更",
   "typeLabel": "タイプ",
-  "preferences": "設定"
+  "preferences": "設定",
+  "weeklyActivityHeatmap": "週間アクティビティ"
 }

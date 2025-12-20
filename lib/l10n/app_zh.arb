@@ -662,5 +662,6 @@
   "genericIcons": "通用图标",
   "changeIcon": "更改图标",
   "typeLabel": "类型",
-  "preferences": "首选项"
+  "preferences": "首选项",
+  "weeklyActivityHeatmap": "每周活动"
 }

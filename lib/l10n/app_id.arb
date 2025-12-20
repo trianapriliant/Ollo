@@ -771,5 +771,6 @@
   "genericIcons": "Ikon Umum",
   "changeIcon": "Ganti Ikon",
   "typeLabel": "Tipe",
-  "preferences": "Preferensi"
+  "preferences": "Preferensi",
+  "weeklyActivityHeatmap": "Aktivitas Mingguan"
 }

@@ -1340,6 +1340,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get preferences => 'Preferences';
 
   @override
+  String get weeklyActivityHeatmap => 'Weekly Activity';
+
+  @override
   String backupSuccess(String path) {
     return 'Backup saved successfully to:\n$path';
   }

@@ -1315,6 +1315,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get preferences => '設定';
 
   @override
+  String get weeklyActivityHeatmap => '週間アクティビティ';
+
+  @override
   String backupSuccess(String path) {
     return 'バックアップを保存しました:\n$path';
   }

@@ -1314,6 +1314,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get preferences => '首选项';
 
   @override
+  String get weeklyActivityHeatmap => '每周活动';
+
+  @override
   String backupSuccess(String path) {
     return '已保存至：\n$path';
   }

@@ -662,5 +662,6 @@
   "genericIcons": "Iconos Genéricos",
   "changeIcon": "Cambiar Icono",
   "typeLabel": "Tipo",
-  "preferences": "Preferencias"
+  "preferences": "Preferencias",
+  "weeklyActivityHeatmap": "Actividad Semanal"
 }

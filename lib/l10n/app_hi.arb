@@ -662,5 +662,6 @@
   "genericIcons": "सामान्य चिह्न",
   "changeIcon": "आइकन बदलें",
   "typeLabel": "प्रकार",
-  "preferences": "प्राथमिकताएं"
+  "preferences": "प्राथमिकताएं",
+  "weeklyActivityHeatmap": "साप्ताहिक गतिविधि"
 }

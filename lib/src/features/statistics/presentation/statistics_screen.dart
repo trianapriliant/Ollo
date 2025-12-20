@@ -18,6 +18,7 @@ import 'widgets/new_stats/comparative_analysis_card.dart';
 import 'widgets/new_stats/top_spenders_card.dart';
 import 'widgets/new_stats/daily_average_card.dart';
 import 'widgets/new_stats/spending_heatmap.dart';
+import 'widgets/new_stats/weekly_spending_heatmap.dart';
 
 import 'widgets/statistics_category_item.dart';
 import 'widgets/statistics_date_filter.dart';
@@ -43,6 +44,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
     final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider(_selectedDate));
     final dailyStatsAsync = ref.watch(dailyStatisticsProvider(_selectedDate));
+    final weeklyStatsAsync = ref.watch(weeklyStatisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
 
     final comparativeAsync = ref.watch(comparativeStatisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
     final topSpendersAsync = ref.watch(topMerchantsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
@@ -301,6 +303,18 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                   },
                   loading: () => const SizedBox(), 
                   error: (_,__) => const SizedBox(),
+                )
+              else if (_timeRange == TimeRange.year)
+                weeklyStatsAsync.when(
+                  data: (data) {
+                    if (data.isEmpty) return const SizedBox();
+                    return WeeklySpendingHeatmap(
+                      weeklyData: data,
+                      isExpense: _isExpense,
+                    );
+                  },
+                  loading: () => const SizedBox(),
+                  error: (_, __) => const SizedBox(),
                 ),
 
               const SizedBox(height: 16),

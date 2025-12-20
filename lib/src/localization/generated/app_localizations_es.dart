@@ -1335,6 +1335,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get preferences => 'Preferencias';
 
   @override
+  String get weeklyActivityHeatmap => 'Actividad Semanal';
+
+  @override
   String backupSuccess(String path) {
     return 'Respaldo guardado en:\n$path';
   }

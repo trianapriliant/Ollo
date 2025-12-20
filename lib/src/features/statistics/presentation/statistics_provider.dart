@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../dashboard/presentation/transaction_provider.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
@@ -303,6 +304,86 @@ final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>
     }
     
     data.add(DailyData(day: day, income: income, expense: expense, savings: savings));
+  }
+
+  return data;
+});
+
+class WeeklyData {
+  final int week;
+  final double amount;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  WeeklyData({
+    required this.week,
+    required this.amount,
+    required this.startDate,
+    required this.endDate,
+  });
+}
+
+final weeklyStatisticsProvider = FutureProvider.family<List<WeeklyData>, StatisticsFilter>((ref, filter) async {
+  final transactions = await ref.watch(transactionListProvider.future);
+  
+  final year = filter.date.year;
+  final yearStart = DateTime(year, 1, 1);
+  final yearEnd = DateTime(year, 12, 31, 23, 59, 59);
+
+  // Filter for the year and type
+  final yearTransactions = transactions.where((t) {
+      if (filter.isExpense) {
+         if (t.type == TransactionType.expense || (t.type == TransactionType.system && t.categoryId != 'savings')) {
+            // keep
+         } else {
+           return false;
+         }
+      } else {
+         if (t.type != TransactionType.income) return false;
+      }
+      return t.date.year == year;
+  }).toList();
+
+  final Map<int, double> weekTotals = {};
+  
+  // Initialize map for 53 weeks (max potential)
+  for (int i = 1; i <= 53; i++) {
+    weekTotals[i] = 0.0;
+  }
+
+  for (var t in yearTransactions) {
+    // Determine week number based on day of year
+    // This aligns with our grid generation logic: Week 1 = Jan 1-7, Week 2 = Jan 8-14, etc.
+    final dayOfYear = int.parse(DateFormat('D').format(t.date));
+    final weekNum = ((dayOfYear - 1) / 7).floor() + 1;
+    
+    if (weekNum <= 53) {
+      weekTotals[weekNum] = (weekTotals[weekNum] ?? 0) + t.amount;
+    }
+  }
+
+  final List<WeeklyData> data = [];
+  
+  // Generate data list
+  for (int i = 1; i <= 53; i++) {
+     // Calculate approximation of start/end date for the week
+     // This is rough estimation but enough for UI tooltip
+     // ISO weeks are complicated, but for display:
+     // Jan 1 + (week-1)*7 days
+     DateTime weekStart = DateTime(year, 1, 1).add(Duration(days: (i - 1) * 7));
+     if (weekStart.year > year) break; // Don't go into next year
+     DateTime weekEnd = weekStart.add(const Duration(days: 6));
+     
+     // Correct the first week start to Jan 1? 
+     // DateFormat 'w' logic is simpler. 
+     // Let's just pass the week number and calculated dates.
+     
+     data.add(WeeklyData(
+       week: i, 
+       amount: weekTotals[i] ?? 0, 
+       startDate: weekStart, 
+       endDate: weekEnd
+     ));
   }
 
   return data;

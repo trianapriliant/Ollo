@@ -12,12 +12,16 @@ import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class FilteredTransactionsScreen extends ConsumerWidget {
   final bool isExpense;
-  final DateTime? specificDate; // New optional parameter
+  final DateTime? specificDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   const FilteredTransactionsScreen({
     super.key,
     required this.isExpense,
     this.specificDate,
+    this.startDate,
+    this.endDate,
   });
 
   @override
@@ -31,6 +35,9 @@ class FilteredTransactionsScreen extends ConsumerWidget {
     if (specificDate != null) {
       // Format: "Dec 7, 2025"
       timeLabel = _formatDate(context, specificDate!);
+    } else if (startDate != null && endDate != null) {
+      // Format: "Dec 1 - Dec 7, 2025"
+      timeLabel = '${_formatDate(context, startDate!)} - ${_formatDate(context, endDate!)}';
     } else {
       switch (filterState.filterType) {
         case TimeFilterType.day:
@@ -74,9 +81,9 @@ class FilteredTransactionsScreen extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: specificDate != null 
+      body: (specificDate != null || (startDate != null && endDate != null))
           ? allTransactionsAsync.when(
-              data: (transactions) => _buildTransactionList(context, transactions, isSpecificDate: true),
+              data: (transactions) => _buildTransactionList(context, transactions, isSpecificDate: specificDate != null),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error(err.toString()))),
             )
@@ -96,13 +103,18 @@ class FilteredTransactionsScreen extends ConsumerWidget {
     // Filter logic
     final typeFilteredTransactions = transactions.where((t) {
       
-       // 1. Date Check (if specificDate is set)
+       // 1. Date Check
        if (isSpecificDate && specificDate != null) {
          if (t.date.year != specificDate!.year || 
              t.date.month != specificDate!.month || 
              t.date.day != specificDate!.day) {
            return false;
          }
+       } else if (startDate != null && endDate != null) {
+          // Range check
+          if (t.date.isBefore(startDate!) || t.date.isAfter(endDate!.add(const Duration(days: 1) - const Duration(milliseconds: 1)))) {
+             return false;
+          }
        }
 
       // 2. Type Check
@@ -140,7 +152,7 @@ class FilteredTransactionsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              AppLocalizations.of(context)!.forThisDate, // Simplified label
+             (startDate != null && endDate != null) ? 'For this period' : AppLocalizations.of(context)!.forThisDate, // TODO: Localize
               style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[500]),
             ),
           ],

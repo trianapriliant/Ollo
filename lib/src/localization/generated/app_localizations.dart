@@ -2608,6 +2608,12 @@ abstract class AppLocalizations {
   /// **'Preferences'**
   String get preferences;
 
+  /// No description provided for @weeklyActivityHeatmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Activity'**
+  String get weeklyActivityHeatmap;
+
   /// No description provided for @backupSuccess.
   ///
   /// In en, this message translates to:

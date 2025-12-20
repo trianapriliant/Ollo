@@ -1329,6 +1329,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get preferences => 'प्राथमिकताएं';
 
   @override
+  String get weeklyActivityHeatmap => 'साप्ताहिक गतिविधि';
+
+  @override
   String backupSuccess(String path) {
     return 'सहेजा गया:\n$path';
   }

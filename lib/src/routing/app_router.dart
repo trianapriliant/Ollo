@@ -134,6 +134,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return FilteredTransactionsScreen(
             isExpense: extra['isExpense'] as bool,
             specificDate: extra['specificDate'] as DateTime?,
+            startDate: extra['startDate'] as DateTime?,
+            endDate: extra['endDate'] as DateTime?,
           );
         },
       ),

@@ -1337,6 +1337,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get preferences => 'Preferensi';
 
   @override
+  String get weeklyActivityHeatmap => 'Aktivitas Mingguan';
+
+  @override
   String backupSuccess(String path) {
     return 'Cadangan berhasil disimpan ke:\n$path';
   }
