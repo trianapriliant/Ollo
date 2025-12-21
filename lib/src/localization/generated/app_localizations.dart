@@ -3075,7 +3075,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqAddWalletAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Go to the \"Wallets\" menu and tap the \"+\" button in the top right corner. Select the wallet type (Cash, Bank, etc.), enter the name and initial balance, then save.'**
+  /// **'Go to the \"Wallets\" menu and tap the \"+\" button. Select the wallet type (Cash, Bank, E-Wallet), enter the initial balance, then save.'**
   String get faqAddWalletAnswer;
 
   /// No description provided for @faqExportDataQuestion.
@@ -3087,19 +3087,19 @@ abstract class AppLocalizations {
   /// No description provided for @faqExportDataAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Data export is a Premium feature coming soon. It will allow you to export your transactions to CSV or Excel formats.'**
+  /// **'Yes! Go to Profile > Data Management. You can export CSV for Excel or create a Full Backup (JSON) to restore later.'**
   String get faqExportDataAnswer;
 
   /// No description provided for @faqResetDataQuestion.
   ///
   /// In en, this message translates to:
-  /// **'How do I reset my data?'**
+  /// **'Can I delete all my data?'**
   String get faqResetDataQuestion;
 
   /// No description provided for @faqResetDataAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.'**
+  /// **'Yes, go to Settings > Danger Zone > Delete All Data. Be careful, this cannot be undone!'**
   String get faqResetDataAnswer;
 
   /// No description provided for @faqSecureDataQuestion.
@@ -3111,8 +3111,32 @@ abstract class AppLocalizations {
   /// No description provided for @faqSecureDataAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.'**
+  /// **'Absolutely. Ollo stores data 100% offline on your device. No personal financial data is sent to our servers.'**
   String get faqSecureDataAnswer;
+
+  /// No description provided for @faqQuickRecordQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is Quick Record?'**
+  String get faqQuickRecordQuestion;
+
+  /// No description provided for @faqQuickRecordAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The fastest way to track! Use the Widget or Notification Tile, then say \"Lunch 20k using Cash\" or scan a receipt.'**
+  String get faqQuickRecordAnswer;
+
+  /// No description provided for @faqWidgetQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How to add Widgets?'**
+  String get faqWidgetQuestion;
+
+  /// No description provided for @faqWidgetAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press home screen > Widgets > Find \"Ollo\". Available: Budget Widget (4x1), Daily Graph, and Quick Access.'**
+  String get faqWidgetAnswer;
 
   /// No description provided for @contactSupport.
   ///

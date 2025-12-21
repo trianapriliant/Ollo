@@ -1599,32 +1599,46 @@ class AppLocalizationsId extends AppLocalizations {
   String get faqTitle => 'Pertanyaan yang Sering Diajukan (FAQ)';
 
   @override
-  String get faqAddWalletQuestion => 'Bagaimana cara menambah dompet baru?';
+  String get faqAddWalletQuestion => 'Bagaimana cara menambah dompet?';
 
   @override
   String get faqAddWalletAnswer =>
-      'Buka menu \"Dompet\" dan ketuk tombol \"+\" di pojok kanan atas. Pilih jenis dompet (Tunai, Bank, dll.), masukkan nama dan saldo awal, lalu simpan.';
+      'Buka menu \"Dompet\", ketuk tombol \"+\". Pilih jenis dompet (Tunai, Bank, E-Wallet), lalu masukkan saldo awal.';
 
   @override
-  String get faqExportDataQuestion => 'Bisakah saya mengekspor data saya?';
+  String get faqExportDataQuestion => 'Bagaimana cara mengambil data saya?';
 
   @override
   String get faqExportDataAnswer =>
-      'Ekspor data adalah fitur Premium yang akan segera hadir. Ini akan memungkinkan Anda mengekspor transaksi ke format CSV atau Excel.';
+      'Buka Profil > Manajemen Data. Anda bisa Ekspor CSV untuk Excel, atau Backup Penuh (JSON) untuk dipulihkan nanti.';
 
   @override
-  String get faqResetDataQuestion => 'Bagaimana cara mereset data saya?';
+  String get faqResetDataQuestion => 'Bisakah saya menghapus semua data?';
 
   @override
   String get faqResetDataAnswer =>
-      'Saat ini, Anda dapat menghapus transaksi atau dompet satu per satu. Opsi reset pabrik penuh akan tersedia di menu Pengaturan pada pembaruan mendatang.';
+      'Ya, di menu Pengaturan > Zona Bahaya > Hapus Semua Data. Hati-hati, ini tidak bisa dibatalkan!';
 
   @override
   String get faqSecureDataQuestion => 'Apakah data saya aman?';
 
   @override
   String get faqSecureDataAnswer =>
-      'Ya, semua data Anda disimpan secara lokal di perangkat Anda. Kami tidak mengunggah data keuangan pribadi Anda ke server eksternal mana pun.';
+      'Sangat aman. Ollo menyimpan data 100% offline di HP Anda. Tidak ada data yang dikirim ke server kami.';
+
+  @override
+  String get faqQuickRecordQuestion => 'Apa itu Quick Record?';
+
+  @override
+  String get faqQuickRecordAnswer =>
+      'Cara tercepat mencatat! Gunakan Widget atau Tile Notifikasi, lalu bicara \"Makan 20rb pakai OVO\" atau foto struk belanjaan.';
+
+  @override
+  String get faqWidgetQuestion => 'Bagaimana cara pasang Widget?';
+
+  @override
+  String get faqWidgetAnswer =>
+      'Tekan lama layar depan HP > Widget > Cari \"Ollo\". Tersedia Widget Budget (4x1), Grafik Harian, dan Tombol Cepat.';
 
   @override
   String get contactSupport => 'Hubungi Dukungan';

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_quick_record_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background_quick_record"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/widget_quick_record_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_mic_white_24dp"
+        android:contentDescription="Record"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REC"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_below="@id/widget_quick_record_icon"
+        android:layout_marginTop="2dp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

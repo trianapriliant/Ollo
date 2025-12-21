@@ -1599,6 +1599,20 @@ class AppLocalizationsKo extends AppLocalizations {
       '네, 모든 데이터는 기기에 로컬로 저장됩니다. 저희는 귀하의 개인 금융 데이터를 외부 서버에 업로드하지 않습니다.';
 
   @override
+  String get faqQuickRecordQuestion => 'What is Quick Record?';
+
+  @override
+  String get faqQuickRecordAnswer =>
+      'The fastest way to track! Use the Widget or Notification Tile, then say \"Lunch 20k using Cash\" or scan a receipt.';
+
+  @override
+  String get faqWidgetQuestion => 'How to add Widgets?';
+
+  @override
+  String get faqWidgetAnswer =>
+      'Long press home screen > Widgets > Find \"Ollo\". Available: Budget Widget (4x1), Daily Graph, and Quick Access.';
+
+  @override
   String get contactSupport => '지원 팀 문의';
 
   @override

@@ -1606,28 +1606,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqAddWalletAnswer =>
-      'Go to the \"Wallets\" menu and tap the \"+\" button in the top right corner. Select the wallet type (Cash, Bank, etc.), enter the name and initial balance, then save.';
+      'Go to the \"Wallets\" menu and tap the \"+\" button. Select the wallet type (Cash, Bank, E-Wallet), enter the initial balance, then save.';
 
   @override
   String get faqExportDataQuestion => 'Can I export my data?';
 
   @override
   String get faqExportDataAnswer =>
-      'Data export is a Premium feature coming soon. It will allow you to export your transactions to CSV or Excel formats.';
+      'Yes! Go to Profile > Data Management. You can export CSV for Excel or create a Full Backup (JSON) to restore later.';
 
   @override
-  String get faqResetDataQuestion => 'How do I reset my data?';
+  String get faqResetDataQuestion => 'Can I delete all my data?';
 
   @override
   String get faqResetDataAnswer =>
-      'Currently, you can delete individual transactions or wallets. A full factory reset option will be available in the Settings menu in a future update.';
+      'Yes, go to Settings > Danger Zone > Delete All Data. Be careful, this cannot be undone!';
 
   @override
   String get faqSecureDataQuestion => 'Is my data secure?';
 
   @override
   String get faqSecureDataAnswer =>
-      'Yes, all your data is stored locally on your device. We do not upload your personal financial data to any external servers.';
+      'Absolutely. Ollo stores data 100% offline on your device. No personal financial data is sent to our servers.';
+
+  @override
+  String get faqQuickRecordQuestion => 'What is Quick Record?';
+
+  @override
+  String get faqQuickRecordAnswer =>
+      'The fastest way to track! Use the Widget or Notification Tile, then say \"Lunch 20k using Cash\" or scan a receipt.';
+
+  @override
+  String get faqWidgetQuestion => 'How to add Widgets?';
+
+  @override
+  String get faqWidgetAnswer =>
+      'Long press home screen > Widgets > Find \"Ollo\". Available: Budget Widget (4x1), Daily Graph, and Quick Access.';
 
   @override
   String get contactSupport => 'Contact Support';

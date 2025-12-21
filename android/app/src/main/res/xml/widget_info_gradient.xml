@@ -8,6 +8,6 @@
     android:initialLayout="@layout/widget_layout_gradient"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:previewImage="@drawable/widget_preview_gradient">
+    android:previewImage="@drawable/widget_preview_gradient_v2">
 </appwidget-provider>
 

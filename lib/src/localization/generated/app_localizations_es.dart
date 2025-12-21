@@ -1614,6 +1614,20 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sí, todos sus datos se almacenan localmente en su dispositivo. No subimos sus datos financieros a servidores externos.';
 
   @override
+  String get faqQuickRecordQuestion => 'What is Quick Record?';
+
+  @override
+  String get faqQuickRecordAnswer =>
+      'The fastest way to track! Use the Widget or Notification Tile, then say \"Lunch 20k using Cash\" or scan a receipt.';
+
+  @override
+  String get faqWidgetQuestion => 'How to add Widgets?';
+
+  @override
+  String get faqWidgetAnswer =>
+      'Long press home screen > Widgets > Find \"Ollo\". Available: Budget Widget (4x1), Daily Graph, and Quick Access.';
+
+  @override
   String get contactSupport => 'Contactar Soporte';
 
   @override

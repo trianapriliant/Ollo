@@ -31,7 +31,8 @@ class OlloGradientWidgetProvider : HomeWidgetProvider() {
                 // 3. Handle Click (Open Add Transaction)
                 val intent = Intent(context, MainActivity::class.java).apply {
                     action = "es.antonborri.home_widget.action.LAUNCH"
-                    data = android.net.Uri.parse("ollo://add-transaction") 
+                    action = "es.antonborri.home_widget.action.LAUNCH"
+                    data = android.net.Uri.parse("ollo://app/add-transaction") // Updated URI with host
                 }
                 
                 val pendingIntent = PendingIntent.getActivity(
@@ -42,7 +43,7 @@ class OlloGradientWidgetProvider : HomeWidgetProvider() {
                 )
 
                 // Make the whole widget clickable
-                setOnClickPendingIntent(R.id.widget_gradient_amount, pendingIntent)
+                setOnClickPendingIntent(R.id.widget_gradient_root, pendingIntent)
                 // Or maybe just the background if possible, or bind to root layout ID? 
                 // RemoteViews doesn't easily target root, but we can wrap root in ID if needed.
                 // For now, let's target the amount text which is center and large.

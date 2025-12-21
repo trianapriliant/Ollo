@@ -305,11 +305,8 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Open AddTransactionScreen with pre-filled data
-                          context.pop(); // Close modal
-                          // Navigate to Add Transaction with 'extra'
-                          // NOTE: You need to ensure your Router handles 'extra' transaction object
-                          context.push('/add-transaction', extra: txn);
+                          // Return transaction to caller
+                          context.pop(txn); 
                         },
                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                         child: Text(AppLocalizations.of(context)!.saveAdjust),

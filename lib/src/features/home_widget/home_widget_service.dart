@@ -19,37 +19,72 @@ class HomeWidgetService {
   static const String keyTodayExpense = 'today_expense';
   static const String keyTodayDay = 'today_day';
 
+  // Keys for Budget Widget
+  static const String keyBudgetSpent = 'budget_spent_text';
+  static const String keyBudgetTotal = 'budget_total_text';
+  static const String keyBudgetPercent = 'budget_percent_text';
+  static const String keyBudgetRemaining = 'budget_remaining_text';
+  static const String keyBudgetProgress = 'budget_progress';
+
+  static const String androidBudgetWidgetName = 'OlloBudgetWidgetProvider';
+
   static Future<void> updateWidgetData({
-    required double income,
-    required double expense,
-    required double balance,
-    // New optional params, defaulting to 0/Today if not passed (though we should pass them)
-    double todayExpense = 0,
+    double? income,
+    double? expense,
+    double? balance,
+    // New optional params
+    double? todayExpense,
+    // Budget Params (Optional, default to 0 if not provided)
+    double budgetSpent = 0,
+    double budgetTotal = 0,
   }) async {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     final monthFormat = DateFormat('MMMM yyyy');
     final dayFormat = DateFormat('EEEE'); // e.g. Sunday
 
-    // Save Data to Shared Preferences (via home_widget)
-    await HomeWidget.saveWidgetData<String>(keyIncome, currencyFormat.format(income));
-    await HomeWidget.saveWidgetData<String>(keyExpense, currencyFormat.format(expense));
-    await HomeWidget.saveWidgetData<String>(keyBalance, currencyFormat.format(balance));
+    // ... Existing Standard & Gradient Updates ...
+    if (income != null) await HomeWidget.saveWidgetData<String>(keyIncome, currencyFormat.format(income));
+    if (expense != null) await HomeWidget.saveWidgetData<String>(keyExpense, currencyFormat.format(expense));
+    if (balance != null) await HomeWidget.saveWidgetData<String>(keyBalance, currencyFormat.format(balance));
     await HomeWidget.saveWidgetData<String>(keyMonth, monthFormat.format(DateTime.now()));
     
-    // Save New Data
-    await HomeWidget.saveWidgetData<String>(keyTodayExpense, currencyFormat.format(todayExpense)); // Showing as positive or negative? Usually expense is negative or positive red. Let's keep raw sign logic from UI.
+    if (todayExpense != null) await HomeWidget.saveWidgetData<String>(keyTodayExpense, currencyFormat.format(todayExpense));
     await HomeWidget.saveWidgetData<String>(keyTodayDay, dayFormat.format(DateTime.now()));
 
-    // Trigger Widget Update (Main Widget)
+    // ... Budget Update ...
+    if (budgetTotal > 0) {
+       final percent = (budgetSpent / budgetTotal * 100).clamp(0, 100).toInt();
+       final remaining = budgetTotal - budgetSpent;
+       
+       await HomeWidget.saveWidgetData<String>(keyBudgetSpent, '${currencyFormat.format(budgetSpent)} used');
+       await HomeWidget.saveWidgetData<String>(keyBudgetTotal, '/ ${currencyFormat.format(budgetTotal)}');
+       await HomeWidget.saveWidgetData<String>(keyBudgetPercent, '($percent%)');
+       await HomeWidget.saveWidgetData<String>(keyBudgetRemaining, 'Remaining: ${currencyFormat.format(remaining)}');
+       await HomeWidget.saveWidgetData<int>(keyBudgetProgress, percent); // int for progress bar
+    } else {
+       // Reset or Empty state
+       await HomeWidget.saveWidgetData<String>(keyBudgetSpent, 'No Budget');
+       await HomeWidget.saveWidgetData<String>(keyBudgetTotal, '');
+       await HomeWidget.saveWidgetData<String>(keyBudgetPercent, '-');
+       await HomeWidget.saveWidgetData<String>(keyBudgetRemaining, 'Set a budget in app');
+       await HomeWidget.saveWidgetData<int>(keyBudgetProgress, 0);
+    }
+
+
+    // Trigger Widget Updates
     await HomeWidget.updateWidget(
       name: androidWidgetName,
       androidName: androidWidgetName,
     );
     
-    // Trigger Widget Update (Gradient Widget)
     await HomeWidget.updateWidget(
       name: androidGradientWidgetName,
       androidName: androidGradientWidgetName,
+    );
+
+    await HomeWidget.updateWidget(
+      name: androidBudgetWidgetName,
+      androidName: androidBudgetWidgetName,
     );
   }
 }

@@ -1586,6 +1586,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get faqSecureDataAnswer => '是的，所有数据都存储在您的设备本地。我们不会将您的财务数据上传到任何外部服务器。';
 
   @override
+  String get faqQuickRecordQuestion => 'What is Quick Record?';
+
+  @override
+  String get faqQuickRecordAnswer =>
+      'The fastest way to track! Use the Widget or Notification Tile, then say \"Lunch 20k using Cash\" or scan a receipt.';
+
+  @override
+  String get faqWidgetQuestion => 'How to add Widgets?';
+
+  @override
+  String get faqWidgetAnswer =>
+      'Long press home screen > Widgets > Find \"Ollo\". Available: Budget Widget (4x1), Daily Graph, and Quick Access.';
+
+  @override
   String get contactSupport => '联系支持';
 
   @override

@@ -37,7 +37,7 @@ class OlloWidgetProvider : HomeWidgetProvider() {
                 // Or better, launch with a URI: "ollo://add-transaction"
                 val intent = Intent(context, MainActivity::class.java).apply {
                     action = "es.antonborri.home_widget.action.LAUNCH"
-                    data = android.net.Uri.parse("ollo://add-transaction") 
+                    data = android.net.Uri.parse("ollo://app/add-transaction") 
                 }
                 
                 // PendingIntent.FLAG_IMMUTABLE is required for Android 12+

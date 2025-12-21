@@ -39,36 +39,46 @@ class RoadmapScreen extends StatelessWidget {
           children: [
             _buildFeatureList([
               _FeatureItem(
-                title: l10n.featureCloudBackupTitle,
-                description: l10n.featureCloudBackupDesc,
-                tag: l10n.roadmapHighPriority,
-              ),
-              _FeatureItem(
                 title: l10n.featureAiInsightsTitle,
                 description: l10n.featureAiInsightsDesc,
                 tag: l10n.roadmapBeta,
               ),
               _FeatureItem(
-                title: l10n.featureDataExportTitle,
-                description: l10n.featureDataExportDesc,
-                tag: l10n.roadmapDev,
+                title: l10n.featureBudgetForecastingTitle,
+                description: l10n.featureBudgetForecastingDesc,
+              ),
+            ]),
+            _buildFeatureList([
+               _FeatureItem(
+                title: l10n.featureMultiCurrencyTitle,
+                description: l10n.featureMultiCurrencyDesc,
+              ),
+               _FeatureItem(
+                title: l10n.featureCloudBackupTitle, // Real Google Drive sync
+                description: l10n.featureCloudBackupDesc,
               ),
             ]),
             _buildFeatureList([
               _FeatureItem(
-                title: l10n.featureBudgetForecastingTitle,
-                description: l10n.featureBudgetForecastingDesc,
+                 title: "Home Widgets",
+                 description: "Budget Widget, Daily Graph, Quick Record Shortcut",
+                 isDone: true,
               ),
               _FeatureItem(
-                title: l10n.featureMultiCurrencyTitle,
-                description: l10n.featureMultiCurrencyDesc,
+                 title: "Quick Record",
+                 description: "Voice & Text Input for super fast tracking",
+                 isDone: true,
+              ),
+              _FeatureItem(
+                title: l10n.featureDataExportTitle,
+                description: l10n.featureDataExportDesc,
+                isDone: true,
               ),
               _FeatureItem(
                 title: l10n.featureReceiptScanningTitle,
                 description: l10n.featureReceiptScanningDesc,
+                isDone: true,
               ),
-            ]),
-            _buildFeatureList([
               _FeatureItem(
                 title: l10n.featureLocalBackupTitle,
                 description: l10n.featureLocalBackupDesc,

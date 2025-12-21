@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../common_widgets/scaffold_with_nav_bar.dart';
+import '../constants/app_colors.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/statistics/presentation/statistics_screen.dart';
 import '../features/dashboard/presentation/filtered_transactions_screen.dart';
@@ -61,6 +62,7 @@ import '../features/backup/presentation/backup_screen.dart';
 import '../features/roadmap/presentation/roadmap_screen.dart';
 import '../features/gamification/presentation/gamification_screen.dart';
 import '../features/gamification/presentation/gamification_listener.dart';
+import '../features/quick_record/presentation/quick_record_modal.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -422,6 +424,69 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/gamification',
         builder: (context, state) => const GamificationScreen(),
       ),
+      GoRoute(
+        path: '/quick-record',
+        parentNavigatorKey: rootNavigatorKey,
+        pageBuilder: (context, state) {
+          // Use a transparent page that opens the modal immediately
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const _QuickRecordDeepLinkWrapper(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            opaque: false,
+          );
+        },
+      ),
     ],
   );
 });
+
+class _QuickRecordDeepLinkWrapper extends StatefulWidget {
+  const _QuickRecordDeepLinkWrapper();
+
+  @override
+  State<_QuickRecordDeepLinkWrapper> createState() => _QuickRecordDeepLinkWrapperState();
+}
+
+class _QuickRecordDeepLinkWrapperState extends State<_QuickRecordDeepLinkWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showModal();
+    });
+  }
+
+  Future<void> _showModal() async {
+    // Show the modal and wait for result
+    final result = await showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const QuickRecordModal(initialMode: 'voice'),
+    );
+    
+    if (!mounted) return;
+
+    if (result is Transaction) {
+        // Option 1: Go Home, then Push AddTransaction (Cleanest history)
+        context.go('/home');
+        context.push('/add-transaction', extra: result);
+    } else {
+        // User cancelled
+        if (context.canPop()) {
+           context.pop();
+        } else {
+           context.go('/home');
+        }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use app background color to avoid black screen
+    return Scaffold(backgroundColor: AppColors.background);
+  }
+}

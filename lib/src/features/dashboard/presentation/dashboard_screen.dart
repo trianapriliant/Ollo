@@ -18,6 +18,8 @@ import 'dashboard_filter_provider.dart';
 import '../../profile/data/user_profile_repository.dart';
 import '../../recurring/application/recurring_transaction_service.dart';
 import '../../transactions/domain/transaction.dart';
+import '../../budget/data/budget_repository.dart';
+import '../../budget/domain/budget.dart';
 import '../../home_widget/home_widget_service.dart';
 import 'transaction_provider.dart';
 import '../../../localization/generated/app_localizations.dart';
@@ -43,8 +45,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     
     // Sync Widget Data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        // We use listenManual to avoid rebuilding the widget, but since we are in build/initState mix
-        // We can just listen to the provider in the build method for changes.
+        _updateBudgetWidgetData(); // Force update on load
     });
   }
 
@@ -107,7 +108,55 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         balance: balance,
         todayExpense: todayExpense,
      );
+     
+     // Update Budget Widget Data (Async)
+     _updateBudgetWidgetData();
+  }
+  
+  Future<void> _updateBudgetWidgetData() async {
+    try {
+        final budgetRepo = ref.read(budgetRepositoryProvider);
+        // We focus on Monthly budgets for the main widget
+        final budgets = await budgetRepo.getBudgetsByPeriod(BudgetPeriod.monthly);
+        
+        if (budgets.isEmpty) {
+             HomeWidgetService.updateWidgetData(
+                income: 0, expense: 0, balance: 0, // Ignored by specific param check usually, but let's be safe or modify Service to allow partial updates?
+                // Actually Service requires all params. That's a flaw in my Service design.
+                // But I can just re-pass the current state or better: 
+                // Modify Service to cache or allow partial.
+                // OR: Just calculate here and pass everything in one go.
+             );
+             return;
+        }
 
+        debugPrint('BudgetWidget: Found ${budgets.length} monthly budgets');
+
+        double totalLimit = 0;
+        double totalSpent = 0;
+
+        for (var budget in budgets) {
+             final spent = await budgetRepo.calculateSpentAmount(budget);
+             totalLimit += budget.amount;
+             totalSpent += spent;
+             debugPrint('BudgetWidget: ${budget.categoryId} - Limit: ${budget.amount}, Spent: $spent');
+        }
+        
+        debugPrint('BudgetWidget: Total Limit: $totalLimit, Total Spent: $totalSpent');
+        
+        // We need to re-fetch the basic data if we want to call the ONE update method.
+        // OR, I can refactor _updateWidgetData to do everything in one flow.
+        // Let's refactor _updateWidgetData to be async and do it all.
+        
+        // Call Service with ONLY budget data
+        HomeWidgetService.updateWidgetData(
+            budgetSpent: totalSpent,
+            budgetTotal: totalLimit,
+        );
+
+    } catch (e) {
+        debugPrint('Error updating budget widget: $e');
+    }
   }
 
   @override

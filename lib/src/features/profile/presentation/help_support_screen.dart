@@ -97,6 +97,14 @@ class HelpSupportScreen extends StatelessWidget {
               l10n.faqSecureDataQuestion,
               l10n.faqSecureDataAnswer,
             ),
+            _buildFAQItem(
+              l10n.faqQuickRecordQuestion,
+              l10n.faqQuickRecordAnswer,
+            ),
+            _buildFAQItem(
+              l10n.faqWidgetQuestion,
+              l10n.faqWidgetAnswer,
+            ),
 
             const SizedBox(height: 32),
 

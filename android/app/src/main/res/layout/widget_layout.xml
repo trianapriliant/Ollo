@@ -12,10 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="December 2025"
-        android:textColor="#B0BEC5"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp"/>
+        android:textColor="#90A4AE"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginBottom="16dp"/>
 
     <!-- Balance Section (Top Right) -->
     <LinearLayout
@@ -28,15 +28,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Balance"
-            android:textColor="#4FC3F7"
-            android:textSize="12sp" />
+            android:textColor="#29B6F6"
+            android:textAllCaps="true"
+            android:textSize="10sp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.05"/>
         <TextView
             android:id="@+id/widget_balance_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rp 0"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-condensed"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -46,8 +50,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/widget_month_text"
         android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
+        android:layout_marginTop="4dp"
+        android:weightSum="2"
+        android:baselineAligned="false">
 
         <!-- Income Card -->
         <LinearLayout
@@ -56,24 +61,27 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:background="@drawable/widget_card_background"
-            android:padding="12dp"
-            android:layout_marginEnd="8dp">
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginEnd="6dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Income"
-                android:textColor="#66BB6A"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
+                android:text="INCOME"
+                android:textColor="#81C784"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.05"/>
             <TextView
                 android:id="@+id/widget_income_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rp 0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textColor="#E0E0E0"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-condensed"
                 android:textStyle="bold"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="2dp"/>
         </LinearLayout>
 
         <!-- Expense Card -->
@@ -83,24 +91,27 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:background="@drawable/widget_card_background"
-            android:padding="12dp"
-            android:layout_marginStart="8dp">
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginStart="6dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Expense"
-                android:textColor="#EF5350"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
+                android:text="EXPENSE"
+                android:textColor="#E57373"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.05"/>
             <TextView
                 android:id="@+id/widget_expense_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rp 0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textColor="#E0E0E0"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-condensed"
                 android:textStyle="bold"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="2dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -108,13 +119,14 @@
     <Button
         android:id="@+id/widget_add_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/widget_button_background"
         android:text="+ Add Transaction"
         android:textColor="#FFFFFF"
         android:textAllCaps="false"
-        android:textStyle="bold"
-        android:textSize="13sp"/>
+        android:fontFamily="sans-serif-medium"
+        android:textSize="12sp"
+        android:stateListAnimator="@null"/>
 
 </RelativeLayout>
