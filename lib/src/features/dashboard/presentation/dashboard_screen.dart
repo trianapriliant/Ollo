@@ -7,6 +7,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../gamification/application/gamification_provider.dart';
+import '../../gamification/domain/gamification_settings.dart';
 import 'widgets/main_account_card.dart';
 import 'widgets/quick_record_section.dart';
 import 'widgets/recent_transactions_list.dart';
@@ -144,7 +145,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                   Container(
+                    if (ref.watch(gamificationSettingsProvider).showDashboardLevel)
+                    Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       margin: const EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(

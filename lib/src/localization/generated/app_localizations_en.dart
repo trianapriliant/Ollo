@@ -2455,4 +2455,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get badgeSectionMisc => 'Fun & Misc';
+
+  @override
+  String get gamificationSettingsTitle => 'Gamification Settings';
+
+  @override
+  String get settingsShowDashboardLevel => 'Show Level on Dashboard';
+
+  @override
+  String get settingsShowDashboardLevelDesc =>
+      'Display your level progress on the home screen';
+
+  @override
+  String get settingsSpoilerMode => 'Spoiler Mode';
+
+  @override
+  String get settingsSpoilerModeDesc => 'Hide details of locked badges';
+
+  @override
+  String get settingsAchievementNotifications => 'Achievement Notifications';
+
+  @override
+  String get settingsAchievementNotificationsDesc =>
+      'Show popup when a new badge is unlocked';
+
+  @override
+  String get notificationNewBadgeUnlocked => 'New Badge Unlocked!';
+
+  @override
+  String get notificationCongratulations => 'Congratulations!';
+
+  @override
+  String notificationYouEarnedXP(int amount) {
+    return 'You earned $amount XP';
+  }
+
+  @override
+  String get notificationAwesome => 'Awesome';
 }

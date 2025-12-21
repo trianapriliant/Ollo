@@ -8,6 +8,8 @@ import '../../../constants/app_text_styles.dart';
 import '../../profile/data/user_profile_repository.dart';
 import '../domain/gamification_stats.dart';
 import '../application/gamification_provider.dart';
+import '../domain/gamification_settings.dart';
+import '../domain/gamification_settings.dart';
 
 
 class GamificationScreen extends ConsumerWidget {
@@ -31,7 +33,7 @@ class GamificationScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: AppColors.textPrimary),
-            onPressed: () {},
+            onPressed: () => _showSettingsSheet(context, ref),
           ),
         ],
       ),
@@ -109,7 +111,7 @@ class GamificationScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   statsAsync.when(
-                    data: (stats) => _buildBadgesGrid(context, stats.badges),
+                    data: (stats) => _buildBadgesGrid(context, ref, stats.badges),
                     loading: () => const CircularProgressIndicator(),
                     error: (_, __) => const Text('Failed to load badges'),
                   ),
@@ -279,7 +281,7 @@ class GamificationScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBadgesGrid(BuildContext context, List<GamificationBadge> badges) {
+  Widget _buildBadgesGrid(BuildContext context, WidgetRef ref, List<GamificationBadge> badges) {
     // Helper to filter badges by category
     List<GamificationBadge> getBadges(BadgeCategory cat) => badges.where((b) => b.category == cat).toList();
 
@@ -287,15 +289,15 @@ class GamificationScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildBadgeSection(context, l10n.badgeSectionConsistency, getBadges(BadgeCategory.consistency)),
-        _buildBadgeSection(context, l10n.badgeSectionBudget, getBadges(BadgeCategory.budget)),
-        _buildBadgeSection(context, l10n.badgeSectionSaving, getBadges(BadgeCategory.saving)),
-        _buildBadgeSection(context, l10n.badgeSectionMisc, [...getBadges(BadgeCategory.misc), ...getBadges(BadgeCategory.anti)]),
+        _buildBadgeSection(context, ref, l10n.badgeSectionConsistency, getBadges(BadgeCategory.consistency)),
+        _buildBadgeSection(context, ref, l10n.badgeSectionBudget, getBadges(BadgeCategory.budget)),
+        _buildBadgeSection(context, ref, l10n.badgeSectionSaving, getBadges(BadgeCategory.saving)),
+        _buildBadgeSection(context, ref, l10n.badgeSectionMisc, [...getBadges(BadgeCategory.misc), ...getBadges(BadgeCategory.anti)]),
       ],
     );
   }
 
-  Widget _buildBadgeSection(BuildContext context, String title, List<GamificationBadge> sectionBadges) {
+  Widget _buildBadgeSection(BuildContext context, WidgetRef ref, String title, List<GamificationBadge> sectionBadges) {
     if (sectionBadges.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,14 +314,14 @@ class GamificationScreen extends ConsumerWidget {
         Wrap(
           spacing: 16,
           runSpacing: 16,
-          children: sectionBadges.map((badge) => _buildBadgeItem(context, badge)).toList(),
+          children: sectionBadges.map((badge) => _buildBadgeItem(context, ref, badge)).toList(),
         ),
         const SizedBox(height: 24),
       ],
     );
   }
 
-  Widget _buildBadgeItem(BuildContext context, GamificationBadge badge) {
+  Widget _buildBadgeItem(BuildContext context, WidgetRef ref, GamificationBadge badge) {
     return Container(
       width: 100, // Fixed width for grid feel
       child: Column(
@@ -360,7 +362,10 @@ class GamificationScreen extends ConsumerWidget {
                         : [],
                   ),
                   child: Icon(
-                    badge.icon,
+                    // Spoiler Mode Logic
+                    !badge.isUnlocked && ref.watch(gamificationSettingsProvider).hideLockedBadges 
+                        ? Icons.question_mark_rounded 
+                        : badge.icon,
                     color: badge.isUnlocked ? Colors.white : Colors.grey[400],
                     size: 32,
                   ),
@@ -399,7 +404,10 @@ class GamificationScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            _getLocalizedBadgeTitle(context, badge.titleKey),
+            // Spoiler Mode Logic
+            !badge.isUnlocked && ref.watch(gamificationSettingsProvider).hideLockedBadges
+                ? '???'
+                : _getLocalizedBadgeTitle(context, badge.titleKey),
             textAlign: TextAlign.center,
             style: GoogleFonts.outfit(
               fontSize: 12,
@@ -491,5 +499,132 @@ class GamificationScreen extends ConsumerWidget {
        case 'badgeWealthDesc': return l10n.badgeWealthDesc;
        default: return key;
      }
+  }
+
+  void _showSettingsSheet(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final settings = ref.watch(gamificationSettingsProvider);
+            final notifier = ref.read(gamificationSettingsProvider.notifier);
+            final l10n = AppLocalizations.of(context)!;
+            
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      l10n.gamificationSettingsTitle,
+                      style: GoogleFonts.outfit(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    // Toggle 1: Dashboard Visibility
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      activeColor: AppColors.primary,
+                      title: Text(
+                        l10n.settingsShowDashboardLevel,
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      subtitle: Text(
+                        l10n.settingsShowDashboardLevelDesc,
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      value: settings.showDashboardLevel,
+                      onChanged: (val) => notifier.toggleDashboardLevel(val),
+                    ),
+                    const Divider(),
+                    
+                    // Toggle 2: Spoiler Mode
+                    SwitchListTile(
+                       contentPadding: EdgeInsets.zero,
+                      activeColor: AppColors.primary,
+                      title: Text(
+                        l10n.settingsSpoilerMode,
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      subtitle: Text(
+                        l10n.settingsSpoilerModeDesc,
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      value: settings.hideLockedBadges,
+                      onChanged: (val) => notifier.toggleSpoilerMode(val),
+                    ),
+                    const Divider(),
+
+                    // Toggle 3: Notifications
+                    SwitchListTile(
+                       contentPadding: EdgeInsets.zero,
+                      activeColor: AppColors.primary,
+                      title: Text(
+                        l10n.settingsAchievementNotifications,
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      subtitle: Text(
+                        l10n.settingsAchievementNotificationsDesc,
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      value: settings.enableNotifications,
+                      onChanged: (val) => notifier.toggleNotifications(val),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

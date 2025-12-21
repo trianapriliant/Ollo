@@ -2451,4 +2451,42 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get badgeSectionMisc => 'Seru & Lainnya';
+
+  @override
+  String get gamificationSettingsTitle => 'Pengaturan Gamifikasi';
+
+  @override
+  String get settingsShowDashboardLevel => 'Tampilkan Level di Beranda';
+
+  @override
+  String get settingsShowDashboardLevelDesc =>
+      'Tampilkan kemajuan level Anda di layar utama';
+
+  @override
+  String get settingsSpoilerMode => 'Mode Spoiler';
+
+  @override
+  String get settingsSpoilerModeDesc =>
+      'Sembunyikan detail lencana yang terkunci';
+
+  @override
+  String get settingsAchievementNotifications => 'Notifikasi Pencapaian';
+
+  @override
+  String get settingsAchievementNotificationsDesc =>
+      'Tampilkan popup saat lencana baru terbuka';
+
+  @override
+  String get notificationNewBadgeUnlocked => 'Lencana Baru Terbuka!';
+
+  @override
+  String get notificationCongratulations => 'Selamat!';
+
+  @override
+  String notificationYouEarnedXP(int amount) {
+    return 'Anda mendapatkan $amount XP';
+  }
+
+  @override
+  String get notificationAwesome => 'Keren';
 }

@@ -4709,6 +4709,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fun & Misc'**
   String get badgeSectionMisc;
+
+  /// No description provided for @gamificationSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gamification Settings'**
+  String get gamificationSettingsTitle;
+
+  /// No description provided for @settingsShowDashboardLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Level on Dashboard'**
+  String get settingsShowDashboardLevel;
+
+  /// No description provided for @settingsShowDashboardLevelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display your level progress on the home screen'**
+  String get settingsShowDashboardLevelDesc;
+
+  /// No description provided for @settingsSpoilerMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoiler Mode'**
+  String get settingsSpoilerMode;
+
+  /// No description provided for @settingsSpoilerModeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide details of locked badges'**
+  String get settingsSpoilerModeDesc;
+
+  /// No description provided for @settingsAchievementNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Notifications'**
+  String get settingsAchievementNotifications;
+
+  /// No description provided for @settingsAchievementNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Show popup when a new badge is unlocked'**
+  String get settingsAchievementNotificationsDesc;
+
+  /// No description provided for @notificationNewBadgeUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'New Badge Unlocked!'**
+  String get notificationNewBadgeUnlocked;
+
+  /// No description provided for @notificationCongratulations.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get notificationCongratulations;
+
+  /// No description provided for @notificationYouEarnedXP.
+  ///
+  /// In en, this message translates to:
+  /// **'You earned {amount} XP'**
+  String notificationYouEarnedXP(int amount);
+
+  /// No description provided for @notificationAwesome.
+  ///
+  /// In en, this message translates to:
+  /// **'Awesome'**
+  String get notificationAwesome;
 }
 
 class _AppLocalizationsDelegate

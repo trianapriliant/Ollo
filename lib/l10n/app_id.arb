@@ -898,5 +898,16 @@
   "badgeSectionBudget": "Penganggaran",
   "badgeSectionSaving": "Tujuan Tabungan",
   "badgeSectionMisc": "Seru & Lainnya",
-  "weeklyActivityHeatmap": "Aktivitas Mingguan"
+  "weeklyActivityHeatmap": "Aktivitas Mingguan",
+  "gamificationSettingsTitle": "Pengaturan Gamifikasi",
+  "settingsShowDashboardLevel": "Tampilkan Level di Beranda",
+  "settingsShowDashboardLevelDesc": "Tampilkan kemajuan level Anda di layar utama",
+  "settingsSpoilerMode": "Mode Spoiler",
+  "settingsSpoilerModeDesc": "Sembunyikan detail lencana yang terkunci",
+  "settingsAchievementNotifications": "Notifikasi Pencapaian",
+  "settingsAchievementNotificationsDesc": "Tampilkan popup saat lencana baru terbuka",
+  "notificationNewBadgeUnlocked": "Lencana Baru Terbuka!",
+  "notificationCongratulations": "Selamat!",
+  "notificationYouEarnedXP": "Anda mendapatkan {amount} XP",
+  "notificationAwesome": "Keren"
 }

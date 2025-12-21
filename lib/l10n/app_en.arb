@@ -1091,5 +1091,23 @@
   "badgeSectionConsistency": "Consistency & Streak",
   "badgeSectionBudget": "Budgeting",
   "badgeSectionSaving": "Savings Goals",
-  "badgeSectionMisc": "Fun & Misc"
+  "badgeSectionMisc": "Fun & Misc",
+  "gamificationSettingsTitle": "Gamification Settings",
+  "settingsShowDashboardLevel": "Show Level on Dashboard",
+  "settingsShowDashboardLevelDesc": "Display your level progress on the home screen",
+  "settingsSpoilerMode": "Spoiler Mode",
+  "settingsSpoilerModeDesc": "Hide details of locked badges",
+  "settingsAchievementNotifications": "Achievement Notifications",
+  "settingsAchievementNotificationsDesc": "Show popup when a new badge is unlocked",
+  "notificationNewBadgeUnlocked": "New Badge Unlocked!",
+  "notificationCongratulations": "Congratulations!",
+  "notificationYouEarnedXP": "You earned {amount} XP",
+  "@notificationYouEarnedXP": {
+      "placeholders": {
+          "amount": {
+              "type": "int"
+          }
+      }
+  },
+  "notificationAwesome": "Awesome"
 }
