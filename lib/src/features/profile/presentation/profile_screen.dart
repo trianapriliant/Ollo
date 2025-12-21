@@ -67,170 +67,207 @@ class ProfileScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: profileAsync.when(
-        data: (profile) => SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 24),
-                // Modular Header
-                ProfileHeader(profile: profile),
-
-                const SizedBox(height: 16),
-                
-                // Modular Premium Card
-                const PremiumStatusCard(),
-
-                const SizedBox(height: 32),
-
-                // Future Features Section
-                ProfileMenuSection(title: AppLocalizations.of(context)!.futureFeatures),
-                ProfileMenuItem(
-                  icon: Icons.cloud_sync_outlined,
-                  title: AppLocalizations.of(context)!.backupRecovery,
-                  onTap: () => context.push('/backup'),
+      body: Stack(
+        children: [
+          // Footer Layer (Behind everything)
+          Positioned(
+            bottom: -20, // Slight offset to hide the bottom edge if needed
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
+                'OLLO',
+                style: TextStyle(
+                  fontSize: 120,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 10,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 1.0
+                    ..color = AppColors.primary.withOpacity(0.1), // Subtle outline
                 ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.auto_awesome_outlined,
-                  title: AppLocalizations.of(context)!.aiAutomation,
-                  onTap: () => _showComingSoonDialog(context, AppLocalizations.of(context)!.aiAutomation, AppLocalizations.of(context)!.comingSoonDesc),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.feedback_outlined,
-                  title: AppLocalizations.of(context)!.feedbackRoadmap,
-                  onTap: () => context.push('/roadmap'),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.file_download_outlined,
-                  title: AppLocalizations.of(context)!.dataExport,
-                  onTap: () {
-                     context.push('/data-export');
-                  },
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.file_upload_outlined,
-                  title: AppLocalizations.of(context)!.importData,
-                  onTap: () => context.push('/data-import'),
-                ),
-                const SizedBox(height: 24),
-
-                // Data Management Section
-                ProfileMenuSection(title: AppLocalizations.of(context)!.dataManagement),
-                ProfileMenuItem(
-                  icon: Icons.category,
-                  title: AppLocalizations.of(context)!.categories,
-                  onTap: () => context.push('/categories'),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.account_balance_wallet,
-                  title: AppLocalizations.of(context)!.wallets,
-                  onTap: () => context.go('/wallet'),
-                ),
-                const SizedBox(height: 24),
-
-                // Preferences Section
-                ProfileMenuSection(title: AppLocalizations.of(context)!.preferences),
-                ProfileMenuItem(
-                  icon: Icons.grid_view_rounded,
-                  title: AppLocalizations.of(context)!.customizeMenu,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ReorderMenuScreen(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.palette,
-                  title: AppLocalizations.of(context)!.cardAppearance,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const CardThemeSelectionScreen(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // General Section
-                ProfileMenuSection(title: AppLocalizations.of(context)!.general),
-                ProfileMenuItem(
-                  icon: Icons.settings,
-                  title: AppLocalizations.of(context)!.settings,
-                  onTap: () => context.push('/settings'),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.help_outline,
-                  title: AppLocalizations.of(context)!.helpSupport,
-                  onTap: () => context.push('/help-support'),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.chat_bubble_outline,
-                  title: AppLocalizations.of(context)!.sendFeedback,
-                  onTap: () => context.push('/send-feedback'),
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.info_outline,
-                  title: AppLocalizations.of(context)!.aboutOllo,
-                  onTap: () => context.push('/about-ollo'),
-                ),
-                const SizedBox(height: 24),
-
-                // Account Section
-                ProfileMenuSection(title: AppLocalizations.of(context)!.account),
-                ProfileMenuItem(
-                  icon: Icons.delete_forever,
-                  title: AppLocalizations.of(context)!.deleteData,
-                  onTap: () => _showDeleteDataDialog(context, ref),
-                  isDestructive: true,
-                ),
-                const SizedBox(height: 16),
-                ProfileMenuItem(
-                  icon: Icons.logout,
-                  title: AppLocalizations.of(context)!.logout,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(AppLocalizations.of(context)!.exitAppTitle),
-                        content: Text(AppLocalizations.of(context)!.exitAppConfirm),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(AppLocalizations.of(context)!.cancel),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context); // Close dialog
-                              SystemNavigator.pop(); // Exit app
-                            },
-                            child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  isDestructive: true,
-                ),
-
-                
-                const SizedBox(height: 32),
-                _buildVersionInfo(),
-                const SizedBox(height: 32),
-              ],
+              ),
             ),
           ),
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+          
+          // Content Layer
+          profileAsync.when(
+            data: (profile) => LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Container(
+                      color: AppColors.background, // Opaque background to act as curtain
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 24),
+                            // Modular Header
+                            ProfileHeader(profile: profile),
+
+                            const SizedBox(height: 16),
+                            
+                            // Modular Premium Card
+                            const PremiumStatusCard(),
+
+                            const SizedBox(height: 32),
+
+                            // Future Features Section
+                            ProfileMenuSection(title: AppLocalizations.of(context)!.futureFeatures),
+                            ProfileMenuItem(
+                              icon: Icons.cloud_sync_outlined,
+                              title: AppLocalizations.of(context)!.backupRecovery,
+                              onTap: () => context.push('/backup'),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.auto_awesome_outlined,
+                              title: AppLocalizations.of(context)!.aiAutomation,
+                              onTap: () => _showComingSoonDialog(context, AppLocalizations.of(context)!.aiAutomation, AppLocalizations.of(context)!.comingSoonDesc),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.feedback_outlined,
+                              title: AppLocalizations.of(context)!.feedbackRoadmap,
+                              onTap: () => context.push('/roadmap'),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.file_download_outlined,
+                              title: AppLocalizations.of(context)!.dataExport,
+                              onTap: () {
+                                 context.push('/data-export');
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.file_upload_outlined,
+                              title: AppLocalizations.of(context)!.importData,
+                              onTap: () => context.push('/data-import'),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Data Management Section
+                            ProfileMenuSection(title: AppLocalizations.of(context)!.dataManagement),
+                            ProfileMenuItem(
+                              icon: Icons.category,
+                              title: AppLocalizations.of(context)!.categories,
+                              onTap: () => context.push('/categories'),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.account_balance_wallet,
+                              title: AppLocalizations.of(context)!.wallets,
+                              onTap: () => context.go('/wallet'),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Preferences Section
+                            ProfileMenuSection(title: AppLocalizations.of(context)!.preferences),
+                            ProfileMenuItem(
+                              icon: Icons.grid_view_rounded,
+                              title: AppLocalizations.of(context)!.customizeMenu,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const ReorderMenuScreen(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.palette,
+                              title: AppLocalizations.of(context)!.cardAppearance,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const CardThemeSelectionScreen(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // General Section
+                            ProfileMenuSection(title: AppLocalizations.of(context)!.general),
+                            ProfileMenuItem(
+                              icon: Icons.settings,
+                              title: AppLocalizations.of(context)!.settings,
+                              onTap: () => context.push('/settings'),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.help_outline,
+                              title: AppLocalizations.of(context)!.helpSupport,
+                              onTap: () => context.push('/help-support'),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.chat_bubble_outline,
+                              title: AppLocalizations.of(context)!.sendFeedback,
+                              onTap: () => context.push('/send-feedback'),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.info_outline,
+                              title: AppLocalizations.of(context)!.aboutOllo,
+                              onTap: () => context.push('/about-ollo'),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Account Section
+                            ProfileMenuSection(title: AppLocalizations.of(context)!.account),
+                            ProfileMenuItem(
+                              icon: Icons.delete_forever,
+                              title: AppLocalizations.of(context)!.deleteData,
+                              onTap: () => _showDeleteDataDialog(context, ref),
+                              isDestructive: true,
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.logout,
+                              title: AppLocalizations.of(context)!.logout,
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(AppLocalizations.of(context)!.exitAppTitle),
+                                    content: Text(AppLocalizations.of(context)!.exitAppConfirm),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text(AppLocalizations.of(context)!.cancel),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context); // Close dialog
+                                          SystemNavigator.pop(); // Exit app
+                                        },
+                                        child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              isDestructive: true,
+                            ),
+
+                            
+                            const SizedBox(height: 32),
+                            _buildVersionInfo(),
+                            const SizedBox(height: 32),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+          ),
+        ],
       ),
     );
   }

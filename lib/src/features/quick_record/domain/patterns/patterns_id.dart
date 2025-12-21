@@ -104,14 +104,15 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'bayar kamar', 'bayar tempat tinggal', 'sewa bulanan', 
         'pembayaran kos', 'uang kos', 'uang kontrakan', 
         'boarding house', 'rent', 'sewa apartemen', 'bayar apart',
-        'monthly rent', 'apartment rent', 'lease'
+        'monthly rent', 'apartment rent', 'lease',
+        'biaya sewa', 'tagihan sewa', 'uang sewa'
       ],
 
       'Mortgage': [
         'kpr', 'cicilan rumah', 'mortgage', 'kredit rumah', 
         'angsuran rumah', 'kredit properti', 'cicilan properti',
         'pembayaran kpr', 'angsuran kpr', 'kpr btn', 'kpr bca', 
-        'kredit pemilikan rumah'
+        'kredit pemilikan rumah', 'bunga kpr', 'cicilan apartemen', 'kpa'
       ],
 
       'Utilities': [
@@ -119,7 +120,8 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'pulsa listrik', 'gas', 'lpg', 'elpiji', 'pgn', 'meteran',
         'tagihan air', 'tagihan listrik', 'pembayaran pdam',
         'bayar pln', 'biaya utilitas', 'utilitas',
-        'electricity', 'water bill', 'power bill', 'gas bill', 'utility'
+        'electricity', 'water bill', 'power bill', 'gas bill', 'utility',
+        'iuran sampah', 'uang kebersihan', 'tagihan gas'
       ],
 
       'Internet': [
@@ -128,7 +130,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'myrepublic', 'cbn fiber', 'oxigen', 'hinet', 
         'indosat', 'telkomsel', 'tri', 'xl', 
         'kabel internet', 'wifi bulanan', 'pemasangan wifi',
-        'tagihan internet',
+        'tagihan internet', 'kuota', 'beli kuota', 'paket internet',
         'internet bill', 'wifi bill', 'data plan', 'mobile data'
       ],
 
@@ -137,7 +139,8 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'renovasi', 'kebocoran', 'ledeng', 'plafon',
         'cat', 'pengecatan', 'repair', 'servis kulkas',
         'service mesin cuci', 'tukang bangunan', 'tukang cat',
-        'jasa tukang', 'ganti pipa', 'perbaikan rumah'
+        'jasa tukang', 'ganti pipa', 'perbaikan rumah',
+        'genteng bocor', 'ganti kran', 'perbaikan listrik', 'korslet'
       ],
 
       'Furniture': [
@@ -145,7 +148,8 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'dipan', 'bantal', 'guling', 'spring bed',
         'perabot', 'perabotan', 'furniture', 
         'rak', 'bufet', 'meja belajar', 'meja makan',
-        'almari', 'kabinet', 'kursi tamu', 'karpet'
+        'almari', 'kabinet', 'kursi tamu', 'karpet',
+        'dekorasi rumah', 'hiasan dinding', 'gorden', 'tirai'
       ],
 
       'Services': [
@@ -153,7 +157,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'kebersihan', 'cleaning service', 'cs', 
         'sampah', 'tarikan sampah', 'pengangkutan sampah',
         'ipl', 'iuran bulanan', 'iuran lingkungan',
-        'petugas komplek', 'karyawan komplek'
+        'petugas komplek', 'karyawan komplek', 'biaya lingkungan'
       ],
     },
   ),
@@ -165,10 +169,11 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'hoodie', 'sweater', 'jeans', 'celana jeans',
         'rok', 'dress', 'kebaya', 'jas', 'pakaian',
         'fashion', 'outfit', 'baju kondangan',
-        'zara', 'uniqlo', 'h&m', 'cotton on', 
-        'mango', 'guess', 'giordano', 'brand pakaian',
-        'thrifting', 'baju bekas', 'preloved pakaian',
-        'shirt', 'pants', 'trousers', 'jeans', 'dress', 'jacket', 'hoodie', 'shoes', 'sneakers', 'clothing', 'apparel'
+        'shirt', 'pants', 'trousers', 'shoes', 'sneakers',
+        'sepatu', 'sandal', 'tas', 'dompet', 'topi',
+        'jilbab', 'kerudung', 'gamis', 'batik',
+        'zara', 'uniqlo', 'h&m', 'brand pakaian',
+        'beli baju', 'belanja baju', 'fitting'
       ],
 
       'Electronics': [
@@ -178,8 +183,9 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'keyboard', 'mouse', 'monitor', 'elektronik',
         'tablet', 'ipad', 'processor', 'ssd', 'hdd',
         'kulkas', 'mesin cuci', 'tv', 'ac',
-        'electronic store', 'service hp', 'repair laptop',
-        'phone', 'mobile', 'computer', 'laptop', 'charger', 'headphones', 'earbuds', 'television', 'washing machine', 'fridge'
+        'kamera', 'camera', 'tripod', 'lensa',
+        'samsung', 'iphone', 'xiaomi', 'oppo', 'vivo',
+        'electronic store', 'service hp', 'repair laptop'
       ],
 
       'Home': [
@@ -189,7 +195,9 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'korden', 'gorden', 'tirai', 'karpet',
         'keset', 'lemari', 'rak piring', 'perabot kecil',
         'peralatan kamar mandi', 'dispenser', 'vacuum cleaner',
-        'furniture', 'decor', 'bed sheet', 'curtain', 'pillow', 'rug', 'carpet', 'shelf', 'cabinet'
+        'sapu', 'pel', 'ember', 'gayung', 'sikat',
+        'deterjen', 'sabun cuci', 'pewangi pakaian',
+        'furniture', 'decor', 'bed sheet', 'curtain'
       ],
 
       'Beauty': [
@@ -200,13 +208,14 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'salon', 'spa', 'perawatan tubuh',
         'potong rambut', 'haircut', 'cat rambut', 'hair dye',
         'sabun', 'shampoo','sampo', 'perawatan rambut', 'parfume', 'parfum', 'perfume',
-        'makeup', 'lipstick', 'foundation', 'powder', 'serum', 'moisturizer', 'facial', 'soap', 'body wash'
+        'body lotion', 'hand body', 'lulur', 'massage', 'creambath'
       ],
 
       'Gifts': [
         'kado', 'hadiah', 'gift', 'oleh-oleh',
         'bingkisan', 'souvenir', 'hampers', 'parcel',
-        'kado ulang tahun', 'giftbox', 'premium gift'
+        'kado ulang tahun', 'giftbox', 'premium gift',
+        'bungkus kado', 'kotak kado', 'hadiah wisuda', 'hadiah nikah'
       ],
 
       'Software': [
@@ -215,8 +224,8 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'adobe', 'photoshop', 'illustrator', 'premiere',
         'office', 'ms office', 'word', 'excel', '365', 
         'windows', 'license key', 'product key',
-        'spotify', 'youtube premium', 'netflix',
-        'antivirus', 'vpn', 'cloud storage'
+        'spotify', 'youtube premium', 'netflix', 'disney+',
+        'antivirus', 'vpn', 'cloud storage', 'google drive'
       ],
 
       'Tools': [
@@ -224,7 +233,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'mesin bor', 'kunci inggris', 'kunci pas',
         'alat tukang', 'alat bangunan', 'peralatan bengkel',
         'gergaji', 'tang', 'bor listrik', 'obeng set',
-        'toolkit', 'toolbox'
+        'toolkit', 'toolbox', 'meteran', 'paku', 'sekrup', 'baut'
       ],
     },
   ),
