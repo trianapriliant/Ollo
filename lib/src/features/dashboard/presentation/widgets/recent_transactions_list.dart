@@ -14,6 +14,8 @@ import '../dashboard_filter_provider.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
 import '../../../../localization/generated/app_localizations.dart';
+import 'package:ollo/src/features/transactions/data/transaction_repository.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../categories/presentation/category_localization_helper.dart';
 
 class RecentTransactionsList extends ConsumerWidget {
@@ -246,28 +248,88 @@ class RecentTransactionsList extends ConsumerWidget {
 
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: GestureDetector(
-                          onTap: () {
-                            context.push('/transaction-detail', extra: transaction);
-                          },
-                          child: _buildActivityItem(
-                            context,
-                            displayTitle,
-                            walletName,
-                            transaction.amount,
-                            category,
-                            _getSubCategoryIcon(transaction, category), // Pass sub-category icon
-                            _getSubCategoryName(transaction, category), // Pass sub-category name
-                            isExpense,
-                            currency,
-                            transaction.note,
-                            transaction.date,
-                            isSystem: isSystem,
-                            isReimbursement: transaction.type == TransactionType.reimbursement,
-                            isTransfer: transaction.type == TransactionType.transfer, // New Flag
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.02),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
                           ),
-                        ),
-                      );
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Slidable(
+                              key: ValueKey(transaction.id),
+                              startActionPane: ActionPane(
+                                motion: const BehindMotion(),
+                                extentRatio: 0.25,
+                                dismissible: DismissiblePane(
+                                  onDismissed: () {
+                                    ref.read(transactionRepositoryProvider).value!.deleteTransaction(transaction.id);
+                                  },
+                                  confirmDismiss: () async {
+                                    return await _showDeleteConfirmation(context) ?? false;
+                                  },
+                                ),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) async {
+                                      final confirmed = await _showDeleteConfirmation(context);
+                                      if (confirmed == true) {
+                                        ref.read(transactionRepositoryProvider).value!.deleteTransaction(transaction.id);
+                                      }
+                                    },
+                                    backgroundColor: const Color(0xFFFE4A49),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                    label: 'Delete',
+                                  ),
+                                ],
+                              ),
+                              endActionPane: ActionPane(
+                                motion: const BehindMotion(),
+                                extentRatio: 0.25,
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      context.push('/add-transaction', extra: transaction);
+                                    },
+                                    backgroundColor: const Color(0xFF21B7CA),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.edit,
+                                    label: 'Edit',
+                                  ),
+                                ],
+                              ),
+                            child: GestureDetector(
+                              onTap: () {
+                                context.push('/transaction-detail', extra: transaction);
+                              },
+                              child: _buildActivityItem(
+                                context,
+                                displayTitle,
+                                walletName,
+                                transaction.amount,
+                                category,
+                                _getSubCategoryIcon(transaction, category),
+                                _getSubCategoryName(transaction, category),
+                                isExpense,
+                                currency,
+                                transaction.note,
+                                transaction.date,
+                                isSystem: isSystem,
+                                isReimbursement: transaction.type == TransactionType.reimbursement,
+                                isTransfer: transaction.type == TransactionType.transfer,
+                              ),
+                            ),
+                          ), // Slidable
+                        ), // ClipRRect
+                      ), // Container
+                    ); // Padding
                     }).toList(),
                   ],
                 );
@@ -275,6 +337,29 @@ class RecentTransactionsList extends ConsumerWidget {
             ),
           ],
         );
+  }
+
+  Future<bool?> _showDeleteConfirmation(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Transaction'),
+          content: const Text('Are you sure you want to delete this transaction? This action cannot be undone.'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Delete', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   List<_TransactionGroup> _groupTransactions(List<Transaction> transactions) {
@@ -423,13 +508,6 @@ class RecentTransactionsList extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
       ),
       child: Row(
         children: [

@@ -59,6 +59,7 @@ import '../features/profile/presentation/data_export_screen.dart';
 import '../features/profile/presentation/data_import_screen.dart';
 import '../features/backup/presentation/backup_screen.dart';
 import '../features/roadmap/presentation/roadmap_screen.dart';
+import '../features/gamification/presentation/gamification_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -413,6 +414,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/roadmap',
         builder: (context, state) => const RoadmapScreen(),
+      ),
+      GoRoute(
+        path: '/gamification',
+        builder: (context, state) => const GamificationScreen(),
       ),
     ],
   );

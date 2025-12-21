@@ -38,6 +38,8 @@ dependencies:
   package_info_plus: ^9.0.0
   flutter_local_notifications: ^18.0.1
   timezone: ^0.10.0
+  flutter_slidable: ^4.0.3
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

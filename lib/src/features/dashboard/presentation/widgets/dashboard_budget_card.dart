@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../settings/presentation/currency_provider.dart';
 import '../../../../constants/app_text_styles.dart';
@@ -40,54 +41,64 @@ class DashboardBudgetCard extends ConsumerWidget {
             if (filterState.filterType == TimeFilterType.week) title = AppLocalizations.of(context)!.weeklyBudget;
             if (filterState.filterType == TimeFilterType.year) title = AppLocalizations.of(context)!.yearlyBudget;
 
-            return Container(
-              padding: const EdgeInsets.all(12), // Reduced from 16
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(title, style: AppTextStyles.h3),
-                      Text(
-                        '${(percentage * 100).toStringAsFixed(0)}%',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: percentage > 0.8 ? Colors.red : AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8), // Reduced from 12
-                  LinearProgressIndicator(
-                    value: percentage,
-                    backgroundColor: Colors.grey[100],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      percentage > 0.8 ? Colors.red : AppColors.primary,
+            return GestureDetector(
+              onTap: () => context.push('/budget'),
+              child: Container(
+                padding: const EdgeInsets.all(12), // Reduced from 16
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.02),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
                     ),
-                    minHeight: 6, // Reduced from 8
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  const SizedBox(height: 6), // Reduced from 8
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        currency.format(totalSpent),
-                        style: AppTextStyles.bodySmall,
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(title, style: AppTextStyles.h3),
+                        Text(
+                          '${(percentage * 100).toStringAsFixed(0)}%',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: percentage > 0.8 ? Colors.red : AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8), // Reduced from 12
+                    LinearProgressIndicator(
+                      value: percentage,
+                      backgroundColor: Colors.grey[100],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        percentage > 0.8 ? Colors.red : AppColors.primary,
                       ),
-                      Text(
-                        currency.format(totalBudget),
-                        style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
+                      minHeight: 6, // Reduced from 8
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    const SizedBox(height: 6), // Reduced from 8
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          currency.format(totalSpent),
+                          style: AppTextStyles.bodySmall,
+                        ),
+                        Text(
+                          currency.format(totalBudget),
+                          style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },

@@ -8,6 +8,8 @@ import '../../domain/transaction.dart';
 import '../../../../utils/icon_helper.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import '../../data/transaction_repository.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class TransactionListItem extends ConsumerWidget {
@@ -140,26 +142,100 @@ class TransactionListItem extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        leading: CircleAvatar(
-          backgroundColor: backgroundColor,
-          child: Icon(iconData, color: iconColor),
+      clipBehavior: Clip.antiAlias, // Clip items to card shape
+      child: Slidable(
+        key: ValueKey(transaction.id),
+        startActionPane: ActionPane(
+          motion: const BehindMotion(),
+          extentRatio: 0.25,
+          dismissible: DismissiblePane(
+            onDismissed: () {
+              ref.read(transactionRepositoryProvider).value!.deleteTransaction(transaction.id);
+            },
+            confirmDismiss: () async {
+              return await _showDeleteConfirmation(context) ?? false;
+            },
+          ),
+          children: [
+            SlidableAction(
+              onPressed: (context) async {
+                final confirmed = await _showDeleteConfirmation(context);
+                if (confirmed == true) {
+                  ref.read(transactionRepositoryProvider).value!.deleteTransaction(transaction.id);
+                }
+              },
+              backgroundColor: const Color(0xFFFE4A49),
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+            ),
+          ],
         ),
-        title: Text(displayTitle, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
-        subtitle: Text(
-          isBill ? 'Bill Payment' : (isDebt ? 'Debt Transaction' : (isSavings ? 'Savings Transaction' : (isWishlist ? 'Wishlist Purchase' : dateFormat.format(transaction.date)))), 
-          style: AppTextStyles.bodySmall
+        endActionPane: ActionPane(
+          motion: const BehindMotion(),
+          extentRatio: 0.25,
+          children: [
+            SlidableAction(
+              onPressed: (context) {
+                  context.push('/add-transaction', extra: transaction);
+              },
+              backgroundColor: const Color(0xFF21B7CA),
+              foregroundColor: Colors.white,
+              icon: Icons.edit,
+              label: 'Edit',
+            ),
+          ],
         ),
-        trailing: Text(
-          currencyFormat.format(transaction.amount),
-          style: AppTextStyles.bodyLarge.copyWith(
-            color: isExpenseDisplay ? Colors.red : Colors.green,
-            fontWeight: FontWeight.bold,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(16),
+            leading: CircleAvatar(
+              backgroundColor: backgroundColor,
+              child: Icon(iconData, color: iconColor),
+            ),
+            title: Text(displayTitle, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
+            subtitle: Text(
+              isBill ? 'Bill Payment' : (isDebt ? 'Debt Transaction' : (isSavings ? 'Savings Transaction' : (isWishlist ? 'Wishlist Purchase' : dateFormat.format(transaction.date)))), 
+              style: AppTextStyles.bodySmall
+            ),
+            trailing: Text(
+              currencyFormat.format(transaction.amount),
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: isExpenseDisplay ? Colors.red : Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () => context.push('/transaction-detail', extra: transaction),
           ),
         ),
-        onTap: () => context.push('/transaction-detail', extra: transaction),
       ),
+    );
+  }
+
+  Future<bool?> _showDeleteConfirmation(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Transaction'),
+          content: const Text('Are you sure you want to delete this transaction? This action cannot be undone.'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Delete', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

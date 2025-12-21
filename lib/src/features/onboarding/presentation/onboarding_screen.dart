@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,45 +18,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingPageData> _pages = [
-    OnboardingPageData(
-      title: 'Savings',
-      subtitle: 'Grow Your Wealth',
-      description: 'Start saving more effectively by tracking where your money goes and cutting unnecessary expenses.',
-      imagePath: 'assets/images/onboarding_savings.png',
-      color: const Color(0xFF4CAF50), // Green shade for savings
-    ),
-    OnboardingPageData(
-      title: 'Statistics',
-      subtitle: 'Gain Deep Insights',
-      description: 'Analyze your income and expense trends with detailed reports to make smarter financial decisions.',
-      imagePath: 'assets/images/onboarding_statistics.png',
-      color: const Color(0xFF2196F3), // Blue shade for stats
-    ),
-    OnboardingPageData(
-      title: 'Management',
-      subtitle: 'Total Control',
-      description: 'Manage all your wallets, accounts, and budgets in one simple and intuitive place.',
-      imagePath: 'assets/images/onboarding_management.png',
-      color: const Color(0xFF9C27B0), // Purple shade for management
-    ),
-  ];
-
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-
-  void _onNext() {
-    if (_currentPage < _pages.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.fastEaseInToSlowEaseOut,
-      );
-    } else {
-      _finishOnboarding();
-    }
   }
 
   void _finishOnboarding() {
@@ -65,6 +31,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
+    
+    final List<OnboardingPageData> pages = [
+      OnboardingPageData(
+        title: tr.onboardingSavingsTitle,
+        subtitle: tr.onboardingSavingsSubtitle,
+        description: tr.onboardingSavingsDesc,
+        imagePath: 'assets/images/onboarding_savings.png',
+        color: const Color(0xFF4CAF50),
+      ),
+      OnboardingPageData(
+        title: tr.onboardingStatsTitle,
+        subtitle: tr.onboardingStatsSubtitle,
+        description: tr.onboardingStatsDesc,
+        imagePath: 'assets/images/onboarding_statistics.png',
+        color: const Color(0xFF2196F3),
+      ),
+      OnboardingPageData(
+        title: tr.onboardingMgmtTitle,
+        subtitle: tr.onboardingMgmtSubtitle,
+        description: tr.onboardingMgmtDesc,
+        imagePath: 'assets/images/onboarding_management.png',
+        color: const Color(0xFF9C27B0),
+      ),
+    ];
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -84,9 +76,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     _currentPage = index;
                   });
                 },
-                itemCount: _pages.length,
+                itemCount: pages.length,
                 itemBuilder: (context, index) {
-                  return _OnboardingPage(data: _pages[index]);
+                  return _OnboardingPage(data: pages[index]);
                 },
               ),
             ),
@@ -100,7 +92,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   // Indicators
                   Row(
                     children: List.generate(
-                      _pages.length,
+                      pages.length,
                       (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.only(right: 8),
@@ -108,7 +100,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         width: _currentPage == index ? 32 : 8,
                         decoration: BoxDecoration(
                           color: _currentPage == index 
-                              ? _pages[_currentPage].color 
+                              ? pages[_currentPage].color 
                               : Colors.grey[200],
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -118,16 +110,25 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
                   // Next Button
                   GestureDetector(
-                    onTap: _onNext,
+                    onTap: () {
+                      if (_currentPage < pages.length - 1) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.fastEaseInToSlowEaseOut,
+                        );
+                      } else {
+                        _finishOnboarding();
+                      }
+                    },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                       decoration: BoxDecoration(
-                        color: _pages[_currentPage].color,
+                        color: pages[_currentPage].color,
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: _pages[_currentPage].color.withOpacity(0.3),
+                            color: pages[_currentPage].color.withOpacity(0.3),
                             blurRadius: 15,
                             offset: const Offset(0, 8),
                           ),
@@ -137,7 +138,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                            _currentPage == pages.length - 1 ? tr.onboardingGetStarted : tr.onboardingNext,
                             style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

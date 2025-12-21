@@ -15,7 +15,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
 
       'Lunch': [
         'makan siang', 'lunch', 'siang', 'break', 
-        'jam makan siang', 'nasi padang', 'warteg siang',
+        'jam makan siang', 'nasi siang', 'warteg siang',
         'makan di kantor', 'takeaway siang',
         'lunch break', 'noon meal', 'having lunch'
       ],
@@ -34,7 +34,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'pecel lele', 'ayam penyet', 'bubur ayam', 'warteg',
         'kaki lima', 'angkringan', 'rm', 'rm padang', 
         'ayam geprek', 'ayam bakar', 'ikan bakar',
-        'lalapan', 'mie aceh', 'pempek',
+        'lalapan', 'mie aceh', 'pempek', 'nasi padang','nasi ayam', 'nasi rames'
 
         // Restoran / resto modern / mall
         'padang', 'rendang', 'betutu', 'gudeg', 'rawon', 'coto',
@@ -77,7 +77,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'supermarket', 'pasar', 'indomaret', 'alfamart',
         'superindo', 'lottemart', 'hypermart', 'fresh market',
         'grocery', 'groceries', 'belanja dapur', 'bahan makanan', 'belanja makanan', 'belanja bahan makanan',
-        'market', 'supermarket', 'convenience store', 'vegetables', 'fruits', 'rice', 'oil'
+        'market', 'supermarket', 'convenience store', 'vegetables', 'fruits', 'rice', 'oil', 'galon', 'galon air', 'galon air minum', 'galon akua', 'akua', 'le mineral'
       ],
 
       'Delivery': [

@@ -2089,4 +2089,339 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get exitAppConfirm => 'क्या आप वाकई ऐप से बाहर निकलना चाहते हैं?';
+
+  @override
+  String get onboardingSavingsTitle => 'बचत';
+
+  @override
+  String get onboardingSavingsSubtitle => 'अपनी संपत्ति बढ़ाएं';
+
+  @override
+  String get onboardingSavingsDesc =>
+      'आपका पैसा कहां जाता है, इसे ट्रैक करके और अनावश्यक खर्चों में कटौती करके अधिक प्रभावी ढंग से बचत करना शुरू करें।';
+
+  @override
+  String get onboardingStatsTitle => 'सांख्यिकी';
+
+  @override
+  String get onboardingStatsSubtitle => 'गहरी अंतर्दृष्टि प्राप्त करें';
+
+  @override
+  String get onboardingStatsDesc =>
+      'स्मार्ट वित्तीय निर्णय लेने के लिए विस्तृत रिपोर्ट के साथ अपनी आय और व्यय के रुझान का विश्लेषण करें।';
+
+  @override
+  String get onboardingMgmtTitle => 'प्रबंधन';
+
+  @override
+  String get onboardingMgmtSubtitle => 'पूर्ण नियंत्रण';
+
+  @override
+  String get onboardingMgmtDesc =>
+      'अपने सभी वॉलेट, खाते और बजट को एक सरल और सहज स्थान पर प्रबंधित करें।';
+
+  @override
+  String get onboardingNext => 'अगला';
+
+  @override
+  String get onboardingGetStarted => 'शुरू करें';
+
+  @override
+  String get onboardingLanguageDesc =>
+      'एप्लिकेशन इंटरफ़ेस के लिए अपनी पसंदीदा भाषा चुनें।';
+
+  @override
+  String get onboardingVoiceTitle => 'वॉयस कमांड';
+
+  @override
+  String get onboardingVoiceDesc =>
+      'वॉयस कमांड और त्वरित रिकॉर्डिंग के लिए आप जिस भाषा का उपयोग करेंगे, उसका चयन करें।';
+
+  @override
+  String get onboardingNotifTitle => 'स्मार्ट नोटिफिकेशन';
+
+  @override
+  String get onboardingNotifDesc =>
+      'अपने ट्रैकिंग स्ट्रीक को बनाए रखने के लिए दैनिक रिमाइंडर सक्षम करें।';
+
+  @override
+  String get onboardingProfileTitle => 'आपकी प्रोफाइल';
+
+  @override
+  String get onboardingProfileDesc =>
+      'हमें अपने बारे में थोड़ा बताएं। यह जानकारी आपकी प्रोफाइल में प्रदर्शित की जाएगी।';
+
+  @override
+  String get onboardingWalletTitle => 'पहला वॉलेट';
+
+  @override
+  String get onboardingWalletDesc =>
+      'आइए अपना मुख्य कैश वॉलेट सेटअप करें। अपने पास मौजूद वर्तमान नकद दर्ज करें।';
+
+  @override
+  String get onboardingDailyReminders => 'दैनिक रिमाइंडर';
+
+  @override
+  String get onboardingRemindersSubtitle =>
+      'अपने खर्चों को रिकॉर्ड करने के लिए वैध रिमाइंडर प्राप्त करें।';
+
+  @override
+  String get onboardingFullname => 'पूरा नाम';
+
+  @override
+  String get onboardingNameHint => 'जैसे जॉन डो';
+
+  @override
+  String get onboardingEmail => 'ईमेल (वैकल्पिक)';
+
+  @override
+  String get onboardingEmailHint => 'user@example.com';
+
+  @override
+  String get onboardingBalanceHint => 'जैसे 500000';
+
+  @override
+  String get onboardingWalletGuide =>
+      'आप बाद में वॉलेट मेनू में और वॉलेट (बैंक, ई-वॉलेट) जोड़ सकते हैं।';
+
+  @override
+  String get badgeFirstStepTitle => 'पहला कदम';
+
+  @override
+  String get badgeFirstStepDesc => 'अपना पहला लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeWeekWarriorTitle => '7 दिन का सिलसिला';
+
+  @override
+  String get badgeWeekWarriorDesc => 'लगातार 7 दिनों तक खर्च ट्रैक करें';
+
+  @override
+  String get badgeConsistentSaverTitle => 'अनुशासन';
+
+  @override
+  String get badgeConsistentSaverDesc => 'कुल 30 दिनों के लिए ट्रैक करें';
+
+  @override
+  String get badgeBigSpenderTitle => 'बड़ा खर्च करने वाला';
+
+  @override
+  String get badgeBigSpenderDesc => '100+ लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeSaverTitle => 'बचतकर्ता';
+
+  @override
+  String get badgeSaverDesc => 'व्यय से अधिक आय है';
+
+  @override
+  String get badgeNightOwlTitle => 'रात का उल्लू';
+
+  @override
+  String get badgeNightOwlDesc => 'रात 10 बजे के बाद लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeEarlyBirdTitle => 'जल्दी उठने वाला';
+
+  @override
+  String get badgeEarlyBirdDesc =>
+      'सुबह 5 बजे - 8 बजे के बीच लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeWeekendWarriorTitle => 'सप्ताहांत';
+
+  @override
+  String get badgeWeekendWarriorDesc =>
+      'शनिवार या रविवार को लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeWealthTitle => 'धन';
+
+  @override
+  String get badgeWealthDesc => 'वॉल्यूम में 10,000,000 से अधिक जमा करें';
+
+  @override
+  String get level => 'स्तर';
+
+  @override
+  String get currentStreak => 'वर्तमान सिलसिला';
+
+  @override
+  String get totalActive => 'कुल सक्रिय';
+
+  @override
+  String get achievements => 'उपलब्धियां';
+
+  @override
+  String get days => 'दिन';
+
+  @override
+  String get levelNovice => 'नौसिखिया बचतकर्ता';
+
+  @override
+  String get levelConsistent => 'लगातार बचतकर्ता';
+
+  @override
+  String get levelEnthusiast => 'वित्त उत्साही';
+
+  @override
+  String get badgeFirstLogTitle => 'पहला लॉग';
+
+  @override
+  String get badgeFirstLogDesc => 'अपना सबसे पहला लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeStreak3Title => 'गर्म हो रहा है';
+
+  @override
+  String get badgeStreak3Desc => '3 दिन का दैनिक सिलसिला';
+
+  @override
+  String get badgeStreak7Title => 'आग पर';
+
+  @override
+  String get badgeStreak7Desc => '7 दिन का दैनिक सिलसिला';
+
+  @override
+  String get badgeStreak14Title => 'अजेय';
+
+  @override
+  String get badgeStreak14Desc => '14 दिन का दैनिक सिलसिला';
+
+  @override
+  String get badgeStreak30Title => 'मास्टर';
+
+  @override
+  String get badgeStreak30Desc => '30 दिन का दैनिक सिलसिला';
+
+  @override
+  String get badgeStreak100Title => 'पौराणिक';
+
+  @override
+  String get badgeStreak100Desc => '100 दिन का दैनिक सिलसिला';
+
+  @override
+  String get badgeWeeklyLoggerTitle => 'साप्ताहिक लॉगर';
+
+  @override
+  String get badgeWeeklyLoggerDesc =>
+      'एक महीने के लिए हर हफ्ते कम से कम एक लेनदेन इनपुट करें';
+
+  @override
+  String get badgeFirstBudgetTitle => 'पहला बजट';
+
+  @override
+  String get badgeFirstBudgetDesc => 'अपना पहला बजट बनाएं';
+
+  @override
+  String get badgeUnderBudgetTitle => 'बजट प्रो';
+
+  @override
+  String get badgeUnderBudgetDesc => 'महीने के लिए अपने बजट से कम खर्च करें';
+
+  @override
+  String get badgeBudgetMasterTitle => 'बजट मास्टर';
+
+  @override
+  String get badgeBudgetMasterDesc => 'लगातार 3 महीने बजट के भीतर रहें';
+
+  @override
+  String get badgeMultiBudgeterTitle => 'रणनीतिकार';
+
+  @override
+  String get badgeMultiBudgeterDesc => '3 से अधिक श्रेणियों के लिए बजट बनाएं';
+
+  @override
+  String get badgeFirstGoalTitle => 'सपने देखने वाला';
+
+  @override
+  String get badgeFirstGoalDesc => 'अपना पहला बचत लक्ष्य बनाएं';
+
+  @override
+  String get badgeGoalCompletedTitle => 'प्राप्तकर्ता';
+
+  @override
+  String get badgeGoalCompletedDesc => 'एक बचत लक्ष्य पूरा करें (100%)';
+
+  @override
+  String get badgeGoalSprintTitle => 'धावक';
+
+  @override
+  String get badgeGoalSprintDesc => 'समय सीमा से पहले बचत लक्ष्य तक पहुँचें';
+
+  @override
+  String get badgeMidnightCheckoutTitle => 'आधी रात चेकआउट';
+
+  @override
+  String get badgeMidnightCheckoutDesc => 'आधी रात के बाद खरीदारी (एंटी-बैज)';
+
+  @override
+  String get badgeImpulseKingTitle => 'आवेग राजा';
+
+  @override
+  String get badgeImpulseKingDesc => 'एक दिन में 5+ लेनदेन करना (एंटी-बैज)';
+
+  @override
+  String get badgeExplorerTitle => 'खोजकर्ता';
+
+  @override
+  String get badgeExplorerDesc => '5 अलग-अलग श्रेणियों में लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeLunchTimeTitle => 'दोपहर का भोजन';
+
+  @override
+  String get badgeLunchTimeDesc =>
+      'सुबह 11 बजे - दोपहर 1 बजे के बीच लेनदेन रिकॉर्ड करें';
+
+  @override
+  String get badgeBigSaverTitle => 'बड़ा बचतकर्ता';
+
+  @override
+  String get badgeBigSaverDesc => 'कुल आय में 5,000,000 जमा करें';
+
+  @override
+  String get badgeGiverTitle => 'उदार';
+
+  @override
+  String get badgeGiverDesc => '5+ हस्तांतरण लेनदेन करें';
+
+  @override
+  String get badgeThriftyTitle => 'किफायती';
+
+  @override
+  String get badgeThriftyDesc => 'मासिक व्यय आय का 50% से कम है';
+
+  @override
+  String get badgeWeekendBingeTitle => 'सप्ताहांत बिंज';
+
+  @override
+  String get badgeWeekendBingeDesc => 'एक सप्ताहांत पर 5+ लेनदेन करें';
+
+  @override
+  String get levelRookie => 'नौसिखिया';
+
+  @override
+  String get levelBudgetWarrior => 'बजट योद्धा';
+
+  @override
+  String get levelMoneyNinja => 'मनी निंजा';
+
+  @override
+  String get levelFinanceSensei => 'वित्त सेंसई';
+
+  @override
+  String get levelWealthTycoon => 'धन टाइकून';
+
+  @override
+  String get badgeSectionConsistency => 'स्थिरता और सिलसिला';
+
+  @override
+  String get badgeSectionBudget => 'बजट प्रबंधन';
+
+  @override
+  String get badgeSectionSaving => 'बचत लक्ष्य';
+
+  @override
+  String get badgeSectionMisc => 'मज़ा और विविध';
 }

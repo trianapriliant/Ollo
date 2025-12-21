@@ -4065,8 +4065,650 @@ abstract class AppLocalizations {
   /// No description provided for @exitAppConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to exit the application?'**
+  /// **'Are you sure you want to exit the app?'**
   String get exitAppConfirm;
+
+  /// No description provided for @onboardingSavingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get onboardingSavingsTitle;
+
+  /// No description provided for @onboardingSavingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grow Your Wealth'**
+  String get onboardingSavingsSubtitle;
+
+  /// No description provided for @onboardingSavingsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Start saving more effectively by tracking where your money goes and cutting unnecessary expenses.'**
+  String get onboardingSavingsDesc;
+
+  /// No description provided for @onboardingStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get onboardingStatsTitle;
+
+  /// No description provided for @onboardingStatsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain Deep Insights'**
+  String get onboardingStatsSubtitle;
+
+  /// No description provided for @onboardingStatsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze your income and expense trends with detailed reports to make smarter financial decisions.'**
+  String get onboardingStatsDesc;
+
+  /// No description provided for @onboardingMgmtTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Management'**
+  String get onboardingMgmtTitle;
+
+  /// No description provided for @onboardingMgmtSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Control'**
+  String get onboardingMgmtSubtitle;
+
+  /// No description provided for @onboardingMgmtDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage all your wallets, accounts, and budgets in one simple and intuitive place.'**
+  String get onboardingMgmtDesc;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @onboardingLanguageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language for the application interface.'**
+  String get onboardingLanguageDesc;
+
+  /// No description provided for @onboardingVoiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Command'**
+  String get onboardingVoiceTitle;
+
+  /// No description provided for @onboardingVoiceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the language you will use for voice commands and quick recording.'**
+  String get onboardingVoiceDesc;
+
+  /// No description provided for @onboardingNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Notifications'**
+  String get onboardingNotifTitle;
+
+  /// No description provided for @onboardingNotifDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable daily reminders to keep your tracking on streak.'**
+  String get onboardingNotifDesc;
+
+  /// No description provided for @onboardingProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Profile'**
+  String get onboardingProfileTitle;
+
+  /// No description provided for @onboardingProfileDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a bit about yourself. This information will be displayed in your profile.'**
+  String get onboardingProfileDesc;
+
+  /// No description provided for @onboardingWalletTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Wallet'**
+  String get onboardingWalletTitle;
+
+  /// No description provided for @onboardingWalletDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s setup your main cash wallet. Enter your current cash on hand.'**
+  String get onboardingWalletDesc;
+
+  /// No description provided for @onboardingDailyReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Reminders'**
+  String get onboardingDailyReminders;
+
+  /// No description provided for @onboardingRemindersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get valid reminders to record your expenses.'**
+  String get onboardingRemindersSubtitle;
+
+  /// No description provided for @onboardingFullname.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get onboardingFullname;
+
+  /// No description provided for @onboardingNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. John Doe'**
+  String get onboardingNameHint;
+
+  /// No description provided for @onboardingEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email (Optional)'**
+  String get onboardingEmail;
+
+  /// No description provided for @onboardingEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'user@example.com'**
+  String get onboardingEmailHint;
+
+  /// No description provided for @onboardingBalanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 500000'**
+  String get onboardingBalanceHint;
+
+  /// No description provided for @onboardingWalletGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add more wallets (Bank, E-Wallet) later in the Wallet menu.'**
+  String get onboardingWalletGuide;
+
+  /// No description provided for @badgeFirstStepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Step'**
+  String get badgeFirstStepTitle;
+
+  /// No description provided for @badgeFirstStepDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record your first transaction'**
+  String get badgeFirstStepDesc;
+
+  /// No description provided for @badgeWeekWarriorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'7 Day Streak'**
+  String get badgeWeekWarriorTitle;
+
+  /// No description provided for @badgeWeekWarriorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Track expenses for 7 days in a row'**
+  String get badgeWeekWarriorDesc;
+
+  /// No description provided for @badgeConsistentSaverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discipline'**
+  String get badgeConsistentSaverTitle;
+
+  /// No description provided for @badgeConsistentSaverDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Track for 30 total days'**
+  String get badgeConsistentSaverDesc;
+
+  /// No description provided for @badgeBigSpenderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Big Spender'**
+  String get badgeBigSpenderTitle;
+
+  /// No description provided for @badgeBigSpenderDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record 100+ transactions'**
+  String get badgeBigSpenderDesc;
+
+  /// No description provided for @badgeSaverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saver'**
+  String get badgeSaverTitle;
+
+  /// No description provided for @badgeSaverDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Have more Income than Expense'**
+  String get badgeSaverDesc;
+
+  /// No description provided for @badgeNightOwlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Night Owl'**
+  String get badgeNightOwlTitle;
+
+  /// No description provided for @badgeNightOwlDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a transaction after 10 PM'**
+  String get badgeNightOwlDesc;
+
+  /// No description provided for @badgeEarlyBirdTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Bird'**
+  String get badgeEarlyBirdTitle;
+
+  /// No description provided for @badgeEarlyBirdDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a transaction between 5 AM - 8 AM'**
+  String get badgeEarlyBirdDesc;
+
+  /// No description provided for @badgeWeekendWarriorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekend'**
+  String get badgeWeekendWarriorTitle;
+
+  /// No description provided for @badgeWeekendWarriorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a transaction on Saturday or Sunday'**
+  String get badgeWeekendWarriorDesc;
+
+  /// No description provided for @badgeWealthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth'**
+  String get badgeWealthTitle;
+
+  /// No description provided for @badgeWealthDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Accumulate over 10,000,000 in volume'**
+  String get badgeWealthDesc;
+
+  /// No description provided for @level.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get level;
+
+  /// No description provided for @currentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get currentStreak;
+
+  /// No description provided for @totalActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Active'**
+  String get totalActive;
+
+  /// No description provided for @achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievements;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get days;
+
+  /// No description provided for @levelNovice.
+  ///
+  /// In en, this message translates to:
+  /// **'Novice Saver'**
+  String get levelNovice;
+
+  /// No description provided for @levelConsistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent Saver'**
+  String get levelConsistent;
+
+  /// No description provided for @levelEnthusiast.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance Enthusiast'**
+  String get levelEnthusiast;
+
+  /// No description provided for @badgeFirstLogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Log'**
+  String get badgeFirstLogTitle;
+
+  /// No description provided for @badgeFirstLogDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record your very first transaction'**
+  String get badgeFirstLogDesc;
+
+  /// No description provided for @badgeStreak3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Heating Up'**
+  String get badgeStreak3Title;
+
+  /// No description provided for @badgeStreak3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Day Daily Streak'**
+  String get badgeStreak3Desc;
+
+  /// No description provided for @badgeStreak7Title.
+  ///
+  /// In en, this message translates to:
+  /// **'On Fire'**
+  String get badgeStreak7Title;
+
+  /// No description provided for @badgeStreak7Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'7 Day Daily Streak'**
+  String get badgeStreak7Desc;
+
+  /// No description provided for @badgeStreak14Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Unstoppable'**
+  String get badgeStreak14Title;
+
+  /// No description provided for @badgeStreak14Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'14 Day Daily Streak'**
+  String get badgeStreak14Desc;
+
+  /// No description provided for @badgeStreak30Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discipline Master'**
+  String get badgeStreak30Title;
+
+  /// No description provided for @badgeStreak30Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'30 Day Daily Streak'**
+  String get badgeStreak30Desc;
+
+  /// No description provided for @badgeStreak100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Legendary'**
+  String get badgeStreak100Title;
+
+  /// No description provided for @badgeStreak100Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'100 Day Daily Streak'**
+  String get badgeStreak100Desc;
+
+  /// No description provided for @badgeWeeklyLoggerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Logger'**
+  String get badgeWeeklyLoggerTitle;
+
+  /// No description provided for @badgeWeeklyLoggerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Input at least one transaction every week for a month'**
+  String get badgeWeeklyLoggerDesc;
+
+  /// No description provided for @badgeFirstBudgetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First Budget'**
+  String get badgeFirstBudgetTitle;
+
+  /// No description provided for @badgeFirstBudgetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first budget'**
+  String get badgeFirstBudgetDesc;
+
+  /// No description provided for @badgeUnderBudgetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Pro'**
+  String get badgeUnderBudgetTitle;
+
+  /// No description provided for @badgeUnderBudgetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend less than your budget for the month'**
+  String get badgeUnderBudgetDesc;
+
+  /// No description provided for @badgeBudgetMasterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Master'**
+  String get badgeBudgetMasterTitle;
+
+  /// No description provided for @badgeBudgetMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay under budget for 3 consecutive months'**
+  String get badgeBudgetMasterDesc;
+
+  /// No description provided for @badgeMultiBudgeterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategist'**
+  String get badgeMultiBudgeterTitle;
+
+  /// No description provided for @badgeMultiBudgeterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create budgets for more than 3 categories'**
+  String get badgeMultiBudgeterDesc;
+
+  /// No description provided for @badgeFirstGoalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dreamer'**
+  String get badgeFirstGoalTitle;
+
+  /// No description provided for @badgeFirstGoalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first saving goal'**
+  String get badgeFirstGoalDesc;
+
+  /// No description provided for @badgeGoalCompletedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Achiever'**
+  String get badgeGoalCompletedTitle;
+
+  /// No description provided for @badgeGoalCompletedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a saving goal (100%)'**
+  String get badgeGoalCompletedDesc;
+
+  /// No description provided for @badgeGoalSprintTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sprinter'**
+  String get badgeGoalSprintTitle;
+
+  /// No description provided for @badgeGoalSprintDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach a saving goal before the deadline'**
+  String get badgeGoalSprintDesc;
+
+  /// No description provided for @badgeMidnightCheckoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight Checkout'**
+  String get badgeMidnightCheckoutTitle;
+
+  /// No description provided for @badgeMidnightCheckoutDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping after midnight (Anti-Badge)'**
+  String get badgeMidnightCheckoutDesc;
+
+  /// No description provided for @badgeImpulseKingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Impulse King'**
+  String get badgeImpulseKingTitle;
+
+  /// No description provided for @badgeImpulseKingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Making 5+ transactions in one day (Anti-Badge)'**
+  String get badgeImpulseKingDesc;
+
+  /// No description provided for @badgeExplorerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explorer'**
+  String get badgeExplorerTitle;
+
+  /// No description provided for @badgeExplorerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record transactions in 5 different categories'**
+  String get badgeExplorerDesc;
+
+  /// No description provided for @badgeLunchTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch Break'**
+  String get badgeLunchTimeTitle;
+
+  /// No description provided for @badgeLunchTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a transaction between 11 AM - 1 PM'**
+  String get badgeLunchTimeDesc;
+
+  /// No description provided for @badgeBigSaverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Big Saver'**
+  String get badgeBigSaverTitle;
+
+  /// No description provided for @badgeBigSaverDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Accumulate 5,000,000 in total Income'**
+  String get badgeBigSaverDesc;
+
+  /// No description provided for @badgeGiverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Generous'**
+  String get badgeGiverTitle;
+
+  /// No description provided for @badgeGiverDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Make 5+ Transfer transactions'**
+  String get badgeGiverDesc;
+
+  /// No description provided for @badgeThriftyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thrifty'**
+  String get badgeThriftyTitle;
+
+  /// No description provided for @badgeThriftyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Expense is less than 50% of Income'**
+  String get badgeThriftyDesc;
+
+  /// No description provided for @badgeWeekendBingeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekend Binge'**
+  String get badgeWeekendBingeTitle;
+
+  /// No description provided for @badgeWeekendBingeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Make 5+ transactions on a weekend'**
+  String get badgeWeekendBingeDesc;
+
+  /// No description provided for @levelRookie.
+  ///
+  /// In en, this message translates to:
+  /// **'Rookie Saver'**
+  String get levelRookie;
+
+  /// No description provided for @levelBudgetWarrior.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Warrior'**
+  String get levelBudgetWarrior;
+
+  /// No description provided for @levelMoneyNinja.
+  ///
+  /// In en, this message translates to:
+  /// **'Money Ninja'**
+  String get levelMoneyNinja;
+
+  /// No description provided for @levelFinanceSensei.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Sensei'**
+  String get levelFinanceSensei;
+
+  /// No description provided for @levelWealthTycoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth Tycoon'**
+  String get levelWealthTycoon;
+
+  /// No description provided for @badgeSectionConsistency.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency & Streak'**
+  String get badgeSectionConsistency;
+
+  /// No description provided for @badgeSectionBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgeting'**
+  String get badgeSectionBudget;
+
+  /// No description provided for @badgeSectionSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Goals'**
+  String get badgeSectionSaving;
+
+  /// No description provided for @badgeSectionMisc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fun & Misc'**
+  String get badgeSectionMisc;
 }
 
 class _AppLocalizationsDelegate

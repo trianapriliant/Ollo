@@ -2082,4 +2082,328 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get exitAppConfirm => '앱을 종료하시겠습니까?';
+
+  @override
+  String get onboardingSavingsTitle => '저축';
+
+  @override
+  String get onboardingSavingsSubtitle => '자산을 늘리세요';
+
+  @override
+  String get onboardingSavingsDesc =>
+      '돈이 어디로 가는지 추적하고 불필요한 지출을 줄여 더 효과적으로 저축을 시작하세요.';
+
+  @override
+  String get onboardingStatsTitle => '통계';
+
+  @override
+  String get onboardingStatsSubtitle => '깊은 통찰력';
+
+  @override
+  String get onboardingStatsDesc =>
+      '더 현명한 재정 결정을 내리기 위해 상세한 보고서로 수입 및 지출 추세를 분석하세요.';
+
+  @override
+  String get onboardingMgmtTitle => '관리';
+
+  @override
+  String get onboardingMgmtSubtitle => '완벽한 통제';
+
+  @override
+  String get onboardingMgmtDesc => '모든 지갑, 계좌 및 예산을 간단하고 직관적인 한 곳에서 관리하세요.';
+
+  @override
+  String get onboardingNext => '다음';
+
+  @override
+  String get onboardingGetStarted => '시작하기';
+
+  @override
+  String get onboardingLanguageDesc => '애플리케이션 인터페이스의 선호 언어를 선택하세요.';
+
+  @override
+  String get onboardingVoiceTitle => '음성 명령';
+
+  @override
+  String get onboardingVoiceDesc => '음성 명령 및 빠른 기록에 사용할 언어를 선택하세요.';
+
+  @override
+  String get onboardingNotifTitle => '스마트 알림';
+
+  @override
+  String get onboardingNotifDesc => '매일 알림을 활성화하여 기록 연속성을 유지하세요.';
+
+  @override
+  String get onboardingProfileTitle => '프로필';
+
+  @override
+  String get onboardingProfileDesc => '본인에 대해 조금 알려주세요. 이 정보는 프로필에 표시됩니다.';
+
+  @override
+  String get onboardingWalletTitle => '첫 번째 지갑';
+
+  @override
+  String get onboardingWalletDesc => '주 현금 지갑을 설정합시다. 현재 보유 현금을 입력하세요.';
+
+  @override
+  String get onboardingDailyReminders => '일일 알림';
+
+  @override
+  String get onboardingRemindersSubtitle => '지출 기록을 위한 유용한 알림을 받으세요.';
+
+  @override
+  String get onboardingFullname => '전체 이름';
+
+  @override
+  String get onboardingNameHint => '예: 홍길동';
+
+  @override
+  String get onboardingEmail => '이메일 (선택 사항)';
+
+  @override
+  String get onboardingEmailHint => 'user@example.com';
+
+  @override
+  String get onboardingBalanceHint => '예: 500000';
+
+  @override
+  String get onboardingWalletGuide =>
+      '나중에 지갑 메뉴에서 더 많은 지갑(은행, 전자 지갑)을 추가할 수 있습니다.';
+
+  @override
+  String get badgeFirstStepTitle => '첫 걸음';
+
+  @override
+  String get badgeFirstStepDesc => '첫 거래 기록하기';
+
+  @override
+  String get badgeWeekWarriorTitle => '7일 연속';
+
+  @override
+  String get badgeWeekWarriorDesc => '7일 연속으로 지출 추적하기';
+
+  @override
+  String get badgeConsistentSaverTitle => '규율';
+
+  @override
+  String get badgeConsistentSaverDesc => '총 30일 동안 추적하기';
+
+  @override
+  String get badgeBigSpenderTitle => '큰 손';
+
+  @override
+  String get badgeBigSpenderDesc => '100건 이상의 거래 기록하기';
+
+  @override
+  String get badgeSaverTitle => '저축가';
+
+  @override
+  String get badgeSaverDesc => '지출보다 수입이 많음';
+
+  @override
+  String get badgeNightOwlTitle => '올빼미';
+
+  @override
+  String get badgeNightOwlDesc => '오후 10시 이후에 거래 기록하기';
+
+  @override
+  String get badgeEarlyBirdTitle => '얼리 버드';
+
+  @override
+  String get badgeEarlyBirdDesc => '오전 5시 - 오전 8시 사이에 거래 기록하기';
+
+  @override
+  String get badgeWeekendWarriorTitle => '주말';
+
+  @override
+  String get badgeWeekendWarriorDesc => '토요일 또는 일요일에 거래 기록하기';
+
+  @override
+  String get badgeWealthTitle => '부';
+
+  @override
+  String get badgeWealthDesc => '10,000,000 이상의 거래량 축적';
+
+  @override
+  String get level => '레벨';
+
+  @override
+  String get currentStreak => '현재 연속';
+
+  @override
+  String get totalActive => '총 활동';
+
+  @override
+  String get achievements => '업적';
+
+  @override
+  String get days => '일';
+
+  @override
+  String get levelNovice => '초보 저축가';
+
+  @override
+  String get levelConsistent => '꾸준한 저축가';
+
+  @override
+  String get levelEnthusiast => '금융 애호가';
+
+  @override
+  String get badgeFirstLogTitle => '첫 로그';
+
+  @override
+  String get badgeFirstLogDesc => '가장 첫 번째 거래를 기록하세요';
+
+  @override
+  String get badgeStreak3Title => '워밍업';
+
+  @override
+  String get badgeStreak3Desc => '3일 일일 연속';
+
+  @override
+  String get badgeStreak7Title => '불타오르는 중';
+
+  @override
+  String get badgeStreak7Desc => '7일 일일 연속';
+
+  @override
+  String get badgeStreak14Title => '거침없는';
+
+  @override
+  String get badgeStreak14Desc => '14일 일일 연속';
+
+  @override
+  String get badgeStreak30Title => '마스터';
+
+  @override
+  String get badgeStreak30Desc => '30일 일일 연속';
+
+  @override
+  String get badgeStreak100Title => '전설적인';
+
+  @override
+  String get badgeStreak100Desc => '100일 일일 연속';
+
+  @override
+  String get badgeWeeklyLoggerTitle => '주간 기록자';
+
+  @override
+  String get badgeWeeklyLoggerDesc => '한 달 동안 매주 최소 하나의 거래 입력';
+
+  @override
+  String get badgeFirstBudgetTitle => '첫 예산';
+
+  @override
+  String get badgeFirstBudgetDesc => '첫 예산 만들기';
+
+  @override
+  String get badgeUnderBudgetTitle => '예산 프로';
+
+  @override
+  String get badgeUnderBudgetDesc => '이번 달 예산보다 적게 지출';
+
+  @override
+  String get badgeBudgetMasterTitle => '예산 마스터';
+
+  @override
+  String get badgeBudgetMasterDesc => '3개월 연속 예산 미만 유지';
+
+  @override
+  String get badgeMultiBudgeterTitle => '전략가';
+
+  @override
+  String get badgeMultiBudgeterDesc => '3개 이상의 카테고리에 대한 예산 만들기';
+
+  @override
+  String get badgeFirstGoalTitle => '꿈꾸는 자';
+
+  @override
+  String get badgeFirstGoalDesc => '첫 저축 목표 만들기';
+
+  @override
+  String get badgeGoalCompletedTitle => '성취자';
+
+  @override
+  String get badgeGoalCompletedDesc => '저축 목표 달성 (100%)';
+
+  @override
+  String get badgeGoalSprintTitle => '스프린터';
+
+  @override
+  String get badgeGoalSprintDesc => '마감일 전에 저축 목표 달성';
+
+  @override
+  String get badgeMidnightCheckoutTitle => '자정 체크아웃';
+
+  @override
+  String get badgeMidnightCheckoutDesc => '자정 이후 쇼핑 (안티 배지)';
+
+  @override
+  String get badgeImpulseKingTitle => '충동 구매왕';
+
+  @override
+  String get badgeImpulseKingDesc => '하루에 5건 이상의 거래 (안티 배지)';
+
+  @override
+  String get badgeExplorerTitle => '탐험가';
+
+  @override
+  String get badgeExplorerDesc => '5개의 다른 카테고리에서 거래 기록';
+
+  @override
+  String get badgeLunchTimeTitle => '점심 시간';
+
+  @override
+  String get badgeLunchTimeDesc => '오전 11시 - 오후 1시 사이에 거래 기록';
+
+  @override
+  String get badgeBigSaverTitle => '큰 저축가';
+
+  @override
+  String get badgeBigSaverDesc => '총 수입 5,000,000 축적';
+
+  @override
+  String get badgeGiverTitle => '관대한';
+
+  @override
+  String get badgeGiverDesc => '5건 이상의 이체 거래 수행';
+
+  @override
+  String get badgeThriftyTitle => '검소한';
+
+  @override
+  String get badgeThriftyDesc => '월 지출이 수입의 50% 미만';
+
+  @override
+  String get badgeWeekendBingeTitle => '주말 폭주';
+
+  @override
+  String get badgeWeekendBingeDesc => '주말에 5건 이상의 거래 수행';
+
+  @override
+  String get levelRookie => '루키';
+
+  @override
+  String get levelBudgetWarrior => '예산 전사';
+
+  @override
+  String get levelMoneyNinja => '머니 닌자';
+
+  @override
+  String get levelFinanceSensei => '금융 센세이';
+
+  @override
+  String get levelWealthTycoon => '부의 거물';
+
+  @override
+  String get badgeSectionConsistency => '일관성 및 연속';
+
+  @override
+  String get badgeSectionBudget => '예산 관리';
+
+  @override
+  String get badgeSectionSaving => '저축 목표';
+
+  @override
+  String get badgeSectionMisc => '재미 및 기타';
 }

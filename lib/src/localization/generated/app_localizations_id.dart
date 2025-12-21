@@ -2109,8 +2109,346 @@ class AppLocalizationsId extends AppLocalizations {
   String get selectWallet => 'Pilih Dompet';
 
   @override
-  String get exitAppTitle => 'Keluar Aplikasi';
+  String get exitAppTitle => 'Exit App';
 
   @override
   String get exitAppConfirm => 'Apakah Anda yakin ingin keluar dari aplikasi?';
+
+  @override
+  String get onboardingSavingsTitle => 'Tabungan';
+
+  @override
+  String get onboardingSavingsSubtitle => 'Kembangkan Kekayaan';
+
+  @override
+  String get onboardingSavingsDesc =>
+      'Mulai menabung lebih efektif dengan melacak kemana uang Anda pergi dan memangkas pengeluaran yang tidak perlu.';
+
+  @override
+  String get onboardingStatsTitle => 'Statistik';
+
+  @override
+  String get onboardingStatsSubtitle => 'Wawasan Mendalam';
+
+  @override
+  String get onboardingStatsDesc =>
+      'Analisis tren pemasukan dan pengeluaran Anda dengan laporan terperinci untuk keputusan finansial yang lebih cerdas.';
+
+  @override
+  String get onboardingMgmtTitle => 'Manajemen';
+
+  @override
+  String get onboardingMgmtSubtitle => 'Kendali Penuh';
+
+  @override
+  String get onboardingMgmtDesc =>
+      'Kelola semua dompet, akun, dan anggaran Anda di satu tempat yang sederhana dan intuitif.';
+
+  @override
+  String get onboardingNext => 'Lanjut';
+
+  @override
+  String get onboardingGetStarted => 'Mulai Sekarang';
+
+  @override
+  String get onboardingLanguageDesc =>
+      'Pilih bahasa utama untuk antarmuka aplikasi.';
+
+  @override
+  String get onboardingVoiceTitle => 'Perintah Suara';
+
+  @override
+  String get onboardingVoiceDesc =>
+      'Pilih bahasa yang akan digunakan untuk perintah suara dan pencatatan cepat.';
+
+  @override
+  String get onboardingNotifTitle => 'Notifikasi Pintar';
+
+  @override
+  String get onboardingNotifDesc =>
+      'Aktifkan pengingat harian agar pencatatan keuanganmu tetap rutin.';
+
+  @override
+  String get onboardingProfileTitle => 'Profil Kamu';
+
+  @override
+  String get onboardingProfileDesc =>
+      'Ceritakan sedikit tentang dirimu. Informasi ini akan ditampilkan di profilmu.';
+
+  @override
+  String get onboardingWalletTitle => 'Dompet Pertama';
+
+  @override
+  String get onboardingWalletDesc =>
+      'Mari atur dompet tunai utamamu. Masukkan jumlah uang tunai yang kamu pegang saat ini.';
+
+  @override
+  String get onboardingDailyReminders => 'Pengingat Harian';
+
+  @override
+  String get onboardingRemindersSubtitle =>
+      'Dapatkan pengingat untuk mencatat pengeluaranmu.';
+
+  @override
+  String get onboardingFullname => 'Nama Lengkap';
+
+  @override
+  String get onboardingNameHint => 'cth. Budi Santoso';
+
+  @override
+  String get onboardingEmail => 'Email (Opsional)';
+
+  @override
+  String get onboardingEmailHint => 'user@example.com';
+
+  @override
+  String get onboardingBalanceHint => 'cth. 500000';
+
+  @override
+  String get onboardingWalletGuide =>
+      'Kamu bisa menambah dompet lain (Bank, E-Wallet) nanti di menu Dompet.';
+
+  @override
+  String get badgeFirstStepTitle => 'Langkah Awal';
+
+  @override
+  String get badgeFirstStepDesc => 'Catat transaksi pertamamu';
+
+  @override
+  String get badgeWeekWarriorTitle => '7 Hari Streak';
+
+  @override
+  String get badgeWeekWarriorDesc => 'Catat pengeluaran 7 hari berturut-turut';
+
+  @override
+  String get badgeConsistentSaverTitle => 'Disiplin';
+
+  @override
+  String get badgeConsistentSaverDesc => 'Catat selama 30 hari total';
+
+  @override
+  String get badgeBigSpenderTitle => 'Sultan';
+
+  @override
+  String get badgeBigSpenderDesc => 'Catat lebih dari 100 transaksi';
+
+  @override
+  String get badgeSaverTitle => 'Hemat';
+
+  @override
+  String get badgeSaverDesc => 'Pemasukan lebih besar dari Pengeluaran';
+
+  @override
+  String get badgeNightOwlTitle => 'Kalong';
+
+  @override
+  String get badgeNightOwlDesc => 'Catat transaksi di atas jam 10 malam';
+
+  @override
+  String get badgeEarlyBirdTitle => 'Rajin';
+
+  @override
+  String get badgeEarlyBirdDesc => 'Catat transaksi antara jam 5 - 8 pagi';
+
+  @override
+  String get badgeWeekendWarriorTitle => 'Akhir Pekan';
+
+  @override
+  String get badgeWeekendWarriorDesc =>
+      'Catat transaksi di hari Sabtu atau Minggu';
+
+  @override
+  String get badgeWealthTitle => 'Tajir';
+
+  @override
+  String get badgeWealthDesc => 'Akumulasi volume transaksi lebih dari 10 Juta';
+
+  @override
+  String get level => 'Level';
+
+  @override
+  String get currentStreak => 'Streak Saat Ini';
+
+  @override
+  String get totalActive => 'Total Aktif';
+
+  @override
+  String get achievements => 'Pencapaian';
+
+  @override
+  String get days => 'Hari';
+
+  @override
+  String get levelNovice => 'Penabung Junior';
+
+  @override
+  String get levelConsistent => 'Penabung Konsisten';
+
+  @override
+  String get levelEnthusiast => 'Antusias Finansial';
+
+  @override
+  String get badgeFirstLogTitle => 'Catatan Pertama';
+
+  @override
+  String get badgeFirstLogDesc => 'Catat transaksi pertamamu';
+
+  @override
+  String get badgeStreak3Title => 'Pemanasan';
+
+  @override
+  String get badgeStreak3Desc => 'Streak Harian 3 Hari';
+
+  @override
+  String get badgeStreak7Title => 'Membara';
+
+  @override
+  String get badgeStreak7Desc => 'Streak Harian 7 Hari';
+
+  @override
+  String get badgeStreak14Title => 'Tak Terhentikan';
+
+  @override
+  String get badgeStreak14Desc => 'Streak Harian 14 Hari';
+
+  @override
+  String get badgeStreak30Title => 'Master Disiplin';
+
+  @override
+  String get badgeStreak30Desc => 'Streak Harian 30 Hari';
+
+  @override
+  String get badgeStreak100Title => 'Legendaris';
+
+  @override
+  String get badgeStreak100Desc => 'Streak Harian 100 Hari';
+
+  @override
+  String get badgeWeeklyLoggerTitle => 'Pencatat Mingguan';
+
+  @override
+  String get badgeWeeklyLoggerDesc =>
+      'Catat transaksi tiap minggu selama sebulan';
+
+  @override
+  String get badgeFirstBudgetTitle => 'Anggaran Pertama';
+
+  @override
+  String get badgeFirstBudgetDesc => 'Buat anggaran pertamamu';
+
+  @override
+  String get badgeUnderBudgetTitle => 'Jago Budget';
+
+  @override
+  String get badgeUnderBudgetDesc => 'Pengeluaran di bawah anggaran bulan ini';
+
+  @override
+  String get badgeBudgetMasterTitle => 'Master Budget';
+
+  @override
+  String get badgeBudgetMasterDesc =>
+      'Di bawah anggaran 3 bulan berturut-turut';
+
+  @override
+  String get badgeMultiBudgeterTitle => 'Ahli Strategi';
+
+  @override
+  String get badgeMultiBudgeterDesc =>
+      'Buat anggaran untuk lebih dari 3 kategori';
+
+  @override
+  String get badgeFirstGoalTitle => 'Pemimpi';
+
+  @override
+  String get badgeFirstGoalDesc => 'Buat tujuan tabungan pertamamu';
+
+  @override
+  String get badgeGoalCompletedTitle => 'Pencapai Mimpi';
+
+  @override
+  String get badgeGoalCompletedDesc => 'Selesaikan sebuah saving goal (100%)';
+
+  @override
+  String get badgeGoalSprintTitle => 'Pelari Cepat';
+
+  @override
+  String get badgeGoalSprintDesc => 'Capai goal sebelum tenggat waktu';
+
+  @override
+  String get badgeMidnightCheckoutTitle => 'Belanja Tengah Malam';
+
+  @override
+  String get badgeMidnightCheckoutDesc =>
+      'Belanja lewat tengah malam (Anti-Badge)';
+
+  @override
+  String get badgeImpulseKingTitle => 'Raja Impulsif';
+
+  @override
+  String get badgeImpulseKingDesc =>
+      'Lebih dari 5 transaksi dalam sehari (Anti-Badge)';
+
+  @override
+  String get badgeExplorerTitle => 'Penjelajah';
+
+  @override
+  String get badgeExplorerDesc => 'Catat transaksi di 5 kategori berbeda';
+
+  @override
+  String get badgeLunchTimeTitle => 'Jam Makan Siang';
+
+  @override
+  String get badgeLunchTimeDesc =>
+      'Catat transaksi antara jam 11 siang - 1 siang';
+
+  @override
+  String get badgeBigSaverTitle => 'Juragan Tabungan';
+
+  @override
+  String get badgeBigSaverDesc => 'Akumulasi Pemasukan total 5.000.000';
+
+  @override
+  String get badgeGiverTitle => 'Dermawan';
+
+  @override
+  String get badgeGiverDesc => 'Lakukan 5+ transaksi Transfer';
+
+  @override
+  String get badgeThriftyTitle => 'Irit Banget';
+
+  @override
+  String get badgeThriftyDesc => 'Pengeluaran bulanan di bawah 50% Pemasukan';
+
+  @override
+  String get badgeWeekendBingeTitle => 'Pesta Akhir Pekan';
+
+  @override
+  String get badgeWeekendBingeDesc => 'Lakukan 5+ transaksi di akhir pekan';
+
+  @override
+  String get levelRookie => 'Penabung Pemula';
+
+  @override
+  String get levelBudgetWarrior => 'Pejuang Anggaran';
+
+  @override
+  String get levelMoneyNinja => 'Ninja Keuangan';
+
+  @override
+  String get levelFinanceSensei => 'Sensei Finansial';
+
+  @override
+  String get levelWealthTycoon => 'Taikun Kekayaan';
+
+  @override
+  String get badgeSectionConsistency => 'Konsistensi & Streak';
+
+  @override
+  String get badgeSectionBudget => 'Penganggaran';
+
+  @override
+  String get badgeSectionSaving => 'Tujuan Tabungan';
+
+  @override
+  String get badgeSectionMisc => 'Seru & Lainnya';
 }

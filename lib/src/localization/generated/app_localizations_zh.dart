@@ -2069,4 +2069,325 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get exitAppConfirm => '您确定要退出应用程序吗？';
+
+  @override
+  String get onboardingSavingsTitle => '储蓄';
+
+  @override
+  String get onboardingSavingsSubtitle => '增长您的财富';
+
+  @override
+  String get onboardingSavingsDesc => '通过追踪资金去向并削减不必要的开支，开始更有效地储蓄。';
+
+  @override
+  String get onboardingStatsTitle => '统计';
+
+  @override
+  String get onboardingStatsSubtitle => '获得深入见解';
+
+  @override
+  String get onboardingStatsDesc => '通过详细报告分析您的收入和支出趋势，做出更明智的财务决策。';
+
+  @override
+  String get onboardingMgmtTitle => '管理';
+
+  @override
+  String get onboardingMgmtSubtitle => '全面掌控';
+
+  @override
+  String get onboardingMgmtDesc => '在一个简单直观的地方管理您所有的钱包、账户和预算。';
+
+  @override
+  String get onboardingNext => '下一步';
+
+  @override
+  String get onboardingGetStarted => '开始使用';
+
+  @override
+  String get onboardingLanguageDesc => '选择应用程序界面的首选语言。';
+
+  @override
+  String get onboardingVoiceTitle => '语音指令';
+
+  @override
+  String get onboardingVoiceDesc => '选择您将用于语音指令和快速记录的语言。';
+
+  @override
+  String get onboardingNotifTitle => '智能通知';
+
+  @override
+  String get onboardingNotifDesc => '启用每日提醒，保持您的记账习惯。';
+
+  @override
+  String get onboardingProfileTitle => '您的个人资料';
+
+  @override
+  String get onboardingProfileDesc => '介绍一下您自己。此信息将显示在您的个人资料中。';
+
+  @override
+  String get onboardingWalletTitle => '第一个钱包';
+
+  @override
+  String get onboardingWalletDesc => '让我们设置您的主要现金钱包。输入您当前的手头现金。';
+
+  @override
+  String get onboardingDailyReminders => '每日提醒';
+
+  @override
+  String get onboardingRemindersSubtitle => '获取记录支出的有效提醒。';
+
+  @override
+  String get onboardingFullname => '全名';
+
+  @override
+  String get onboardingNameHint => '例如 张三';
+
+  @override
+  String get onboardingEmail => '电子邮件（可选）';
+
+  @override
+  String get onboardingEmailHint => 'user@example.com';
+
+  @override
+  String get onboardingBalanceHint => '例如 500000';
+
+  @override
+  String get onboardingWalletGuide => '您稍后可以在钱包菜单中添加更多钱包（银行、电子钱包）。';
+
+  @override
+  String get badgeFirstStepTitle => '第一步';
+
+  @override
+  String get badgeFirstStepDesc => '记录您的第一笔交易';
+
+  @override
+  String get badgeWeekWarriorTitle => '7天连胜';
+
+  @override
+  String get badgeWeekWarriorDesc => '连续7天记录支出';
+
+  @override
+  String get badgeConsistentSaverTitle => '自律';
+
+  @override
+  String get badgeConsistentSaverDesc => '累计记录30天';
+
+  @override
+  String get badgeBigSpenderTitle => '挥霍者';
+
+  @override
+  String get badgeBigSpenderDesc => '记录超过100笔交易';
+
+  @override
+  String get badgeSaverTitle => '储蓄者';
+
+  @override
+  String get badgeSaverDesc => '收入大于支出';
+
+  @override
+  String get badgeNightOwlTitle => '夜猫子';
+
+  @override
+  String get badgeNightOwlDesc => '在晚上10点均记录交易';
+
+  @override
+  String get badgeEarlyBirdTitle => '早起的鸟儿';
+
+  @override
+  String get badgeEarlyBirdDesc => '在早上5点至8点之间记录交易';
+
+  @override
+  String get badgeWeekendWarriorTitle => '周末';
+
+  @override
+  String get badgeWeekendWarriorDesc => '在周六或周日记录交易';
+
+  @override
+  String get badgeWealthTitle => '财富';
+
+  @override
+  String get badgeWealthDesc => '累计超过10,000,000的金额';
+
+  @override
+  String get level => '等级';
+
+  @override
+  String get currentStreak => '当前连胜';
+
+  @override
+  String get totalActive => '总活跃';
+
+  @override
+  String get achievements => '成就';
+
+  @override
+  String get days => '天';
+
+  @override
+  String get levelNovice => '初级储蓄者';
+
+  @override
+  String get levelConsistent => '坚持储蓄者';
+
+  @override
+  String get levelEnthusiast => '金融爱好者';
+
+  @override
+  String get badgeFirstLogTitle => '第一条记录';
+
+  @override
+  String get badgeFirstLogDesc => '记录您的第一笔交易';
+
+  @override
+  String get badgeStreak3Title => '升温';
+
+  @override
+  String get badgeStreak3Desc => '3天每日连胜';
+
+  @override
+  String get badgeStreak7Title => '着火';
+
+  @override
+  String get badgeStreak7Desc => '7天每日连胜';
+
+  @override
+  String get badgeStreak14Title => '势不可挡';
+
+  @override
+  String get badgeStreak14Desc => '14天每日连胜';
+
+  @override
+  String get badgeStreak30Title => '大师';
+
+  @override
+  String get badgeStreak30Desc => '30天每日连胜';
+
+  @override
+  String get badgeStreak100Title => '传奇';
+
+  @override
+  String get badgeStreak100Desc => '100天每日连胜';
+
+  @override
+  String get badgeWeeklyLoggerTitle => '每周记录';
+
+  @override
+  String get badgeWeeklyLoggerDesc => '一个月内每周至少输入一笔交易';
+
+  @override
+  String get badgeFirstBudgetTitle => '第一个预算';
+
+  @override
+  String get badgeFirstBudgetDesc => '创建您的第一个预算';
+
+  @override
+  String get badgeUnderBudgetTitle => '预算专家';
+
+  @override
+  String get badgeUnderBudgetDesc => '本月支出少于预算';
+
+  @override
+  String get badgeBudgetMasterTitle => '预算大师';
+
+  @override
+  String get badgeBudgetMasterDesc => '连续3个月保持在预算范围内';
+
+  @override
+  String get badgeMultiBudgeterTitle => '战略家';
+
+  @override
+  String get badgeMultiBudgeterDesc => '为超过3个类别创建预算';
+
+  @override
+  String get badgeFirstGoalTitle => '梦想家';
+
+  @override
+  String get badgeFirstGoalDesc => '创建您的第一个储蓄目标';
+
+  @override
+  String get badgeGoalCompletedTitle => '达成者';
+
+  @override
+  String get badgeGoalCompletedDesc => '完成一项储蓄目标（100%）';
+
+  @override
+  String get badgeGoalSprintTitle => '冲刺者';
+
+  @override
+  String get badgeGoalSprintDesc => '在截止日期前达成储蓄目标';
+
+  @override
+  String get badgeMidnightCheckoutTitle => '午夜结账';
+
+  @override
+  String get badgeMidnightCheckoutDesc => '午夜后购物（反向徽章）';
+
+  @override
+  String get badgeImpulseKingTitle => '冲动之王';
+
+  @override
+  String get badgeImpulseKingDesc => '一天内进行5笔以上交易（反向徽章）';
+
+  @override
+  String get badgeExplorerTitle => '探险家';
+
+  @override
+  String get badgeExplorerDesc => '记录5不同类别的交易';
+
+  @override
+  String get badgeLunchTimeTitle => '午餐时间';
+
+  @override
+  String get badgeLunchTimeDesc => '在上午11点至下午1点之间记录交易';
+
+  @override
+  String get badgeBigSaverTitle => '大储蓄家';
+
+  @override
+  String get badgeBigSaverDesc => '累计总收入5,000,000';
+
+  @override
+  String get badgeGiverTitle => '慷慨';
+
+  @override
+  String get badgeGiverDesc => '进行5笔以上转账交易';
+
+  @override
+  String get badgeThriftyTitle => '节俭';
+
+  @override
+  String get badgeThriftyDesc => '月支出少于收入的50%';
+
+  @override
+  String get badgeWeekendBingeTitle => '周末狂欢';
+
+  @override
+  String get badgeWeekendBingeDesc => '周末进行5笔以上交易';
+
+  @override
+  String get levelRookie => '新手';
+
+  @override
+  String get levelBudgetWarrior => '预算战士';
+
+  @override
+  String get levelMoneyNinja => '理财忍者';
+
+  @override
+  String get levelFinanceSensei => '金融从师';
+
+  @override
+  String get levelWealthTycoon => '财富大亨';
+
+  @override
+  String get badgeSectionConsistency => '连胜与坚持';
+
+  @override
+  String get badgeSectionBudget => '预算管理';
+
+  @override
+  String get badgeSectionSaving => '储蓄目标';
+
+  @override
+  String get badgeSectionMisc => '趣味与杂项';
 }

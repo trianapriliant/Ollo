@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:io';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../constants/app_text_styles.dart';
+import '../../gamification/application/gamification_provider.dart';
 import 'widgets/main_account_card.dart';
 import 'widgets/quick_record_section.dart';
 import 'widgets/recent_transactions_list.dart';
@@ -134,15 +138,46 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           profileAsync.when(
             data: (profile) => Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.accentBlue,
-                backgroundImage: profile.profileImagePath != null
-                    ? FileImage(File(profile.profileImagePath!))
-                    : null,
-                child: profile.profileImagePath == null
-                    ? const Icon(Icons.person, color: AppColors.primary)
-                    : null,
+              child: InkWell(
+                onTap: () => context.push('/gamification'),
+                borderRadius: BorderRadius.circular(20),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                   Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.orange, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Lvl ${ref.watch(gamificationProvider).value?.level ?? 1}',
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CircleAvatar(
+                  radius: 20,
+                  backgroundColor: AppColors.accentBlue,
+                  backgroundImage: profile.profileImagePath != null
+                      ? FileImage(File(profile.profileImagePath!))
+                      : null,
+                  child: profile.profileImagePath == null
+                      ? const Icon(Icons.person, color: AppColors.primary)
+                      : null,
+                ),
+                ],
+                ),
               ),
             ),
             loading: () => const SizedBox.shrink(),

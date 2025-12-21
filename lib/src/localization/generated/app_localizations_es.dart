@@ -2098,4 +2098,347 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get exitAppConfirm =>
       '¿Estás seguro de que quieres salir de la aplicación?';
+
+  @override
+  String get onboardingSavingsTitle => 'Ahorros';
+
+  @override
+  String get onboardingSavingsSubtitle => 'Haz Crecer tu Riqueza';
+
+  @override
+  String get onboardingSavingsDesc =>
+      'Comienza a ahorrar de manera más efectiva rastreando a dónde va tu dinero y recortando gastos innecesarios.';
+
+  @override
+  String get onboardingStatsTitle => 'Estadísticas';
+
+  @override
+  String get onboardingStatsSubtitle => 'Obtén Información Profunda';
+
+  @override
+  String get onboardingStatsDesc =>
+      'Analiza tus tendencias de ingresos y gastos con informes detallados para tomar decisiones financieras más inteligentes.';
+
+  @override
+  String get onboardingMgmtTitle => 'Gestión';
+
+  @override
+  String get onboardingMgmtSubtitle => 'Control Total';
+
+  @override
+  String get onboardingMgmtDesc =>
+      'Gestiona todas tus billeteras, cuentas y presupuestos en un lugar simple e intuitivo.';
+
+  @override
+  String get onboardingNext => 'Siguiente';
+
+  @override
+  String get onboardingGetStarted => 'Empezar';
+
+  @override
+  String get onboardingLanguageDesc =>
+      'Elige tu idioma preferido para la interfaz de la aplicación.';
+
+  @override
+  String get onboardingVoiceTitle => 'Comando de Voz';
+
+  @override
+  String get onboardingVoiceDesc =>
+      'Selecciona el idioma que usarás para comandos de voz y registro rápido.';
+
+  @override
+  String get onboardingNotifTitle => 'Notificaciones Inteligentes';
+
+  @override
+  String get onboardingNotifDesc =>
+      'Activa recordatorios diarios para mantener tu racha de seguimiento.';
+
+  @override
+  String get onboardingProfileTitle => 'Tu Perfil';
+
+  @override
+  String get onboardingProfileDesc =>
+      'Cuéntanos un poco sobre ti. Esta información se mostrará en tu perfil.';
+
+  @override
+  String get onboardingWalletTitle => 'Primera Billetera';
+
+  @override
+  String get onboardingWalletDesc =>
+      'Configuremos tu billetera de efectivo principal. Ingresa tu efectivo actual disponible.';
+
+  @override
+  String get onboardingDailyReminders => 'Recordatorios Diarios';
+
+  @override
+  String get onboardingRemindersSubtitle =>
+      'Recibe recordatorios válidos para registrar tus gastos.';
+
+  @override
+  String get onboardingFullname => 'Nombre Completo';
+
+  @override
+  String get onboardingNameHint => 'ej. Juan Pérez';
+
+  @override
+  String get onboardingEmail => 'Correo (Opcional)';
+
+  @override
+  String get onboardingEmailHint => 'usuario@ejemplo.com';
+
+  @override
+  String get onboardingBalanceHint => 'ej. 500000';
+
+  @override
+  String get onboardingWalletGuide =>
+      'Puedes agregar más billeteras (Banco, Billetera Digital) más tarde en el menú Billetera.';
+
+  @override
+  String get badgeFirstStepTitle => 'Primer Paso';
+
+  @override
+  String get badgeFirstStepDesc => 'Registra tu primera transacción';
+
+  @override
+  String get badgeWeekWarriorTitle => 'Racha de 7 Días';
+
+  @override
+  String get badgeWeekWarriorDesc => 'Registra gastos durante 7 días seguidos';
+
+  @override
+  String get badgeConsistentSaverTitle => 'Disciplina';
+
+  @override
+  String get badgeConsistentSaverDesc => 'Registra por 30 días en total';
+
+  @override
+  String get badgeBigSpenderTitle => 'Gran Gastador';
+
+  @override
+  String get badgeBigSpenderDesc => 'Registra más de 100 transacciones';
+
+  @override
+  String get badgeSaverTitle => 'Ahorrador';
+
+  @override
+  String get badgeSaverDesc => 'Tener más Ingresos que Gastos';
+
+  @override
+  String get badgeNightOwlTitle => 'Noctámbulo';
+
+  @override
+  String get badgeNightOwlDesc =>
+      'Registra una transacción después de las 10 PM';
+
+  @override
+  String get badgeEarlyBirdTitle => 'Madrugador';
+
+  @override
+  String get badgeEarlyBirdDesc => 'Registra una transacción entre 5 AM - 8 AM';
+
+  @override
+  String get badgeWeekendWarriorTitle => 'Fin de Semana';
+
+  @override
+  String get badgeWeekendWarriorDesc =>
+      'Registra una transacción en sábado o domingo';
+
+  @override
+  String get badgeWealthTitle => 'Riqueza';
+
+  @override
+  String get badgeWealthDesc => 'Acumula más de 10,000,000 en volumen';
+
+  @override
+  String get level => 'Nivel';
+
+  @override
+  String get currentStreak => 'Racha Actual';
+
+  @override
+  String get totalActive => 'Total Activo';
+
+  @override
+  String get achievements => 'Logros';
+
+  @override
+  String get days => 'Días';
+
+  @override
+  String get levelNovice => 'Ahorrador Novato';
+
+  @override
+  String get levelConsistent => 'Ahorrador Consistente';
+
+  @override
+  String get levelEnthusiast => 'Entusiasta Financiero';
+
+  @override
+  String get badgeFirstLogTitle => 'Primer Registro';
+
+  @override
+  String get badgeFirstLogDesc => 'Registra tu primerísima transacción';
+
+  @override
+  String get badgeStreak3Title => 'Calentando';
+
+  @override
+  String get badgeStreak3Desc => 'Racha de 3 días';
+
+  @override
+  String get badgeStreak7Title => 'En Fuego';
+
+  @override
+  String get badgeStreak7Desc => 'Racha de 7 días';
+
+  @override
+  String get badgeStreak14Title => 'Imparable';
+
+  @override
+  String get badgeStreak14Desc => 'Racha de 14 días';
+
+  @override
+  String get badgeStreak30Title => 'Maestro';
+
+  @override
+  String get badgeStreak30Desc => 'Racha de 30 días';
+
+  @override
+  String get badgeStreak100Title => 'Legendario';
+
+  @override
+  String get badgeStreak100Desc => 'Racha de 100 días';
+
+  @override
+  String get badgeWeeklyLoggerTitle => 'Registrador Semanal';
+
+  @override
+  String get badgeWeeklyLoggerDesc =>
+      'Ingresa al menos una transacción cada semana por un mes';
+
+  @override
+  String get badgeFirstBudgetTitle => 'Primer Presupuesto';
+
+  @override
+  String get badgeFirstBudgetDesc => 'Crea tu primer presupuesto';
+
+  @override
+  String get badgeUnderBudgetTitle => 'Pro del Presupuesto';
+
+  @override
+  String get badgeUnderBudgetDesc => 'Gasta menos de tu presupuesto del mes';
+
+  @override
+  String get badgeBudgetMasterTitle => 'Maestro del Presupuesto';
+
+  @override
+  String get badgeBudgetMasterDesc =>
+      'Mantente bajo el presupuesto por 3 meses seguidos';
+
+  @override
+  String get badgeMultiBudgeterTitle => 'Estratega';
+
+  @override
+  String get badgeMultiBudgeterDesc =>
+      'Crea presupuestos para más de 3 categorías';
+
+  @override
+  String get badgeFirstGoalTitle => 'Soñador';
+
+  @override
+  String get badgeFirstGoalDesc => 'Crea tu primer objetivo de ahorro';
+
+  @override
+  String get badgeGoalCompletedTitle => 'Logrador';
+
+  @override
+  String get badgeGoalCompletedDesc => 'Completa un objetivo de ahorro (100%)';
+
+  @override
+  String get badgeGoalSprintTitle => 'Velocista';
+
+  @override
+  String get badgeGoalSprintDesc =>
+      'Alcanza un objetivo antes de la fecha límite';
+
+  @override
+  String get badgeMidnightCheckoutTitle => 'Compra de Medianoche';
+
+  @override
+  String get badgeMidnightCheckoutDesc =>
+      'Compras después de medianoche (Anti-Badge)';
+
+  @override
+  String get badgeImpulseKingTitle => 'Rey del Impulso';
+
+  @override
+  String get badgeImpulseKingDesc =>
+      'Hacer 5+ transacciones en un día (Anti-Badge)';
+
+  @override
+  String get badgeExplorerTitle => 'Explorador';
+
+  @override
+  String get badgeExplorerDesc =>
+      'Registra transacciones en 5 categorías diferentes';
+
+  @override
+  String get badgeLunchTimeTitle => 'Hora de Almuerzo';
+
+  @override
+  String get badgeLunchTimeDesc =>
+      'Registra una transacción entre 11 AM - 1 PM';
+
+  @override
+  String get badgeBigSaverTitle => 'Gran Ahorrador';
+
+  @override
+  String get badgeBigSaverDesc => 'Acumula 5,000,000 en ingresos totales';
+
+  @override
+  String get badgeGiverTitle => 'Generoso';
+
+  @override
+  String get badgeGiverDesc => 'Haz 5+ transacciones de transferencia';
+
+  @override
+  String get badgeThriftyTitle => 'Ahorrativo';
+
+  @override
+  String get badgeThriftyDesc =>
+      'Gasto mensual es menos del 50% de los ingresos';
+
+  @override
+  String get badgeWeekendBingeTitle => 'Festejo de Fin de Semana';
+
+  @override
+  String get badgeWeekendBingeDesc =>
+      'Haz 5+ transacciones en un fin de semana';
+
+  @override
+  String get levelRookie => 'Novato';
+
+  @override
+  String get levelBudgetWarrior => 'Guerrero del Presupuesto';
+
+  @override
+  String get levelMoneyNinja => 'Ninja del Dinero';
+
+  @override
+  String get levelFinanceSensei => 'Sensei Financiero';
+
+  @override
+  String get levelWealthTycoon => 'Magnate de la Riqueza';
+
+  @override
+  String get badgeSectionConsistency => 'Consistencia y Racha';
+
+  @override
+  String get badgeSectionBudget => 'Presupuesto';
+
+  @override
+  String get badgeSectionSaving => 'Objetivos de Ahorro';
+
+  @override
+  String get badgeSectionMisc => 'Diversión y Varios';
 }

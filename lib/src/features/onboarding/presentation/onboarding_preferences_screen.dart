@@ -8,6 +8,7 @@ import '../../settings/presentation/language_provider.dart';
 import '../../settings/presentation/voice_language_provider.dart';
 import '../../notifications/application/notification_service.dart';
 import '../data/onboarding_repository.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 import 'package:ollo/src/features/wallets/domain/wallet.dart';
 import 'package:ollo/src/features/wallets/data/wallet_repository.dart';
@@ -36,58 +37,6 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
   int _currentPage = 0;
   bool _notificationsEnabled = false;
 
-  // Simple localization map for this screen
-  final Map<String, Map<String, String>> _i18n = {
-    'en': {
-      'step1_title': 'Select Language',
-      'step1_desc': 'Choose your preferred language for the application interface.',
-      'step2_title': 'Voice Command',
-      'step2_desc': 'Select the language you will use for voice commands and quick recording.',
-      'step3_title': 'Smart Notifications',
-      'step3_desc': 'Enable daily reminders to keep your tracking on streak.',
-      'step4_title': 'Your Profile',
-      'step4_desc': 'Tell us a bit about yourself. This information will be displayed in your profile.',
-      'step5_title': 'First Wallet',
-      'step5_desc': 'Let\'s setup your main cash wallet. Enter your current cash on hand.',
-      'next': 'Next',
-      'finish': 'Get Started',
-      'daily_reminders': 'Daily Reminders',
-      'reminders_subtitle': 'Get valid reminders to record your expenses.',
-      'fullname': 'Full Name',
-      'name_hint': 'e.g. John Doe',
-      'email': 'Email (Optional)',
-      'email_hint': 'user@example.com',
-      'wallet_name': 'Cash',
-      'initial_balance': 'Initial Balance',
-      'balance_hint': 'e.g. 500000',
-      'setup_wallet_guide': 'You can add more wallets (Bank, E-Wallet) later in the Wallet menu.',
-    },
-    'id': {
-      'step1_title': 'Pilih Bahasa',
-      'step1_desc': 'Pilih bahasa utama untuk antarmuka aplikasi.',
-      'step2_title': 'Perintah Suara',
-      'step2_desc': 'Pilih bahasa yang akan digunakan untuk perintah suara dan pencatatan cepat.',
-      'step3_title': 'Notifikasi Pintar',
-      'step3_desc': 'Aktifkan pengingat harian agar pencatatan keuanganmu tetap rutin.',
-      'step4_title': 'Profil Kamu',
-      'step4_desc': 'Ceritakan sedikit tentang dirimu. Informasi ini akan ditampilkan di profilmu.',
-      'step5_title': 'Dompet Pertama',
-      'step5_desc': 'Mari atur dompet tunai utamamu. Masukkan jumlah uang tunai yang kamu pegang saat ini.',
-      'next': 'Lanjut',
-      'finish': 'Mulai Sekarang',
-      'daily_reminders': 'Pengingat Harian',
-      'reminders_subtitle': 'Dapatkan pengingat untuk mencatat pengeluaranmu.',
-      'fullname': 'Nama Lengkap',
-      'name_hint': 'cth. Budi Santoso',
-      'email': 'Email (Opsional)',
-      'email_hint': 'user@example.com',
-      'wallet_name': 'Tunai',
-      'initial_balance': 'Saldo Awal',
-      'balance_hint': 'cth. 500000',
-      'setup_wallet_guide': 'Kamu bisa menambah dompet lain (Bank, E-Wallet) nanti di menu Dompet.',
-    },
-  };
-
   @override
   void dispose() {
     _pageController.dispose();
@@ -95,11 +44,6 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
     _nameController.dispose();
     _emailController.dispose();
     super.dispose();
-  }
-
-  String _t(String key) {
-    final langCode = ref.read(languageProvider).code;
-    return _i18n[langCode]?[key] ?? _i18n['en']![key]!;
   }
 
   void _onNext() {
@@ -130,7 +74,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
     }
   }
 
-  Widget _buildProfileSetupCard() {
+  Widget _buildProfileSetupCard(AppLocalizations tr) {
     return Form(
       key: _profileFormKey,
       child: Container(
@@ -189,8 +133,8 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: _t('fullname'),
-                hintText: _t('name_hint'),
+                labelText: tr.onboardingFullname,
+                hintText: tr.onboardingNameHint,
                 prefixIcon: const Icon(Icons.person_outline),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -209,8 +153,8 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
-                labelText: _t('email'),
-                hintText: _t('email_hint'),
+                labelText: tr.onboardingEmail,
+                hintText: tr.onboardingEmailHint,
                 prefixIcon: const Icon(Icons.email_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -225,7 +169,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
     );
   }
 
-  Widget _buildWalletSetupCard() {
+  Widget _buildWalletSetupCard(AppLocalizations tr) {
     return Form(
       key: _formKey,
       child: Container(
@@ -253,7 +197,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _t('wallet_name'),
+                      tr.walletName,
                       style: GoogleFonts.outfit(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -273,7 +217,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
             ),
             const SizedBox(height: 24),
             Text(
-              _t('initial_balance'),
+              tr.initialBalance,
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
@@ -289,7 +233,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                 color: AppColors.primary,
               ),
               decoration: InputDecoration(
-                hintText: _t('balance_hint'),
+                hintText: tr.onboardingBalanceHint,
                 hintStyle: GoogleFonts.outfit(color: Colors.grey[400]),
                 prefixText: ref.read(languageProvider) == AppLanguage.indonesian ? 'Rp ' : '\$ ',
                 prefixStyle: GoogleFonts.outfit(
@@ -333,7 +277,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      _t('setup_wallet_guide'),
+                      tr.onboardingWalletGuide,
                       style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
                     ),
                   ),
@@ -347,6 +291,8 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
   }
 
   Future<void> _finishOnboarding() async {
+    final tr = AppLocalizations.of(context)!;
+    
     if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
       return;
     }
@@ -376,7 +322,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
       final initialBalance = double.tryParse(_balanceController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
       
       final wallet = Wallet.create(
-        name: _t('wallet_name'),
+        name: tr.walletName,
         balance: initialBalance,
         iconPath: 'assets/icons/wallet.png', 
         colorValue: 0xFF4CAF50, // Green
@@ -409,12 +355,24 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     final currentLanguage = ref.watch(languageProvider);
     final currentVoiceLanguage = ref.watch(voiceLanguageProvider);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
+    return PopScope(
+      canPop: _currentPage == 0,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        if (_pageController.hasClients) {
+          await _pageController.previousPage(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
         child: Column(
           children: [
             // Progress Indicator
@@ -444,37 +402,37 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                 children: [
                   // Step 1: App Language
                   _buildStep(
-                    title: _t('step1_title'),
-                    description: _t('step1_desc'),
+                    title: tr.selectLanguage,
+                    description: tr.onboardingLanguageDesc,
                     content: _buildLanguageSelector(currentLanguage),
                   ),
 
                   // Step 2: Voice Language
                   _buildStep(
-                    title: _t('step2_title'),
-                    description: _t('step2_desc'),
+                    title: tr.onboardingVoiceTitle,
+                    description: tr.onboardingVoiceDesc,
                     content: _buildVoiceLanguageSelector(currentVoiceLanguage),
                   ),
 
                   // Step 3: Notifications
                   _buildStep(
-                    title: _t('step3_title'),
-                    description: _t('step3_desc'),
-                    content: _buildNotificationCard(),
+                    title: tr.onboardingNotifTitle,
+                    description: tr.onboardingNotifDesc,
+                    content: _buildNotificationCard(tr),
                   ),
 
                   // Step 4: Profile Setup
                   _buildStep(
-                    title: _t('step4_title'),
-                    description: _t('step4_desc'),
-                    content: _buildProfileSetupCard(),
+                    title: tr.onboardingProfileTitle,
+                    description: tr.onboardingProfileDesc,
+                    content: _buildProfileSetupCard(tr),
                   ),
 
                   // Step 5: First Wallet
                   _buildStep(
-                    title: _t('step5_title'),
-                    description: _t('step5_desc'),
-                    content: _buildWalletSetupCard(),
+                    title: tr.onboardingWalletTitle,
+                    description: tr.onboardingWalletDesc,
+                    content: _buildWalletSetupCard(tr),
                   ),
                 ],
               ),
@@ -495,7 +453,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   child: Text(
-                    _currentPage == 4 ? _t('finish') : _t('next'),
+                    _currentPage == 4 ? tr.onboardingGetStarted : tr.onboardingNext,
                     style: GoogleFonts.outfit(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -507,7 +465,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildStep({required String title, required String description, required Widget content}) {
@@ -641,7 +599,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
     );
   }
 
-  Widget _buildNotificationCard() {
+  Widget _buildNotificationCard(AppLocalizations tr) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -668,7 +626,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
           ),
           const SizedBox(height: 16),
           Text(
-            _t('daily_reminders'),
+            tr.onboardingDailyReminders,
             style: GoogleFonts.outfit(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -676,7 +634,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
           ),
           const SizedBox(height: 8),
           Text(
-            _t('reminders_subtitle'),
+            tr.onboardingRemindersSubtitle,
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
           ),

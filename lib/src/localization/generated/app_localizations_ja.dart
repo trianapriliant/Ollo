@@ -2072,5 +2072,326 @@ class AppLocalizationsJa extends AppLocalizations {
   String get exitAppTitle => 'アプリを終了';
 
   @override
-  String get exitAppConfirm => '本当にアプリを終了しますか？';
+  String get exitAppConfirm => 'アプリを終了してもよろしいですか？';
+
+  @override
+  String get onboardingSavingsTitle => '貯蓄';
+
+  @override
+  String get onboardingSavingsSubtitle => '資産を増やす';
+
+  @override
+  String get onboardingSavingsDesc => 'お金の使い道を追跡し、不必要な出費を削減して、より効果的に貯蓄を始めましょう。';
+
+  @override
+  String get onboardingStatsTitle => '統計';
+
+  @override
+  String get onboardingStatsSubtitle => '深い洞察を得る';
+
+  @override
+  String get onboardingStatsDesc => 'より賢明な財務決定を行うために、詳細なレポートで収入と支出の傾向を分析します。';
+
+  @override
+  String get onboardingMgmtTitle => '管理';
+
+  @override
+  String get onboardingMgmtSubtitle => '完全なコントロール';
+
+  @override
+  String get onboardingMgmtDesc => 'すべてのウォレット、口座、予算をシンプルで直感的な場所で管理します。';
+
+  @override
+  String get onboardingNext => '次へ';
+
+  @override
+  String get onboardingGetStarted => '始める';
+
+  @override
+  String get onboardingLanguageDesc => 'アプリケーションインターフェースの優先言語を選択してください。';
+
+  @override
+  String get onboardingVoiceTitle => '音声コマンド';
+
+  @override
+  String get onboardingVoiceDesc => '音声コマンドとクイック録音に使用する言語を選択してください。';
+
+  @override
+  String get onboardingNotifTitle => 'スマート通知';
+
+  @override
+  String get onboardingNotifDesc => '毎日のリマインダーを有効にして、記録の継続を維持しましょう。';
+
+  @override
+  String get onboardingProfileTitle => 'プロフィール';
+
+  @override
+  String get onboardingProfileDesc => 'あなた自身について少し教えてください。この情報はプロフィールに表示されます。';
+
+  @override
+  String get onboardingWalletTitle => '最初のウォレット';
+
+  @override
+  String get onboardingWalletDesc => 'メインの現金ウォレットを設定しましょう。現在の手持ち現金を入力してください。';
+
+  @override
+  String get onboardingDailyReminders => '毎日のリマインダー';
+
+  @override
+  String get onboardingRemindersSubtitle => '支出を記録するための有効なリマインダーを受け取ります。';
+
+  @override
+  String get onboardingFullname => '氏名';
+
+  @override
+  String get onboardingNameHint => '例：山田 太郎';
+
+  @override
+  String get onboardingEmail => 'メールアドレス（任意）';
+
+  @override
+  String get onboardingEmailHint => 'user@example.com';
+
+  @override
+  String get onboardingBalanceHint => '例：500000';
+
+  @override
+  String get onboardingWalletGuide => 'ウォレットメニューから後でさらにウォレット（銀行、電子マネー）を追加できます。';
+
+  @override
+  String get badgeFirstStepTitle => '最初のステップ';
+
+  @override
+  String get badgeFirstStepDesc => '最初の取引を記録する';
+
+  @override
+  String get badgeWeekWarriorTitle => '7日間ストリーク';
+
+  @override
+  String get badgeWeekWarriorDesc => '7日間連続で支出を記録する';
+
+  @override
+  String get badgeConsistentSaverTitle => '規律';
+
+  @override
+  String get badgeConsistentSaverDesc => '合計30日間記録する';
+
+  @override
+  String get badgeBigSpenderTitle => 'ビッグスペンダー';
+
+  @override
+  String get badgeBigSpenderDesc => '100回以上の取引を記録する';
+
+  @override
+  String get badgeSaverTitle => '節約家';
+
+  @override
+  String get badgeSaverDesc => '支出よりも収入が多い';
+
+  @override
+  String get badgeNightOwlTitle => '夜更かし';
+
+  @override
+  String get badgeNightOwlDesc => '午後10時以降に取引を記録する';
+
+  @override
+  String get badgeEarlyBirdTitle => '早起き';
+
+  @override
+  String get badgeEarlyBirdDesc => '午前5時から午前8時の間に取引を記録する';
+
+  @override
+  String get badgeWeekendWarriorTitle => '週末';
+
+  @override
+  String get badgeWeekendWarriorDesc => '土曜日または日曜日に取引を記録する';
+
+  @override
+  String get badgeWealthTitle => '富';
+
+  @override
+  String get badgeWealthDesc => '取引総額10,000,000以上を蓄積';
+
+  @override
+  String get level => 'レベル';
+
+  @override
+  String get currentStreak => '現在のストリーク';
+
+  @override
+  String get totalActive => '合計アクティブ';
+
+  @override
+  String get achievements => '実績';
+
+  @override
+  String get days => '日';
+
+  @override
+  String get levelNovice => '初級節約家';
+
+  @override
+  String get levelConsistent => '一貫した節約家';
+
+  @override
+  String get levelEnthusiast => '金融愛好家';
+
+  @override
+  String get badgeFirstLogTitle => '最初のログ';
+
+  @override
+  String get badgeFirstLogDesc => 'まさに最初の取引を記録する';
+
+  @override
+  String get badgeStreak3Title => 'ヒートアップ';
+
+  @override
+  String get badgeStreak3Desc => '3日間連続ストリーク';
+
+  @override
+  String get badgeStreak7Title => '燃えている';
+
+  @override
+  String get badgeStreak7Desc => '7日間連続ストリーク';
+
+  @override
+  String get badgeStreak14Title => '止まらない';
+
+  @override
+  String get badgeStreak14Desc => '14日間連続ストリーク';
+
+  @override
+  String get badgeStreak30Title => '規律のマスター';
+
+  @override
+  String get badgeStreak30Desc => '30日間連続ストリーク';
+
+  @override
+  String get badgeStreak100Title => '伝説的';
+
+  @override
+  String get badgeStreak100Desc => '100日間連続ストリーク';
+
+  @override
+  String get badgeWeeklyLoggerTitle => 'ウィークリーロガー';
+
+  @override
+  String get badgeWeeklyLoggerDesc => '1ヶ月間毎週少なくとも1件の取引を入力';
+
+  @override
+  String get badgeFirstBudgetTitle => '最初の予算';
+
+  @override
+  String get badgeFirstBudgetDesc => '最初の予算を作成する';
+
+  @override
+  String get badgeUnderBudgetTitle => '予算のプロ';
+
+  @override
+  String get badgeUnderBudgetDesc => '今月の予算未満で支出する';
+
+  @override
+  String get badgeBudgetMasterTitle => '予算マスター';
+
+  @override
+  String get badgeBudgetMasterDesc => '3ヶ月連続で予算内に収める';
+
+  @override
+  String get badgeMultiBudgeterTitle => '戦略家';
+
+  @override
+  String get badgeMultiBudgeterDesc => '3つ以上のカテゴリで予算を作成する';
+
+  @override
+  String get badgeFirstGoalTitle => 'ドリーマー';
+
+  @override
+  String get badgeFirstGoalDesc => '最初の貯蓄目標を作成する';
+
+  @override
+  String get badgeGoalCompletedTitle => '達成者';
+
+  @override
+  String get badgeGoalCompletedDesc => '貯蓄目標を達成する（100％）';
+
+  @override
+  String get badgeGoalSprintTitle => 'スプリンター';
+
+  @override
+  String get badgeGoalSprintDesc => '期限前に貯蓄目標を達成する';
+
+  @override
+  String get badgeMidnightCheckoutTitle => '真夜中のチェックアウト';
+
+  @override
+  String get badgeMidnightCheckoutDesc => '真夜中過ぎの買い物（アンチバッジ）';
+
+  @override
+  String get badgeImpulseKingTitle => '衝動買いの王様';
+
+  @override
+  String get badgeImpulseKingDesc => '1日に5回以上の取引を行う（アンチバッジ）';
+
+  @override
+  String get badgeExplorerTitle => '探検家';
+
+  @override
+  String get badgeExplorerDesc => '5つの異なるカテゴリで取引を記録';
+
+  @override
+  String get badgeLunchTimeTitle => 'ランチブレイク';
+
+  @override
+  String get badgeLunchTimeDesc => '午前11時から午後1時の間に取引を記録';
+
+  @override
+  String get badgeBigSaverTitle => 'ビッグセーバー';
+
+  @override
+  String get badgeBigSaverDesc => '総収入5,000,000を蓄積';
+
+  @override
+  String get badgeGiverTitle => '寛大';
+
+  @override
+  String get badgeGiverDesc => '5回以上の送金取引を行う';
+
+  @override
+  String get badgeThriftyTitle => '倹約家';
+
+  @override
+  String get badgeThriftyDesc => '月間支出が収入の50％未満';
+
+  @override
+  String get badgeWeekendBingeTitle => '週末の散財';
+
+  @override
+  String get badgeWeekendBingeDesc => '週末に5回以上の取引を行う';
+
+  @override
+  String get levelRookie => '新人節約家';
+
+  @override
+  String get levelBudgetWarrior => '予算の戦士';
+
+  @override
+  String get levelMoneyNinja => 'マネー忍者';
+
+  @override
+  String get levelFinanceSensei => '金融先生';
+
+  @override
+  String get levelWealthTycoon => '富の大物';
+
+  @override
+  String get badgeSectionConsistency => '一貫性とストリーク';
+
+  @override
+  String get badgeSectionBudget => '予算管理';
+
+  @override
+  String get badgeSectionSaving => '貯蓄目標';
+
+  @override
+  String get badgeSectionMisc => 'その他';
 }
