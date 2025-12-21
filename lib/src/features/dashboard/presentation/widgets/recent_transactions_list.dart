@@ -17,6 +17,7 @@ import '../../../../localization/generated/app_localizations.dart';
 import 'package:ollo/src/features/transactions/data/transaction_repository.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../categories/presentation/category_localization_helper.dart';
+import '../../../settings/domain/transaction_color_theme.dart';
 
 class RecentTransactionsList extends ConsumerWidget {
   final List<Transaction> transactions;
@@ -73,6 +74,7 @@ class RecentTransactionsList extends ConsumerWidget {
     final wallets = walletsAsync.valueOrNull ?? [];
     final categoriesAsync = ref.watch(allCategoriesStreamProvider);
     final categories = categoriesAsync.valueOrNull ?? [];
+    final colorTheme = ref.watch(colorPaletteProvider);
 
     // Directly use the passed transactions list
     if (transactions.isEmpty) {
@@ -117,7 +119,7 @@ class RecentTransactionsList extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDateHeader(context, group.date, group.dailyTotal, currency),
+                    _buildDateHeader(context, group.date, group.dailyTotal, currency, colorTheme),
                     const SizedBox(height: 12),
                     ...group.transactions.map((transaction) {
                       String walletName;
@@ -309,7 +311,7 @@ class RecentTransactionsList extends ConsumerWidget {
                               onTap: () {
                                 context.push('/transaction-detail', extra: transaction);
                               },
-                              child: _buildActivityItem(
+                                child: _buildActivityItem(
                                 context,
                                 displayTitle,
                                 walletName,
@@ -321,6 +323,7 @@ class RecentTransactionsList extends ConsumerWidget {
                                 currency,
                                 transaction.note,
                                 transaction.date,
+                                colorTheme,
                                 isSystem: isSystem,
                                 isReimbursement: transaction.type == TransactionType.reimbursement,
                                 isTransfer: transaction.type == TransactionType.transfer,
@@ -393,7 +396,7 @@ class RecentTransactionsList extends ConsumerWidget {
     return sortedGroups;
   }
 
-  Widget _buildDateHeader(BuildContext context, DateTime date, double dailyTotal, Currency currency) {
+  Widget _buildDateHeader(BuildContext context, DateTime date, double dailyTotal, Currency currency, TransactionTheme theme) {
     final now = DateTime.now();
     // ignore: unused_local_variable
     final today = DateTime(now.year, now.month, now.day);
@@ -414,7 +417,7 @@ class RecentTransactionsList extends ConsumerWidget {
           formattedTotal,
           style: AppTextStyles.bodyMedium.copyWith(
             fontWeight: FontWeight.bold,
-            color: isPositive ? Colors.green : Colors.red,
+            color: isPositive ? theme.incomeColor : theme.expenseColor,
           ),
         ),
       ],
@@ -432,7 +435,8 @@ class RecentTransactionsList extends ConsumerWidget {
     bool isExpense, 
     Currency currency,
     String? note,
-    DateTime date, {
+    DateTime date, 
+    TransactionTheme theme, { // New parameter
     bool isSystem = false,
     bool isReimbursement = false,
     bool isTransfer = false, // New parameter
@@ -565,7 +569,7 @@ class RecentTransactionsList extends ConsumerWidget {
             isTransfer ? '~${currency.format(amount)}' : '${isExpense ? "-" : "+"}${currency.format(amount)}',
             style: AppTextStyles.bodyLarge.copyWith(
               fontWeight: FontWeight.bold,
-              color: isTransfer ? Colors.blue : (isExpense ? Colors.red[400] : Colors.green[600]),
+              color: isTransfer ? theme.transferColor : (isExpense ? theme.expenseColor : theme.incomeColor),
             ),
           ),
         ],

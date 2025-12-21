@@ -29,6 +29,7 @@ import '../../profile/application/data_export_service.dart';
 import '../../../localization/generated/app_localizations.dart';
 import '../../settings/presentation/reorder_menu_screen.dart';
 import '../../settings/presentation/card_theme_selection_screen.dart';
+import '../../settings/presentation/color_palette_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -183,6 +184,16 @@ class ProfileScreen extends ConsumerWidget {
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => const CardThemeSelectionScreen(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.color_lens_outlined,
+                              title: 'Color Palette',
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const ColorPaletteScreen(),
                                 ),
                               ),
                             ),
