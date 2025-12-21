@@ -36,6 +36,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
   
   int _currentPage = 0;
   bool _notificationsEnabled = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -297,6 +298,12 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
       return;
     }
 
+    if (_isSubmitting) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
     final repo = ref.read(onboardingRepositoryProvider);
     await repo.completeOnboarding();
     
@@ -351,6 +358,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
     if (mounted) {
       context.go('/home');
     }
+    // No need to set _isSubmitting = false because we are navigating away
   }
 
   @override
@@ -445,20 +453,29 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _onNext,
+                  onPressed: _isSubmitting ? null : _onNext,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: Text(
-                    _currentPage == 4 ? tr.onboardingGetStarted : tr.onboardingNext,
-                    style: GoogleFonts.outfit(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          _currentPage == 4 ? tr.onboardingGetStarted : tr.onboardingNext,
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ),
             ),

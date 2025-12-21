@@ -3,6 +3,8 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../quick_record/presentation/quick_record_modal.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import '../../../transactions/domain/transaction.dart';
 
 class QuickRecordSection extends StatelessWidget {
   const QuickRecordSection({super.key});
@@ -48,8 +50,8 @@ class QuickRecordSection extends StatelessWidget {
 
   Widget _buildQuickActionItem(BuildContext context, IconData icon, String label, String mode) {
     return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
+      onTap: () async {
+        final result = await showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -60,6 +62,10 @@ class QuickRecordSection extends StatelessWidget {
             child: QuickRecordModal(initialMode: mode),
           ),
         );
+
+        if (result is Transaction && context.mounted) {
+           context.push('/add-transaction', extra: result);
+        }
       },
       child: Column(
         children: [

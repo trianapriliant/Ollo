@@ -290,6 +290,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get aboutOllo => 'Olloについて';
 
   @override
+  String get updateLog => 'Update Log';
+
+  @override
   String get account => 'アカウント';
 
   @override

@@ -666,6 +666,12 @@ abstract class AppLocalizations {
   /// **'About Ollo'**
   String get aboutOllo;
 
+  /// No description provided for @updateLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Log'**
+  String get updateLog;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:

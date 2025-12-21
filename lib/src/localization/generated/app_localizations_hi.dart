@@ -294,6 +294,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get aboutOllo => 'Ollo के बारे में';
 
   @override
+  String get updateLog => 'Update Log';
+
+  @override
   String get account => 'खाता';
 
   @override

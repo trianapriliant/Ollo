@@ -290,6 +290,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aboutOllo => '关于Ollo';
 
   @override
+  String get updateLog => 'Update Log';
+
+  @override
   String get account => '账户';
 
   @override

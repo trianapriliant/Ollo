@@ -58,6 +58,7 @@ import '../features/reimbursement/presentation/reimburse_screen.dart';
 import '../features/reimbursement/presentation/add_reimburse_screen.dart';
 import '../features/profile/presentation/data_export_screen.dart';
 import '../features/profile/presentation/data_import_screen.dart';
+import '../features/profile/presentation/update_log_screen.dart';
 import '../features/backup/presentation/backup_screen.dart';
 import '../features/roadmap/presentation/roadmap_screen.dart';
 import '../features/gamification/presentation/gamification_screen.dart';
@@ -397,6 +398,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/data-import',
         builder: (context, state) => const DataImportScreen(),
+      ),
+      GoRoute(
+        path: '/update-log',
+        builder: (context, state) => const UpdateLogScreen(),
       ),
       GoRoute(
         path: '/backup',

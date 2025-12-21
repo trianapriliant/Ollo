@@ -292,6 +292,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get aboutOllo => 'Tentang Ollo';
 
   @override
+  String get updateLog => 'Catatan Update';
+
+  @override
   String get account => 'Akun';
 
   @override

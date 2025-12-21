@@ -296,6 +296,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get aboutOllo => 'Sobre Ollo';
 
   @override
+  String get updateLog => 'Update Log';
+
+  @override
   String get account => 'Cuenta';
 
   @override

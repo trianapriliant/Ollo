@@ -224,6 +224,12 @@ class ProfileScreen extends ConsumerWidget {
                               title: AppLocalizations.of(context)!.aboutOllo,
                               onTap: () => context.push('/about-ollo'),
                             ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.history,
+                              title: AppLocalizations.of(context)!.updateLog ?? 'Update Log',
+                              onTap: () => context.push('/update-log'),
+                            ),
                             const SizedBox(height: 24),
 
                             // Account Section

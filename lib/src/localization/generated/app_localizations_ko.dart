@@ -290,6 +290,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get aboutOllo => 'Ollo 정보';
 
   @override
+  String get updateLog => 'Update Log';
+
+  @override
   String get account => '계정';
 
   @override
