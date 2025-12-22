@@ -80,9 +80,8 @@ class WalletSummaryCard extends ConsumerWidget {
               ),
               
               // Nett Balance & Debt Display
-              const SizedBox(height: 8), // Reduced from 12
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(height: 8),
+              Column(
                 children: [
                   // Nett Balance
                   _buildGlassBadge(
@@ -93,7 +92,7 @@ class WalletSummaryCard extends ConsumerWidget {
                   
                   // Active Debt (if any)
                   if (totalDebt > 0) ...[
-                    const SizedBox(width: 8),
+                    const SizedBox(height: 8),
                     _buildGlassBadge(
                       context,
                       label: '${AppLocalizations.of(context)!.activeDebt}: ${currency.format(totalDebt)}',
