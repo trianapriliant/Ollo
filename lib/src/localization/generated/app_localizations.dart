@@ -660,6 +660,96 @@ abstract class AppLocalizations {
   /// **'Send Feedback'**
   String get sendFeedback;
 
+  /// No description provided for @bugReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Bug'**
+  String get bugReport;
+
+  /// No description provided for @bugReportDeviceInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Information'**
+  String get bugReportDeviceInfo;
+
+  /// No description provided for @bugReportFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature with issue'**
+  String get bugReportFeature;
+
+  /// No description provided for @bugReportSeverity.
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get bugReportSeverity;
+
+  /// No description provided for @bugReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug Title'**
+  String get bugReportTitle;
+
+  /// No description provided for @bugReportTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Brief description of the issue'**
+  String get bugReportTitleHint;
+
+  /// No description provided for @bugReportTitleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a title'**
+  String get bugReportTitleRequired;
+
+  /// No description provided for @bugReportDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get bugReportDescription;
+
+  /// No description provided for @bugReportDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened? What did you expect?'**
+  String get bugReportDescriptionHint;
+
+  /// No description provided for @bugReportDescriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe the bug'**
+  String get bugReportDescriptionRequired;
+
+  /// No description provided for @bugReportSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps to Reproduce'**
+  String get bugReportSteps;
+
+  /// No description provided for @bugReportStepsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Go to...\n2. Tap on...\n3. See error'**
+  String get bugReportStepsHint;
+
+  /// No description provided for @bugReportSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Report'**
+  String get bugReportSend;
+
+  /// No description provided for @bugReportSendVia.
+  ///
+  /// In en, this message translates to:
+  /// **'Send via'**
+  String get bugReportSendVia;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
   /// No description provided for @aboutOllo.
   ///
   /// In en, this message translates to:

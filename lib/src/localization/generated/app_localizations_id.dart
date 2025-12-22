@@ -289,6 +289,52 @@ class AppLocalizationsId extends AppLocalizations {
   String get sendFeedback => 'Kirim Masukan';
 
   @override
+  String get bugReport => 'Lapor Bug';
+
+  @override
+  String get bugReportDeviceInfo => 'Info Perangkat';
+
+  @override
+  String get bugReportFeature => 'Fitur yang bermasalah';
+
+  @override
+  String get bugReportSeverity => 'Tingkat Keparahan';
+
+  @override
+  String get bugReportTitle => 'Judul Bug';
+
+  @override
+  String get bugReportTitleHint => 'Deskripsi singkat masalahnya';
+
+  @override
+  String get bugReportTitleRequired => 'Silakan masukkan judul';
+
+  @override
+  String get bugReportDescription => 'Deskripsi';
+
+  @override
+  String get bugReportDescriptionHint =>
+      'Apa yang terjadi? Apa yang seharusnya terjadi?';
+
+  @override
+  String get bugReportDescriptionRequired => 'Silakan jelaskan bugnya';
+
+  @override
+  String get bugReportSteps => 'Langkah Reproduksi';
+
+  @override
+  String get bugReportStepsHint => '1. Buka...\n2. Ketuk...\n3. Muncul error';
+
+  @override
+  String get bugReportSend => 'Kirim Laporan';
+
+  @override
+  String get bugReportSendVia => 'Kirim via';
+
+  @override
+  String get optional => 'Opsional';
+
+  @override
   String get aboutOllo => 'Tentang Ollo';
 
   @override

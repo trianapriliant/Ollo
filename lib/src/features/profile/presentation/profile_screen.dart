@@ -30,6 +30,7 @@ import '../../../localization/generated/app_localizations.dart';
 import '../../settings/presentation/reorder_menu_screen.dart';
 import '../../settings/presentation/card_theme_selection_screen.dart';
 import '../../settings/presentation/color_palette_screen.dart';
+import '../../settings/presentation/bug_report_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -218,6 +219,17 @@ class ProfileScreen extends ConsumerWidget {
                               title: AppLocalizations.of(context)!.sendFeedback,
                               onTap: () => context.push('/send-feedback'),
                             ),
+                            const SizedBox(height: 16),
+                            ProfileMenuItem(
+                              icon: Icons.bug_report_outlined,
+                              title: AppLocalizations.of(context)!.bugReport,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const BugReportScreen(),
+                                ),
+                              ),
+                            ),
+
                             const SizedBox(height: 16),
                             ProfileMenuItem(
                               icon: Icons.info_outline,

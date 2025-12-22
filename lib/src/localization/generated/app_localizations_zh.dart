@@ -287,6 +287,51 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sendFeedback => '发送反馈';
 
   @override
+  String get bugReport => 'Report Bug';
+
+  @override
+  String get bugReportDeviceInfo => 'Device Information';
+
+  @override
+  String get bugReportFeature => 'Feature with issue';
+
+  @override
+  String get bugReportSeverity => 'Severity';
+
+  @override
+  String get bugReportTitle => 'Bug Title';
+
+  @override
+  String get bugReportTitleHint => 'Brief description of the issue';
+
+  @override
+  String get bugReportTitleRequired => 'Please enter a title';
+
+  @override
+  String get bugReportDescription => 'Description';
+
+  @override
+  String get bugReportDescriptionHint => 'What happened? What did you expect?';
+
+  @override
+  String get bugReportDescriptionRequired => 'Please describe the bug';
+
+  @override
+  String get bugReportSteps => 'Steps to Reproduce';
+
+  @override
+  String get bugReportStepsHint => '1. Go to...\n2. Tap on...\n3. See error';
+
+  @override
+  String get bugReportSend => 'Send Report';
+
+  @override
+  String get bugReportSendVia => 'Send via';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
   String get aboutOllo => '关于Ollo';
 
   @override

@@ -23,8 +23,10 @@ class UpdateLog {
         'Fixed Budget category names not showing in correct language.',
         'Enhanced Quick Record patterns with 130+ new English keywords.',
         'Added Friend patterns to all 5 Quick Record languages.',
+        'New Bug Report feature: Report issues directly via Email, WhatsApp, or Telegram.',
       ],
     ),
+
 
     UpdateLog(
       version: 'Beta 0.5.2',
