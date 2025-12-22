@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,7 +67,6 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
       _titleController.text = b.title;
       _amountController.text = NumberFormat.decimalPattern('en_US').format(b.amount); // Format initial logic
       _dueDate = b.dueDate;
-      _dueDate = b.dueDate;
       _selectedCategoryId = b.categoryId;
       if (b.reminderOffsets != null) {
         _selectedReminders.addAll(b.reminderOffsets!);
@@ -79,8 +79,6 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesAsync = ref.watch(categoryListProvider(CategoryType.expense));
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -168,52 +166,41 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
             // Bill Type Selector
             Text(AppLocalizations.of(context)!.billType, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _selectedBillType,
-                  isExpanded: true,
-                  icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  items: _billTypes.map((type) {
-                    return DropdownMenuItem(
-                      value: type['name'] as String,
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: (type['color'] as Color).withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(type['icon'] as IconData, color: type['color'] as Color, size: 20),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(type['name'] as String),
-                        ],
+            GestureDetector(
+              onTap: _showBillTypePicker,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: (_billTypes.firstWhere((t) => t['name'] == _selectedBillType)['color'] as Color).withOpacity(0.1),
+                        shape: BoxShape.circle,
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      _selectedBillType = val!;
-                      // Auto-fill title if empty or matches previous type
-                      if (_titleController.text.isEmpty || _billTypes.any((t) => t['name'] == _titleController.text)) {
-                        _titleController.text = val;
-                      }
-                    });
-                  },
+                      child: Icon(
+                        _billTypes.firstWhere((t) => t['name'] == _selectedBillType)['icon'] as IconData,
+                        color: _billTypes.firstWhere((t) => t['name'] == _selectedBillType)['color'] as Color,
+                        size: 20
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        _selectedBillType,
+                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                      ),
+                    ),
+                    const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-
             const SizedBox(height: 24),
 
             // Reminders Section
@@ -357,6 +344,93 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
     );
   }
 
+  void _showBillTypePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+             maxHeight: MediaQuery.of(context).size.height * 0.7,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context)!.selectBillType ?? "Select Bill Type",
+                style: AppTextStyles.h2,
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _billTypes.length,
+                  itemBuilder: (context, index) {
+                    final type = _billTypes[index];
+                    final isSelected = type['name'] == _selectedBillType;
+                    
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      leading: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          type['icon'] as IconData,
+                          color: isSelected ? AppColors.primary : (type['color'] as Color),
+                        ),
+                      ),
+                      title: Text(
+                        type['name'] as String,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                        ),
+                      ),
+                      trailing: isSelected 
+                          ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                          : null,
+                      onTap: () {
+                        setState(() {
+                          _selectedBillType = type['name'] as String;
+                           // Auto-fill title logic
+                          if (_titleController.text.isEmpty || _billTypes.any((t) => t['name'] == _titleController.text)) {
+                            _titleController.text = _selectedBillType;
+                          }
+                        });
+                        context.pop();
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
@@ -403,7 +477,7 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
         bill.amount = amount;
         bill.dueDate = _dueDate;
         bill.categoryId = 'bills'; 
-        bill.reminderOffsets = _selectedReminders;
+        bill.reminderOffsets = _selectedReminders; // Make sure to save reminders
         
         await billRepo.updateBill(bill);
         
@@ -412,8 +486,6 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
           final notificationService = ref.read(notificationServiceProvider);
           await notificationService.scheduleBillReminders(bill);
         }
-        
-        await billRepo.updateBill(bill);
         
         if (mounted) {
            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.billUpdated)));
@@ -487,16 +559,13 @@ class _AddBillScreenState extends ConsumerState<AddBillScreen> {
   }
   
   Future<void> _confirmDelete() async {
-    final confirm = await showDialog<bool>(
+    final confirm = await showModernConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteBill),
-        content: Text(AppLocalizations.of(context)!.deleteBillConfirm),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
-        ],
-      ),
+      title: AppLocalizations.of(context)!.deleteBill,
+      message: AppLocalizations.of(context)!.deleteBillConfirm,
+      confirmText: AppLocalizations.of(context)!.delete,
+      cancelText: AppLocalizations.of(context)!.cancel,
+      type: ConfirmDialogType.delete,
     );
     
     if (confirm == true && widget.billToEdit != null) {

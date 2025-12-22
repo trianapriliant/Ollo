@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import '../../wallets/data/wallet_repository.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
@@ -384,16 +385,13 @@ class _AddDebtScreenState extends ConsumerState<AddDebtScreen> {
   }
 
   Future<void> _confirmDelete() async {
-    final confirm = await showDialog<bool>(
+    final confirm = await showModernConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteDebt),
-        content: Text(AppLocalizations.of(context)!.deleteDebtConfirm),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
-        ],
-      ),
+      title: AppLocalizations.of(context)!.deleteDebt,
+      message: AppLocalizations.of(context)!.deleteDebtConfirm,
+      confirmText: AppLocalizations.of(context)!.delete,
+      cancelText: AppLocalizations.of(context)!.cancel,
+      type: ConfirmDialogType.delete,
     );
     
     if (confirm == true && widget.debtToEdit != null) {

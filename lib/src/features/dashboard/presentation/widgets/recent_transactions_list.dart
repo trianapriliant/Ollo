@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../../common_widgets/modern_confirm_dialog.dart';
 import '../../../settings/presentation/currency_provider.dart';
 import '../../../wallets/data/wallet_repository.dart';
 import '../../../wallets/domain/wallet.dart';
@@ -343,25 +344,13 @@ class RecentTransactionsList extends ConsumerWidget {
   }
 
   Future<bool?> _showDeleteConfirmation(BuildContext context) {
-    return showDialog<bool>(
+    return showModernConfirmDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Transaction'),
-          content: const Text('Are you sure you want to delete this transaction? This action cannot be undone.'),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Delete', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        );
-      },
+      title: 'Delete Transaction',
+      message: 'Are you sure you want to delete this transaction? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: ConfirmDialogType.delete,
     );
   }
 

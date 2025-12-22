@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../utils/icon_helper.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../../localization/generated/app_localizations.dart';
 
 class CategoryIconSelector extends StatefulWidget {
   final String selectedIcon;
@@ -56,27 +57,40 @@ class _CategoryIconSelectorState extends State<CategoryIconSelector> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Icon', style: AppTextStyles.h3),
+            Text(
+              AppLocalizations.of(context)!.icon, 
+              style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)
+            ),
             TextButton(
               onPressed: _showFullIconPicker,
-              child: const Text('See All'),
+              child: Text(
+                AppLocalizations.of(context)!.seeAll,
+                style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        SizedBox(
-          height: 60,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              // Simplified quick access list
-              'fastfood', 'restaurant', 'local_cafe',
-              'directions_bus', 'directions_car',
-              'shopping_bag', 'shopping_cart',
-              'movie', 'sports_esports',
-              'medical_services', 'school', 'work',
-              'home', 'attach_money',
-            ].map((icon) => _buildIconOption(icon)).toList(),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: SizedBox(
+            height: 56,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                // Simplified quick access list
+                'fastfood', 'restaurant', 'local_cafe',
+                'directions_bus', 'directions_car',
+                'shopping_bag', 'shopping_cart',
+                'movie', 'sports_esports',
+                'medical_services', 'school', 'work',
+                'home', 'attach_money',
+              ].map((icon) => _buildIconOption(icon)).toList(),
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -88,18 +102,26 @@ class _CategoryIconSelectorState extends State<CategoryIconSelector> {
     final isSelected = widget.selectedIcon == iconPath;
     return GestureDetector(
       onTap: () => widget.onIconSelected(iconPath),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         margin: const EdgeInsets.only(right: 12),
-        width: 50,
-        height: 50,
+        width: 52,
+        height: 52,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: isSelected ? Border.all(color: AppColors.primary, width: 2) : Border.all(color: Colors.grey[300]!),
+          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[50],
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ] : null,
         ),
         child: Icon(
           IconHelper.getIcon(iconPath),
-          color: isSelected ? AppColors.primary : Colors.grey,
+          color: isSelected ? AppColors.primary : Colors.grey[500],
+          size: 24,
         ),
       ),
     );
@@ -134,7 +156,7 @@ class _CategoryIconSelectorState extends State<CategoryIconSelector> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text('Select Icon', style: AppTextStyles.h3),
+                child: Text(AppLocalizations.of(context)!.selectIcon, style: AppTextStyles.h3),
               ),
               const Divider(height: 1),
               Expanded(
@@ -165,16 +187,20 @@ class _CategoryIconSelectorState extends State<CategoryIconSelector> {
                                 widget.onIconSelected(icon);
                                 Navigator.pop(context);
                               },
-                              child: Container(
-                                width: 48,
-                                height: 48,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                width: 52,
+                                height: 52,
                                 decoration: BoxDecoration(
-                                  color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: isSelected ? AppColors.primary : Colors.grey[200]!,
-                                    width: isSelected ? 2 : 1,
-                                  ),
+                                  color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: isSelected ? [
+                                    BoxShadow(
+                                      color: AppColors.primary.withOpacity(0.2),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ] : null,
                                 ),
                                 child: Icon(
                                   IconHelper.getIcon(icon),

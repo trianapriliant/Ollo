@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../utils/icon_helper.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../../common_widgets/modern_confirm_dialog.dart';
 import '../../domain/category.dart';
+import '../../../../localization/generated/app_localizations.dart';
+import '../../../transactions/data/transaction_repository.dart';
 
-class SubCategoryManager extends StatefulWidget {
+class SubCategoryManager extends ConsumerStatefulWidget {
   final List<SubCategory> subCategories;
   final ValueChanged<List<SubCategory>> onSubCategoriesChanged;
 
@@ -16,18 +20,10 @@ class SubCategoryManager extends StatefulWidget {
   });
 
   @override
-  State<SubCategoryManager> createState() => _SubCategoryManagerState();
+  ConsumerState<SubCategoryManager> createState() => _SubCategoryManagerState();
 }
 
-class _SubCategoryManagerState extends State<SubCategoryManager> {
-  // We need a local copy to manipulate? 
-  // Ideally, we just pass changes up.
-  // But for the modal, we need to add/edit.
-
-
-
-  // Re-using the full list from previous file would be better, 
-  // but to keep this widget self-contained I'll include a decent set.
+class _SubCategoryManagerState extends ConsumerState<SubCategoryManager> {
   static const List<String> commonIcons = [
     'fastfood', 'restaurant', 'lunch_dining', 'local_cafe', 
     'directions_bus', 'directions_car', 'local_gas_station', 
@@ -37,6 +33,33 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
     'home', 'lightbulb', 'water_drop', 'wifi',
     'category', 'more_horiz', 'star', 'favorite'
   ];
+
+  Future<void> _showDeleteConfirmation(SubCategory sub, int index) async {
+    // Check for linked transactions
+    final txnRepository = await ref.read(transactionRepositoryProvider.future);
+    final linkedTransactions = await txnRepository.getTransactionsBySubCategoryId(sub.id ?? '');
+    final count = linkedTransactions.length;
+    
+    if (!mounted) return;
+    
+    final confirmed = await showModernConfirmDialog(
+      context: context,
+      title: AppLocalizations.of(context)!.delete,
+      message: '${AppLocalizations.of(context)!.delete} "${sub.name}"?',
+      secondaryMessage: count > 0 
+        ? '$count ${count == 1 ? 'transaction uses' : 'transactions use'} this sub-category'
+        : null,
+      confirmText: AppLocalizations.of(context)!.delete,
+      cancelText: AppLocalizations.of(context)!.cancel,
+      type: ConfirmDialogType.delete,
+    );
+    
+    if (confirmed == true) {
+      final newList = List<SubCategory>.from(widget.subCategories);
+      newList.removeAt(index);
+      widget.onSubCategoriesChanged(newList);
+    }
+  }
 
   void _showSubCategoryEditor({SubCategory? subCategory, int? index}) {
     final isEditing = subCategory != null;
@@ -77,7 +100,9 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        isEditing ? 'Edit Sub-Category' : 'New Sub-Category',
+                        isEditing 
+                            ? AppLocalizations.of(context)!.editSubCategory 
+                            : AppLocalizations.of(context)!.newSubCategory,
                         style: AppTextStyles.h3,
                       ),
                       TextButton(
@@ -103,7 +128,10 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
                             Navigator.pop(context);
                           }
                         },
-                        child: Text('Save', style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          AppLocalizations.of(context)!.save, 
+                          style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)
+                        ),
                       ),
                     ],
                   ),
@@ -115,18 +143,23 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Name', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                        Text(
+                          AppLocalizations.of(context)!.name, 
+                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)
+                        ),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey.withOpacity(0.1)),
                           ),
                           child: TextField(
                             controller: nameController,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. Breakfast',
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.subCategoryHint,
+                              hintStyle: TextStyle(color: Colors.grey[400]),
                               border: InputBorder.none,
                             ),
                             autofocus: !isEditing,
@@ -134,7 +167,10 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
                         ),
                         const SizedBox(height: 24),
 
-                        Text('Icon', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                        Text(
+                          AppLocalizations.of(context)!.icon, 
+                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)
+                        ),
                         const SizedBox(height: 16),
                         Wrap(
                           spacing: 12,
@@ -143,16 +179,20 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
                             final isSelected = selectedIcon == icon;
                             return GestureDetector(
                               onTap: () => setModalState(() => selectedIcon = icon),
-                              child: Container(
-                                width: 48,
-                                height: 48,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                width: 52,
+                                height: 52,
                                 decoration: BoxDecoration(
-                                  color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: isSelected ? AppColors.primary : Colors.grey[200]!,
-                                    width: isSelected ? 2 : 1,
-                                  ),
+                                  color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: isSelected ? [
+                                    BoxShadow(
+                                      color: AppColors.primary.withOpacity(0.2),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ] : null,
                                 ),
                                 child: Icon(
                                   IconHelper.getIcon(icon),
@@ -183,61 +223,99 @@ class _SubCategoryManagerState extends State<SubCategoryManager> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Sub-Categories', style: AppTextStyles.h3),
-            IconButton(
-              onPressed: () => _showSubCategoryEditor(),
-              icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
+            Text(
+              AppLocalizations.of(context)!.subCategories, 
+              style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)
             ),
-          ],
-        ),
-        if (widget.subCategories.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Text('No sub-categories', style: TextStyle(color: Colors.grey)),
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.subCategories.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final sub = widget.subCategories[index];
-              return ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    IconHelper.getIcon(sub.iconPath ?? 'category'),
-                    size: 16,
-                    color: Colors.grey[700],
-                  ),
+            GestureDetector(
+              onTap: () => _showSubCategoryEditor(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                title: Text(sub.name ?? 'Unknown'),
-                trailing: Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit_outlined, size: 18, color: Colors.blue),
-                      onPressed: () => _showSubCategoryEditor(subCategory: sub, index: index),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close, size: 18, color: Colors.grey),
-                      onPressed: () {
-                         final newList = List<SubCategory>.from(widget.subCategories);
-                         newList.removeAt(index);
-                         widget.onSubCategoriesChanged(newList);
-                      },
+                    Icon(Icons.add, color: AppColors.primary, size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      AppLocalizations.of(context)!.add, 
+                      style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)
                     ),
                   ],
                 ),
-              );
-            },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
           ),
+          child: widget.subCategories.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Icon(Icons.folder_open, color: Colors.grey[300], size: 40),
+                        const SizedBox(height: 8),
+                        Text(
+                          AppLocalizations.of(context)!.noSubCategories, 
+                          style: TextStyle(color: Colors.grey[400])
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.subCategories.length,
+                  separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[100]),
+                  itemBuilder: (context, index) {
+                    final sub = widget.subCategories[index];
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          IconHelper.getIcon(sub.iconPath ?? 'category'),
+                          size: 20,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      title: Text(
+                        sub.name ?? 'Unknown',
+                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit_outlined, size: 20, color: Colors.blue),
+                            onPressed: () => _showSubCategoryEditor(subCategory: sub, index: index),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete_outline, size: 20, color: Colors.red[300]),
+                            onPressed: () => _showDeleteConfirmation(sub, index),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+        ),
+        const SizedBox(height: 24),
       ],
     );
   }

@@ -10,6 +10,7 @@ import '../../wallets/presentation/wallet_provider.dart';
 import '../../wallets/domain/wallet.dart';
 import '../data/smart_note_repository.dart';
 import '../domain/smart_note.dart';
+import '../../../common_widgets/modern_wallet_selector.dart';
 
 class AddEditSmartNoteScreen extends ConsumerStatefulWidget {
   final SmartNote? note;
@@ -74,7 +75,7 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.note != null;
-    final walletsAsync = ref.watch(walletListProvider);
+    // Removed walletsAsync watch as ModernWalletSelector handles it internally
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -120,32 +121,15 @@ class _AddEditSmartNoteScreenState extends ConsumerState<AddEditSmartNoteScreen>
                     ),
                     const SizedBox(height: 16),
                     
-                    // Wallet
-                    walletsAsync.when(
-                      data: (wallets) {
-                        return DropdownButtonFormField<String>(
-                          value: _selectedWalletId,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.payWithWallet,
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                            prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
-                          ),
-                          items: wallets.map((w) {
-                            return DropdownMenuItem(
-                              value: w.externalId ?? w.id.toString(),
-                              child: Text(w.name),
-                            );
-                          }).toList(),
-                          onChanged: (val) => setState(() => _selectedWalletId = val),
-                        );
-                      },
-                      loading: () => const LinearProgressIndicator(),
-                      error: (_, __) => const SizedBox.shrink(),
+                    // Wallet (Modernized)
+                    Text(
+                      AppLocalizations.of(context)!.payWithWallet, 
+                      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)
+                    ),
+                    const SizedBox(height: 8),
+                    ModernWalletSelector(
+                      selectedWalletId: _selectedWalletId,
+                      onWalletSelected: (val) => setState(() => _selectedWalletId = val),
                     ),
                     const SizedBox(height: 24),
 

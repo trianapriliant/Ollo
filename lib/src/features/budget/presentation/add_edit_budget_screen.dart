@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import '../data/budget_repository.dart';
 import '../domain/budget.dart';
 import '../../categories/data/category_repository.dart';
@@ -242,19 +243,13 @@ class _AddEditBudgetScreenState extends ConsumerState<AddEditBudgetScreen> {
   }
 
   void _deleteBudget() async {
-    final confirm = await showDialog<bool>(
+    final confirm = await showModernConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteBudget),
-        content: Text(AppLocalizations.of(context)!.deleteBudgetConfirm),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      title: AppLocalizations.of(context)!.deleteBudget,
+      message: AppLocalizations.of(context)!.deleteBudgetConfirm,
+      confirmText: AppLocalizations.of(context)!.delete,
+      cancelText: AppLocalizations.of(context)!.cancel,
+      type: ConfirmDialogType.delete,
     );
 
     if (confirm == true && widget.budget != null) {

@@ -378,6 +378,7 @@
   "billDetails": "Bill Details",
   "billName": "Bill Name",
   "billType": "Bill Type",
+  "selectBillType": "Select Bill Type",
   "repeatBill": "Repeat this bill?",
   "autoCreateBill": "Automatically create new bills",
   "updateBill": "Update Bill",
@@ -1142,5 +1143,17 @@
           }
       }
   },
-  "notificationAwesome": "Awesome"
+  "notificationAwesome": "Awesome",
+  "seeAll": "See All",
+  "selectIcon": "Select Icon",
+  "type": "Type",
+  "editSubCategory": "Edit Sub-Category",
+  "newSubCategory": "New Sub-Category",
+  "name": "Name",
+  "subCategoryHint": "e.g. Breakfast",
+  "subCategories": "Sub-Categories",
+  "add": "Add",
+  "noSubCategories": "No sub-categories",
+  "color": "Color",
+  "icon": "Icon"
 }

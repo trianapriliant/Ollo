@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../data/transaction_repository.dart';
 import '../domain/transaction.dart';
@@ -187,24 +188,18 @@ class TransactionDetailScreen extends ConsumerWidget {
       child: Row(
         children: [
           // Delete Button (Small)
-          Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              onPressed: () async {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(AppLocalizations.of(context)!.deleteTransaction),
-                    content: Text(AppLocalizations.of(context)!.deleteTransactionConfirm),
-                    actions: [
-                      TextButton(onPressed: () => context.pop(false), child: Text(AppLocalizations.of(context)!.cancel)),
-                      TextButton(
-                        onPressed: () => context.pop(true), 
-                        child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
-                      ),
-                    ],
-                  ),
-                );
+            Expanded(
+              flex: 1,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final confirm = await showModernConfirmDialog(
+                    context: context,
+                    title: AppLocalizations.of(context)!.deleteTransaction,
+                    message: AppLocalizations.of(context)!.deleteTransactionConfirm,
+                    confirmText: AppLocalizations.of(context)!.delete,
+                    cancelText: AppLocalizations.of(context)!.cancel,
+                    type: ConfirmDialogType.delete,
+                  );
 
                 if (confirm == true) {
                   // Delete transaction (Repository handles balance reversal)

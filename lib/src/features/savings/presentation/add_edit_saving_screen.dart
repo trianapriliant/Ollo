@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
@@ -134,62 +135,31 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
                     // Type Selector
                     Text('Bucket Type', style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey)),
                     const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<SavingType>(
-                          value: _type,
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                          items: SavingType.values.map((t) {
-                            IconData icon;
-                            Color color;
-                            String label;
-                            
-                            switch (t) {
-                              case SavingType.emergency:
-                                icon = Icons.warning_amber_rounded;
-                                color = Colors.red;
-                                label = 'Emergency Fund';
-                                break;
-                              case SavingType.deposito:
-                                icon = Icons.lock_clock_outlined;
-                                color = Colors.purple;
-                                label = 'Locked / Deposito';
-                                break;
-                              case SavingType.standard:
-                              default:
-                                icon = Icons.savings_outlined;
-                                color = Colors.blue;
-                                label = 'Standard Goal';
-                            }
-
-                            return DropdownMenuItem(
-                              value: t,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: color.withOpacity(0.1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(icon, color: color, size: 20),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(label, style: AppTextStyles.bodyMedium),
-                                ],
+                    GestureDetector(
+                      onTap: _showBucketTypePicker,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: _getTypeColor(_type).withOpacity(0.1),
+                                shape: BoxShape.circle,
                               ),
-                            );
-                          }).toList(),
-                          onChanged: (val) {
-                            if (val != null) setState(() => _type = val);
-                          },
+                              child: Icon(_getTypeIcon(_type), color: _getTypeColor(_type), size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(_getTypeLabel(_type), style: AppTextStyles.bodyMedium),
+                            ),
+                            const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+                          ],
                         ),
                       ),
                     ),
@@ -224,6 +194,121 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
     );
   }
 
+  void _showBucketTypePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+             maxHeight: MediaQuery.of(context).size.height * 0.5,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Select Bucket Type',
+                style: AppTextStyles.h2,
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: SavingType.values.length,
+                  itemBuilder: (context, index) {
+                    final type = SavingType.values[index];
+                    final isSelected = type == _type;
+                    
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      leading: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(_getTypeIcon(type), 
+                          color: isSelected ? AppColors.primary : Colors.grey[700]),
+                      ),
+                      title: Text(
+                        _getTypeLabel(type),
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                        ),
+                      ),
+                      trailing: isSelected 
+                          ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                          : null,
+                      onTap: () {
+                        setState(() => _type = type);
+                        context.pop();
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  IconData _getTypeIcon(SavingType type) {
+    switch (type) {
+      case SavingType.emergency:
+        return Icons.warning_amber_rounded;
+      case SavingType.deposito:
+        return Icons.lock_clock_outlined;
+      case SavingType.standard:
+      default:
+        return Icons.savings_outlined;
+    }
+  }
+
+  Color _getTypeColor(SavingType type) {
+    switch (type) {
+      case SavingType.emergency:
+        return Colors.red;
+      case SavingType.deposito:
+        return Colors.purple;
+      case SavingType.standard:
+      default:
+        return Colors.blue;
+    }
+  }
+
+  String _getTypeLabel(SavingType type) {
+    switch (type) {
+      case SavingType.emergency:
+        return 'Emergency Fund';
+      case SavingType.deposito:
+        return 'Locked / Deposito';
+      case SavingType.standard:
+      default:
+        return 'Standard Goal';
+    }
+  }
+
   Future<void> _saveGoal() async {
     if (_formKey.currentState!.validate()) {
       final target = CurrencyInputFormatter.parse(_targetController.text);
@@ -256,20 +341,13 @@ class _AddEditSavingScreenState extends ConsumerState<AddEditSavingScreen> {
   }
 
   Future<void> _confirmDelete() async {
-    final confirm = await showDialog<bool>(
+    final confirm = await showModernConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Bucket?'),
-        content: const Text('This will delete the saving goal and its history. Wallet balances will NOT be reverted automatically.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+      title: 'Delete Bucket?',
+      message: 'This will delete the saving goal and its history. Wallet balances will NOT be reverted automatically.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: ConfirmDialogType.delete,
     );
 
     if (confirm == true && widget.goal != null) {

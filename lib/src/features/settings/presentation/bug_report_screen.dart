@@ -123,14 +123,28 @@ Sent via Ollo App
 
   Future<void> _sendViaEmail() async {
     final report = _generateReport();
-    final subject = Uri.encodeComponent('[Bug Report] ${_titleController.text}');
-    final body = Uri.encodeComponent(report);
-    final uri = Uri.parse('mailto:trianaprilianto3@gmail.com?subject=$subject&body=$body');
     
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'trianaprilianto3@gmail.com',
+      query: _encodeQueryParameters(<String, String>{
+        'subject': '[Bug Report] ${_titleController.text}',
+        'body': report,
+      }),
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
     }
   }
+
+  String? _encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
 
   Future<void> _sendViaWhatsApp() async {
     final report = _generateReport();
@@ -331,7 +345,7 @@ Sent via Ollo App
                       ),
                     ),
                     trailing: isSelected 
-                        ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                        ? const Icon(Icons.check_circle, color: AppColors.primary, size: 24)
                         : null,
                     onTap: () {
                       setState(() => _selectedFeature = feature);
@@ -400,7 +414,7 @@ Sent via Ollo App
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.info_outline, color: AppColors.primary, size: 20),
+                          const Icon(Icons.info_outline, color: AppColors.primary, size: 20),
                           const SizedBox(width: 8),
                           Text(l10n.bugReportDeviceInfo, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
                         ],
@@ -425,8 +439,8 @@ Sent via Ollo App
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.withOpacity(0.1)),
                     ),
                     child: Row(
                       children: [
@@ -465,14 +479,17 @@ Sent via Ollo App
                         onTap: () => setState(() => _selectedSeverity = entry.key),
                         child: Container(
                           margin: const EdgeInsets.only(right: 8),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                           decoration: BoxDecoration(
                             color: isSelected ? entry.value : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: entry.value,
-                              width: isSelected ? 2 : 1,
-                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: isSelected ? [
+                              BoxShadow(
+                                color: entry.value.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ] : null,
                           ),
                           child: Center(
                             child: Text(
@@ -495,22 +512,29 @@ Sent via Ollo App
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _titleController,
+                  style: AppTextStyles.bodyMedium,
                   decoration: InputDecoration(
                     hintText: l10n.bugReportTitleHint,
+                    hintStyle: TextStyle(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.grey.withOpacity(0.1)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Colors.red, width: 1),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -527,22 +551,29 @@ Sent via Ollo App
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 4,
+                  style: AppTextStyles.bodyMedium,
                   decoration: InputDecoration(
                     hintText: l10n.bugReportDescriptionHint,
+                    hintStyle: TextStyle(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.grey.withOpacity(0.1)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Colors.red, width: 1),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -572,22 +603,25 @@ Sent via Ollo App
                 TextFormField(
                   controller: _stepsController,
                   maxLines: 3,
+                  style: AppTextStyles.bodyMedium,
                   decoration: InputDecoration(
                     hintText: l10n.bugReportStepsHint,
+                    hintStyle: TextStyle(color: Colors.grey[400]),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.grey.withOpacity(0.1)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
                     ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                 ),
                 const SizedBox(height: 32),

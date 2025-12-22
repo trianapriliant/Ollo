@@ -107,68 +107,180 @@ class SettingsScreen extends ConsumerWidget {
   void _showCurrencyPicker(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(24),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppLocalizations.of(context)!.selectCurrency, style: AppTextStyles.h2),
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context)!.selectCurrency,
+                style: AppTextStyles.h2,
+              ),
               const SizedBox(height: 16),
               Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                    // Use ListView.builder for efficiency and scrolling
-                  itemCount: availableCurrencies.length,
-                  itemBuilder: (context, index) {
-                    final currency = availableCurrencies[index];
-                    return ListTile(
-                      leading: Text(currency.symbol, style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
-                      title: Text(currency.name, style: AppTextStyles.bodyLarge),
-                      subtitle: Text(currency.code),
-                      onTap: () {
-                        ref.read(currencyProvider.notifier).setCurrency(currency);
-                        context.pop();
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final currentCurrency = ref.watch(currencyProvider);
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: availableCurrencies.length,
+                      itemBuilder: (context, index) {
+                        final currency = availableCurrencies[index];
+                        final isSelected = currency == currentCurrency;
+                        
+                        return ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                          leading: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              currency.symbol,
+                              style: AppTextStyles.h3.copyWith(
+                                color: isSelected ? AppColors.primary : Colors.grey[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            currency.name,
+                            style: AppTextStyles.bodyLarge.copyWith(
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                              color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                            ),
+                          ),
+                          subtitle: Text(
+                            currency.code,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: isSelected ? AppColors.primary.withOpacity(0.7) : Colors.grey[600],
+                            ),
+                          ),
+                          trailing: isSelected 
+                              ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                              : null,
+                          onTap: () {
+                            ref.read(currencyProvider.notifier).setCurrency(currency);
+                            context.pop();
+                          },
+                        );
                       },
                     );
                   },
                 ),
               ),
+              const SizedBox(height: 24),
             ],
           ),
         );
       },
     );
   }
+
   void _showLanguagePicker(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(24),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppLocalizations.of(context)!.selectLanguage, style: AppTextStyles.h2),
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context)!.selectLanguage,
+                style: AppTextStyles.h2,
+              ),
               const SizedBox(height: 16),
-              ...AppLanguage.values.map((language) {
-                return ListTile(
-                  leading: Text(language.code.toUpperCase(), style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
-                  title: Text(language.name, style: AppTextStyles.bodyLarge),
-                  onTap: () {
-                    ref.read(languageProvider.notifier).setLanguage(language);
-                    context.pop();
+              Flexible(
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final currentLanguage = ref.watch(languageProvider);
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: AppLanguage.values.length,
+                      itemBuilder: (context, index) {
+                        final language = AppLanguage.values[index];
+                        final isSelected = language == currentLanguage;
+                        
+                        return ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                          leading: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              language.code.toUpperCase(),
+                              style: AppTextStyles.h3.copyWith(
+                                color: isSelected ? AppColors.primary : Colors.grey[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            language.name,
+                            style: AppTextStyles.bodyLarge.copyWith(
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                              color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                            ),
+                          ),
+                          trailing: isSelected 
+                              ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                              : null,
+                          onTap: () {
+                            ref.read(languageProvider.notifier).setLanguage(language);
+                            context.pop();
+                          },
+                        );
+                      },
+                    );
                   },
-                );
-              }),
+                ),
+              ),
+              const SizedBox(height: 24),
             ],
           ),
         );
@@ -179,36 +291,85 @@ class SettingsScreen extends ConsumerWidget {
   void _showVoiceLanguagePicker(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(24),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Select Voice Language', style: AppTextStyles.h2),
-               const SizedBox(height: 8),
-              Text('Language used for voice recording', style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
-              const SizedBox(height: 16),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: VoiceLanguage.values.map((language) {
-                      return ListTile(
-                        leading: Text(language.code.split('_').last, style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
-                        title: Text(language.name, style: AppTextStyles.bodyLarge),
-                        onTap: () {
-                          ref.read(voiceLanguageProvider.notifier).setLanguage(language);
-                          context.pop();
-                        },
-                      );
-                    }).toList(),
-                  ),
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
+              const SizedBox(height: 24),
+              Text(
+                'Select Voice Language',
+                style: AppTextStyles.h2,
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final currentVoiceLang = ref.watch(voiceLanguageProvider);
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: VoiceLanguage.values.length,
+                      itemBuilder: (context, index) {
+                        final language = VoiceLanguage.values[index];
+                        final isSelected = language == currentVoiceLang;
+                        
+                        return ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                          leading: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              language.code.split('_').last,
+                              style: AppTextStyles.h3.copyWith(
+                                color: isSelected ? AppColors.primary : Colors.grey[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            language.name,
+                            style: AppTextStyles.bodyLarge.copyWith(
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                              color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                            ),
+                          ),
+                          trailing: isSelected 
+                              ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                              : null,
+                          onTap: () {
+                            ref.read(voiceLanguageProvider.notifier).setLanguage(language);
+                            context.pop();
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
             ],
           ),
         );

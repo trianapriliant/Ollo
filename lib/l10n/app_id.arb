@@ -291,6 +291,7 @@
   "billDetails": "Rincian Tagihan",
   "billName": "Nama Tagihan",
   "billType": "Tipe Tagihan",
+  "selectBillType": "Pilih Tipe Tagihan",
   "repeatBill": "Ulangi tagihan ini?",
   "autoCreateBill": "Otomatis buat tagihan baru",
   "updateBill": "Perbarui",
@@ -942,5 +943,17 @@
   "notificationNewBadgeUnlocked": "Lencana Baru Terbuka!",
   "notificationCongratulations": "Selamat!",
   "notificationYouEarnedXP": "Anda mendapatkan {amount} XP",
-  "notificationAwesome": "Keren"
+  "notificationAwesome": "Keren",
+  "seeAll": "Lihat Semua",
+  "selectIcon": "Pilih Ikon",
+  "type": "Tipe",
+  "editSubCategory": "Edit Sub-Kategori",
+  "newSubCategory": "Sub-Kategori Baru",
+  "name": "Nama",
+  "subCategoryHint": "cth. Sarapan",
+  "subCategories": "Sub-Kategori",
+  "add": "Tambah",
+  "noSubCategories": "Belum ada sub-kategori",
+  "color": "Warna",
+  "icon": "Ikon"
 }

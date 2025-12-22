@@ -36,12 +36,32 @@ final isarProvider = FutureProvider<Isar>((ref) async {
     // Comprehensive Migration: Sync all default categories
     // This ensures any new categories added to defaultCategories are available on app update
     for (final defaultCat in defaultCategories) {
-      final existingCat = await isar.categorys.filter()
+      // First, try to find by externalId (the correct way)
+      var existingCat = await isar.categorys.filter()
           .externalIdEqualTo(defaultCat.externalId)
           .findFirst();
       
+      // If not found by externalId, also check by name + type (for corrupted data repair)
       if (existingCat == null) {
-        // Category doesn't exist, add it
+        existingCat = await isar.categorys.filter()
+            .nameEqualTo(defaultCat.name)
+            .and()
+            .typeEqualTo(defaultCat.type)
+            .findFirst();
+        
+        if (existingCat != null) {
+          // Found by name+type but externalId doesn't match - this is corrupted data
+          // Fix the externalId instead of adding a duplicate
+          existingCat.externalId = defaultCat.externalId;
+          await isar.writeTxn(() async {
+            await isar.categorys.put(existingCat!);
+          });
+          continue; // Move to next default category
+        }
+      }
+      
+      if (existingCat == null) {
+        // Category truly doesn't exist, add it
         await isar.writeTxn(() async {
           await isar.categorys.put(defaultCat);
         });
@@ -65,7 +85,7 @@ final isarProvider = FutureProvider<Isar>((ref) async {
         if (changed) {
           existingCat.subCategories = currentSubs;
           await isar.writeTxn(() async {
-            await isar.categorys.put(existingCat);
+            await isar.categorys.put(existingCat!);
           });
         }
       }

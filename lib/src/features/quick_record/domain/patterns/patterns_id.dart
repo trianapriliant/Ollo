@@ -51,7 +51,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
       ],
 
       'Snacks': [
-        'cemilan', 'snack', 'jajan', 'coklat', 'keripik', 'roti',
+        'cucur','cucur adaby','cucur adaby yang enaq','cemilan', 'snack', 'jajan', 'coklat', 'keripik', 'roti',
         'kue', 'martabak', 'dimsum', 'basreng', 'macaroni', 
         'kacang', 'permen', 'kue basah', 'kue kering', 
         'donat', 'donut', 'croissant', 'wafer',
@@ -105,7 +105,8 @@ const Map<String, CategoryPattern> indonesianPatterns = {
         'pembayaran kos', 'uang kos', 'uang kontrakan', 
         'boarding house', 'rent', 'sewa apartemen', 'bayar apart',
         'monthly rent', 'apartment rent', 'lease',
-        'biaya sewa', 'tagihan sewa', 'uang sewa'
+        'biaya sewa', 'tagihan sewa', 'uang sewa', 'kos', 'sewa kos', 'bayar kos',
+        'bayar sewa', 'bayar kontrakan'
       ],
 
       'Mortgage': [
@@ -476,7 +477,7 @@ const Map<String, CategoryPattern> indonesianPatterns = {
       'Treat': [
         'traktir', 'traktir teman', 'bayarin teman', 'bayarin',
         'treat', 'treat teman', 'beliin teman', 'beli untuk teman',
-        'bayar makan teman', 'bayar teman'
+        'bayar makan teman', 'bayar teman', 'bayarin teman'
       ],
       'Refund': [
         'refund teman', 'balikin duit teman', 'balikin uang teman',
@@ -499,10 +500,10 @@ const Map<String, CategoryPattern> indonesianPatterns = {
     mainKeywords: ['pendapatan', 'salary'],
     subCategoryKeywords: {
       'Monthly': [
-        'gaji', 'gaji bulanan', 'gajian', 'monthly', 'gaji pokok',
+        'penghasilan','penghasilan bulanan','gaji', 'gaji bulanan', 'gajian', 'monthly', 'gaji pokok',
         'salary', 'pendapatan bulanan', 'income bulanan', 'penghasilan tetap',
         'pemasukan rutin', 'upah bulanan', 'gaji tetap', 'uang bulanan',
-        'fixed salary', 'bayaran bulanan'
+        'fixed salary', 'bayaran bulanan', 'uang tetap', 'uang tetap bulanan', 'uang tetap rutin', 'uang tetap rutin bulanan'
       ],
 
       'Weekly': [
@@ -555,11 +556,33 @@ const Map<String, CategoryPattern> indonesianPatterns = {
   'Investments': CategoryPattern(
     mainKeywords: ['investasi', 'cuan'],
     subCategoryKeywords: {
-      'Dividends': ['dividen', 'bagi hasil'],
-      'Interest': ['bunga bank', 'bunga deposito'],
-      'Crypto': ['crypto', 'bitcoin', 'eth', 'trading'],
-      'Stocks': ['saham', 'stock', 'rdn', 'capital gain'],
-      'Real Estate': ['sewa rumah', 'kosan', 'properti'],
+      'Dividends': [
+        'dividen','bagi hasil','bagi laba','bagi untung','pembagian keuntungan',
+        'profit sharing','hasil saham','dividen tunai','dividen rdn','yield',
+        'pembagian laba','div.','dividen masuk'
+      ],
+      'Interest': [
+        'bunga bank','bunga deposito','bunga tabungan','interest','return deposito',
+        'bonus tabungan','nisbah','ujrah','margin','bagi hasil tabungan',
+        'bunga berjalan','imbal hasil','bunga investasi','margin bank',
+        'bunga pinjaman masuk'
+      ],
+      'Crypto': [
+        'crypto','kripto','bitcoin','btc','eth','ether','bnb','doge','altcoin',
+        'token','crypto trading','trading koin','jual beli crypto','swap crypto',
+        'staking reward','mining','airdrop','profit crypto','cuan crypto',
+        'futures','leverage','binance'
+      ],
+      'Stocks': [
+        'saham','stock','stocks','rdn','rekening dana nasabah','RDN masuk',
+        'capital gain','cuan saham','profit saham','dividen saham','jual saham',
+        'beli saham','trading saham','invest saham','IHSG','bluechip','lot saham'
+      ],
+      'Real Estate': [
+        'sewa properti','rental properti','properti','property rental',
+        'terima uang kos','terima uang kost','terima uang kontrakan','terima uang rental kost','terima uang sewa','ruko',
+        'kapling','jual rumah','jual tanah','sewa kamar','deposit sewa'
+      ],
     },
   ),
   'Gifts': CategoryPattern(

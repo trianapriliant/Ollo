@@ -876,6 +876,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get billType => 'प्रकार';
 
   @override
+  String get selectBillType => 'Select Bill Type';
+
+  @override
   String get repeatBill => 'दोहराना?';
 
   @override
@@ -2550,4 +2553,34 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get notificationAwesome => 'Awesome';
+
+  @override
+  String get seeAll => 'See All';
+
+  @override
+  String get selectIcon => 'Select Icon';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get editSubCategory => 'Edit Sub-Category';
+
+  @override
+  String get newSubCategory => 'New Sub-Category';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get subCategoryHint => 'e.g. Breakfast';
+
+  @override
+  String get subCategories => 'Sub-Categories';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get noSubCategories => 'No sub-categories';
 }

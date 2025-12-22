@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
@@ -141,13 +142,13 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Icon(
-                              _type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet,
+                              _getTypeIcon(_type),
                               color: Colors.white.withOpacity(0.8),
                             ),
                             const SizedBox(height: 4),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
+                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -239,7 +240,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
               ),
               const SizedBox(height: 16),
               
-              // New Fields
+              // New Fields (Optional)
               Row(
                 children: [
                   Expanded(
@@ -248,6 +249,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                       label: 'Label (Optional)',
                       hint: 'e.g. Main Savings',
                       icon: Icons.label_outline,
+                      isRequired: false, // Explicitly not required
                       onChanged: (_) => setState(() {}),
                     ),
                   ),
@@ -258,6 +260,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                       label: 'Branch (Optional)',
                       hint: 'e.g. KCP Sudirman',
                       icon: Icons.location_on_outlined,
+                      isRequired: false, // Explicitly not required
                       onChanged: (_) => setState(() {}),
                     ),
                   ),
@@ -265,75 +268,36 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Type & Account Type
+              // Type & Account Type (Modernized Selectors)
               Row(
                 children: [
                   Expanded(
-                    child: DropdownButtonFormField<CardType>(
-                      value: _type,
-                      decoration: InputDecoration(
-                        labelText: 'Provider',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(_type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet),
-                      ),
-                      items: CardType.values.map((t) {
-                        return DropdownMenuItem(
-                          value: t,
-                          child: Text(t.name.toUpperCase()),
-                        );
-                      }).toList(),
-                      onChanged: (val) {
-                        if (val != null) setState(() => _type = val);
-                      },
+                    child: _buildSelector(
+                      label: 'Provider',
+                      value: _type.name.toUpperCase(),
+                      icon: _getTypeIcon(_type),
+                      onTap: _showProviderPicker,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: DropdownButtonFormField<CardAccountType>(
-                      value: _accountType,
-                      decoration: InputDecoration(
-                        labelText: 'Type',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(_accountType == CardAccountType.personal ? Icons.person : Icons.work),
-                      ),
-                      items: CardAccountType.values.map((t) {
-                        return DropdownMenuItem(
-                          value: t,
-                          child: Text(t.name.toUpperCase()),
-                        );
-                      }).toList(),
-                      onChanged: (val) {
-                        if (val != null) setState(() => _accountType = val);
-                      },
+                    child: _buildSelector(
+                      label: 'Type',
+                      value: _accountType.name.toUpperCase(),
+                      icon: _getAccountTypeIcon(_accountType),
+                      onTap: _showAccountTypePicker,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              // Category Dropdown
-              DropdownButtonFormField<CardCategory>(
-                value: _category,
-                decoration: InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-                  filled: true,
-                  fillColor: Colors.white,
-                  prefixIcon: const Icon(Icons.category_outlined),
-                ),
-                items: CardCategory.values.map((t) {
-                  return DropdownMenuItem(
-                    value: t,
-                    child: Text(t.name.toUpperCase()),
-                  );
-                }).toList(),
-                onChanged: (val) {
-                  if (val != null) setState(() => _category = val);
-                },
+              // Category Selector (Modernized)
+              _buildSelector(
+                label: 'Category',
+                value: _category.name.toUpperCase(),
+                icon: Icons.category_outlined, 
+                onTap: _showCategoryPicker,
               ),
               const SizedBox(height: 16),
 
@@ -385,12 +349,14 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
     required String hint,
     required IconData icon,
     TextInputType? keyboardType,
+    bool isRequired = true,
     void Function(String)? onChanged,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       onChanged: onChanged,
+      style: AppTextStyles.bodyMedium,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
@@ -400,11 +366,203 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        prefixIcon: Icon(icon),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.1)),
+        ),
+        prefixIcon: Icon(icon, color: AppColors.textSecondary),
+        labelStyle: const TextStyle(color: AppColors.textSecondary),
       ),
-      validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+      validator: (val) {
+        if (!isRequired) return null;
+        if (val == null || val.isEmpty) return 'Required';
+        return null;
+      },
     );
   }
+
+  /// Reusable Selector Widget similar to AddBillScreen pattern
+  Widget _buildSelector({
+    required String label,
+    required String value,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+           // Label optional, usually included in InputDecorator style or outside
+           // Here mimicking custom InputDecorator look
+           Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.withOpacity(0.1)),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: AppColors.textSecondary),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      const SizedBox(height: 4),
+                      Text(value, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- Helpers for Icons ---
+  IconData _getTypeIcon(CardType type) {
+    switch (type) {
+      case CardType.bank: return Icons.account_balance;
+      case CardType.eWallet: return Icons.account_balance_wallet;
+      case CardType.other: return Icons.credit_card;
+      default: return Icons.payment;
+    }
+  }
+
+  IconData _getAccountTypeIcon(CardAccountType type) {
+    switch (type) {
+      case CardAccountType.personal: return Icons.person;
+      case CardAccountType.business: return Icons.business_center;
+
+      default: return Icons.work;
+    }
+  }
+
+  // --- Pickers ---
+
+  void _showProviderPicker() {
+    _showPicker(
+      title: 'Select Provider',
+      items: CardType.values,
+      selectedItem: _type,
+      getName: (item) => item.name.toUpperCase(),
+      getIcon: (item) => _getTypeIcon(item),
+      onSelected: (item) => setState(() => _type = item),
+    );
+  }
+
+  void _showAccountTypePicker() {
+    _showPicker(
+      title: 'Select Account Type',
+      items: CardAccountType.values,
+      selectedItem: _accountType,
+      getName: (item) => item.name.toUpperCase(),
+      getIcon: (item) => _getAccountTypeIcon(item),
+      onSelected: (item) => setState(() => _accountType = item),
+    );
+  }
+
+  void _showCategoryPicker() {
+    _showPicker(
+      title: 'Select Category',
+      items: CardCategory.values,
+      selectedItem: _category,
+      getName: (item) => item.name.toUpperCase(),
+      getIcon: (item) => Icons.category_outlined, // Simplified, or add map
+      onSelected: (item) => setState(() => _category = item),
+    );
+  }
+
+  // --- Generic Picker Implementation ---
+  void _showPicker<T>({
+    required String title,
+    required List<T> items,
+    required T selectedItem,
+    required String Function(T) getName,
+    required IconData Function(T) getIcon,
+    required Function(T) onSelected,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.5,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(title, style: AppTextStyles.h2),
+              const SizedBox(height: 16),
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    final isSelected = item == selectedItem;
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          getIcon(item),
+                          color: isSelected ? AppColors.primary : Colors.grey,
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        getName(item),
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                        ),
+                      ),
+                      trailing: isSelected 
+                          ? const Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                          : null,
+                      onTap: () {
+                        onSelected(item);
+                        context.pop();
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   Future<void> _saveCard() async {
     if (_formKey.currentState!.validate()) {
@@ -446,19 +604,13 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
 
   Future<void> _deleteCard() async {
     if (widget.card != null) {
-      final confirm = await showDialog<bool>(
+      final confirm = await showModernConfirmDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Delete Card?'),
-          content: const Text('Are you sure you want to delete this card?'),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true), 
-              child: const Text('Delete', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
+        title: 'Delete Card?',
+        message: 'Are you sure you want to delete this card?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        type: ConfirmDialogType.delete,
       );
 
       if (confirm == true) {

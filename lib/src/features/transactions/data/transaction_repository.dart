@@ -11,6 +11,8 @@ abstract class TransactionRepository {
   Future<void> updateTransaction(Transaction transaction);
   Future<void> deleteTransaction(Id id);
   Future<List<Transaction>> getAllTransactions();
+  Future<List<Transaction>> getTransactionsByCategoryId(String categoryId);
+  Future<List<Transaction>> getTransactionsBySubCategoryId(String subCategoryId);
   Future<void> clearAllTransactions();
   Future<void> importTransactions(List<Transaction> transactions);
   Stream<List<Transaction>> watchTransactions();
@@ -115,6 +117,16 @@ class IsarTransactionRepository implements TransactionRepository {
   @override
   Future<List<Transaction>> getAllTransactions() async {
     return isar.transactions.where().sortByDateDesc().findAll();
+  }
+
+  @override
+  Future<List<Transaction>> getTransactionsByCategoryId(String categoryId) async {
+    return isar.transactions.filter().categoryIdEqualTo(categoryId).findAll();
+  }
+
+  @override
+  Future<List<Transaction>> getTransactionsBySubCategoryId(String subCategoryId) async {
+    return isar.transactions.filter().subCategoryIdEqualTo(subCategoryId).findAll();
   }
 
   @override

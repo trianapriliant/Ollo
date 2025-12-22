@@ -878,6 +878,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get billType => 'Tipe Tagihan';
 
   @override
+  String get selectBillType => 'Pilih Tipe Tagihan';
+
+  @override
   String get repeatBill => 'Ulangi tagihan ini?';
 
   @override
@@ -2579,4 +2582,34 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get notificationAwesome => 'Keren';
+
+  @override
+  String get seeAll => 'Lihat Semua';
+
+  @override
+  String get selectIcon => 'Pilih Ikon';
+
+  @override
+  String get type => 'Tipe';
+
+  @override
+  String get editSubCategory => 'Edit Sub-Kategori';
+
+  @override
+  String get newSubCategory => 'Sub-Kategori Baru';
+
+  @override
+  String get name => 'Nama';
+
+  @override
+  String get subCategoryHint => 'cth. Sarapan';
+
+  @override
+  String get subCategories => 'Sub-Kategori';
+
+  @override
+  String get add => 'Tambah';
+
+  @override
+  String get noSubCategories => 'Belum ada sub-kategori';
 }

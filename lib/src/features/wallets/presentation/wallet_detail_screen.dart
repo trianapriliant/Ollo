@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../dashboard/presentation/widgets/recent_transactions_list.dart';
 import '../../transactions/data/transaction_repository.dart';
@@ -62,19 +63,13 @@ class WalletDetailScreen extends ConsumerWidget {
                   MaterialPageRoute(builder: (_) => AddWalletScreen(walletToEdit: currentWallet)),
                 );
               } else if (value == 'delete_wallet') {
-                final confirm = await showDialog<bool>(
+                final confirm = await showModernConfirmDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(AppLocalizations.of(context)!.deleteWalletTitle),
-                    content: Text(AppLocalizations.of(context)!.deleteWalletConfirm(currentWallet.name)),
-                    actions: [
-                      TextButton(onPressed: () => context.pop(false), child: Text(AppLocalizations.of(context)!.cancel)),
-                      TextButton(
-                        onPressed: () => context.pop(true),
-                        child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
-                      ),
-                    ],
-                  ),
+                  title: AppLocalizations.of(context)!.deleteWalletTitle,
+                  message: AppLocalizations.of(context)!.deleteWalletConfirm(currentWallet.name),
+                  confirmText: AppLocalizations.of(context)!.delete,
+                  cancelText: AppLocalizations.of(context)!.cancel,
+                  type: ConfirmDialogType.delete,
                 );
 
                 if (confirm == true) {

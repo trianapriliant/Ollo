@@ -27,6 +27,7 @@ class Transaction {
   String? walletId;
   String? destinationWalletId; // For transfers
   String? categoryId;
+  String? categoryName; // Snapshot of category name when transaction was created
 
 
 
@@ -45,6 +46,7 @@ class Transaction {
     this.walletId,
     this.destinationWalletId,
     this.categoryId,
+    this.categoryName,
     this.subCategoryId,
     this.subCategoryName,
     this.subCategoryIcon,
@@ -53,6 +55,7 @@ class Transaction {
   String? subCategoryId;
   String? subCategoryName;
   String? subCategoryIcon;
+
 
   // Helper getters (ignored by Isar)
   @ignore
@@ -77,6 +80,7 @@ class Transaction {
       'walletId': walletId,
       'destinationWalletId': destinationWalletId,
       'categoryId': categoryId,
+      'categoryName': categoryName,
       'subCategoryId': subCategoryId,
       'subCategoryName': subCategoryName,
       'subCategoryIcon': subCategoryIcon,
@@ -100,6 +104,7 @@ class Transaction {
       walletId: json['walletId'] as String?,
       destinationWalletId: json['destinationWalletId'] as String?,
       categoryId: json['categoryId'] as String?,
+      categoryName: json['categoryName'] as String?,
       subCategoryId: json['subCategoryId'] as String?,
       subCategoryName: json['subCategoryName'] as String?,
       subCategoryIcon: json['subCategoryIcon'] as String?,

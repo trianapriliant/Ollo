@@ -10,6 +10,7 @@ import 'package:path/path.dart' as path;
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import '../data/wishlist_repository.dart';
 import '../domain/wishlist.dart';
 
@@ -331,16 +332,13 @@ class _AddWishlistScreenState extends ConsumerState<AddWishlistScreen> {
   }
   
   Future<void> _confirmDelete() async {
-    final confirm = await showDialog<bool>(
+    final confirm = await showModernConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteWishlistTitle),
-        content: Text(AppLocalizations.of(context)!.deleteWishlistConfirm),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red))),
-        ],
-      ),
+      title: AppLocalizations.of(context)!.deleteWishlistTitle,
+      message: AppLocalizations.of(context)!.deleteWishlistConfirm,
+      confirmText: AppLocalizations.of(context)!.delete,
+      cancelText: AppLocalizations.of(context)!.cancel,
+      type: ConfirmDialogType.delete,
     );
     
     if (confirm == true && widget.wishlistToEdit != null) {

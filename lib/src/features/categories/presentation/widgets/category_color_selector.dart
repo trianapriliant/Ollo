@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../../localization/generated/app_localizations.dart';
 
 class CategoryColorSelector extends StatelessWidget {
   final Color selectedColor;
@@ -25,12 +26,20 @@ class CategoryColorSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Color', style: AppTextStyles.h3),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 50,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
+        Text(
+          AppLocalizations.of(context)!.color, 
+          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
             children: _availableColors.map((color) => _buildColorOption(color)).toList(),
           ),
         ),
@@ -43,20 +52,30 @@ class CategoryColorSelector extends StatelessWidget {
     final isSelected = selectedColor.value == color.value;
     return GestureDetector(
       onTap: () => onColorSelected(color),
-      child: Container(
-        margin: const EdgeInsets.only(right: 12),
-        width: 40,
-        height: 40,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 44,
+        height: 44,
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
-          border: isSelected ? Border.all(color: Colors.black, width: 2) : null,
           boxShadow: [
-            if (isSelected)
-              BoxShadow(color: color.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 2)),
+            BoxShadow(
+              color: isSelected ? color.withOpacity(0.5) : Colors.transparent,
+              blurRadius: isSelected ? 12 : 0,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
-        child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
+        child: isSelected 
+            ? Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 3),
+                ),
+                child: const Icon(Icons.check, color: Colors.white, size: 22),
+              )
+            : null,
       ),
     );
   }

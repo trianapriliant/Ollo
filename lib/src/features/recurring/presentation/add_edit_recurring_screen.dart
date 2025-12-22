@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../common_widgets/modern_confirm_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -10,8 +11,6 @@ import '../../recurring/data/recurring_repository.dart';
 import '../../recurring/domain/recurring_transaction.dart';
 import '../../../common_widgets/modern_wallet_selector.dart';
 import '../../../localization/generated/app_localizations.dart';
-
-import 'package:intl/intl.dart';
 import '../../../utils/currency_input_formatter.dart';
 
 class AddEditRecurringScreen extends ConsumerStatefulWidget {
@@ -60,8 +59,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.transaction != null;
-    final walletsAsync = ref.watch(walletRepositoryProvider.select((repo) => repo.value?.watchWallets()));
-
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -155,25 +153,24 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                       children: [
                         Text(AppLocalizations.of(context)!.frequency, style: AppTextStyles.bodyMedium),
                         const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<RecurringFrequency>(
-                              value: _frequency,
-                              isExpanded: true,
-                              items: RecurringFrequency.values.map((f) {
-                                return DropdownMenuItem(
-                                  value: f,
-                                  child: Text(f.name.toUpperCase(), style: AppTextStyles.bodyLarge),
-                                );
-                              }).toList(),
-                              onChanged: (val) {
-                                if (val != null) setState(() => _frequency = val);
-                              },
+                        GestureDetector(
+                          onTap: _showFrequencyPicker,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _frequency.name[0].toUpperCase() + _frequency.name.substring(1), 
+                                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w500)
+                                  ),
+                                ),
+                                const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                              ],
                             ),
                           ),
                         ),
@@ -187,13 +184,25 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                       children: [
                         Text(AppLocalizations.of(context)!.startDate, style: AppTextStyles.bodyMedium),
                         const SizedBox(height: 8),
-                        InkWell(
+                        GestureDetector(
                           onTap: () async {
                             final picked = await showDatePicker(
                               context: context,
                               initialDate: _startDate,
                               firstDate: DateTime.now().subtract(const Duration(days: 365)),
                               lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+                              builder: (context, child) {
+                                return Theme(
+                                  data: Theme.of(context).copyWith(
+                                    colorScheme: const ColorScheme.light(
+                                      primary: AppColors.primary,
+                                      onPrimary: Colors.white,
+                                      onSurface: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              }
                             );
                             if (picked != null) setState(() => _startDate = picked);
                           },
@@ -205,7 +214,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
+                                const Icon(Icons.calendar_today, size: 18, color: AppColors.primary), // Changed color to primary
                                 const SizedBox(width: 8),
                                 Text(DateFormat('d MMM y').format(_startDate), style: AppTextStyles.bodyLarge),
                               ],
@@ -272,6 +281,85 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
     );
   }
 
+  void _showFrequencyPicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context)!.frequency,
+                style: AppTextStyles.h2,
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: RecurringFrequency.values.length,
+                  itemBuilder: (context, index) {
+                    final frequency = RecurringFrequency.values[index];
+                    final isSelected = frequency == _frequency;
+                    final label = frequency.name[0].toUpperCase() + frequency.name.substring(1);
+                    
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      leading: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.repeat, // Or specific icons for frequencies if we wanted
+                          color: isSelected ? AppColors.primary : Colors.grey[700],
+                        ),
+                      ),
+                      title: Text(
+                        label,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                        ),
+                      ),
+                      trailing: isSelected 
+                          ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                          : null,
+                      onTap: () {
+                        setState(() => _frequency = frequency);
+                        context.pop();
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _saveRecurring() async {
     if (_formKey.currentState!.validate() && _selectedWalletId != null) {
       final amount = CurrencyInputFormatter.parse(_amountController.text);
@@ -321,6 +409,7 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
           startDate: _startDate,
           nextDueDate: nextDue,
           isActive: true,
+          // TODO: Add category picker for recurring transactions if needed
         );
         await ref.read(recurringRepositoryProvider).addRecurringTransaction(newTx);
       }
@@ -335,19 +424,13 @@ class _AddEditRecurringScreenState extends ConsumerState<AddEditRecurringScreen>
 
   Future<void> _deleteRecurring() async {
     if (widget.transaction != null) {
-      final confirm = await showDialog<bool>(
+      final confirm = await showModernConfirmDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.deleteRecurring),
-          content: Text(AppLocalizations.of(context)!.deleteRecurringConfirm),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true), 
-              child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
+        title: AppLocalizations.of(context)!.deleteRecurring,
+        message: AppLocalizations.of(context)!.deleteRecurringConfirm,
+        confirmText: AppLocalizations.of(context)!.delete,
+        cancelText: AppLocalizations.of(context)!.cancel,
+        type: ConfirmDialogType.delete,
       );
 
       if (confirm == true) {

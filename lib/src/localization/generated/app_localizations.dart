@@ -1764,6 +1764,12 @@ abstract class AppLocalizations {
   /// **'Bill Type'**
   String get billType;
 
+  /// No description provided for @selectBillType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Bill Type'**
+  String get selectBillType;
+
   /// No description provided for @repeatBill.
   ///
   /// In en, this message translates to:
@@ -4949,6 +4955,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Awesome'**
   String get notificationAwesome;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See All'**
+  String get seeAll;
+
+  /// No description provided for @selectIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Icon'**
+  String get selectIcon;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @editSubCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Sub-Category'**
+  String get editSubCategory;
+
+  /// No description provided for @newSubCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'New Sub-Category'**
+  String get newSubCategory;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @subCategoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Breakfast'**
+  String get subCategoryHint;
+
+  /// No description provided for @subCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Sub-Categories'**
+  String get subCategories;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @noSubCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'No sub-categories'**
+  String get noSubCategories;
 }
 
 class _AppLocalizationsDelegate
