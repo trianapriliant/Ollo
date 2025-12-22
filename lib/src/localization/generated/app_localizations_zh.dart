@@ -293,6 +293,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateLog => 'Update Log';
 
   @override
+  String get colorPalette => '调色板';
+
+  @override
+  String get colorPalettePreview => '预览';
+
+  @override
+  String get colorPaletteSelectTheme => '选择主题';
+
+  @override
   String get account => '账户';
 
   @override
@@ -1744,6 +1753,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get category_family => '家庭';
 
   @override
+  String get category_friend => '朋友';
+
+  @override
   String get category_salary => '工资';
 
   @override
@@ -1984,6 +1996,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get subcategory_pets => '宠物';
+
+  @override
+  String get subcategory_transfer_friend => '转账';
+
+  @override
+  String get subcategory_treat => '请客';
+
+  @override
+  String get subcategory_refund_friend => '退款';
+
+  @override
+  String get subcategory_loan_friend => '借款';
+
+  @override
+  String get subcategory_gift_friend => '送礼';
 
   @override
   String get subcategory_monthly => '月薪';

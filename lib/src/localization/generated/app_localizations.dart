@@ -672,6 +672,24 @@ abstract class AppLocalizations {
   /// **'Update Log'**
   String get updateLog;
 
+  /// No description provided for @colorPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Palette'**
+  String get colorPalette;
+
+  /// No description provided for @colorPalettePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get colorPalettePreview;
+
+  /// No description provided for @colorPaletteSelectTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Theme'**
+  String get colorPaletteSelectTheme;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:
@@ -3414,6 +3432,12 @@ abstract class AppLocalizations {
   /// **'Family'**
   String get category_family;
 
+  /// No description provided for @category_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Friend'**
+  String get category_friend;
+
   /// No description provided for @category_salary.
   ///
   /// In en, this message translates to:
@@ -3893,6 +3917,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pets'**
   String get subcategory_pets;
+
+  /// No description provided for @subcategory_transfer_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get subcategory_transfer_friend;
+
+  /// No description provided for @subcategory_treat.
+  ///
+  /// In en, this message translates to:
+  /// **'Treat'**
+  String get subcategory_treat;
+
+  /// No description provided for @subcategory_refund_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get subcategory_refund_friend;
+
+  /// No description provided for @subcategory_loan_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Loan'**
+  String get subcategory_loan_friend;
+
+  /// No description provided for @subcategory_gift_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get subcategory_gift_friend;
 
   /// No description provided for @subcategory_monthly.
   ///

@@ -101,7 +101,11 @@
   "sendFeedback": "Send Feedback",
   "aboutOllo": "About Ollo",
   "updateLog": "Update Log",
+  "colorPalette": "Color Palette",
+  "colorPalettePreview": "Preview",
+  "colorPaletteSelectTheme": "Select Theme",
   "account": "Account",
+
   "deleteData": "Delete Data",
   "logout": "Logout",
   "comingSoon": "Coming Soon",
@@ -843,6 +847,7 @@
   "category_personal": "Personal",
   "category_financial": "Financial",
   "category_family": "Family",
+  "category_friend": "Friend",
   "category_salary": "Salary",
   "category_business": "Business",
   "category_investments": "Investments",
@@ -944,7 +949,14 @@
   "subcategory_school_kids": "School",
   "subcategory_pets": "Pets",
 
+  "subcategory_transfer_friend": "Transfer",
+  "subcategory_treat": "Treat",
+  "subcategory_refund_friend": "Refund",
+  "subcategory_loan_friend": "Loan",
+  "subcategory_gift_friend": "Gift",
+
   "subcategory_monthly": "Monthly",
+
   "subcategory_weekly": "Weekly",
   "subcategory_bonus": "Bonus",
   "subcategory_overtime": "Overtime",

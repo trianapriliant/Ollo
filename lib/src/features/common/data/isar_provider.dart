@@ -33,51 +33,45 @@ final isarProvider = FutureProvider<Isar>((ref) async {
   if (await isar.categorys.count() == 0) {
     await seedCategories(isar);
   } else {
-    // Migration: Check if 'Eateries' exists. If not add it.
-    // Also remove 'Warung' or 'Restoran' if I accidentally added them in previous step.
-    final foodCat = await isar.categorys.filter().externalIdEqualTo('food').findFirst();
-    if (foodCat != null) {
-      bool changed = false;
-      List<SubCategory> subs = List.from(foodCat.subCategories ?? []);
+    // Comprehensive Migration: Sync all default categories
+    // This ensures any new categories added to defaultCategories are available on app update
+    for (final defaultCat in defaultCategories) {
+      final existingCat = await isar.categorys.filter()
+          .externalIdEqualTo(defaultCat.externalId)
+          .findFirst();
       
-      // Cleanup previous attempt keys
-      final initialLen = subs.length;
-      subs.removeWhere((s) => s.id == 'warung' || s.id == 'restoran');
-      if (subs.length != initialLen) changed = true;
-
-      // Add Eateries
-      if (!subs.any((s) => s.id == 'eateries')) {
-        subs.insert(3, SubCategory(id: 'eateries', name: 'Eateries', iconPath: 'restaurant'));
-        changed = true;
-      }
-
-      if (changed) {
-        foodCat.subCategories = subs;
+      if (existingCat == null) {
+        // Category doesn't exist, add it
         await isar.writeTxn(() async {
-          await isar.categorys.put(foodCat);
+          await isar.categorys.put(defaultCat);
         });
+      } else {
+        // Category exists, sync subcategories (add any missing ones)
+        bool changed = false;
+        List<SubCategory> currentSubs = List.from(existingCat.subCategories ?? []);
+        
+        for (final defaultSub in defaultCat.subCategories ?? <SubCategory>[]) {
+          if (!currentSubs.any((s) => s.id == defaultSub.id)) {
+            currentSubs.add(defaultSub);
+            changed = true;
+          }
+        }
+        
+        // Also cleanup any legacy subcategories (e.g., warung, restoran)
+        final initialLen = currentSubs.length;
+        currentSubs.removeWhere((s) => s.id == 'warung' || s.id == 'restoran');
+        if (currentSubs.length != initialLen) changed = true;
+        
+        if (changed) {
+          existingCat.subCategories = currentSubs;
+          await isar.writeTxn(() async {
+            await isar.categorys.put(existingCat);
+          });
+        }
       }
-    }
-
-    // Migration: Add System Category if missing
-    final systemCatCheck = await isar.categorys.filter().externalIdEqualTo('system').findFirst();
-    if (systemCatCheck == null) {
-      final newSystemCat = Category(
-        externalId: 'system',
-        name: 'System',
-        iconPath: 'settings',
-        type: CategoryType.expense,
-        colorValue: 0xFF9E9E9E, // Grey
-        subCategories: [
-          SubCategory(id: 'adjustment', name: 'Adjustment', iconPath: 'tune'),
-          SubCategory(id: 'fee_sys', name: 'Fees', iconPath: 'payments'),
-        ],
-      );
-      await isar.writeTxn(() async {
-        await isar.categorys.put(newSystemCat);
-      });
     }
   }
+
 
   return isar;
 });
@@ -252,8 +246,23 @@ final defaultCategories = [
         SubCategory(id: 'pets', name: 'Pets', iconPath: 'pets'),
       ],
     ),
+    Category(
+      externalId: 'friend',
+      name: 'Friend',
+      iconPath: 'group',
+      type: CategoryType.expense,
+      colorValue: Colors.cyan.value,
+      subCategories: [
+        SubCategory(id: 'transfer_friend', name: 'Transfer', iconPath: 'send'),
+        SubCategory(id: 'treat', name: 'Treat', iconPath: 'restaurant'),
+        SubCategory(id: 'refund_friend', name: 'Refund', iconPath: 'undo'),
+        SubCategory(id: 'loan_friend', name: 'Loan', iconPath: 'attach_money'),
+        SubCategory(id: 'gift_friend', name: 'Gift', iconPath: 'card_giftcard'),
+      ],
+    ),
 
     // Income
+
     Category(
       externalId: 'salary',
       name: 'Salary',

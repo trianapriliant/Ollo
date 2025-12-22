@@ -164,8 +164,19 @@ const Map<String, CategoryPattern> mandarinPatterns = {
       'Cosmetics': ['化妆品'],
     },
   ),
+  'Friend': CategoryPattern(
+    mainKeywords: ['朋友', '好友', '伙伴'],
+    subCategoryKeywords: {
+      'Transfer': ['转给朋友', '转账朋友', '给朋友转'],
+      'Treat': ['请客', '请朋友吃饭', '买单', '请客吃饭', '我请客'],
+      'Refund': ['还朋友钱', '还钱给朋友'],
+      'Loan': ['借给朋友', '朋友借钱', '借出'],
+      'Gift': ['送朋友', '朋友礼物', '给朋友买礼物'],
+    },
+  ),
 
   // --- INCOME ---
+
   'Salary': CategoryPattern(
     mainKeywords: ['工资', '收入'],
     subCategoryKeywords: {

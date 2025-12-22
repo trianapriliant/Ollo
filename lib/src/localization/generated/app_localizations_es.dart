@@ -299,6 +299,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateLog => 'Update Log';
 
   @override
+  String get colorPalette => 'Paleta de Colores';
+
+  @override
+  String get colorPalettePreview => 'Vista previa';
+
+  @override
+  String get colorPaletteSelectTheme => 'Seleccionar Tema';
+
+  @override
   String get account => 'Cuenta';
 
   @override
@@ -1772,6 +1781,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get category_family => 'Familia';
 
   @override
+  String get category_friend => 'Amigo';
+
+  @override
   String get category_salary => 'Salario';
 
   @override
@@ -2012,6 +2024,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get subcategory_pets => 'Mascotas';
+
+  @override
+  String get subcategory_transfer_friend => 'Transferencia';
+
+  @override
+  String get subcategory_treat => 'Invitar';
+
+  @override
+  String get subcategory_refund_friend => 'Reembolso';
+
+  @override
+  String get subcategory_loan_friend => 'Préstamo';
+
+  @override
+  String get subcategory_gift_friend => 'Regalo';
 
   @override
   String get subcategory_monthly => 'Mensual';

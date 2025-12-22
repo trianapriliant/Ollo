@@ -295,6 +295,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get updateLog => 'Catatan Update';
 
   @override
+  String get colorPalette => 'Palet Warna';
+
+  @override
+  String get colorPalettePreview => 'Pratinjau';
+
+  @override
+  String get colorPaletteSelectTheme => 'Pilih Tema';
+
+  @override
   String get account => 'Akun';
 
   @override
@@ -1788,6 +1797,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get category_family => 'Keluarga';
 
   @override
+  String get category_friend => 'Teman';
+
+  @override
   String get category_salary => 'Gaji';
 
   @override
@@ -2028,6 +2040,21 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get subcategory_pets => 'Hewan Peliharaan';
+
+  @override
+  String get subcategory_transfer_friend => 'Transfer';
+
+  @override
+  String get subcategory_treat => 'Traktir';
+
+  @override
+  String get subcategory_refund_friend => 'Refund';
+
+  @override
+  String get subcategory_loan_friend => 'Pinjam';
+
+  @override
+  String get subcategory_gift_friend => 'Hadiah';
 
   @override
   String get subcategory_monthly => 'Bulanan';

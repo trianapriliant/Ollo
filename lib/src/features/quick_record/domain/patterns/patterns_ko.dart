@@ -170,8 +170,19 @@ const Map<String, CategoryPattern> koreanPatterns = {
       'Cosmetics': ['화장품', '올리브영'],
     },
   ),
+  'Friend': CategoryPattern(
+    mainKeywords: ['친구', '벗', '동료'],
+    subCategoryKeywords: {
+      'Transfer': ['송금', '친구에게 송금', '돈 보내기'],
+      'Treat': ['한턱', '쏘기', '사주기', '밥 사주기'],
+      'Refund': ['돈 갚기', '환불', '돈 돌려주기'],
+      'Loan': ['빌려주기', '돈 빌려주기', '대출'],
+      'Gift': ['선물', '친구 선물', '생일선물'],
+    },
+  ),
 
   // --- INCOME ---
+
   'Salary': CategoryPattern(
     mainKeywords: ['월급', '급여'],
     subCategoryKeywords: {

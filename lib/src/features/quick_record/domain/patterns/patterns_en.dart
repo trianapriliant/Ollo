@@ -494,13 +494,151 @@ const Map<String, CategoryPattern> englishPatterns = {
       ],
     },
   ),
-  'Income': CategoryPattern(
-    mainKeywords: ['income', 'earning'],
+  'Friend': CategoryPattern(
+    mainKeywords: ['friend', 'buddy', 'mate', 'pal'],
     subCategoryKeywords: {
-      'Salary': ['salary', 'wage', 'paycheck', 'payroll'],
-      'Business': ['business', 'sales', 'revenue', 'profit'],
-      'Investments': ['investment', 'dividend', 'interest', 'crypto', 'stock', 'rent income'],
-      'Gifts': ['gift', 'birthday money', 'bonus', 'allowance'],
-    }
+      'Transfer': [
+        'transfer friend', 'send to friend', 'tf friend', 'wire friend',
+        'send money friend', 'transfer buddy', 'send buddy'
+      ],
+      'Treat': [
+        'treat', 'buy for friend', 'treat friend', 'treat buddy',
+        'pay for friend', 'cover friend', 'got friend', 
+        'bought for friend', 'on me', 'my treat'
+      ],
+      'Refund': [
+        'refund friend', 'pay back friend', 'return money friend',
+        'payback friend', 'reimburse friend', 'owe friend'
+      ],
+      'Loan': [
+        'lend', 'loan friend', 'lend friend', 'lend to friend',
+        'give loan', 'loan to buddy'
+      ],
+      'Gift': [
+        'gift friend', 'present friend', 'birthday friend',
+        'gift for friend', 'buy gift friend'
+      ],
+    },
+  ),
+
+  // --- INCOME ---
+  'Salary': CategoryPattern(
+    mainKeywords: ['salary', 'wage', 'paycheck', 'income'],
+    subCategoryKeywords: {
+      'Monthly': [
+        'monthly salary', 'paycheck', 'payroll', 'fixed salary',
+        'monthly income', 'monthly pay', 'base salary', 'take home pay',
+        'direct deposit', 'salary deposit', 'pay day', 'payday'
+      ],
+      'Weekly': [
+        'weekly pay', 'weekly wage', 'hourly pay', 'hourly wage',
+        'daily pay', 'daily wage', 'per diem', 'part time pay',
+        'weekly paycheck', 'weekly income'
+      ],
+      'Bonus': [
+        'bonus', 'year end bonus', 'performance bonus', 'annual bonus',
+        'commission', 'incentive', 'tip', 'tips', 'gratuity',
+        'cash bonus', 'signing bonus', 'referral bonus', 'holiday bonus'
+      ],
+      'Overtime': [
+        'overtime', 'ot pay', 'overtime pay', 'extra hours',
+        'overtime compensation', 'overtime wage', 'time and a half',
+        'holiday pay', 'weekend pay', 'night shift pay'
+      ],
+    },
+  ),
+  'Business': CategoryPattern(
+    mainKeywords: ['business', 'revenue', 'sales'],
+    subCategoryKeywords: {
+      'Sales': [
+        'sales', 'revenue', 'product sales', 'service sales',
+        'retail sales', 'online sales', 'e-commerce', 'order payment',
+        'customer payment', 'invoice paid', 'payment received',
+        'sales revenue', 'gross sales', 'net sales'
+      ],
+      'Services': [
+        'service fee', 'consulting fee', 'freelance', 'freelance income',
+        'gig income', 'contract work', 'project fee', 'service revenue',
+        'professional fee', 'hourly rate', 'billable hours',
+        'client payment', 'retainer fee'
+      ],
+      'Profit': [
+        'profit', 'net profit', 'gross profit', 'margin',
+        'earnings', 'net income', 'business income', 'operating profit',
+        'profit share', 'partnership distribution', 'owner draw'
+      ],
+    },
+  ),
+  'Investments': CategoryPattern(
+    mainKeywords: ['investment', 'portfolio', 'returns'],
+    subCategoryKeywords: {
+      'Dividends': [
+        'dividend', 'dividends', 'stock dividend', 'quarterly dividend',
+        'annual dividend', 'dividend payment', 'dividend income',
+        'yield', 'dividend yield', 'payout'
+      ],
+      'Interest': [
+        'interest', 'bank interest', 'savings interest', 'deposit interest',
+        'cd interest', 'bond interest', 'fixed deposit interest',
+        'money market interest', 'high yield savings'
+      ],
+      'Crypto': [
+        'crypto', 'bitcoin', 'btc', 'ethereum', 'eth', 'crypto trading',
+        'crypto profit', 'token', 'staking reward', 'mining reward',
+        'airdrop', 'defi', 'nft sale'
+      ],
+      'Stocks': [
+        'stock', 'stocks', 'stock sale', 'capital gain', 'equity',
+        'share sale', 'stock profit', 'investment return',
+        'portfolio gain', 'realized gain', 'securities'
+      ],
+      'Real Estate': [
+        'rent income', 'rental income', 'property income', 'tenant payment',
+        'real estate', 'property sale', 'lease income', 'sublease income',
+        'airbnb income', 'rental property', 'passive income'
+      ],
+    },
+  ),
+  'Gifts': CategoryPattern(
+    mainKeywords: ['gift', 'present', 'received'],
+    subCategoryKeywords: {
+      'Birthday': [
+        'birthday money', 'birthday gift', 'birthday present',
+        'birthday cash', 'bday money', 'gift money'
+      ],
+      'Holiday': [
+        'holiday gift', 'christmas money', 'holiday bonus', 'new year gift',
+        'red envelope', 'lucky money', 'easter money', 'thanksgiving gift'
+      ],
+      'Allowance': [
+        'allowance', 'pocket money', 'spending money', 'parents money',
+        'family support', 'monthly allowance', 'weekly allowance',
+        'living expenses', 'stipend'
+      ],
+    },
+  ),
+  'Other': CategoryPattern(
+    mainKeywords: ['other income', 'miscellaneous'],
+    subCategoryKeywords: {
+      'Refunds': [
+        'refund', 'money back', 'reimbursement', 'return',
+        'cashback', 'credit back', 'reversal', 'chargeback',
+        'deposit return', 'security deposit', 'overpayment'
+      ],
+      'Grants': [
+        'grant', 'scholarship', 'subsidy', 'government aid',
+        'financial aid', 'stipend', 'fellowship', 'bursary',
+        'funding', 'research grant', 'education grant'
+      ],
+      'Lottery': [
+        'lottery', 'winning', 'prize', 'jackpot', 'lucky draw',
+        'raffle', 'contest prize', 'sweepstakes', 'giveaway win'
+      ],
+      'Selling': [
+        'selling', 'sold', 'resale', 'secondhand', 'used item',
+        'ebay', 'marketplace', 'garage sale', 'yard sale',
+        'facebook marketplace', 'craigslist', 'poshmark', 'mercari'
+      ],
+    },
   ),
 };

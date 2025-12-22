@@ -293,6 +293,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get updateLog => 'Update Log';
 
   @override
+  String get colorPalette => 'カラーパレット';
+
+  @override
+  String get colorPalettePreview => 'プレビュー';
+
+  @override
+  String get colorPaletteSelectTheme => 'テーマを選択';
+
+  @override
   String get account => 'アカウント';
 
   @override
@@ -1748,6 +1757,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get category_family => '家族';
 
   @override
+  String get category_friend => '友達';
+
+  @override
   String get category_salary => '給与';
 
   @override
@@ -1988,6 +2000,21 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get subcategory_pets => 'ペット';
+
+  @override
+  String get subcategory_transfer_friend => '送金';
+
+  @override
+  String get subcategory_treat => 'おごり';
+
+  @override
+  String get subcategory_refund_friend => '返金';
+
+  @override
+  String get subcategory_loan_friend => '貸し';
+
+  @override
+  String get subcategory_gift_friend => 'プレゼント';
 
   @override
   String get subcategory_monthly => '月給';

@@ -293,6 +293,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get updateLog => 'Update Log';
 
   @override
+  String get colorPalette => '색상 팔레트';
+
+  @override
+  String get colorPalettePreview => '미리보기';
+
+  @override
+  String get colorPaletteSelectTheme => '테마 선택';
+
+  @override
   String get account => '계정';
 
   @override
@@ -1757,6 +1766,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get category_family => '가족';
 
   @override
+  String get category_friend => '친구';
+
+  @override
   String get category_salary => '여';
 
   @override
@@ -1997,6 +2009,21 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get subcategory_pets => '반려동물';
+
+  @override
+  String get subcategory_transfer_friend => '송금';
+
+  @override
+  String get subcategory_treat => '한턱';
+
+  @override
+  String get subcategory_refund_friend => '환불';
+
+  @override
+  String get subcategory_loan_friend => '대출';
+
+  @override
+  String get subcategory_gift_friend => '선물';
 
   @override
   String get subcategory_monthly => '월급';

@@ -181,8 +181,19 @@ const Map<String, CategoryPattern> japanesePatterns = {
       'Cosmetics': ['化粧品', 'コスメ'],
     },
   ),
+  'Friend': CategoryPattern(
+    mainKeywords: ['友達', '友人', '仲間'],
+    subCategoryKeywords: {
+      'Transfer': ['送金', '振込み', '友達に送金'],
+      'Treat': ['おごり', '奢り', 'ご馳走', '払ってあげる'],
+      'Refund': ['返金', '返す', 'お金を返す'],
+      'Loan': ['貸す', 'お金を貸す', '貸し'],
+      'Gift': ['プレゼント', '友達へのプレゼント', '誕プレ'],
+    },
+  ),
 
   // --- INCOME ---
+
   'Salary': CategoryPattern(
     mainKeywords: ['給料', '収入'],
     subCategoryKeywords: {

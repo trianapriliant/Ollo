@@ -297,6 +297,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get updateLog => 'Update Log';
 
   @override
+  String get colorPalette => 'रंग पट्टिका';
+
+  @override
+  String get colorPalettePreview => 'पूर्वावलोकन';
+
+  @override
+  String get colorPaletteSelectTheme => 'थीम चुनें';
+
+  @override
   String get account => 'खाता';
 
   @override
@@ -1764,6 +1773,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get category_family => 'परिवार';
 
   @override
+  String get category_friend => 'दोस्त';
+
+  @override
   String get category_salary => 'वेतन';
 
   @override
@@ -2004,6 +2016,21 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get subcategory_pets => 'पालतू जानवर';
+
+  @override
+  String get subcategory_transfer_friend => 'ट्रांसफर';
+
+  @override
+  String get subcategory_treat => 'दावत';
+
+  @override
+  String get subcategory_refund_friend => 'रिफंड';
+
+  @override
+  String get subcategory_loan_friend => 'उधार';
+
+  @override
+  String get subcategory_gift_friend => 'उपहार';
 
   @override
   String get subcategory_monthly => 'मासिक';

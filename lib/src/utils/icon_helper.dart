@@ -113,12 +113,15 @@ class IconHelper {
       // Family & People
       case 'person': return Icons.person;
       case 'people': return Icons.people;
+      case 'group': return Icons.group;
       case 'groups': return Icons.groups;
       case 'child_friendly': return Icons.child_friendly;
       case 'baby_changing_station': return Icons.baby_changing_station;
       case 'family_restroom': return Icons.family_restroom;
       case 'face': return Icons.face;
       case 'mood': return Icons.mood;
+      case 'send': return Icons.send;
+
       
       // Activity & Fitness
       case 'directions_run': return Icons.directions_run;

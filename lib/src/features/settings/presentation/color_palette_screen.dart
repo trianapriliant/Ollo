@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../domain/transaction_color_theme.dart';
+import '../../../localization/generated/app_localizations.dart';
 
 class ColorPaletteScreen extends ConsumerWidget {
   const ColorPaletteScreen({super.key});
@@ -21,7 +22,7 @@ class ColorPaletteScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Color Palette', style: AppTextStyles.h2),
+        title: Text(AppLocalizations.of(context)!.colorPalette, style: AppTextStyles.h2),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -31,7 +32,7 @@ class ColorPaletteScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Preview',
+                AppLocalizations.of(context)!.colorPalettePreview,
                 style: AppTextStyles.h3.copyWith(fontSize: 18),
               ),
               const SizedBox(height: 16),
@@ -86,7 +87,7 @@ class ColorPaletteScreen extends ConsumerWidget {
               
               const SizedBox(height: 32),
               Text(
-                'Select Theme',
+                AppLocalizations.of(context)!.colorPaletteSelectTheme,
                 style: AppTextStyles.h3.copyWith(fontSize: 18),
               ),
               const SizedBox(height: 16),

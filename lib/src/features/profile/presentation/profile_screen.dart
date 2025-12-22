@@ -190,7 +190,7 @@ class ProfileScreen extends ConsumerWidget {
                             const SizedBox(height: 16),
                             ProfileMenuItem(
                               icon: Icons.color_lens_outlined,
-                              title: 'Color Palette',
+                              title: AppLocalizations.of(context)!.colorPalette,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => const ColorPaletteScreen(),

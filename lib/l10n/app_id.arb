@@ -93,7 +93,11 @@
   "sendFeedback": "Kirim Masukan",
   "aboutOllo": "Tentang Ollo",
   "updateLog": "Catatan Update",
+  "colorPalette": "Palet Warna",
+  "colorPalettePreview": "Pratinjau",
+  "colorPaletteSelectTheme": "Pilih Tema",
   "account": "Akun",
+
   "deleteData": "Hapus Data",
   "logout": "Keluar",
   "comingSoon": "Segera Hadir",
@@ -647,6 +651,7 @@
   "category_personal": "Pribadi",
   "category_financial": "Keuangan",
   "category_family": "Keluarga",
+  "category_friend": "Teman",
   "category_salary": "Gaji",
   "category_business": "Bisnis",
   "category_investments": "Investasi",
@@ -738,7 +743,14 @@
   "subcategory_school_kids": "Sekolah",
   "subcategory_pets": "Hewan Peliharaan",
 
+  "subcategory_transfer_friend": "Transfer",
+  "subcategory_treat": "Traktir",
+  "subcategory_refund_friend": "Refund",
+  "subcategory_loan_friend": "Pinjam",
+  "subcategory_gift_friend": "Hadiah",
+
   "subcategory_monthly": "Bulanan",
+
   "subcategory_weekly": "Mingguan",
   "subcategory_bonus": "Bonus",
   "subcategory_overtime": "Lembur",

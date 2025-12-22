@@ -11,6 +11,8 @@ import '../../categories/domain/category.dart';
 import 'widgets/budget_summary_card.dart';
 import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
+import '../../categories/presentation/category_localization_helper.dart';
+
 
 class BudgetScreen extends ConsumerWidget {
   const BudgetScreen({super.key});
@@ -163,6 +165,9 @@ class _BudgetCard extends ConsumerWidget {
                         future: _fetchCategory(categoryRepo, budget.categoryId),
                         builder: (context, catSnapshot) {
                           final category = catSnapshot.data;
+                          final displayName = category != null 
+                              ? CategoryLocalizationHelper.getLocalizedCategoryName(context, category)
+                              : AppLocalizations.of(context)!.unknown;
                           return Row(
                             children: [
                               Container(
@@ -178,9 +183,10 @@ class _BudgetCard extends ConsumerWidget {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              Text(category?.name ?? AppLocalizations.of(context)!.unknown, style: AppTextStyles.h3),
+                              Text(displayName, style: AppTextStyles.h3),
                             ],
                           );
+
                         },
                       );
                     },

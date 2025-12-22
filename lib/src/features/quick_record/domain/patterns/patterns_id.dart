@@ -466,8 +466,35 @@ const Map<String, CategoryPattern> indonesianPatterns = {
       'deodorant spray', 'roll on', 'body mist'],
     },
   ),
+  'Friend': CategoryPattern(
+    mainKeywords: ['teman', 'friend', 'sobat', 'kawan'],
+    subCategoryKeywords: {
+      'Transfer': [
+        'transfer teman', 'tf teman', 'kirim teman', 'kirim ke teman',
+        'transfer ke teman', 'transfer friend', 'send to friend'
+      ],
+      'Treat': [
+        'traktir', 'traktir teman', 'bayarin teman', 'bayarin',
+        'treat', 'treat teman', 'beliin teman', 'beli untuk teman',
+        'bayar makan teman', 'bayar teman'
+      ],
+      'Refund': [
+        'refund teman', 'balikin duit teman', 'balikin uang teman',
+        'kembaliin uang teman', 'bayar balik teman', 'ganti uang teman'
+      ],
+      'Loan': [
+        'pinjam', 'pinjemin teman', 'kasih pinjam', 'pinjami teman',
+        'kasih pinjaman', 'utangin', 'hutangin'
+      ],
+      'Gift': [
+        'kado teman', 'hadiah teman', 'beli kado teman',
+        'gift friend', 'beliin hadiah', 'hadiah buat teman'
+      ],
+    },
+  ),
 
   // --- INCOME ---
+
   'Salary': CategoryPattern(
     mainKeywords: ['pendapatan', 'salary'],
     subCategoryKeywords: {

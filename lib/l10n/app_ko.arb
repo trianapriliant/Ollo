@@ -100,7 +100,11 @@
   "helpSupport": "고객 지원",
   "sendFeedback": "피드백 보내기",
   "aboutOllo": "Ollo 정보",
+  "colorPalette": "색상 팔레트",
+  "colorPalettePreview": "미리보기",
+  "colorPaletteSelectTheme": "테마 선택",
   "account": "계정",
+
   "deleteData": "데이터 삭제",
   "logout": "로그아웃",
   "comingSoon": "준비 중",
@@ -832,6 +836,7 @@
   "category_personal": "개인",
   "category_financial": "금융",
   "category_family": "가족",
+  "category_friend": "친구",
   "category_salary": "여",
   "category_business": "사업",
   "category_investments": "투자",
@@ -924,6 +929,12 @@
   "subcategory_toys": "장난감",
   "subcategory_school_kids": "학교",
   "subcategory_pets": "반려동물",
+
+  "subcategory_transfer_friend": "송금",
+  "subcategory_treat": "한턱",
+  "subcategory_refund_friend": "환불",
+  "subcategory_loan_friend": "대출",
+  "subcategory_gift_friend": "선물",
 
   "subcategory_monthly": "월급",
   "subcategory_weekly": "주급",

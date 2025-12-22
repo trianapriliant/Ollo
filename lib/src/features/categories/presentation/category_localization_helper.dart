@@ -51,7 +51,9 @@ class CategoryLocalizationHelper {
       'personal': l10n.category_personal,
       'financial': l10n.category_financial,
       'family': l10n.category_family,
+      'friend': l10n.category_friend,
       'salary': l10n.category_salary,
+
       'business': l10n.category_business,
       'investments': l10n.category_investments,
       'gifts_income': l10n.category_gifts_income,
@@ -84,7 +86,9 @@ class CategoryLocalizationHelper {
     'personal': 'personal',
     'financial': 'financial',
     'family': 'family',
+    'friend': 'friend',
     'salary': 'salary',
+
     'business': 'business',
     'investments': 'investments',
     'gifts': 'gifts_income',
@@ -170,7 +174,14 @@ class CategoryLocalizationHelper {
       'school_kids': l10n.subcategory_school_kids,
       'pets': l10n.subcategory_pets,
 
+      'transfer_friend': l10n.subcategory_transfer_friend,
+      'treat': l10n.subcategory_treat,
+      'refund_friend': l10n.subcategory_refund_friend,
+      'loan_friend': l10n.subcategory_loan_friend,
+      'gift_friend': l10n.subcategory_gift_friend,
+
       'monthly': l10n.subcategory_monthly,
+
       'weekly': l10n.subcategory_weekly,
       'bonus': l10n.subcategory_bonus,
       'overtime': l10n.subcategory_overtime,
