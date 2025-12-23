@@ -115,6 +115,65 @@ enum MainCardTheme {
       end: Alignment.bottomRight,
       colors: [Color(0xFFF7D754), Color(0xFFF7D754)], // Flat Lemon
     ),
+  ),
+  argon(
+    'themeArgon',
+    LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFF03001e), // Deep Purple/Navy
+        Color(0xFF7303c0), // Purple
+        Color(0xFFec38bc), // Pink
+        Color(0xFFfdeff9), // Light Pink
+      ],
+      stops: [0.0, 0.33, 0.66, 1.0],
+    ),
+  ),
+  velvetSun(
+    'themeVelvetSun',
+    LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFe1eec3), Color(0xFFf05053)], // Light green → Red
+    ),
+  ),
+  summer(
+    'themeSummer',
+    LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF22c1c3), Color(0xFFfdbb2d)], // Teal → Yellow
+    ),
+  ),
+  brokenHearts(
+    'themeBrokenHearts',
+    LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFd9a7c7), Color(0xFFfffcdc)], // Pink → Light cream
+    ),
+  ),
+  relay(
+    'themeRelay',
+    LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFF3a1c71), // Dark purple
+        Color(0xFFd76d77), // Pink
+        Color(0xFFffaf7b), // Peach
+      ],
+      stops: [0.0, 0.5, 1.0],
+    ),
+  ),
+  cinnamint(
+    'themeCinnamint',
+    LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF4ac29a), Color(0xFFbdfff3)], // Green → Light mint
+    ),
   );
 
   final String localizationKey;

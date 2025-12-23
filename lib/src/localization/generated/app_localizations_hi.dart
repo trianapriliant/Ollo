@@ -103,6 +103,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String get themeLemon => 'सिंपली लेमन';
 
   @override
+  String get themeArgon => 'आर्गन';
+
+  @override
+  String get themeVelvetSun => 'वेलवेट सन';
+
+  @override
+  String get themeSummer => 'समर';
+
+  @override
+  String get themeBrokenHearts => 'ब्रोकन हार्ट्स';
+
+  @override
+  String get themeRelay => 'रिले';
+
+  @override
+  String get themeCinnamint => 'सिनामिंट';
+
+  @override
   String get wallet => 'वॉलेट';
 
   @override

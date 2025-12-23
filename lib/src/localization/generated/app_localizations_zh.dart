@@ -102,6 +102,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeLemon => '柠檬黄';
 
   @override
+  String get themeArgon => '氩气';
+
+  @override
+  String get themeVelvetSun => '天鹅绒阳光';
+
+  @override
+  String get themeSummer => '夏日';
+
+  @override
+  String get themeBrokenHearts => '心碎';
+
+  @override
+  String get themeRelay => '接力';
+
+  @override
+  String get themeCinnamint => '薄荷肉桂';
+
+  @override
   String get wallet => '钱包';
 
   @override

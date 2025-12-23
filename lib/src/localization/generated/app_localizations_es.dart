@@ -103,6 +103,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get themeLemon => 'Limón Simple';
 
   @override
+  String get themeArgon => 'Argón';
+
+  @override
+  String get themeVelvetSun => 'Sol de Terciopelo';
+
+  @override
+  String get themeSummer => 'Verano';
+
+  @override
+  String get themeBrokenHearts => 'Corazones Rotos';
+
+  @override
+  String get themeRelay => 'Relevo';
+
+  @override
+  String get themeCinnamint => 'Cinamenta';
+
+  @override
   String get wallet => 'Billetera';
 
   @override

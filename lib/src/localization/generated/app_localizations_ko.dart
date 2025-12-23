@@ -102,6 +102,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get themeLemon => '심플리 레몬';
 
   @override
+  String get themeArgon => '아르곤';
+
+  @override
+  String get themeVelvetSun => '벨벳 선';
+
+  @override
+  String get themeSummer => '썸머';
+
+  @override
+  String get themeBrokenHearts => '브로큰 하트';
+
+  @override
+  String get themeRelay => '릴레이';
+
+  @override
+  String get themeCinnamint => '시나민트';
+
+  @override
   String get wallet => '지갑';
 
   @override

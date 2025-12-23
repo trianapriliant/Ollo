@@ -102,6 +102,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get themeLemon => 'シンプリーレモン';
 
   @override
+  String get themeArgon => 'アルゴン';
+
+  @override
+  String get themeVelvetSun => 'ベルベットサン';
+
+  @override
+  String get themeSummer => 'サマー';
+
+  @override
+  String get themeBrokenHearts => 'ブロークンハート';
+
+  @override
+  String get themeRelay => 'リレー';
+
+  @override
+  String get themeCinnamint => 'シナミント';
+
+  @override
   String get wallet => 'ウォレット';
 
   @override

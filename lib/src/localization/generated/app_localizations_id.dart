@@ -102,6 +102,24 @@ class AppLocalizationsId extends AppLocalizations {
   String get themeLemon => 'Lemon Polos';
 
   @override
+  String get themeArgon => 'Argon';
+
+  @override
+  String get themeVelvetSun => 'Velvet Sun';
+
+  @override
+  String get themeSummer => 'Summer';
+
+  @override
+  String get themeBrokenHearts => 'Broken Hearts';
+
+  @override
+  String get themeRelay => 'Relay';
+
+  @override
+  String get themeCinnamint => 'Cinnamint';
+
+  @override
   String get wallet => 'Dompet';
 
   @override

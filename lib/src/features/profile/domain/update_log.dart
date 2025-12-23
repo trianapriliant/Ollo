@@ -14,6 +14,16 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.5.5',
+      date: DateTime(2025, 12, 23),
+      changes: [
+        'Modernized all delete confirmation dialogs with consistent design (icons, soft shadows, modern buttons).',
+        'Added 6 new gradient themes: Argon, Velvet Sun, Summer, Broken Hearts, Relay, Cinnamint.',
+        'Fixed wallet card overflow by stacking Nett Balance and Active Debts vertically.',
+        'Modern delete dialogs now apply to: Transaction, Wallet, Budget, Card, Wishlist, Debt, Bill, Saving, Recurring, Category, Sub-Category.',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.5.4',
       date: DateTime(2025, 12, 22),
       changes: [

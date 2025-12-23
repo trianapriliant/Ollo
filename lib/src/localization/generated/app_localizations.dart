@@ -294,6 +294,42 @@ abstract class AppLocalizations {
   /// **'Simply Lemon'**
   String get themeLemon;
 
+  /// No description provided for @themeArgon.
+  ///
+  /// In en, this message translates to:
+  /// **'Argon'**
+  String get themeArgon;
+
+  /// No description provided for @themeVelvetSun.
+  ///
+  /// In en, this message translates to:
+  /// **'Velvet Sun'**
+  String get themeVelvetSun;
+
+  /// No description provided for @themeSummer.
+  ///
+  /// In en, this message translates to:
+  /// **'Summer'**
+  String get themeSummer;
+
+  /// No description provided for @themeBrokenHearts.
+  ///
+  /// In en, this message translates to:
+  /// **'Broken Hearts'**
+  String get themeBrokenHearts;
+
+  /// No description provided for @themeRelay.
+  ///
+  /// In en, this message translates to:
+  /// **'Relay'**
+  String get themeRelay;
+
+  /// No description provided for @themeCinnamint.
+  ///
+  /// In en, this message translates to:
+  /// **'Cinnamint'**
+  String get themeCinnamint;
+
   /// No description provided for @wallet.
   ///
   /// In en, this message translates to:

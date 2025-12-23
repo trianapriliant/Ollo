@@ -122,6 +122,18 @@ class CardThemeSelectionScreen extends ConsumerWidget {
         return l10n.themeLilac;
       case MainCardTheme.lemon:
         return l10n.themeLemon;
+      case MainCardTheme.argon:
+        return l10n.themeArgon;
+      case MainCardTheme.velvetSun:
+        return l10n.themeVelvetSun;
+      case MainCardTheme.summer:
+        return l10n.themeSummer;
+      case MainCardTheme.brokenHearts:
+        return l10n.themeBrokenHearts;
+      case MainCardTheme.relay:
+        return l10n.themeRelay;
+      case MainCardTheme.cinnamint:
+        return l10n.themeCinnamint;
     }
   }
 }
