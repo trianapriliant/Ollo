@@ -171,6 +171,7 @@ class WalletTemplateService {
       }
       
       // Save templates to storage
+      debugPrint('💾 Saving ${newTemplates.length} new templates...');
       if (newTemplates.isNotEmpty) {
         final allTemplates = [...existingTemplates, ...newTemplates];
         final jsonList = allTemplates.map((t) => jsonEncode({
@@ -180,6 +181,7 @@ class WalletTemplateService {
         })).toList();
         
         await prefs.setStringList(_importedTemplatesKey, jsonList);
+        debugPrint('💾 Saved ${jsonList.length} total templates to SharedPreferences');
         
         // Track installed packs
         final installedPacks = prefs.getStringList(_templatePacksKey) ?? [];
@@ -187,8 +189,11 @@ class WalletTemplateService {
           installedPacks.add(packName);
           await prefs.setStringList(_templatePacksKey, installedPacks);
         }
+      } else {
+        debugPrint('⚠️ No new templates to save (all ${skipped} skipped)');
       }
       
+      debugPrint('✅ Import complete: ${newTemplates.length} imported, $skipped skipped');
       return ImportResult(
         success: true,
         packName: packName,
@@ -254,20 +259,25 @@ class ImportResult {
 }
 
 /// Provider for imported templates
-final importedTemplatesProvider = FutureProvider<List<WalletTemplate>>((ref) async {
-  return WalletTemplateService.getImportedTemplates();
+final importedTemplatesProvider = FutureProvider.autoDispose<List<WalletTemplate>>((ref) async {
+  debugPrint('📦 Loading imported templates...');
+  final templates = await WalletTemplateService.getImportedTemplates();
+  debugPrint('📦 Found ${templates.length} imported templates');
+  return templates;
 });
 
 /// Provider for installed packs
-final installedPacksProvider = FutureProvider<List<String>>((ref) async {
+final installedPacksProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   return WalletTemplateService.getInstalledPacks();
 });
 
 /// Provider for all available templates (built-in + imported)
-final availableTemplatesProvider = FutureProvider<({List<WalletTemplate> banks, List<WalletTemplate> eWallets})>((ref) async {
-  // For development, include built-in templates
-  // Change to false for Play Store release
-  const bool isDevelopment = true; // TODO: Use kDebugMode or a build config
-  return WalletTemplateService.getTemplates(includeBuiltIn: isDevelopment);
+final availableTemplatesProvider = FutureProvider.autoDispose<({List<WalletTemplate> banks, List<WalletTemplate> eWallets})>((ref) async {
+  // RELEASE MODE: templates are empty until imported
+  const bool isDevelopment = false;
+  debugPrint('🔄 Loading templates (isDevelopment: $isDevelopment)');
+  final result = await WalletTemplateService.getTemplates(includeBuiltIn: isDevelopment);
+  debugPrint('🔄 Banks: ${result.banks.length}, E-Wallets: ${result.eWallets.length}');
+  return result;
 });
 

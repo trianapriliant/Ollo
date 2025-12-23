@@ -14,6 +14,19 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.5.6',
+      date: DateTime(2025, 12, 23),
+      changes: [
+        'New Feature: Import Wallet Icon Pack from ZIP files (Settings → Wallet Icons).',
+        'New Feature: Custom wallet icon upload from gallery.',
+        'Modernized Add Wallet type selector with horizontal pill-style chips.',
+        'Wallet templates now dynamically loaded from imported icon packs.',
+        'Added support for SVG icons from local storage (imported packs).',
+        'VIP codes updated to 16-character format with 50 available codes.',
+        'Prepared app for Play Store release: wallet icons now require import.',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.5.5',
       date: DateTime(2025, 12, 23),
       changes: [

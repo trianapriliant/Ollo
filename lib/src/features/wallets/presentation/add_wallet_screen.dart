@@ -10,6 +10,7 @@ import '../../../constants/app_text_styles.dart';
 import '../data/wallet_repository.dart';
 import '../domain/wallet.dart';
 import '../domain/wallet_template.dart';
+import '../application/wallet_template_service.dart';
 import '../../settings/presentation/currency_provider.dart';
 import '../../../utils/icon_helper.dart';
 import '../../../common_widgets/wallet_icon.dart';
@@ -281,39 +282,86 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Templates Section
-            Text(AppLocalizations.of(context)!.popularBanks, style: AppTextStyles.h3),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 100,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: bankTemplates.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  final template = bankTemplates[index];
-                  return _buildTemplateItem(template);
-                },
-              ),
+            // Templates Section - uses dynamic provider
+            ref.watch(availableTemplatesProvider).when(
+              data: (templates) {
+                final hasBanks = templates.banks.isNotEmpty;
+                final hasEWallets = templates.eWallets.isNotEmpty;
+                
+                if (!hasBanks && !hasEWallets) {
+                  // No templates available - show import prompt
+                  return Container(
+                    padding: const EdgeInsets.all(24),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      children: [
+                        const Icon(Icons.info_outline, color: Colors.orange, size: 32),
+                        const SizedBox(height: 12),
+                        Text(
+                          'No wallet templates available',
+                          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Go to Settings → Import Icon Pack to add bank and e-wallet templates.',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (hasBanks) ...[
+                      Text(AppLocalizations.of(context)!.popularBanks, style: AppTextStyles.h3),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: 100,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: templates.banks.length,
+                          separatorBuilder: (context, index) => const SizedBox(width: 12),
+                          itemBuilder: (context, index) {
+                            final template = templates.banks[index];
+                            return _buildTemplateItem(template);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                    if (hasEWallets) ...[
+                      Text(AppLocalizations.of(context)!.eWallets, style: AppTextStyles.h3),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: 100,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: templates.eWallets.length,
+                          separatorBuilder: (context, index) => const SizedBox(width: 12),
+                          itemBuilder: (context, index) {
+                            final template = templates.eWallets[index];
+                            return _buildTemplateItem(template);
+                          },
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 16),
+                  ],
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Text('Error: $e'),
             ),
-            const SizedBox(height: 24),
-            Text(AppLocalizations.of(context)!.eWallets, style: AppTextStyles.h3),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 100,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: eWalletTemplates.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  final template = eWalletTemplates[index];
-                  return _buildTemplateItem(template);
-                },
-              ),
-            ),
-            const SizedBox(height: 32),
-            const Divider(),
-            const SizedBox(height: 16),
             
             // Manual Input Section
             Text(AppLocalizations.of(context)!.walletDetails, style: AppTextStyles.h3),
@@ -401,49 +449,84 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                 ),
               ),
             ] else ...[
-              // Custom Asset Icons
-              Text(AppLocalizations.of(context)!.bankEWalletLogos, style: AppTextStyles.bodyMedium),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                  ),
-                  itemCount: bankTemplates.length + eWalletTemplates.length,
-                  itemBuilder: (context, index) {
-                    final allTemplates = [...bankTemplates, ...eWalletTemplates];
-                    final template = allTemplates[index];
-                    final isSelected = _selectedIcon == template.assetPath;
-                    
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIcon = template.assetPath;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                          border: isSelected ? Border.all(color: AppColors.primary, width: 2) : Border.all(color: Colors.grey[200]!),
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: WalletIcon(iconPath: template.assetPath, size: 24),
+              // Custom Asset Icons (only show if templates imported)
+              ref.watch(availableTemplatesProvider).when(
+                data: (templates) {
+                  final allTemplates = [...templates.banks, ...templates.eWallets];
+                  if (allTemplates.isEmpty) {
+                    // No imported icons - show import prompt
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.grey[600]),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Import icon pack from Settings to see bank/e-wallet icons',
+                              style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
+                            ),
+                          ),
+                        ],
                       ),
                     );
-                  },
-                ),
+                  }
+                  
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppLocalizations.of(context)!.bankEWalletLogos, style: AppTextStyles.bodyMedium),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                          ),
+                          itemCount: allTemplates.length,
+                          itemBuilder: (context, index) {
+                            final template = allTemplates[index];
+                            final isSelected = _selectedIcon == template.assetPath;
+                            
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedIcon = template.assetPath;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: isSelected ? Border.all(color: AppColors.primary, width: 2) : Border.all(color: Colors.grey[200]!),
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: WalletIcon(iconPath: template.assetPath, size: 24),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  );
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
               ),
-              const SizedBox(height: 16),
 
               // Upload Custom Icon Button
               Center(

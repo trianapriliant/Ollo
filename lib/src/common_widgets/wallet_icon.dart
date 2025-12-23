@@ -19,7 +19,7 @@ class WalletIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if it's a custom file (user uploaded image)
+    // Check if it's a custom file (user uploaded image or imported icon)
     if (_isCustomFilePath(iconPath)) {
       return Container(
         width: size + 16,
@@ -30,13 +30,7 @@ class WalletIcon extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         child: ClipOval(
-          child: Image.file(
-            File(iconPath),
-            width: size + 8,
-            height: size + 8,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
-          ),
+          child: _buildCustomFileIcon(),
         ),
       );
     }
@@ -86,6 +80,32 @@ class WalletIcon extends StatelessWidget {
       return true;
     }
     return false;
+  }
+
+  /// Build icon from custom file path (local storage)
+  /// Supports both SVG and raster images (PNG, JPG)
+  Widget _buildCustomFileIcon() {
+    final file = File(iconPath);
+    
+    if (iconPath.toLowerCase().endsWith('.svg')) {
+      // Use SvgPicture.file for SVG files from local storage
+      return SvgPicture.file(
+        file,
+        width: size + 8,
+        height: size + 8,
+        fit: BoxFit.contain,
+        placeholderBuilder: (BuildContext context) => _buildErrorIcon(),
+      );
+    } else {
+      // Use Image.file for raster images (PNG, JPG, etc)
+      return Image.file(
+        file,
+        width: size + 8,
+        height: size + 8,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
+      );
+    }
   }
 
   Widget _buildAssetIcon() {
