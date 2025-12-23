@@ -364,10 +364,10 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                                 ),
                                 child: Icon(
                                   selectedCategory != null 
-                                      ? IconHelper.getIcon(selectedCategory.icon) 
+                                      ? IconHelper.getIcon(selectedCategory.iconPath) 
                                       : Icons.category,
                                   color: selectedCategory != null 
-                                      ? Color(selectedCategory.color).withOpacity(1.0) 
+                                      ? Color(selectedCategory.colorValue ?? 0xFF000000).withOpacity(1.0) 
                                       : AppColors.primary,
                                   size: 20
                                 ),
@@ -706,8 +706,8 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                           ),
                           alignment: Alignment.center,
                           child: Icon(
-                            IconHelper.getIcon(c.icon),
-                            color: isSelected ? AppColors.primary : (Color(c.color).withOpacity(1.0)),
+                            IconHelper.getIcon(c.iconPath),
+                            color: isSelected ? AppColors.primary : (Color(c.colorValue ?? 0xFF000000).withOpacity(1.0)),
                           ),
                         ),
                         title: Text(
