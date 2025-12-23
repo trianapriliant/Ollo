@@ -23,6 +23,7 @@ import 'widgets/new_stats/weekly_spending_heatmap.dart';
 import 'widgets/statistics_category_item.dart';
 import 'widgets/statistics_date_filter.dart';
 import 'widgets/statistics_type_toggle.dart';
+import '../../subscription/presentation/premium_provider.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
   const StatisticsScreen({super.key});
@@ -38,6 +39,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPremium = ref.watch(isPremiumProvider);
+    final isVip = ref.watch(isVipProvider);
+    final hasPremiumAccess = isPremium || isVip;
     final statisticsAsync = ref.watch(statisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
     final insightAsync = ref.watch(insightProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
     final currency = ref.watch(currencyProvider);
@@ -241,14 +245,18 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
               const SizedBox(height: 24),
               
-              // 7. Comparative Analysis
-              comparativeAsync.when(
-                data: (data) {
-                  if (data == null) return const SizedBox();
-                  return ComparativeAnalysisCard(data: data, isExpense: _isExpense);
-                }, 
-                loading: () => const SizedBox(), 
-                error: (_,__) => const SizedBox(),
+              // 7. Comparative Analysis (Premium Feature)
+              _PremiumLock(
+                isLocked: !hasPremiumAccess,
+                onUnlock: () => context.push('/premium'),
+                child: comparativeAsync.when(
+                  data: (data) {
+                    if (data == null) return const SizedBox();
+                    return ComparativeAnalysisCard(data: data, isExpense: _isExpense);
+                  }, 
+                  loading: () => const SizedBox(), 
+                  error: (_,__) => const SizedBox(),
+                ),
               ),
               const SizedBox(height: 16),
 

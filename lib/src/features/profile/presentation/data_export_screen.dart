@@ -11,6 +11,8 @@ import '../../wallets/presentation/wallet_provider.dart';
 import '../../categories/data/category_repository.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../profile/application/data_export_service.dart';
+import '../../subscription/presentation/premium_provider.dart';
+import '../../subscription/presentation/widgets/premium_gate_widget.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class DataExportScreen extends ConsumerStatefulWidget {
@@ -156,6 +158,32 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
   Widget build(BuildContext context) {
     final walletsAsync = ref.watch(walletListProvider);
     final categoriesAsync = ref.watch(allCategoriesStreamProvider);
+    final isPremium = ref.watch(isPremiumProvider);
+    final isVip = ref.watch(isVipProvider);
+    final hasPremiumAccess = isPremium || isVip;
+
+    // Show premium gate for free users
+    if (!hasPremiumAccess) {
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+            onPressed: () => context.pop(),
+          ),
+          title: Text(AppLocalizations.of(context)!.exportDataTitle, style: AppTextStyles.h2),
+          centerTitle: true,
+        ),
+        body: PremiumGateWidget(
+          featureName: AppLocalizations.of(context)!.exportDataTitle,
+          featureDescription: 'Export your transactions to CSV or Excel',
+          showPreview: false,
+          child: const SizedBox.shrink(),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,

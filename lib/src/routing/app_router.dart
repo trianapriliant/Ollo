@@ -32,7 +32,6 @@ import '../features/savings/presentation/savings_screen.dart';
 import '../features/savings/presentation/saving_detail_screen.dart';
 import '../features/savings/presentation/add_edit_saving_screen.dart';
 import '../features/savings/domain/saving_goal.dart';
-import '../features/subscription/presentation/paywall_screen.dart';
 import '../features/bills/presentation/bills_screen.dart';
 import '../features/bills/presentation/add_bill_screen.dart';
 import '../features/bills/domain/bill.dart';
@@ -64,6 +63,7 @@ import '../features/roadmap/presentation/roadmap_screen.dart';
 import '../features/gamification/presentation/gamification_screen.dart';
 import '../features/gamification/presentation/gamification_listener.dart';
 import '../features/quick_record/presentation/quick_record_modal.dart';
+import '../features/subscription/presentation/premium_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -187,6 +187,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
+        path: '/premium',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const PremiumScreen(),
+      ),
+      GoRoute(
         path: '/categories',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const CategoryManagementScreen(),
@@ -291,7 +296,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/paywall',
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const PaywallScreen(),
+        redirect: (context, state) => '/premium',
       ),
       GoRoute(
         path: '/bills',

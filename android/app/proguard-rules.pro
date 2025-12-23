@@ -5,3 +5,6 @@
 -dontwarn com.google.mlkit.vision.text.devanagari.**
 -dontwarn com.google.mlkit.vision.text.japanese.**
 -dontwarn com.google.mlkit.vision.text.korean.**
+
+# RevenueCat - Keep for in-app purchases
+-keep class com.revenuecat.purchases.** { *; }

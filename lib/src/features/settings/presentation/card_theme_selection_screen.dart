@@ -5,13 +5,27 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../../localization/generated/app_localizations.dart';
 import '../../dashboard/presentation/main_card_theme_provider.dart';
+import '../../subscription/presentation/premium_provider.dart';
 
 class CardThemeSelectionScreen extends ConsumerWidget {
   const CardThemeSelectionScreen({super.key});
 
+  // Premium-only themes
+  static const Set<MainCardTheme> _premiumThemes = {
+    MainCardTheme.argon,
+    MainCardTheme.velvetSun,
+    MainCardTheme.summer,
+    MainCardTheme.brokenHearts,
+    MainCardTheme.relay,
+    MainCardTheme.cinnamint,
+  };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTheme = ref.watch(mainCardThemeProvider);
+    final isPremium = ref.watch(isPremiumProvider);
+    final isVip = ref.watch(isVipProvider);
+    final hasPremiumAccess = isPremium || isVip;
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -37,9 +51,17 @@ class CardThemeSelectionScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final theme = MainCardTheme.values[index];
           final isSelected = theme == currentTheme;
+          final isPremiumTheme = _premiumThemes.contains(theme);
+          final isLocked = isPremiumTheme && !hasPremiumAccess;
+
           return GestureDetector(
             onTap: () {
-              ref.read(mainCardThemeProvider.notifier).setTheme(theme);
+              if (isLocked) {
+                // Navigate to premium screen
+                context.push('/premium');
+              } else {
+                ref.read(mainCardThemeProvider.notifier).setTheme(theme);
+              }
             },
             child: Container(
               decoration: BoxDecoration(
@@ -58,18 +80,24 @@ class CardThemeSelectionScreen extends ConsumerWidget {
               ),
               child: Stack(
                 children: [
-                   Center(
+                  // Theme name (centered)
+                  Center(
                     child: Text(
                       _getThemeName(l10n, theme),
-                      style: AppTextStyles.h3.copyWith(color: Colors.white, shadows: [
-                         Shadow(
-                          offset: const Offset(0, 1),
-                          blurRadius: 2,
-                          color: Colors.black.withOpacity(0.3),
-                        ),
-                      ]),
+                      style: AppTextStyles.h3.copyWith(
+                        color: isLocked ? Colors.white60 : Colors.white,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(0, 1),
+                            blurRadius: 2,
+                            color: Colors.black.withOpacity(0.3),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  
+                  // Selected checkmark
                   if (isSelected)
                     Positioned(
                       top: 8,
@@ -81,6 +109,51 @@ class CardThemeSelectionScreen extends ConsumerWidget {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.check, size: 16, color: AppColors.primary),
+                      ),
+                    ),
+                  
+                  // Premium lock badge
+                  if (isLocked)
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.star, color: Colors.white, size: 12),
+                            SizedBox(width: 4),
+                            Text(
+                              'PRO',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  
+                  // Lock overlay for locked themes
+                  if (isLocked)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.lock, color: Colors.white, size: 24),
+                        ),
                       ),
                     ),
                 ],

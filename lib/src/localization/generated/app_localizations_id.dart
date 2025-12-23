@@ -2028,7 +2028,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get currentBalance => 'Saldo Saat Ini';
 
   @override
-  String get premiumMember => 'Anggota Premium';
+  String get premiumMember => 'Member Premium';
 
   @override
   String get upgradeToPremium => 'Upgrade ke Premium';
@@ -2630,4 +2630,164 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get noSubCategories => 'Belum ada sub-kategori';
+
+  @override
+  String get vipMember => 'Member VIP';
+
+  @override
+  String get freeMember => 'Member Gratis';
+
+  @override
+  String get premiumFeatures => 'Fitur Premium';
+
+  @override
+  String get chooseYourPlan => 'Pilih Paket Kamu';
+
+  @override
+  String get restorePurchases => 'Pulihkan Pembelian';
+
+  @override
+  String get haveVipCode => 'Punya kode VIP?';
+
+  @override
+  String get enterVipCode => 'Masukkan Kode VIP';
+
+  @override
+  String get enterYourCode => 'Masukkan kode kamu';
+
+  @override
+  String get redeem => 'Tukarkan';
+
+  @override
+  String get welcomeToPremium => 'Selamat Datang di Premium!';
+
+  @override
+  String get thankYouForSupport =>
+      'Terima kasih atas dukunganmu. Nikmati semua fitur premium!';
+
+  @override
+  String get continue_ => 'Lanjutkan';
+
+  @override
+  String get purchasesRestored => 'Pembelian berhasil dipulihkan!';
+
+  @override
+  String get noPurchasesFound => 'Tidak ada pembelian sebelumnya.';
+
+  @override
+  String get purchaseFailed => 'Pembelian gagal. Silakan coba lagi.';
+
+  @override
+  String get welcomeToVip => 'Selamat Datang di VIP! 🎉';
+
+  @override
+  String get invalidVipCode => 'Kode tidak valid. Silakan coba lagi.';
+
+  @override
+  String currentPlan(String plan) {
+    return 'Paket Saat Ini: $plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => 'Akses Awal & Benefit Eksklusif';
+
+  @override
+  String get voiceQuickRecord => 'Rekam Suara Cepat';
+
+  @override
+  String get voiceQuickRecordDesc => 'Tambah transaksi dengan suaramu';
+
+  @override
+  String get advancedStatistics => 'Statistik Lanjutan';
+
+  @override
+  String get advancedStatisticsDesc => 'Insight mendalam tentang keuanganmu';
+
+  @override
+  String get dataExportDesc => 'Ekspor ke CSV dan Excel';
+
+  @override
+  String get smartScan => 'Scan Pintar';
+
+  @override
+  String get smartScanDesc => 'Scan struk secara otomatis';
+
+  @override
+  String get premiumThemes => 'Tema Premium';
+
+  @override
+  String get premiumThemesDesc => 'Tema gradien eksklusif';
+
+  @override
+  String get unlimitedWallets => 'Dompet Tanpa Batas';
+
+  @override
+  String get unlimitedWalletsDesc => 'Tanpa batasan dompet';
+
+  @override
+  String get vipExclusive => 'Eksklusif VIP';
+
+  @override
+  String get earlyAccess => 'Akses Awal';
+
+  @override
+  String get earlyAccessDesc => 'Dapatkan fitur baru lebih dulu';
+
+  @override
+  String get prioritySupport => 'Dukungan Prioritas';
+
+  @override
+  String get prioritySupportDesc => 'Penanganan bug laporan lebih cepat';
+
+  @override
+  String get betaFeatures => 'Fitur Beta';
+
+  @override
+  String get betaFeaturesDesc => 'Coba fitur eksperimental';
+
+  @override
+  String get sixMonths => '6 Bulan';
+
+  @override
+  String get annual => 'Tahunan';
+
+  @override
+  String get lifetime => 'Seumur Hidup';
+
+  @override
+  String get perMonth => '/bulan';
+
+  @override
+  String get per6Months => '/6 bulan';
+
+  @override
+  String get perYear => '/tahun';
+
+  @override
+  String get oneTime => 'sekali bayar';
+
+  @override
+  String get save17 => 'Hemat 17%';
+
+  @override
+  String get save33 => 'Hemat 33%';
+
+  @override
+  String get bestValue => 'Paling Hemat';
+
+  @override
+  String get forever => 'Selamanya';
+
+  @override
+  String get freeTrialDays => 'Gratis 7 hari';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => 'Fitur Premium';
+
+  @override
+  String get thisFeatureRequiresPremium =>
+      'Fitur ini memerlukan langganan premium';
 }

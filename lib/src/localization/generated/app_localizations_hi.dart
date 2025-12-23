@@ -288,7 +288,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get feedbackRoadmap => 'फीडबैक और रोडमैप';
 
   @override
-  String get dataExport => 'डाटा निर्यात';
+  String get dataExport => 'डेटा निर्यात';
 
   @override
   String get dataManagement => 'डाटा प्रबंधन';
@@ -2601,4 +2601,164 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get noSubCategories => 'No sub-categories';
+
+  @override
+  String get vipMember => 'VIP सदस्य';
+
+  @override
+  String get freeMember => 'मुफ्त सदस्य';
+
+  @override
+  String get premiumFeatures => 'प्रीमियम सुविधाएं';
+
+  @override
+  String get chooseYourPlan => 'अपना प्लान चुनें';
+
+  @override
+  String get restorePurchases => 'खरीदारी पुनर्स्थापित करें';
+
+  @override
+  String get haveVipCode => 'VIP कोड है?';
+
+  @override
+  String get enterVipCode => 'VIP कोड दर्ज करें';
+
+  @override
+  String get enterYourCode => 'अपना कोड दर्ज करें';
+
+  @override
+  String get redeem => 'रिडीम करें';
+
+  @override
+  String get welcomeToPremium => 'प्रीमियम में आपका स्वागत है!';
+
+  @override
+  String get thankYouForSupport =>
+      'आपके समर्थन के लिए धन्यवाद। सभी प्रीमियम सुविधाओं का आनंद लें!';
+
+  @override
+  String get continue_ => 'जारी रखें';
+
+  @override
+  String get purchasesRestored => 'खरीदारी सफलतापूर्वक पुनर्स्थापित!';
+
+  @override
+  String get noPurchasesFound => 'कोई पिछली खरीदारी नहीं मिली।';
+
+  @override
+  String get purchaseFailed => 'खरीदारी विफल। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get welcomeToVip => 'VIP में आपका स्वागत है! 🎉';
+
+  @override
+  String get invalidVipCode => 'अमान्य कोड। कृपया पुनः प्रयास करें।';
+
+  @override
+  String currentPlan(String plan) {
+    return 'वर्तमान प्लान: $plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => 'प्रारंभिक पहुंच और विशेष लाभ';
+
+  @override
+  String get voiceQuickRecord => 'वॉइस क्विक रिकॉर्ड';
+
+  @override
+  String get voiceQuickRecordDesc => 'अपनी आवाज से लेनदेन जोड़ें';
+
+  @override
+  String get advancedStatistics => 'उन्नत सांख्यिकी';
+
+  @override
+  String get advancedStatisticsDesc => 'अपने वित्त की गहरी जानकारी';
+
+  @override
+  String get dataExportDesc => 'CSV और Excel में निर्यात करें';
+
+  @override
+  String get smartScan => 'स्मार्ट स्कैन';
+
+  @override
+  String get smartScanDesc => 'रसीद स्वचालित रूप से स्कैन करें';
+
+  @override
+  String get premiumThemes => 'प्रीमियम थीम';
+
+  @override
+  String get premiumThemesDesc => 'विशेष ग्रेडिएंट थीम';
+
+  @override
+  String get unlimitedWallets => 'असीमित वॉलेट';
+
+  @override
+  String get unlimitedWalletsDesc => 'वॉलेट पर कोई सीमा नहीं';
+
+  @override
+  String get vipExclusive => 'VIP विशेष';
+
+  @override
+  String get earlyAccess => 'प्रारंभिक पहुंच';
+
+  @override
+  String get earlyAccessDesc => 'नई सुविधाएं सबसे पहले प्राप्त करें';
+
+  @override
+  String get prioritySupport => 'प्राथमिकता सहायता';
+
+  @override
+  String get prioritySupportDesc => 'बग रिपोर्ट की तेज प्रक्रिया';
+
+  @override
+  String get betaFeatures => 'बीटा सुविधाएं';
+
+  @override
+  String get betaFeaturesDesc => 'प्रयोगात्मक सुविधाएं आज़माएं';
+
+  @override
+  String get sixMonths => '6 महीने';
+
+  @override
+  String get annual => 'वार्षिक';
+
+  @override
+  String get lifetime => 'आजीवन';
+
+  @override
+  String get perMonth => '/महीना';
+
+  @override
+  String get per6Months => '/6 महीने';
+
+  @override
+  String get perYear => '/वर्ष';
+
+  @override
+  String get oneTime => 'एक बार';
+
+  @override
+  String get save17 => '17% बचाएं';
+
+  @override
+  String get save33 => '33% बचाएं';
+
+  @override
+  String get bestValue => 'सर्वोत्तम मूल्य';
+
+  @override
+  String get forever => 'हमेशा के लिए';
+
+  @override
+  String get freeTrialDays => '7 दिन मुफ्त';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => 'प्रीमियम सुविधा';
+
+  @override
+  String get thisFeatureRequiresPremium =>
+      'इस सुविधा के लिए प्रीमियम सदस्यता आवश्यक है';
 }

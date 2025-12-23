@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../utils/icon_helper.dart';
@@ -18,10 +19,32 @@ class WalletIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if it's a custom file (user uploaded image)
+    if (_isCustomFilePath(iconPath)) {
+      return Container(
+        width: size + 16,
+        height: size + 16,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: ClipOval(
+          child: Image.file(
+            File(iconPath),
+            width: size + 8,
+            height: size + 8,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => _buildErrorIcon(),
+          ),
+        ),
+      );
+    }
+
     // Check if it's an asset path
     if (iconPath.startsWith('assets/')) {
       return Container(
-        width: size + 16, // Add padding compensation
+        width: size + 16,
         height: size + 16,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -47,6 +70,24 @@ class WalletIcon extends StatelessWidget {
     );
   }
 
+  /// Check if the path is a custom file path (user uploaded)
+  bool _isCustomFilePath(String path) {
+    // Custom files are stored with absolute paths or in app documents directory
+    if (path.isEmpty) return false;
+    if (path.startsWith('assets/')) return false;
+    
+    // Check common file path patterns
+    if (path.startsWith('/') || // Unix/Android absolute path
+        path.contains(':\\') || // Windows absolute path
+        path.startsWith('file://') || // File URI
+        path.contains('/app_flutter/') || // Flutter app documents
+        path.contains('Documents') || // iOS documents
+        path.contains('data/data/')) { // Android app data
+      return true;
+    }
+    return false;
+  }
+
   Widget _buildAssetIcon() {
     if (iconPath.toLowerCase().endsWith('.svg')) {
       return SvgPicture.asset(
@@ -54,9 +95,6 @@ class WalletIcon extends StatelessWidget {
         width: size,
         height: size,
         fit: BoxFit.contain,
-        // Optional: Apply color filter if color is provided, 
-        // but usually wallet logos have their own colors.
-        // colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
         placeholderBuilder: (BuildContext context) => _buildErrorIcon(),
       );
     } else {

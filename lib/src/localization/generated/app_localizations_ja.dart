@@ -600,7 +600,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get weekly => '毎週';
 
   @override
-  String get monthly => '毎月';
+  String get monthly => '月額';
 
   @override
   String get yearly => '毎年';
@@ -1987,7 +1987,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get currentBalance => '現在の残高';
 
   @override
-  String get premiumMember => 'プレミアムメンバー';
+  String get premiumMember => 'プレミアム会員';
 
   @override
   String get upgradeToPremium => 'プレミアムにアップグレード';
@@ -2571,4 +2571,162 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noSubCategories => 'No sub-categories';
+
+  @override
+  String get vipMember => 'VIP会員';
+
+  @override
+  String get freeMember => '無料会員';
+
+  @override
+  String get premiumFeatures => 'プレミアム機能';
+
+  @override
+  String get chooseYourPlan => 'プランを選択';
+
+  @override
+  String get restorePurchases => '購入を復元';
+
+  @override
+  String get haveVipCode => 'VIPコードをお持ちですか？';
+
+  @override
+  String get enterVipCode => 'VIPコードを入力';
+
+  @override
+  String get enterYourCode => 'コードを入力';
+
+  @override
+  String get redeem => '引き換える';
+
+  @override
+  String get welcomeToPremium => 'プレミアムへようこそ！';
+
+  @override
+  String get thankYouForSupport => 'ご支援ありがとうございます。すべてのプレミアム機能をお楽しみください！';
+
+  @override
+  String get continue_ => '続ける';
+
+  @override
+  String get purchasesRestored => '購入が正常に復元されました！';
+
+  @override
+  String get noPurchasesFound => '過去の購入が見つかりません。';
+
+  @override
+  String get purchaseFailed => '購入に失敗しました。再度お試しください。';
+
+  @override
+  String get welcomeToVip => 'VIPへようこそ！🎉';
+
+  @override
+  String get invalidVipCode => '無効なコードです。再度お試しください。';
+
+  @override
+  String currentPlan(String plan) {
+    return '現在のプラン: $plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => '早期アクセスと限定特典';
+
+  @override
+  String get voiceQuickRecord => '音声クイック記録';
+
+  @override
+  String get voiceQuickRecordDesc => '音声で取引を追加';
+
+  @override
+  String get advancedStatistics => '高度な統計';
+
+  @override
+  String get advancedStatisticsDesc => '財務の詳細な分析';
+
+  @override
+  String get dataExportDesc => 'CSVとExcelにエクスポート';
+
+  @override
+  String get smartScan => 'スマートスキャン';
+
+  @override
+  String get smartScanDesc => 'レシートを自動スキャン';
+
+  @override
+  String get premiumThemes => 'プレミアムテーマ';
+
+  @override
+  String get premiumThemesDesc => '限定グラデーションテーマ';
+
+  @override
+  String get unlimitedWallets => '無制限ウォレット';
+
+  @override
+  String get unlimitedWalletsDesc => 'ウォレット数の制限なし';
+
+  @override
+  String get vipExclusive => 'VIP限定';
+
+  @override
+  String get earlyAccess => '早期アクセス';
+
+  @override
+  String get earlyAccessDesc => '新機能を最初に入手';
+
+  @override
+  String get prioritySupport => '優先サポート';
+
+  @override
+  String get prioritySupportDesc => 'バグ報告の優先対応';
+
+  @override
+  String get betaFeatures => 'ベータ機能';
+
+  @override
+  String get betaFeaturesDesc => '実験的機能を試す';
+
+  @override
+  String get sixMonths => '6ヶ月';
+
+  @override
+  String get annual => '年額';
+
+  @override
+  String get lifetime => '永久';
+
+  @override
+  String get perMonth => '/月';
+
+  @override
+  String get per6Months => '/6ヶ月';
+
+  @override
+  String get perYear => '/年';
+
+  @override
+  String get oneTime => '一回払い';
+
+  @override
+  String get save17 => '17%お得';
+
+  @override
+  String get save33 => '33%お得';
+
+  @override
+  String get bestValue => '最もお得';
+
+  @override
+  String get forever => '永久に';
+
+  @override
+  String get freeTrialDays => '7日間無料';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => 'プレミアム機能';
+
+  @override
+  String get thisFeatureRequiresPremium => 'この機能にはプレミアム購読が必要です';
 }

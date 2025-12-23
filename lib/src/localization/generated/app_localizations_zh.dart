@@ -284,7 +284,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get feedbackRoadmap => '反馈与路线图';
 
   @override
-  String get dataExport => '导出数据';
+  String get dataExport => '数据导出';
 
   @override
   String get dataManagement => '数据管理';
@@ -600,7 +600,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get weekly => '每周';
 
   @override
-  String get monthly => '每月';
+  String get monthly => '月付';
 
   @override
   String get yearly => '每年';
@@ -1986,7 +1986,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get premiumMember => '高级会员';
 
   @override
-  String get upgradeToPremium => '升级至高级版';
+  String get upgradeToPremium => '升级到高级版';
 
   @override
   String get unlimitedAccess => '无限访问';
@@ -2567,4 +2567,162 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noSubCategories => 'No sub-categories';
+
+  @override
+  String get vipMember => 'VIP会员';
+
+  @override
+  String get freeMember => '免费会员';
+
+  @override
+  String get premiumFeatures => '高级功能';
+
+  @override
+  String get chooseYourPlan => '选择您的套餐';
+
+  @override
+  String get restorePurchases => '恢复购买';
+
+  @override
+  String get haveVipCode => '有VIP代码吗？';
+
+  @override
+  String get enterVipCode => '输入VIP代码';
+
+  @override
+  String get enterYourCode => '输入您的代码';
+
+  @override
+  String get redeem => '兑换';
+
+  @override
+  String get welcomeToPremium => '欢迎加入高级版！';
+
+  @override
+  String get thankYouForSupport => '感谢您的支持。享受所有高级功能！';
+
+  @override
+  String get continue_ => '继续';
+
+  @override
+  String get purchasesRestored => '购买已成功恢复！';
+
+  @override
+  String get noPurchasesFound => '未找到之前的购买记录。';
+
+  @override
+  String get purchaseFailed => '购买失败。请重试。';
+
+  @override
+  String get welcomeToVip => '欢迎加入VIP！🎉';
+
+  @override
+  String get invalidVipCode => '代码无效。请重试。';
+
+  @override
+  String currentPlan(String plan) {
+    return '当前套餐：$plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => '抢先体验和专属福利';
+
+  @override
+  String get voiceQuickRecord => '语音快速记录';
+
+  @override
+  String get voiceQuickRecordDesc => '用语音添加交易';
+
+  @override
+  String get advancedStatistics => '高级统计';
+
+  @override
+  String get advancedStatisticsDesc => '深入了解您的财务';
+
+  @override
+  String get dataExportDesc => '导出为CSV和Excel';
+
+  @override
+  String get smartScan => '智能扫描';
+
+  @override
+  String get smartScanDesc => '自动扫描收据';
+
+  @override
+  String get premiumThemes => '高级主题';
+
+  @override
+  String get premiumThemesDesc => '专属渐变主题';
+
+  @override
+  String get unlimitedWallets => '无限钱包';
+
+  @override
+  String get unlimitedWalletsDesc => '钱包数量不受限制';
+
+  @override
+  String get vipExclusive => 'VIP专属';
+
+  @override
+  String get earlyAccess => '抢先体验';
+
+  @override
+  String get earlyAccessDesc => '率先获取新功能';
+
+  @override
+  String get prioritySupport => '优先支持';
+
+  @override
+  String get prioritySupportDesc => '错误报告优先处理';
+
+  @override
+  String get betaFeatures => '测试功能';
+
+  @override
+  String get betaFeaturesDesc => '尝试实验性功能';
+
+  @override
+  String get sixMonths => '6个月';
+
+  @override
+  String get annual => '年付';
+
+  @override
+  String get lifetime => '终身';
+
+  @override
+  String get perMonth => '/月';
+
+  @override
+  String get per6Months => '/6个月';
+
+  @override
+  String get perYear => '/年';
+
+  @override
+  String get oneTime => '一次性';
+
+  @override
+  String get save17 => '省17%';
+
+  @override
+  String get save33 => '省33%';
+
+  @override
+  String get bestValue => '最划算';
+
+  @override
+  String get forever => '永久';
+
+  @override
+  String get freeTrialDays => '7天免费试用';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => '高级功能';
+
+  @override
+  String get thisFeatureRequiresPremium => '此功能需要高级订阅';
 }

@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../data/wallet_repository.dart';
@@ -139,6 +143,71 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
       _selectedType = template.type;
       _selectedIcon = template.assetPath;
     });
+  }
+
+  /// Check if current icon is a custom uploaded file
+  bool get _isCustomIcon {
+    if (_selectedIcon.isEmpty) return false;
+    if (_selectedIcon.startsWith('assets/')) return false;
+    // Check if it's a file path (not a Material icon name)
+    return _selectedIcon.startsWith('/') || 
+           _selectedIcon.contains(':\\') ||
+           _selectedIcon.contains('/app_flutter/') ||
+           _selectedIcon.contains('Documents');
+  }
+
+  /// Pick image from gallery and save to app documents
+  Future<void> _pickCustomIcon() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+      
+      if (image == null) return;
+      
+      // Get app documents directory
+      final Directory appDir = await getApplicationDocumentsDirectory();
+      final String iconsDir = '${appDir.path}/wallet_icons';
+      
+      // Create icons directory if not exists
+      final Directory iconsDirRef = Directory(iconsDir);
+      if (!await iconsDirRef.exists()) {
+        await iconsDirRef.create(recursive: true);
+      }
+      
+      // Generate unique filename
+      final String fileName = 'wallet_${DateTime.now().millisecondsSinceEpoch}${path.extension(image.path)}';
+      final String savedPath = '$iconsDir/$fileName';
+      
+      // Copy image to app directory
+      await File(image.path).copy(savedPath);
+      
+      setState(() {
+        _selectedIcon = savedPath;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Custom icon selected!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to pick image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _saveWallet() async {
@@ -283,44 +352,43 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
             ),
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context)!.typeLabel, style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<WalletType>(
-                  value: _selectedType,
-                  isExpanded: true,
-                  items: WalletType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.name.toUpperCase()),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedType = value;
-                      });
-                    }
-                  },
-                ),
+            const SizedBox(height: 12),
+            // Modern Pill-style Type Selector
+            SizedBox(
+              height: 50,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: WalletType.values.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final type = WalletType.values[index];
+                  final isSelected = type == _selectedType;
+                  return _buildTypeChip(type, isSelected);
+                },
               ),
             ),
             const SizedBox(height: 24),
             Text(AppLocalizations.of(context)!.icon, style: AppTextStyles.bodyMedium),
             const SizedBox(height: 12),
             
-            // Selected Icon Preview (if asset)
-            if (_selectedIcon.startsWith('assets/')) ...[
+            // Selected Icon Preview (if asset or custom)
+            if (_selectedIcon.startsWith('assets/') || _isCustomIcon) ...[
               Center(
                 child: Column(
                   children: [
-                    WalletIcon(iconPath: _selectedIcon, size: 48),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.primary, width: 2),
+                      ),
+                      child: WalletIcon(iconPath: _selectedIcon, size: 64),
+                    ),
                     const SizedBox(height: 8),
+                    Text(
+                      _isCustomIcon ? 'Custom Icon' : 'Selected Icon',
+                      style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
                     TextButton(
                       onPressed: () {
                         setState(() {
@@ -375,6 +443,24 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 16),
+
+              // Upload Custom Icon Button
+              Center(
+                child: OutlinedButton.icon(
+                  onPressed: _pickCustomIcon,
+                  icon: const Icon(Icons.add_photo_alternate),
+                  label: const Text('Upload Custom Icon'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 24),
 
               Text(AppLocalizations.of(context)!.genericIcons, style: AppTextStyles.bodyMedium),
@@ -425,6 +511,116 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildTypeChip(WalletType type, bool isSelected) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedType = type;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          gradient: isSelected 
+              ? LinearGradient(
+                  colors: [
+                    _getTypeColor(type),
+                    _getTypeColor(type).withOpacity(0.7),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          border: isSelected 
+              ? null 
+              : Border.all(color: Colors.grey[300]!, width: 1),
+          boxShadow: isSelected 
+              ? [
+                  BoxShadow(
+                    color: _getTypeColor(type).withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              _getTypeIcon(type),
+              size: 18,
+              color: isSelected ? Colors.white : Colors.grey[600],
+            ),
+            const SizedBox(width: 8),
+            Text(
+              _getTypeLabel(type),
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.grey[700],
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  IconData _getTypeIcon(WalletType type) {
+    switch (type) {
+      case WalletType.bank:
+        return Icons.account_balance;
+      case WalletType.ewallet:
+        return Icons.account_balance_wallet;
+      case WalletType.cash:
+        return Icons.payments;
+      case WalletType.creditCard:
+        return Icons.credit_card;
+      case WalletType.exchange:
+        return Icons.trending_up;
+      case WalletType.other:
+        return Icons.more_horiz;
+    }
+  }
+
+  Color _getTypeColor(WalletType type) {
+    switch (type) {
+      case WalletType.bank:
+        return const Color(0xFF1976D2); // Blue
+      case WalletType.ewallet:
+        return const Color(0xFF7B1FA2); // Purple
+      case WalletType.cash:
+        return const Color(0xFF388E3C); // Green
+      case WalletType.creditCard:
+        return const Color(0xFFE64A19); // Deep Orange
+      case WalletType.exchange:
+        return const Color(0xFF00897B); // Teal
+      case WalletType.other:
+        return const Color(0xFF455A64); // Blue Grey
+    }
+  }
+
+  String _getTypeLabel(WalletType type) {
+    switch (type) {
+      case WalletType.bank:
+        return 'Bank';
+      case WalletType.ewallet:
+        return 'E-Wallet';
+      case WalletType.cash:
+        return 'Cash';
+      case WalletType.creditCard:
+        return 'Credit Card';
+      case WalletType.exchange:
+        return 'Investment';
+      case WalletType.other:
+        return 'Other';
+    }
   }
 
   Widget _buildTemplateItem(WalletTemplate template) {

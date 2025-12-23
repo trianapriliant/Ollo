@@ -2632,4 +2632,164 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noSubCategories => 'No sub-categories';
+
+  @override
+  String get vipMember => 'VIP Member';
+
+  @override
+  String get freeMember => 'Free Member';
+
+  @override
+  String get premiumFeatures => 'Premium Features';
+
+  @override
+  String get chooseYourPlan => 'Choose Your Plan';
+
+  @override
+  String get restorePurchases => 'Restore Purchases';
+
+  @override
+  String get haveVipCode => 'Have a VIP code?';
+
+  @override
+  String get enterVipCode => 'Enter VIP Code';
+
+  @override
+  String get enterYourCode => 'Enter your code';
+
+  @override
+  String get redeem => 'Redeem';
+
+  @override
+  String get welcomeToPremium => 'Welcome to Premium!';
+
+  @override
+  String get thankYouForSupport =>
+      'Thank you for your support. Enjoy all premium features!';
+
+  @override
+  String get continue_ => 'Continue';
+
+  @override
+  String get purchasesRestored => 'Purchases restored successfully!';
+
+  @override
+  String get noPurchasesFound => 'No previous purchases found.';
+
+  @override
+  String get purchaseFailed => 'Purchase failed. Please try again.';
+
+  @override
+  String get welcomeToVip => 'Welcome to VIP! 🎉';
+
+  @override
+  String get invalidVipCode => 'Invalid code. Please try again.';
+
+  @override
+  String currentPlan(String plan) {
+    return 'Current Plan: $plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => 'Early Access & Exclusive Benefits';
+
+  @override
+  String get voiceQuickRecord => 'Voice Quick Record';
+
+  @override
+  String get voiceQuickRecordDesc => 'Add transactions with your voice';
+
+  @override
+  String get advancedStatistics => 'Advanced Statistics';
+
+  @override
+  String get advancedStatisticsDesc => 'Deep insights into your finances';
+
+  @override
+  String get dataExportDesc => 'Export to CSV and Excel';
+
+  @override
+  String get smartScan => 'Smart Scan';
+
+  @override
+  String get smartScanDesc => 'Scan receipts automatically';
+
+  @override
+  String get premiumThemes => 'Premium Themes';
+
+  @override
+  String get premiumThemesDesc => 'Exclusive gradient themes';
+
+  @override
+  String get unlimitedWallets => 'Unlimited Wallets';
+
+  @override
+  String get unlimitedWalletsDesc => 'No limits on wallets';
+
+  @override
+  String get vipExclusive => 'VIP Exclusive';
+
+  @override
+  String get earlyAccess => 'Early Access';
+
+  @override
+  String get earlyAccessDesc => 'Get new features first';
+
+  @override
+  String get prioritySupport => 'Priority Support';
+
+  @override
+  String get prioritySupportDesc => 'Fast-track bug reports';
+
+  @override
+  String get betaFeatures => 'Beta Features';
+
+  @override
+  String get betaFeaturesDesc => 'Try experimental features';
+
+  @override
+  String get sixMonths => '6 Months';
+
+  @override
+  String get annual => 'Annual';
+
+  @override
+  String get lifetime => 'Lifetime';
+
+  @override
+  String get perMonth => '/month';
+
+  @override
+  String get per6Months => '/6 months';
+
+  @override
+  String get perYear => '/year';
+
+  @override
+  String get oneTime => 'one-time';
+
+  @override
+  String get save17 => 'Save 17%';
+
+  @override
+  String get save33 => 'Save 33%';
+
+  @override
+  String get bestValue => 'Best Value';
+
+  @override
+  String get forever => 'Forever';
+
+  @override
+  String get freeTrialDays => '7-day free trial';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => 'Premium Feature';
+
+  @override
+  String get thisFeatureRequiresPremium =>
+      'This feature requires a premium subscription';
 }

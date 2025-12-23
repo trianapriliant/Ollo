@@ -5051,6 +5051,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No sub-categories'**
   String get noSubCategories;
+
+  /// No description provided for @vipMember.
+  ///
+  /// In en, this message translates to:
+  /// **'VIP Member'**
+  String get vipMember;
+
+  /// No description provided for @freeMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Member'**
+  String get freeMember;
+
+  /// No description provided for @premiumFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Features'**
+  String get premiumFeatures;
+
+  /// No description provided for @chooseYourPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Plan'**
+  String get chooseYourPlan;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @haveVipCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a VIP code?'**
+  String get haveVipCode;
+
+  /// No description provided for @enterVipCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter VIP Code'**
+  String get enterVipCode;
+
+  /// No description provided for @enterYourCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your code'**
+  String get enterYourCode;
+
+  /// No description provided for @redeem.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem'**
+  String get redeem;
+
+  /// No description provided for @welcomeToPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Premium!'**
+  String get welcomeToPremium;
+
+  /// No description provided for @thankYouForSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your support. Enjoy all premium features!'**
+  String get thankYouForSupport;
+
+  /// No description provided for @continue_.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_;
+
+  /// No description provided for @purchasesRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases restored successfully!'**
+  String get purchasesRestored;
+
+  /// No description provided for @noPurchasesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No previous purchases found.'**
+  String get noPurchasesFound;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase failed. Please try again.'**
+  String get purchaseFailed;
+
+  /// No description provided for @welcomeToVip.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to VIP! 🎉'**
+  String get welcomeToVip;
+
+  /// No description provided for @invalidVipCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code. Please try again.'**
+  String get invalidVipCode;
+
+  /// No description provided for @currentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Plan: {plan}'**
+  String currentPlan(String plan);
+
+  /// No description provided for @earlyAccessBenefits.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Access & Exclusive Benefits'**
+  String get earlyAccessBenefits;
+
+  /// No description provided for @voiceQuickRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Quick Record'**
+  String get voiceQuickRecord;
+
+  /// No description provided for @voiceQuickRecordDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add transactions with your voice'**
+  String get voiceQuickRecordDesc;
+
+  /// No description provided for @advancedStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Statistics'**
+  String get advancedStatistics;
+
+  /// No description provided for @advancedStatisticsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep insights into your finances'**
+  String get advancedStatisticsDesc;
+
+  /// No description provided for @dataExportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to CSV and Excel'**
+  String get dataExportDesc;
+
+  /// No description provided for @smartScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Scan'**
+  String get smartScan;
+
+  /// No description provided for @smartScanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipts automatically'**
+  String get smartScanDesc;
+
+  /// No description provided for @premiumThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Themes'**
+  String get premiumThemes;
+
+  /// No description provided for @premiumThemesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive gradient themes'**
+  String get premiumThemesDesc;
+
+  /// No description provided for @unlimitedWallets.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited Wallets'**
+  String get unlimitedWallets;
+
+  /// No description provided for @unlimitedWalletsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'No limits on wallets'**
+  String get unlimitedWalletsDesc;
+
+  /// No description provided for @vipExclusive.
+  ///
+  /// In en, this message translates to:
+  /// **'VIP Exclusive'**
+  String get vipExclusive;
+
+  /// No description provided for @earlyAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Access'**
+  String get earlyAccess;
+
+  /// No description provided for @earlyAccessDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get new features first'**
+  String get earlyAccessDesc;
+
+  /// No description provided for @prioritySupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Support'**
+  String get prioritySupport;
+
+  /// No description provided for @prioritySupportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast-track bug reports'**
+  String get prioritySupportDesc;
+
+  /// No description provided for @betaFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Beta Features'**
+  String get betaFeatures;
+
+  /// No description provided for @betaFeaturesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Try experimental features'**
+  String get betaFeaturesDesc;
+
+  /// No description provided for @sixMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Months'**
+  String get sixMonths;
+
+  /// No description provided for @annual.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual'**
+  String get annual;
+
+  /// No description provided for @lifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get lifetime;
+
+  /// No description provided for @perMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/month'**
+  String get perMonth;
+
+  /// No description provided for @per6Months.
+  ///
+  /// In en, this message translates to:
+  /// **'/6 months'**
+  String get per6Months;
+
+  /// No description provided for @perYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/year'**
+  String get perYear;
+
+  /// No description provided for @oneTime.
+  ///
+  /// In en, this message translates to:
+  /// **'one-time'**
+  String get oneTime;
+
+  /// No description provided for @save17.
+  ///
+  /// In en, this message translates to:
+  /// **'Save 17%'**
+  String get save17;
+
+  /// No description provided for @save33.
+  ///
+  /// In en, this message translates to:
+  /// **'Save 33%'**
+  String get save33;
+
+  /// No description provided for @bestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Value'**
+  String get bestValue;
+
+  /// No description provided for @forever.
+  ///
+  /// In en, this message translates to:
+  /// **'Forever'**
+  String get forever;
+
+  /// No description provided for @freeTrialDays.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day free trial'**
+  String get freeTrialDays;
+
+  /// No description provided for @pro.
+  ///
+  /// In en, this message translates to:
+  /// **'PRO'**
+  String get pro;
+
+  /// No description provided for @premiumFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Feature'**
+  String get premiumFeature;
+
+  /// No description provided for @thisFeatureRequiresPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature requires a premium subscription'**
+  String get thisFeatureRequiresPremium;
 }
 
 class _AppLocalizationsDelegate

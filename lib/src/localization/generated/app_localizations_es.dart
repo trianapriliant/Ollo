@@ -611,7 +611,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get weekly => 'Semanalmente';
 
   @override
-  String get monthly => 'Mensualmente';
+  String get monthly => 'Mensual';
 
   @override
   String get yearly => 'Anualmente';
@@ -2014,7 +2014,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get premiumMember => 'Miembro Premium';
 
   @override
-  String get upgradeToPremium => 'Mejorar a Premium';
+  String get upgradeToPremium => 'Actualizar a Premium';
 
   @override
   String get unlimitedAccess => 'Acceso Ilimitado';
@@ -2618,4 +2618,165 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noSubCategories => 'No sub-categories';
+
+  @override
+  String get vipMember => 'Miembro VIP';
+
+  @override
+  String get freeMember => 'Miembro Gratis';
+
+  @override
+  String get premiumFeatures => 'Funciones Premium';
+
+  @override
+  String get chooseYourPlan => 'Elige tu Plan';
+
+  @override
+  String get restorePurchases => 'Restaurar Compras';
+
+  @override
+  String get haveVipCode => '¿Tienes un código VIP?';
+
+  @override
+  String get enterVipCode => 'Ingresar Código VIP';
+
+  @override
+  String get enterYourCode => 'Ingresa tu código';
+
+  @override
+  String get redeem => 'Canjear';
+
+  @override
+  String get welcomeToPremium => '¡Bienvenido a Premium!';
+
+  @override
+  String get thankYouForSupport =>
+      'Gracias por tu apoyo. ¡Disfruta todas las funciones premium!';
+
+  @override
+  String get continue_ => 'Continuar';
+
+  @override
+  String get purchasesRestored => '¡Compras restauradas exitosamente!';
+
+  @override
+  String get noPurchasesFound => 'No se encontraron compras anteriores.';
+
+  @override
+  String get purchaseFailed => 'La compra falló. Por favor intenta de nuevo.';
+
+  @override
+  String get welcomeToVip => '¡Bienvenido a VIP! 🎉';
+
+  @override
+  String get invalidVipCode => 'Código inválido. Por favor intenta de nuevo.';
+
+  @override
+  String currentPlan(String plan) {
+    return 'Plan Actual: $plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => 'Acceso Anticipado y Beneficios Exclusivos';
+
+  @override
+  String get voiceQuickRecord => 'Grabación Rápida por Voz';
+
+  @override
+  String get voiceQuickRecordDesc => 'Agrega transacciones con tu voz';
+
+  @override
+  String get advancedStatistics => 'Estadísticas Avanzadas';
+
+  @override
+  String get advancedStatisticsDesc =>
+      'Información profunda sobre tus finanzas';
+
+  @override
+  String get dataExportDesc => 'Exportar a CSV y Excel';
+
+  @override
+  String get smartScan => 'Escaneo Inteligente';
+
+  @override
+  String get smartScanDesc => 'Escanea recibos automáticamente';
+
+  @override
+  String get premiumThemes => 'Temas Premium';
+
+  @override
+  String get premiumThemesDesc => 'Temas de gradiente exclusivos';
+
+  @override
+  String get unlimitedWallets => 'Billeteras Ilimitadas';
+
+  @override
+  String get unlimitedWalletsDesc => 'Sin límites en billeteras';
+
+  @override
+  String get vipExclusive => 'Exclusivo VIP';
+
+  @override
+  String get earlyAccess => 'Acceso Anticipado';
+
+  @override
+  String get earlyAccessDesc => 'Obtén nuevas funciones primero';
+
+  @override
+  String get prioritySupport => 'Soporte Prioritario';
+
+  @override
+  String get prioritySupportDesc => 'Reportes de errores prioritarios';
+
+  @override
+  String get betaFeatures => 'Funciones Beta';
+
+  @override
+  String get betaFeaturesDesc => 'Prueba funciones experimentales';
+
+  @override
+  String get sixMonths => '6 Meses';
+
+  @override
+  String get annual => 'Anual';
+
+  @override
+  String get lifetime => 'De por Vida';
+
+  @override
+  String get perMonth => '/mes';
+
+  @override
+  String get per6Months => '/6 meses';
+
+  @override
+  String get perYear => '/año';
+
+  @override
+  String get oneTime => 'único pago';
+
+  @override
+  String get save17 => 'Ahorra 17%';
+
+  @override
+  String get save33 => 'Ahorra 33%';
+
+  @override
+  String get bestValue => 'Mejor Valor';
+
+  @override
+  String get forever => 'Para Siempre';
+
+  @override
+  String get freeTrialDays => '7 días gratis';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => 'Función Premium';
+
+  @override
+  String get thisFeatureRequiresPremium =>
+      'Esta función requiere una suscripción premium';
 }

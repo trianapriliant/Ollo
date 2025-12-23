@@ -601,7 +601,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get weekly => '매주';
 
   @override
-  String get monthly => '매월';
+  String get monthly => '월간';
 
   @override
   String get yearly => '매년';
@@ -2583,4 +2583,162 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get noSubCategories => 'No sub-categories';
+
+  @override
+  String get vipMember => 'VIP 회원';
+
+  @override
+  String get freeMember => '무료 회원';
+
+  @override
+  String get premiumFeatures => '프리미엄 기능';
+
+  @override
+  String get chooseYourPlan => '요금제 선택';
+
+  @override
+  String get restorePurchases => '구매 복원';
+
+  @override
+  String get haveVipCode => 'VIP 코드가 있으신가요?';
+
+  @override
+  String get enterVipCode => 'VIP 코드 입력';
+
+  @override
+  String get enterYourCode => '코드를 입력하세요';
+
+  @override
+  String get redeem => '사용하기';
+
+  @override
+  String get welcomeToPremium => '프리미엄에 오신 것을 환영합니다!';
+
+  @override
+  String get thankYouForSupport => '지원해 주셔서 감사합니다. 모든 프리미엄 기능을 즐기세요!';
+
+  @override
+  String get continue_ => '계속';
+
+  @override
+  String get purchasesRestored => '구매가 성공적으로 복원되었습니다!';
+
+  @override
+  String get noPurchasesFound => '이전 구매 내역이 없습니다.';
+
+  @override
+  String get purchaseFailed => '구매에 실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get welcomeToVip => 'VIP에 오신 것을 환영합니다! 🎉';
+
+  @override
+  String get invalidVipCode => '잘못된 코드입니다. 다시 시도해 주세요.';
+
+  @override
+  String currentPlan(String plan) {
+    return '현재 요금제: $plan';
+  }
+
+  @override
+  String get earlyAccessBenefits => '조기 액세스 및 독점 혜택';
+
+  @override
+  String get voiceQuickRecord => '음성 빠른 기록';
+
+  @override
+  String get voiceQuickRecordDesc => '음성으로 거래 추가';
+
+  @override
+  String get advancedStatistics => '고급 통계';
+
+  @override
+  String get advancedStatisticsDesc => '재정에 대한 심층 분석';
+
+  @override
+  String get dataExportDesc => 'CSV 및 Excel로 내보내기';
+
+  @override
+  String get smartScan => '스마트 스캔';
+
+  @override
+  String get smartScanDesc => '영수증 자동 스캔';
+
+  @override
+  String get premiumThemes => '프리미엄 테마';
+
+  @override
+  String get premiumThemesDesc => '독점 그라데이션 테마';
+
+  @override
+  String get unlimitedWallets => '무제한 지갑';
+
+  @override
+  String get unlimitedWalletsDesc => '지갑 수 제한 없음';
+
+  @override
+  String get vipExclusive => 'VIP 전용';
+
+  @override
+  String get earlyAccess => '조기 액세스';
+
+  @override
+  String get earlyAccessDesc => '새로운 기능을 먼저 받으세요';
+
+  @override
+  String get prioritySupport => '우선 지원';
+
+  @override
+  String get prioritySupportDesc => '버그 보고 우선 처리';
+
+  @override
+  String get betaFeatures => '베타 기능';
+
+  @override
+  String get betaFeaturesDesc => '실험적 기능 체험';
+
+  @override
+  String get sixMonths => '6개월';
+
+  @override
+  String get annual => '연간';
+
+  @override
+  String get lifetime => '평생';
+
+  @override
+  String get perMonth => '/월';
+
+  @override
+  String get per6Months => '/6개월';
+
+  @override
+  String get perYear => '/년';
+
+  @override
+  String get oneTime => '일회성';
+
+  @override
+  String get save17 => '17% 절약';
+
+  @override
+  String get save33 => '33% 절약';
+
+  @override
+  String get bestValue => '최고의 가치';
+
+  @override
+  String get forever => '영원히';
+
+  @override
+  String get freeTrialDays => '7일 무료';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get premiumFeature => '프리미엄 기능';
+
+  @override
+  String get thisFeatureRequiresPremium => '이 기능은 프리미엄 구독이 필요합니다';
 }
