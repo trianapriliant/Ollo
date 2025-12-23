@@ -1,0 +1,25 @@
+{
+  "packName": "Indonesian Banks & E-Wallets",
+  "version": "1.0",
+  "author": "Ollo Team",
+  "description": "Complete pack of Indonesian local banks and e-wallet icons",
+  "templates": [
+    {"name": "BCA", "iconFileName": "bca.svg", "type": "bank"},
+    {"name": "BRI", "iconFileName": "bri.svg", "type": "bank"},
+    {"name": "BNI", "iconFileName": "bni.svg", "type": "bank"},
+    {"name": "Bank Mandiri", "iconFileName": "mandiri.png", "type": "bank"},
+    {"name": "BSI", "iconFileName": "bsi.svg", "type": "bank"},
+    {"name": "BTN", "iconFileName": "btn.svg", "type": "bank"},
+    {"name": "CIMB Niaga", "iconFileName": "cimb_niaga.svg", "type": "bank"},
+    {"name": "Danamon", "iconFileName": "danamon.svg", "type": "bank"},
+    {"name": "Permata Bank", "iconFileName": "permata.svg", "type": "bank"},
+    {"name": "OCBC NISP", "iconFileName": "ocbc.svg", "type": "bank"},
+    {"name": "Bank Jago", "iconFileName": "jago.svg", "type": "bank"},
+    {"name": "BTPN / Jenius", "iconFileName": "btpn.svg", "type": "bank"},
+    {"name": "GoPay", "iconFileName": "gopay.svg", "type": "ewallet"},
+    {"name": "OVO", "iconFileName": "ovo.svg", "type": "ewallet"},
+    {"name": "DANA", "iconFileName": "dana.svg", "type": "ewallet"},
+    {"name": "ShopeePay", "iconFileName": "shopeepay.svg", "type": "ewallet"},
+    {"name": "LinkAja", "iconFileName": "linkaja.svg", "type": "ewallet"}
+  ]
+}

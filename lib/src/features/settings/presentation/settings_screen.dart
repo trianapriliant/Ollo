@@ -1,12 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'currency_provider.dart';
 import 'language_provider.dart';
 import 'voice_language_provider.dart';
 import '../../../localization/generated/app_localizations.dart';
+import '../../wallets/application/wallet_template_service.dart';
 
 
 class SettingsScreen extends ConsumerWidget {
@@ -15,6 +18,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentCurrency = ref.watch(currencyProvider);
+    final installedPacksAsync = ref.watch(installedPacksProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -27,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Text(AppLocalizations.of(context)!.settings, style: AppTextStyles.h2),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,11 +102,180 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            
+            const SizedBox(height: 24),
+            
+            // Wallet Icon Packs Section
+            Text('Wallet Icons', style: AppTextStyles.bodyMedium),
+            const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.downloading, color: Color(0xFF4CAF50)),
+                    ),
+                    title: Text('Import Icon Pack', style: AppTextStyles.bodyLarge),
+                    subtitle: installedPacksAsync.when(
+                      data: (packs) => Text(
+                        packs.isEmpty ? 'No packs installed' : '${packs.length} pack(s) installed',
+                        style: TextStyle(color: packs.isEmpty ? Colors.grey : Colors.green),
+                      ),
+                      loading: () => const Text('Loading...'),
+                      error: (_, __) => const Text('Error'),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _importIconPack(context, ref),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFEBEE),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.delete_outline, color: Color(0xFFF44336)),
+                    ),
+                    title: Text('Clear Imported Packs', style: AppTextStyles.bodyLarge),
+                    subtitle: const Text('Remove all imported icons'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _clearIconPacks(context, ref),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+
+  Future<void> _importIconPack(BuildContext context, WidgetRef ref) async {
+    try {
+      // Pick ZIP file
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['zip'],
+        dialogTitle: 'Select Icon Pack ZIP File',
+      );
+      
+      if (result == null || result.files.isEmpty) return;
+      
+      final filePath = result.files.first.path;
+      if (filePath == null) return;
+      
+      // Show importing dialog
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 24),
+                Text('Importing icon pack...'),
+              ],
+            ),
+          ),
+        );
+      }
+      
+      // Import the ZIP
+      final importResult = await WalletTemplateService.importFromZip(File(filePath));
+      
+      // Close dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+      
+      // Refresh providers
+      ref.invalidate(installedPacksProvider);
+      ref.invalidate(importedTemplatesProvider);
+      
+      // Show result
+      if (context.mounted) {
+        if (importResult.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '✅ Imported ${importResult.importedCount} templates from "${importResult.packName}"'
+                '${importResult.skippedCount > 0 ? ' (${importResult.skippedCount} skipped)' : ''}',
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('❌ Import failed: ${importResult.error}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close dialog if open
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _clearIconPacks(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear All Icon Packs?'),
+        content: const Text(
+          'This will remove all imported wallet icons. '
+          'You will need to import them again to use bank/e-wallet templates.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Clear All'),
+          ),
+        ],
+      ),
+    );
+    
+    if (confirmed == true) {
+      await WalletTemplateService.clearImportedTemplates();
+      ref.invalidate(installedPacksProvider);
+      ref.invalidate(importedTemplatesProvider);
+      
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ All imported icon packs cleared'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    }
+  }
+
 
   void _showCurrencyPicker(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
