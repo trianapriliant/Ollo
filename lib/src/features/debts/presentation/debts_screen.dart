@@ -279,75 +279,129 @@ class _DebtList extends ConsumerWidget {
           );
         }
 
-        return ListView.separated(
+        // Separate active and completed debts
+        final activeDebts = debts.where((d) => !d.isPaid).toList();
+        final completedDebts = debts.where((d) => d.isPaid).toList();
+
+        return ListView(
           padding: const EdgeInsets.all(20),
-          itemCount: debts.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final debt = debts[index];
-            final isOverdue = !debt.isPaid && debt.dueDate.isBefore(DateTime.now());
+          children: [
+            // Active Debts Section
+            ...activeDebts.map((debt) => Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _buildDebtCard(context, ref, debt, currency),
+            )),
             
-            return GestureDetector(
-              onTap: () => context.push('/debts/detail', extra: debt),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                  border: isOverdue ? Border.all(color: Colors.red.withOpacity(0.3), width: 1) : null,
-                ),
+            // Completed Debts Section (if any)
+            if (completedDebts.isNotEmpty) ...[
+              if (activeDebts.isNotEmpty) const SizedBox(height: 8),
+              // Visual Divider with "Completed" label
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 16),
                 child: Row(
                   children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: (debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue)).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(
-                        debt.isPaid ? Icons.check_circle : (type == DebtType.borrowing ? Icons.arrow_downward : Icons.arrow_upward),
-                        color: debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue),
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Expanded(child: Divider(color: Colors.grey[300])),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
                         children: [
+                          Icon(Icons.check_circle, size: 16, color: Colors.green[400]),
+                          const SizedBox(width: 6),
                           Text(
-                            debt.personName,
-                            style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(
-                                isOverdue ? Icons.error_outline : Icons.calendar_today_outlined,
-                                size: 14,
-                                color: isOverdue ? Colors.red : Colors.grey,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                debt.isPaid ? AppLocalizations.of(context)!.paidStatus : (isOverdue ? AppLocalizations.of(context)!.overdue : AppLocalizations.of(context)!.dueOnDate(DateFormat('d MMM').format(debt.dueDate))),
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: debt.isPaid ? Colors.green : (isOverdue ? Colors.red : Colors.grey),
-                                  fontWeight: isOverdue ? FontWeight.bold : FontWeight.normal,
-                                ),
-                              ),
-                            ],
+                            AppLocalizations.of(context)!.completedDebts,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
                     ),
+                    Expanded(child: Divider(color: Colors.grey[300])),
+                  ],
+                ),
+              ),
+              // Completed debt cards with reduced opacity
+              ...completedDebts.map((debt) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Opacity(
+                  opacity: 0.65,
+                  child: _buildDebtCard(context, ref, debt, currency),
+                ),
+              )),
+            ],
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error: $err')),
+    );
+  }
+
+  Widget _buildDebtCard(BuildContext context, WidgetRef ref, Debt debt, currency) {
+    final isOverdue = !debt.isPaid && debt.dueDate.isBefore(DateTime.now());
+    
+    return GestureDetector(
+      onTap: () => context.push('/debts/detail', extra: debt),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: isOverdue ? Border.all(color: Colors.red.withOpacity(0.3), width: 1) : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: (debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue)).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                debt.isPaid ? Icons.check_circle : (type == DebtType.borrowing ? Icons.arrow_downward : Icons.arrow_upward),
+                color: debt.isPaid ? Colors.green : (type == DebtType.borrowing ? Colors.red : Colors.blue),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    debt.personName,
+                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        isOverdue ? Icons.error_outline : Icons.calendar_today_outlined,
+                        size: 14,
+                        color: isOverdue ? Colors.red : Colors.grey,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        debt.isPaid ? AppLocalizations.of(context)!.paidStatus : (isOverdue ? AppLocalizations.of(context)!.overdue : AppLocalizations.of(context)!.dueOnDate(DateFormat('d MMM').format(debt.dueDate))),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: debt.isPaid ? Colors.green : (isOverdue ? Colors.red : Colors.grey),
+                          fontWeight: isOverdue ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             // Action Section
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -364,7 +418,7 @@ class _DebtList extends ConsumerWidget {
                     const SizedBox(width: 12),
                     IconButton(
                       icon: const Icon(Icons.delete_outline, color: Colors.grey, size: 20),
-                      onPressed: () => _confirmDelete(context, ref, debt), // Need to extract _confirmDelete to be usable here or move logic
+                      onPressed: () => _confirmDelete(context, ref, debt),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -381,13 +435,8 @@ class _DebtList extends ConsumerWidget {
         ),
       ),
     );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
-    );
   }
+
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref, Debt debt) async {
     final confirm = await showDialog<bool>(
       context: context,

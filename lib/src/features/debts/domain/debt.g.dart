@@ -1890,6 +1890,11 @@ const DebtHistorySchema = Schema(
       id: 2,
       name: r'note',
       type: IsarType.string,
+    ),
+    r'transactionId': PropertySchema(
+      id: 3,
+      name: r'transactionId',
+      type: IsarType.long,
     )
   },
   estimateSize: _debtHistoryEstimateSize,
@@ -1922,6 +1927,7 @@ void _debtHistorySerialize(
   writer.writeDouble(offsets[0], object.amount);
   writer.writeDateTime(offsets[1], object.date);
   writer.writeString(offsets[2], object.note);
+  writer.writeLong(offsets[3], object.transactionId);
 }
 
 DebtHistory _debtHistoryDeserialize(
@@ -1934,6 +1940,7 @@ DebtHistory _debtHistoryDeserialize(
     amount: reader.readDoubleOrNull(offsets[0]),
     date: reader.readDateTimeOrNull(offsets[1]),
     note: reader.readStringOrNull(offsets[2]),
+    transactionId: reader.readLongOrNull(offsets[3]),
   );
   return object;
 }
@@ -1951,6 +1958,8 @@ P _debtHistoryDeserializeProp<P>(
       return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -2252,6 +2261,80 @@ extension DebtHistoryQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'note',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      transactionIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      transactionIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      transactionIdEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      transactionIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      transactionIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DebtHistory, DebtHistory, QAfterFilterCondition>
+      transactionIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'transactionId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }

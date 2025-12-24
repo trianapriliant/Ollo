@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,46 +16,73 @@ class ProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () => _showEditProfileDialog(context, ref, profile),
-          child: Stack(
+    return GestureDetector(
+      onTap: () => _showEditProfileDialog(context, ref, profile),
+      child: Column(
+        children: [
+          // Avatar centered
+          Stack(
             children: [
-              CircleAvatar(
-                radius: 60,
-                backgroundColor: AppColors.accentBlue,
-                backgroundImage: profile.profileImagePath != null
-                    ? FileImage(File(profile.profileImagePath!))
-                    : null,
-                child: profile.profileImagePath == null
-                    ? const Icon(Icons.person, size: 60, color: AppColors.primary)
-                    : null,
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey[200]!, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey[100],
+                  backgroundImage: profile.profileImagePath != null
+                      ? FileImage(File(profile.profileImagePath!))
+                      : null,
+                  child: profile.profileImagePath == null
+                      ? Icon(Icons.person, size: 50, color: Colors.grey[400])
+                      : null,
+                ),
               ),
               Positioned(
                 bottom: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: AppColors.primary,
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                   ),
-                  child: const Icon(Icons.edit, size: 16, color: Colors.white),
+                  child: const Icon(Icons.edit, size: 14, color: Colors.white),
                 ),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 16),
-        // Name & Email
-        Text(profile.name, style: AppTextStyles.h2),
-        if (profile.email != null)
-          Text(profile.email!, style: AppTextStyles.bodyMedium),
-
-
-      ],
+          const SizedBox(height: 12),
+          // Name & Email centered
+          Text(
+            profile.name,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (profile.email != null)
+            Text(
+              profile.email!,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+        ],
+      ),
     );
   }
 

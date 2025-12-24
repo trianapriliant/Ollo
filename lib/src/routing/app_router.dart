@@ -64,6 +64,7 @@ import '../features/gamification/presentation/gamification_screen.dart';
 import '../features/gamification/presentation/gamification_listener.dart';
 import '../features/quick_record/presentation/quick_record_modal.dart';
 import '../features/subscription/presentation/premium_screen.dart';
+import '../features/wallets/presentation/import_wallet_templates_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -411,6 +412,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/backup',
         builder: (context, state) => const BackupScreen(),
+      ),
+      GoRoute(
+        path: '/import-wallet-templates',
+        builder: (context, state) => const ImportWalletTemplatesScreen(),
       ),
       GoRoute(
         path: '/reimburse',

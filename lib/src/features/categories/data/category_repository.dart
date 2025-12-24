@@ -74,7 +74,38 @@ final categoryRepositoryProvider = FutureProvider<CategoryRepository>((ref) asyn
 
 final categoryListProvider = FutureProvider.family<List<Category>, CategoryType>((ref, type) async {
   final repository = await ref.watch(categoryRepositoryProvider.future);
-  return repository.getCategories(type);
+  final categories = await repository.getCategories(type);
+  
+  // Custom sort order for expense categories (Friend before Personal)
+  if (type == CategoryType.expense) {
+    const expenseOrder = [
+      'food', 'transport', 'shopping', 'housing', 'entertainment',
+      'health', 'education', 'friend', 'personal', 'financial', 'family'
+    ];
+    categories.sort((a, b) {
+      final aIndex = expenseOrder.indexOf(a.externalId ?? '');
+      final bIndex = expenseOrder.indexOf(b.externalId ?? '');
+      if (aIndex != -1 && bIndex != -1) return aIndex.compareTo(bIndex);
+      if (aIndex != -1) return -1;
+      if (bIndex != -1) return 1;
+      return a.name.compareTo(b.name);
+    });
+  }
+  
+  // Custom sort order for income categories
+  if (type == CategoryType.income) {
+    const incomeOrder = ['salary', 'business', 'investments', 'gifts', 'other'];
+    categories.sort((a, b) {
+      final aIndex = incomeOrder.indexOf(a.externalId ?? '');
+      final bIndex = incomeOrder.indexOf(b.externalId ?? '');
+      if (aIndex != -1 && bIndex != -1) return aIndex.compareTo(bIndex);
+      if (aIndex != -1) return -1;
+      if (bIndex != -1) return 1;
+      return a.name.compareTo(b.name);
+    });
+  }
+  
+  return categories;
 });
 
 final allCategoriesStreamProvider = StreamProvider<List<Category>>((ref) async* {

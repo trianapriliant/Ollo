@@ -790,6 +790,18 @@ class AppLocalizationsHi extends AppLocalizations {
   String get paymentRecorded => 'भुगतान दर्ज किया गया!';
 
   @override
+  String get paymentOptions => 'Payment Options';
+
+  @override
+  String get editPayment => 'Edit Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get completedDebts => 'Completed';
+
+  @override
   String get balanceUpdateDetected => 'शेष राशि अद्यतन का पता चला';
 
   @override
@@ -2231,6 +2243,16 @@ class AppLocalizationsHi extends AppLocalizations {
       'अपने सभी वॉलेट, खाते और बजट को एक सरल और सहज स्थान पर प्रबंधित करें।';
 
   @override
+  String get onboardingQuickTitle => 'Quick Record';
+
+  @override
+  String get onboardingQuickSubtitle => 'Record in Seconds';
+
+  @override
+  String get onboardingQuickDesc =>
+      'Say \"Coffee 25k using Cash\" or scan a receipt. Our smart voice and scan features make tracking effortless and lightning fast!';
+
+  @override
   String get onboardingNext => 'अगला';
 
   @override
@@ -2246,6 +2268,10 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get onboardingVoiceDesc =>
       'वॉयस कमांड और त्वरित रिकॉर्डिंग के लिए आप जिस भाषा का उपयोग करेंगे, उसका चयन करें।';
+
+  @override
+  String get onboardingCurrencyDesc =>
+      'Choose your preferred currency for tracking expenses.';
 
   @override
   String get onboardingNotifTitle => 'स्मार्ट नोटिफिकेशन';
@@ -2267,6 +2293,9 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get onboardingWalletDesc =>
       'आइए अपना मुख्य कैश वॉलेट सेटअप करें। अपने पास मौजूद वर्तमान नकद दर्ज करें।';
+
+  @override
+  String get onboardingFirstWalletSubtitle => 'Your first wallet';
 
   @override
   String get onboardingDailyReminders => 'दैनिक रिमाइंडर';

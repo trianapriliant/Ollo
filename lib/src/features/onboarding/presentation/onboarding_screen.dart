@@ -34,13 +34,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final tr = AppLocalizations.of(context)!;
     
     final List<OnboardingPageData> pages = [
+      // Page 1: Quick Record (previously page 4)
       OnboardingPageData(
-        title: tr.onboardingSavingsTitle,
-        subtitle: tr.onboardingSavingsSubtitle,
-        description: tr.onboardingSavingsDesc,
-        imagePath: 'assets/images/onboarding_savings.png',
-        color: const Color(0xFF4CAF50),
+        title: tr.onboardingQuickTitle,
+        subtitle: tr.onboardingQuickSubtitle,
+        description: tr.onboardingQuickDesc,
+        imagePath: 'assets/images/onboarding_quickrecord.png',
+        color: const Color(0xFF009688), // Teal
       ),
+      // Page 2: Statistics
       OnboardingPageData(
         title: tr.onboardingStatsTitle,
         subtitle: tr.onboardingStatsSubtitle,
@@ -48,12 +50,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         imagePath: 'assets/images/onboarding_statistics.png',
         color: const Color(0xFF2196F3),
       ),
+      // Page 3: Management
       OnboardingPageData(
         title: tr.onboardingMgmtTitle,
         subtitle: tr.onboardingMgmtSubtitle,
         description: tr.onboardingMgmtDesc,
         imagePath: 'assets/images/onboarding_management.png',
-        color: const Color(0xFF9C27B0),
+        color: const Color(0xFF1565C0), // Dark Blue
+      ),
+      // Page 4: Savings (previously page 1, now purple to match 3D wallet image)
+      OnboardingPageData(
+        title: tr.onboardingSavingsTitle,
+        subtitle: tr.onboardingSavingsSubtitle,
+        description: tr.onboardingSavingsDesc,
+        imagePath: 'assets/images/onboarding_savings.png',
+        color: const Color(0xFF7B1FA2), // Purple (matching wallet 3D)
       ),
     ];
 

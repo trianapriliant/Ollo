@@ -780,6 +780,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paymentRecorded => '已记录！';
 
   @override
+  String get paymentOptions => 'Payment Options';
+
+  @override
+  String get editPayment => 'Edit Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get completedDebts => 'Completed';
+
+  @override
   String get balanceUpdateDetected => '检测到余额更新';
 
   @override
@@ -2208,6 +2220,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingMgmtDesc => '在一个简单直观的地方管理您所有的钱包、账户和预算。';
 
   @override
+  String get onboardingQuickTitle => 'Quick Record';
+
+  @override
+  String get onboardingQuickSubtitle => 'Record in Seconds';
+
+  @override
+  String get onboardingQuickDesc =>
+      'Say \"Coffee 25k using Cash\" or scan a receipt. Our smart voice and scan features make tracking effortless and lightning fast!';
+
+  @override
   String get onboardingNext => '下一步';
 
   @override
@@ -2221,6 +2243,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onboardingVoiceDesc => '选择您将用于语音指令和快速记录的语言。';
+
+  @override
+  String get onboardingCurrencyDesc =>
+      'Choose your preferred currency for tracking expenses.';
 
   @override
   String get onboardingNotifTitle => '智能通知';
@@ -2239,6 +2265,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onboardingWalletDesc => '让我们设置您的主要现金钱包。输入您当前的手头现金。';
+
+  @override
+  String get onboardingFirstWalletSubtitle => 'Your first wallet';
 
   @override
   String get onboardingDailyReminders => '每日提醒';

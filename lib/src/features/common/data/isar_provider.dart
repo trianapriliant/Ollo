@@ -229,6 +229,20 @@ final defaultCategories = [
       ],
     ),
     Category(
+      externalId: 'friend',
+      name: 'Friend',
+      iconPath: 'group',
+      type: CategoryType.expense,
+      colorValue: Colors.cyan.value,
+      subCategories: [
+        SubCategory(id: 'transfer_friend', name: 'Transfer', iconPath: 'send'),
+        SubCategory(id: 'treat', name: 'Treat', iconPath: 'restaurant'),
+        SubCategory(id: 'refund_friend', name: 'Refund', iconPath: 'undo'),
+        SubCategory(id: 'loan_friend', name: 'Loan', iconPath: 'attach_money'),
+        SubCategory(id: 'gift_friend', name: 'Gift', iconPath: 'card_giftcard'),
+      ],
+    ),
+    Category(
       externalId: 'personal',
       name: 'Personal',
       iconPath: 'person',
@@ -264,20 +278,6 @@ final defaultCategories = [
         SubCategory(id: 'toys', name: 'Toys', iconPath: 'toys'),
         SubCategory(id: 'school_kids', name: 'School', iconPath: 'school'),
         SubCategory(id: 'pets', name: 'Pets', iconPath: 'pets'),
-      ],
-    ),
-    Category(
-      externalId: 'friend',
-      name: 'Friend',
-      iconPath: 'group',
-      type: CategoryType.expense,
-      colorValue: Colors.cyan.value,
-      subCategories: [
-        SubCategory(id: 'transfer_friend', name: 'Transfer', iconPath: 'send'),
-        SubCategory(id: 'treat', name: 'Treat', iconPath: 'restaurant'),
-        SubCategory(id: 'refund_friend', name: 'Refund', iconPath: 'undo'),
-        SubCategory(id: 'loan_friend', name: 'Loan', iconPath: 'attach_money'),
-        SubCategory(id: 'gift_friend', name: 'Gift', iconPath: 'card_giftcard'),
       ],
     ),
 

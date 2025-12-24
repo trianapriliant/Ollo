@@ -780,6 +780,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get paymentRecorded => '記録しました！';
 
   @override
+  String get paymentOptions => 'Payment Options';
+
+  @override
+  String get editPayment => 'Edit Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get completedDebts => 'Completed';
+
+  @override
   String get balanceUpdateDetected => '残高の更新を検出';
 
   @override
@@ -2212,6 +2224,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onboardingMgmtDesc => 'すべてのウォレット、口座、予算をシンプルで直感的な場所で管理します。';
 
   @override
+  String get onboardingQuickTitle => 'Quick Record';
+
+  @override
+  String get onboardingQuickSubtitle => 'Record in Seconds';
+
+  @override
+  String get onboardingQuickDesc =>
+      'Say \"Coffee 25k using Cash\" or scan a receipt. Our smart voice and scan features make tracking effortless and lightning fast!';
+
+  @override
   String get onboardingNext => '次へ';
 
   @override
@@ -2225,6 +2247,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onboardingVoiceDesc => '音声コマンドとクイック録音に使用する言語を選択してください。';
+
+  @override
+  String get onboardingCurrencyDesc =>
+      'Choose your preferred currency for tracking expenses.';
 
   @override
   String get onboardingNotifTitle => 'スマート通知';
@@ -2243,6 +2269,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onboardingWalletDesc => 'メインの現金ウォレットを設定しましょう。現在の手持ち現金を入力してください。';
+
+  @override
+  String get onboardingFirstWalletSubtitle => 'Your first wallet';
 
   @override
   String get onboardingDailyReminders => '毎日のリマインダー';

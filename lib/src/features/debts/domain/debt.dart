@@ -98,11 +98,13 @@ class DebtHistory {
   DateTime? date;
   double? amount;
   String? note;
+  int? transactionId; // Link to the transaction for this payment
 
   DebtHistory({
     this.date,
     this.amount,
     this.note,
+    this.transactionId,
   });
 
   Map<String, dynamic> toJson() {
@@ -110,6 +112,7 @@ class DebtHistory {
       'date': date?.toIso8601String(),
       'amount': amount,
       'note': note,
+      'transactionId': transactionId,
     };
   }
 
@@ -118,6 +121,7 @@ class DebtHistory {
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       amount: (json['amount'] as num?)?.toDouble(),
       note: json['note'] as String?,
+      transactionId: json['transactionId'] as int?,
     );
   }
 }

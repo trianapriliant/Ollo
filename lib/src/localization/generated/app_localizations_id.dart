@@ -792,6 +792,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get paymentRecorded => 'Pembayaran berhasil dicatat!';
 
   @override
+  String get paymentOptions => 'Payment Options';
+
+  @override
+  String get editPayment => 'Edit Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get completedDebts => 'Completed';
+
+  @override
   String get balanceUpdateDetected => 'Perubahan Saldo Terdeteksi';
 
   @override
@@ -2253,7 +2265,17 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get onboardingMgmtDesc =>
-      'Kelola semua dompet, akun, dan anggaran Anda di satu tempat yang sederhana dan intuitif.';
+      'Kelola semua dompet dan anggaran secara manual di satu tempat. Data Anda 100% pribadi - tanpa koneksi bank, hanya pencatatan sederhana.';
+
+  @override
+  String get onboardingQuickTitle => 'Rekam Cepat';
+
+  @override
+  String get onboardingQuickSubtitle => 'Catat dalam Hitungan Detik';
+
+  @override
+  String get onboardingQuickDesc =>
+      'Ucapkan \"Kopi 25rb pakai Cash\" atau pindai struk. Fitur suara dan scan kami membuat pencatatan sangat mudah dan cepat!';
 
   @override
   String get onboardingNext => 'Lanjut';
@@ -2271,6 +2293,10 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get onboardingVoiceDesc =>
       'Pilih bahasa yang akan digunakan untuk perintah suara dan pencatatan cepat.';
+
+  @override
+  String get onboardingCurrencyDesc =>
+      'Pilih mata uang untuk mencatat pengeluaranmu.';
 
   @override
   String get onboardingNotifTitle => 'Notifikasi Pintar';
@@ -2292,6 +2318,9 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get onboardingWalletDesc =>
       'Mari atur dompet tunai utamamu. Masukkan jumlah uang tunai yang kamu pegang saat ini.';
+
+  @override
+  String get onboardingFirstWalletSubtitle => 'Dompet pertamamu';
 
   @override
   String get onboardingDailyReminders => 'Pengingat Harian';

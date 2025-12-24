@@ -6,6 +6,7 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../settings/presentation/language_provider.dart';
 import '../../settings/presentation/voice_language_provider.dart';
+import '../../settings/presentation/currency_provider.dart';
 import '../../notifications/application/notification_service.dart';
 import '../data/onboarding_repository.dart';
 import '../../../localization/generated/app_localizations.dart';
@@ -48,14 +49,14 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
   }
 
   void _onNext() {
-    if (_currentPage == 3) {
-       // Validate Profile Step
+    if (_currentPage == 4) {
+       // Validate Profile Step (now step 5, index 4)
        if (_profileFormKey.currentState != null && !_profileFormKey.currentState!.validate()) {
          return;
        }
     }
     
-    if (_currentPage < 4) {
+    if (_currentPage < 5) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -78,70 +79,103 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
   Widget _buildProfileSetupCard(AppLocalizations tr) {
     return Form(
       key: _profileFormKey,
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.blueAccent.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.blueAccent.withOpacity(0.2)),
-        ),
-        child: Column(
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4),
-                      boxShadow: [
-                        BoxShadow(
-                           color: Colors.black.withOpacity(0.1),
-                           blurRadius: 10,
-                        ),
+      child: Column(
+        children: [
+          // Profile Photo Section
+          Center(
+            child: Stack(
+              children: [
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        AppColors.primary.withOpacity(0.1),
+                        Colors.purple.withOpacity(0.1),
                       ],
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.15),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 58,
+                    backgroundColor: Colors.white,
                     child: CircleAvatar(
-                      radius: 46,
-                      backgroundColor: Colors.grey[200],
+                      radius: 54,
+                      backgroundColor: Colors.grey[100],
                       backgroundImage: _pickedImageFile != null ? FileImage(_pickedImageFile!) : null,
                       child: _pickedImageFile == null
-                          ? const Icon(Icons.person, size: 50, color: Colors.grey)
+                          ? Icon(Icons.person_rounded, size: 50, color: Colors.grey[400])
                           : null,
                     ),
                   ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: InkWell(
-                      onTap: _pickImage,
-                      child: Container(
-                         padding: const EdgeInsets.all(8),
-                         decoration: const BoxDecoration(
-                           color: AppColors.primary,
-                           shape: BoxShape.circle,
-                         ),
-                         child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                ),
+                Positioned(
+                  bottom: 4,
+                  right: 4,
+                  child: GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [AppColors.primary, Color(0xFF7C4DFF)],
+                        ),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
+                      child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 18),
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-            TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: tr.onboardingFullname,
-                hintText: tr.onboardingNameHint,
-                prefixIcon: const Icon(Icons.person_outline),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
                 ),
-                filled: true,
-                fillColor: Colors.white,
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          
+          // Name Input - Modern Borderless Style
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: TextFormField(
+              controller: _nameController,
+              style: GoogleFonts.outfit(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: tr.onboardingFullname,
+                hintStyle: GoogleFonts.outfit(
+                  color: Colors.grey[400],
+                  fontWeight: FontWeight.normal,
+                ),
+                prefixIcon: Icon(Icons.person_outline_rounded, color: Colors.grey[500]),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -150,27 +184,48 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                 return null;
               },
             ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: tr.onboardingEmail,
-                hintText: tr.onboardingEmailHint,
-                prefixIcon: const Icon(Icons.email_outlined),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
+          ),
+          const SizedBox(height: 16),
+          
+          // Email Input - Modern Borderless Style
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
                 ),
-                filled: true,
-                fillColor: Colors.white,
+              ],
+            ),
+            child: TextFormField(
+              controller: _emailController,
+              style: GoogleFonts.outfit(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: tr.onboardingEmail,
+                hintStyle: GoogleFonts.outfit(
+                  color: Colors.grey[400],
+                  fontWeight: FontWeight.normal,
+                ),
+                prefixIcon: Icon(Icons.email_outlined, color: Colors.grey[500]),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildWalletSetupCard(AppLocalizations tr) {
+    final currency = ref.watch(currencyProvider);
+    
     return Form(
       key: _formKey,
       child: Container(
@@ -198,7 +253,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tr.walletName,
+                      'Cash',
                       style: GoogleFonts.outfit(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -206,7 +261,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                       ),
                     ),
                     Text(
-                      'Default Wallet',
+                      tr.onboardingFirstWalletSubtitle,
                       style: GoogleFonts.outfit(
                         fontSize: 12,
                         color: Colors.green[700],
@@ -234,9 +289,9 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                 color: AppColors.primary,
               ),
               decoration: InputDecoration(
-                hintText: tr.onboardingBalanceHint,
+                hintText: '0',
                 hintStyle: GoogleFonts.outfit(color: Colors.grey[400]),
-                prefixText: ref.read(languageProvider) == AppLanguage.indonesian ? 'Rp ' : '\$ ',
+                prefixText: '${currency.symbol} ',
                 prefixStyle: GoogleFonts.outfit(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -323,22 +378,33 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
       debugPrint('Error saving user profile: $e');
     }
 
-    // Create Default Wallet
+    // Update existing Cash Wallet balance (seeded by isar_provider)
     try {
       final walletRepo = await ref.read(walletRepositoryProvider.future);
       final initialBalance = double.tryParse(_balanceController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
       
-      final wallet = Wallet.create(
-        name: tr.walletName,
-        balance: initialBalance,
-        iconPath: 'assets/icons/wallet.png', 
-        colorValue: 0xFF4CAF50, // Green
-        type: WalletType.cash,
-      );
+      // Find existing Cash wallet (created by isar seeding)
+      final wallets = await walletRepo.getAllWallets();
+      final existingCash = wallets.where((w) => w.externalId == 'cash_default' || w.name == 'Cash').firstOrNull;
       
-      await walletRepo.addWallet(wallet);
+      if (existingCash != null) {
+        // Update existing wallet with user's initial balance
+        existingCash.balance = initialBalance;
+        await walletRepo.updateWallet(existingCash);
+      } else {
+        // Fallback: Create new wallet if somehow doesn't exist
+        final wallet = Wallet.create(
+          name: 'Cash',
+          balance: initialBalance,
+          iconPath: 'money', 
+          colorValue: 0xFF4CAF50, // Green
+          type: WalletType.cash,
+        );
+        wallet.externalId = 'cash_default';
+        await walletRepo.addWallet(wallet);
+      }
     } catch (e) {
-      debugPrint('Error creating default wallet: $e');
+      debugPrint('Error setting up wallet: $e');
     }
 
     // Schedule Notifications
@@ -383,11 +449,11 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
         body: SafeArea(
         child: Column(
           children: [
-            // Progress Indicator
+            // Progress Indicator (6 steps now)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Row(
-                children: List.generate(5, (index) {
+                children: List.generate(6, (index) {
                   return Expanded(
                     child: Container(
                       height: 6,
@@ -405,7 +471,6 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
             Expanded(
               child: PageView(
                 controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(), 
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 children: [
                   // Step 1: App Language
@@ -422,21 +487,28 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                     content: _buildVoiceLanguageSelector(currentVoiceLanguage),
                   ),
 
-                  // Step 3: Notifications
+                  // Step 3: Currency
+                  _buildStep(
+                    title: tr.selectCurrency,
+                    description: tr.onboardingCurrencyDesc,
+                    content: _buildCurrencySelector(),
+                  ),
+
+                  // Step 4: Notifications
                   _buildStep(
                     title: tr.onboardingNotifTitle,
                     description: tr.onboardingNotifDesc,
                     content: _buildNotificationCard(tr),
                   ),
 
-                  // Step 4: Profile Setup
+                  // Step 5: Profile Setup
                   _buildStep(
                     title: tr.onboardingProfileTitle,
                     description: tr.onboardingProfileDesc,
                     content: _buildProfileSetupCard(tr),
                   ),
 
-                  // Step 5: First Wallet
+                  // Step 6: First Wallet
                   _buildStep(
                     title: tr.onboardingWalletTitle,
                     description: tr.onboardingWalletDesc,
@@ -470,7 +542,7 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
                           ),
                         )
                       : Text(
-                          _currentPage == 4 ? tr.onboardingGetStarted : tr.onboardingNext,
+                          _currentPage == 5 ? tr.onboardingGetStarted : tr.onboardingNext,
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -560,9 +632,16 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
   }
 
   Widget _buildVoiceLanguageSelector(VoiceLanguage current) {
+    // Reorder: English first, then others
+    final orderedLanguages = [
+      VoiceLanguage.english,
+      ...VoiceLanguage.values.where((l) => l != VoiceLanguage.english),
+    ];
+    
     return Column(
-      children: VoiceLanguage.values.map((lang) {
+      children: orderedLanguages.map((lang) {
         final isSelected = lang == current;
+        
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: InkWell(
@@ -580,31 +659,94 @@ class _OnboardingPreferencesScreenState extends ConsumerState<OnboardingPreferen
               ),
               child: Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        lang.name,
-                        style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          color: isSelected ? Colors.orange[800] : AppColors.textPrimary,
-                        ),
-                      ),
-                      if (lang == VoiceLanguage.indonesian)
-                        Text(
-                          'Recommended',
-                          style: GoogleFonts.outfit(
-                            fontSize: 12,
-                            color: Colors.orange[800],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                    ],
+                  Text(
+                    lang.name,
+                    style: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      color: isSelected ? Colors.orange[800] : AppColors.textPrimary,
+                    ),
                   ),
                   const Spacer(),
                   if (isSelected)
                     Icon(Icons.check_circle, color: Colors.orange[800], size: 24)
+                  else
+                    Icon(Icons.circle_outlined, color: Colors.grey[300], size: 24),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCurrencySelector() {
+    final currentCurrency = ref.watch(currencyProvider);
+    
+    return Column(
+      children: availableCurrencies.map((currency) {
+        final isSelected = currency.code == currentCurrency.code;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: InkWell(
+            onTap: () => ref.read(currencyProvider.notifier).setCurrency(currency),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.green.withOpacity(0.05) : Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isSelected ? Colors.green : Colors.grey[200]!,
+                  width: isSelected ? 2 : 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.green[50] : Colors.grey[100],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        currency.symbol,
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isSelected ? Colors.green[700] : Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          currency.name,
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                            color: isSelected ? Colors.green[700] : AppColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          currency.code,
+                          style: GoogleFonts.outfit(
+                            fontSize: 12,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (isSelected)
+                    Icon(Icons.check_circle, color: Colors.green[700], size: 24)
                   else
                     Icon(Icons.circle_outlined, color: Colors.grey[300], size: 24),
                 ],

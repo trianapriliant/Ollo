@@ -9,6 +9,7 @@ class NumPad extends StatelessWidget {
   final VoidCallback onDoneTap;
   final DateTime selectedDate;
   final VoidCallback onDateTap;
+  final bool isSaving;
 
   const NumPad({
     super.key,
@@ -17,6 +18,7 @@ class NumPad extends StatelessWidget {
     required this.onDoneTap,
     required this.selectedDate,
     required this.onDateTap,
+    this.isSaving = false,
   });
 
   @override
@@ -177,17 +179,27 @@ class NumPad extends StatelessWidget {
 
   Widget _buildDoneButton({required double height}) {
     return InkWell(
-      onTap: onDoneTap,
+      onTap: isSaving ? null : onDoneTap,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         height: height,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: isSaving ? Colors.grey : Colors.black,
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.center,
-        child: const Icon(Icons.check, color: Colors.white, size: 28),
+        child: isSaving 
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2.5,
+              ),
+            )
+          : const Icon(Icons.check, color: Colors.white, size: 28),
       ),
     );
   }

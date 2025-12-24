@@ -1614,6 +1614,30 @@ abstract class AppLocalizations {
   /// **'Payment recorded successfully!'**
   String get paymentRecorded;
 
+  /// No description provided for @paymentOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Options'**
+  String get paymentOptions;
+
+  /// No description provided for @editPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Payment'**
+  String get editPayment;
+
+  /// No description provided for @deletePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Payment'**
+  String get deletePayment;
+
+  /// No description provided for @completedDebts.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedDebts;
+
   /// No description provided for @balanceUpdateDetected.
   ///
   /// In en, this message translates to:
@@ -4335,8 +4359,26 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingMgmtDesc.
   ///
   /// In en, this message translates to:
-  /// **'Manage all your wallets, accounts, and budgets in one simple and intuitive place.'**
+  /// **'Manage all your wallets and budgets manually in one place. Your data stays 100% private - no bank connections, just simple tracking.'**
   String get onboardingMgmtDesc;
+
+  /// No description provided for @onboardingQuickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Record'**
+  String get onboardingQuickTitle;
+
+  /// No description provided for @onboardingQuickSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record in Seconds'**
+  String get onboardingQuickSubtitle;
+
+  /// No description provided for @onboardingQuickDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Say \"Coffee 25k using Cash\" or scan a receipt. Our smart voice and scan features make tracking effortless and lightning fast!'**
+  String get onboardingQuickDesc;
 
   /// No description provided for @onboardingNext.
   ///
@@ -4367,6 +4409,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select the language you will use for voice commands and quick recording.'**
   String get onboardingVoiceDesc;
+
+  /// No description provided for @onboardingCurrencyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred currency for tracking expenses.'**
+  String get onboardingCurrencyDesc;
 
   /// No description provided for @onboardingNotifTitle.
   ///
@@ -4403,6 +4451,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Let\'s setup your main cash wallet. Enter your current cash on hand.'**
   String get onboardingWalletDesc;
+
+  /// No description provided for @onboardingFirstWalletSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first wallet'**
+  String get onboardingFirstWalletSubtitle;
 
   /// No description provided for @onboardingDailyReminders.
   ///

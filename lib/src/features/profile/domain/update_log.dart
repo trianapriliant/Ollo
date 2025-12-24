@@ -14,6 +14,25 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.5.7',
+      date: DateTime(2025, 12, 24),
+      changes: [
+        'Enhanced Onboarding: Added new "Quick Record" page highlighting voice and scan features.',
+        'Enhanced Onboarding: Added Currency selection step before wallet setup.',
+        'Enhanced Onboarding: Modernized Profile setup with borderless inputs and gradient avatar.',
+        'Enhanced Onboarding: Swipe left/right to navigate between steps.',
+        'Enhanced Onboarding: Voice language selector now shows English first, removed "Recommended" badge.',
+        'Enhanced Onboarding: Reordered pages (Quick Record → Statistics → Management → Savings).',
+        'Fixed: Duplicate Cash wallet issue when completing onboarding.',
+        'Fixed: Transaction double-submit bug with loading state on NumPad.',
+        'Improved: Profile page menu order (Data Management first) with reduced spacing.',
+        'Improved: Send Feedback now supports Telegram and Email in addition to WhatsApp.',
+        'Improved: Category order - Friend moved before Personal, Income reordered (Salary first).',
+        'Improved: Debts screen now separates active and completed debts visually.',
+        'Improved: Debt payments now show edit/delete options for better history management.',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.5.6',
       date: DateTime(2025, 12, 23),
       changes: [

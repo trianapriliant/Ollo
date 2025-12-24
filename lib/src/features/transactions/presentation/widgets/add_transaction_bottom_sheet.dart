@@ -87,6 +87,9 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
   }
 
   Future<void> _onDoneTap() async {
+    // Prevent double-tap while saving
+    if (_isSaving) return;
+    
     final amount = double.tryParse(_amountStr) ?? 0.0;
     
     if (amount <= 0) {
@@ -509,6 +512,7 @@ class _AddTransactionBottomSheetState extends ConsumerState<AddTransactionBottom
                     onBackspaceTap: _onBackspaceTap,
                     onDoneTap: _onDoneTap,
                     selectedDate: _selectedDate,
+                    isSaving: _isSaving,
                     onDateTap: () {
                       showCupertinoModalPopup(
                         context: context,

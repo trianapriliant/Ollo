@@ -20,6 +20,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   bool _isLoading = true;
   bool _isPurchasing = false;
   String? _error;
+  int _selectedPlanIndex = 1; // Default to Annual (best value)
 
   @override
   void initState() {
@@ -264,6 +265,21 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     ),
                   if (isPremium || isVip || isDeveloper) const SizedBox(height: 24),
 
+                  // Pricing Section (only for non-premium users) - NOW AT TOP
+                  if (!isPremium && !isVip && !isDeveloper) ...[
+                    Text('Choose Your Plan', style: AppTextStyles.h2),
+                    const SizedBox(height: 16),
+                    
+                    if (_isLoading)
+                      const Center(child: CircularProgressIndicator())
+                    else if (_error != null)
+                      _buildHorizontalPricing()
+                    else
+                      _buildHorizontalPricingCards(),
+                    
+                    const SizedBox(height: 32),
+                  ],
+
                   // Features Section
                   Text('Premium Features', style: AppTextStyles.h2),
                   const SizedBox(height: 16),
@@ -297,20 +313,6 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     _buildFeatureItem(Icons.favorite, 'Built This App', 'Thank you for creating Ollo! 💖', isDeveloperFeature: true),
                     _buildFeatureItem(Icons.all_inclusive, 'Everything Unlocked', 'All features, forever', isDeveloperFeature: true),
                     _buildFeatureItem(Icons.bug_report, 'Debug Access', 'Developer tools & testing', isDeveloperFeature: true),
-                  ],
-
-                  // Pricing Section (only for non-premium users)
-                  if (!isPremium && !isVip) ...[
-                    const SizedBox(height: 32),
-                    Text('Choose Your Plan', style: AppTextStyles.h2),
-                    const SizedBox(height: 16),
-                    
-                    if (_isLoading)
-                      const Center(child: CircularProgressIndicator())
-                    else if (_error != null)
-                      _buildFallbackPricing()
-                    else
-                      _buildPricingCards(),
                   ],
 
                   // Restore Purchases
@@ -390,6 +392,284 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
         ],
       ),
     );
+  }
+
+  // New horizontal pricing layout (like reference image)
+  Widget _buildHorizontalPricing() {
+    return Column(
+      children: [
+        // Top row: Monthly and Annual side-by-side
+        Row(
+          children: [
+            Expanded(
+              child: _buildHorizontalPricingCard(
+                index: 0,
+                title: 'Monthly',
+                price: 'IDR 15,000',
+                subtitle: 'Billed Monthly',
+                onTap: () => setState(() => _selectedPlanIndex = 0),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildHorizontalPricingCard(
+                index: 1,
+                title: 'Annual',
+                price: 'IDR 120,000',
+                subtitle: 'Billed Annually',
+                badge: 'SAVE 33%',
+                onTap: () => setState(() => _selectedPlanIndex = 1),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // Second row: 6 Months and Lifetime
+        Row(
+          children: [
+            Expanded(
+              child: _buildHorizontalPricingCard(
+                index: 2,
+                title: '6 Months',
+                price: 'IDR 75,000',
+                subtitle: 'Billed Semi-Annually',
+                badge: 'SAVE 17%',
+                onTap: () => setState(() => _selectedPlanIndex = 2),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildHorizontalPricingCard(
+                index: 3,
+                title: 'Lifetime',
+                price: 'IDR 199,000',
+                subtitle: 'One-time Payment',
+                badge: 'FOREVER',
+                onTap: () => setState(() => _selectedPlanIndex = 3),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        // Subscribe button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _isPurchasing ? null : () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4A90E2),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: _isPurchasing
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                  )
+                : const Text(
+                    'Subscribe Now',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHorizontalPricingCards() {
+    final offering = _offerings?.current;
+    if (offering == null) return _buildHorizontalPricing();
+
+    final packages = offering.availablePackages;
+    if (packages.isEmpty) return _buildHorizontalPricing();
+
+    // Group packages into pairs for rows
+    List<Widget> rows = [];
+    for (int i = 0; i < packages.length; i += 2) {
+      rows.add(
+        Row(
+          children: [
+            Expanded(
+              child: _buildHorizontalPricingCard(
+                index: i,
+                title: _getPackageTitle(packages[i].packageType),
+                price: packages[i].storeProduct.priceString,
+                subtitle: _getBillingPeriod(packages[i].packageType),
+                badge: _getSavingsBadge(packages[i].packageType),
+                onTap: () {
+                  setState(() => _selectedPlanIndex = i);
+                  _purchase(packages[i]);
+                },
+              ),
+            ),
+            if (i + 1 < packages.length) ...[
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildHorizontalPricingCard(
+                  index: i + 1,
+                  title: _getPackageTitle(packages[i + 1].packageType),
+                  price: packages[i + 1].storeProduct.priceString,
+                  subtitle: _getBillingPeriod(packages[i + 1].packageType),
+                  badge: _getSavingsBadge(packages[i + 1].packageType),
+                  onTap: () {
+                    setState(() => _selectedPlanIndex = i + 1);
+                    _purchase(packages[i + 1]);
+                  },
+                ),
+              ),
+            ] else
+              const Expanded(child: SizedBox()),
+          ],
+        ),
+      );
+      if (i + 2 < packages.length) {
+        rows.add(const SizedBox(height: 12));
+      }
+    }
+
+    return Column(children: rows);
+  }
+
+  Widget _buildHorizontalPricingCard({
+    required int index,
+    required String title,
+    required String price,
+    required String subtitle,
+    String? badge,
+    required VoidCallback onTap,
+  }) {
+    final isSelected = _selectedPlanIndex == index;
+    
+    return GestureDetector(
+      onTap: _isPurchasing ? null : onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.grey[50],
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF4A90E2) : Colors.grey[300]!,
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF4A90E2).withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title row with selection indicator
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isSelected ? const Color(0xFF4A90E2) : Colors.grey[700],
+                  ),
+                ),
+                if (isSelected)
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF4A90E2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.check, color: Colors.white, size: 14),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Price
+            Text(
+              price,
+              style: AppTextStyles.h3.copyWith(
+                color: isSelected ? const Color(0xFF4A90E2) : Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Badge (if any)
+            if (badge != null)
+              Container(
+                margin: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFF50E3C2) : const Color(0xFF50E3C2).withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  badge,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            // Subtitle
+            Text(
+              subtitle,
+              style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getPackageTitle(PackageType type) {
+    switch (type) {
+      case PackageType.monthly:
+        return 'Monthly';
+      case PackageType.sixMonth:
+        return '6 Months';
+      case PackageType.annual:
+        return 'Annual';
+      case PackageType.lifetime:
+        return 'Lifetime';
+      default:
+        return 'Plan';
+    }
+  }
+
+  String _getBillingPeriod(PackageType type) {
+    switch (type) {
+      case PackageType.monthly:
+        return 'Billed Monthly';
+      case PackageType.sixMonth:
+        return 'Billed Semi-Annually';
+      case PackageType.annual:
+        return 'Billed Annually';
+      case PackageType.lifetime:
+        return 'One-time Payment';
+      default:
+        return '';
+    }
+  }
+
+  String? _getSavingsBadge(PackageType type) {
+    switch (type) {
+      case PackageType.sixMonth:
+        return 'SAVE 17%';
+      case PackageType.annual:
+        return 'SAVE 33%';
+      case PackageType.lifetime:
+        return 'FOREVER';
+      default:
+        return null;
+    }
   }
 
   Widget _buildFallbackPricing() {

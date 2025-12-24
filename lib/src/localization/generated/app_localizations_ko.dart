@@ -782,6 +782,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get paymentRecorded => '지불이 기록되었습니다!';
 
   @override
+  String get paymentOptions => 'Payment Options';
+
+  @override
+  String get editPayment => 'Edit Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get completedDebts => 'Completed';
+
+  @override
   String get balanceUpdateDetected => '잔액 업데이트 감지됨';
 
   @override
@@ -2223,6 +2235,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get onboardingMgmtDesc => '모든 지갑, 계좌 및 예산을 간단하고 직관적인 한 곳에서 관리하세요.';
 
   @override
+  String get onboardingQuickTitle => 'Quick Record';
+
+  @override
+  String get onboardingQuickSubtitle => 'Record in Seconds';
+
+  @override
+  String get onboardingQuickDesc =>
+      'Say \"Coffee 25k using Cash\" or scan a receipt. Our smart voice and scan features make tracking effortless and lightning fast!';
+
+  @override
   String get onboardingNext => '다음';
 
   @override
@@ -2236,6 +2258,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get onboardingVoiceDesc => '음성 명령 및 빠른 기록에 사용할 언어를 선택하세요.';
+
+  @override
+  String get onboardingCurrencyDesc =>
+      'Choose your preferred currency for tracking expenses.';
 
   @override
   String get onboardingNotifTitle => '스마트 알림';
@@ -2254,6 +2280,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get onboardingWalletDesc => '주 현금 지갑을 설정합시다. 현재 보유 현금을 입력하세요.';
+
+  @override
+  String get onboardingFirstWalletSubtitle => 'Your first wallet';
 
   @override
   String get onboardingDailyReminders => '일일 알림';

@@ -793,6 +793,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paymentRecorded => '¡Pago registrado!';
 
   @override
+  String get paymentOptions => 'Payment Options';
+
+  @override
+  String get editPayment => 'Edit Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get completedDebts => 'Completed';
+
+  @override
   String get balanceUpdateDetected => 'Actualización de Saldo Detectada';
 
   @override
@@ -2240,6 +2252,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Gestiona todas tus billeteras, cuentas y presupuestos en un lugar simple e intuitivo.';
 
   @override
+  String get onboardingQuickTitle => 'Quick Record';
+
+  @override
+  String get onboardingQuickSubtitle => 'Record in Seconds';
+
+  @override
+  String get onboardingQuickDesc =>
+      'Say \"Coffee 25k using Cash\" or scan a receipt. Our smart voice and scan features make tracking effortless and lightning fast!';
+
+  @override
   String get onboardingNext => 'Siguiente';
 
   @override
@@ -2255,6 +2277,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get onboardingVoiceDesc =>
       'Selecciona el idioma que usarás para comandos de voz y registro rápido.';
+
+  @override
+  String get onboardingCurrencyDesc =>
+      'Choose your preferred currency for tracking expenses.';
 
   @override
   String get onboardingNotifTitle => 'Notificaciones Inteligentes';
@@ -2276,6 +2302,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get onboardingWalletDesc =>
       'Configuremos tu billetera de efectivo principal. Ingresa tu efectivo actual disponible.';
+
+  @override
+  String get onboardingFirstWalletSubtitle => 'Your first wallet';
 
   @override
   String get onboardingDailyReminders => 'Recordatorios Diarios';

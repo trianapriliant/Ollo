@@ -106,66 +106,37 @@ class ProfileScreen extends ConsumerWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           children: [
-                            const SizedBox(height: 24),
-                            // Modular Header
+                            const SizedBox(height: 8),
+                            // Modular Header - centered layout
                             ProfileHeader(profile: profile),
 
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 12),
                             
                             // Modular Premium Card
                             const PremiumStatusCard(),
 
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 16),
 
-                            // Future Features Section
-                            ProfileMenuSection(title: AppLocalizations.of(context)!.futureFeatures),
-                            ProfileMenuItem(
-                              icon: Icons.cloud_sync_outlined,
-                              title: AppLocalizations.of(context)!.backupRecovery,
-                              onTap: () => context.push('/backup'),
-                            ),
-                            const SizedBox(height: 16),
-                            ProfileMenuItem(
-                              icon: Icons.auto_awesome_outlined,
-                              title: AppLocalizations.of(context)!.aiAutomation,
-                              onTap: () => _showComingSoonDialog(context, AppLocalizations.of(context)!.aiAutomation, AppLocalizations.of(context)!.comingSoonDesc),
-                            ),
-                            const SizedBox(height: 16),
-                            ProfileMenuItem(
-                              icon: Icons.feedback_outlined,
-                              title: AppLocalizations.of(context)!.feedbackRoadmap,
-                              onTap: () => context.push('/roadmap'),
-                            ),
-                            const SizedBox(height: 16),
-                            ProfileMenuItem(
-                              icon: Icons.file_download_outlined,
-                              title: AppLocalizations.of(context)!.dataExport,
-                              onTap: () {
-                                 context.push('/data-export');
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            ProfileMenuItem(
-                              icon: Icons.file_upload_outlined,
-                              title: AppLocalizations.of(context)!.importData,
-                              onTap: () => context.push('/data-import'),
-                            ),
-                            const SizedBox(height: 24),
-
-                            // Data Management Section
+                            // Data Management Section (MOVED TO TOP)
                             ProfileMenuSection(title: AppLocalizations.of(context)!.dataManagement),
                             ProfileMenuItem(
                               icon: Icons.category,
                               title: AppLocalizations.of(context)!.categories,
                               onTap: () => context.push('/categories'),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.account_balance_wallet,
                               title: AppLocalizations.of(context)!.wallets,
                               onTap: () => context.go('/wallet'),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 8),
+                            ProfileMenuItem(
+                              icon: Icons.downloading,
+                              title: 'Import Wallet Templates',
+                              onTap: () => context.push('/import-wallet-templates'),
+                            ),
+                            const SizedBox(height: 16),
 
                             // Preferences Section
                             ProfileMenuSection(title: AppLocalizations.of(context)!.preferences),
@@ -178,7 +149,7 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.palette,
                               title: AppLocalizations.of(context)!.cardAppearance,
@@ -188,7 +159,7 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.color_lens_outlined,
                               title: AppLocalizations.of(context)!.colorPalette,
@@ -198,7 +169,42 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
+
+                            // Future Features Section
+                            ProfileMenuSection(title: AppLocalizations.of(context)!.futureFeatures),
+                            ProfileMenuItem(
+                              icon: Icons.cloud_sync_outlined,
+                              title: AppLocalizations.of(context)!.backupRecovery,
+                              onTap: () => context.push('/backup'),
+                            ),
+                            const SizedBox(height: 8),
+                            ProfileMenuItem(
+                              icon: Icons.auto_awesome_outlined,
+                              title: AppLocalizations.of(context)!.aiAutomation,
+                              onTap: () => _showComingSoonDialog(context, AppLocalizations.of(context)!.aiAutomation, AppLocalizations.of(context)!.comingSoonDesc),
+                            ),
+                            const SizedBox(height: 8),
+                            ProfileMenuItem(
+                              icon: Icons.feedback_outlined,
+                              title: AppLocalizations.of(context)!.feedbackRoadmap,
+                              onTap: () => context.push('/roadmap'),
+                            ),
+                            const SizedBox(height: 8),
+                            ProfileMenuItem(
+                              icon: Icons.file_download_outlined,
+                              title: AppLocalizations.of(context)!.dataExport,
+                              onTap: () {
+                                 context.push('/data-export');
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            ProfileMenuItem(
+                              icon: Icons.file_upload_outlined,
+                              title: AppLocalizations.of(context)!.importData,
+                              onTap: () => context.push('/data-import'),
+                            ),
+                            const SizedBox(height: 16),
 
                             // General Section
                             ProfileMenuSection(title: AppLocalizations.of(context)!.general),
@@ -207,19 +213,19 @@ class ProfileScreen extends ConsumerWidget {
                               title: AppLocalizations.of(context)!.settings,
                               onTap: () => context.push('/settings'),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.help_outline,
                               title: AppLocalizations.of(context)!.helpSupport,
                               onTap: () => context.push('/help-support'),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.chat_bubble_outline,
                               title: AppLocalizations.of(context)!.sendFeedback,
                               onTap: () => context.push('/send-feedback'),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.bug_report_outlined,
                               title: AppLocalizations.of(context)!.bugReport,
@@ -229,22 +235,21 @@ class ProfileScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.info_outline,
                               title: AppLocalizations.of(context)!.aboutOllo,
                               onTap: () => context.push('/about-ollo'),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.history,
                               title: AppLocalizations.of(context)!.updateLog ?? 'Update Log',
                               onTap: () => context.push('/update-log'),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
 
-                            // Account Section
+                            // Account Section (MOVED TO BOTTOM)
                             ProfileMenuSection(title: AppLocalizations.of(context)!.account),
                             ProfileMenuItem(
                               icon: Icons.delete_forever,
@@ -252,7 +257,7 @@ class ProfileScreen extends ConsumerWidget {
                               onTap: () => _showDeleteDataDialog(context, ref),
                               isDestructive: true,
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             ProfileMenuItem(
                               icon: Icons.logout,
                               title: AppLocalizations.of(context)!.logout,
@@ -282,7 +287,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
 
                             
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 24),
                             _buildVersionInfo(),
                             const SizedBox(height: 32),
                           ],

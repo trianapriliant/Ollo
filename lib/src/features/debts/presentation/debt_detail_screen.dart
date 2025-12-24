@@ -178,32 +178,47 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                 separatorBuilder: (context, index) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final history = _debt.history[index];
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.withOpacity(0.1)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              DateFormat('d MMM yyyy').format(history.date ?? DateTime.now()),
-                              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                  return GestureDetector(
+                    onTap: () => _showPaymentOptions(context, index, history),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            if (history.note != null)
-                              Text(history.note!, style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
-                          ],
-                        ),
-                        Text(
-                          currency.format(history.amount ?? 0),
-                          style: AppTextStyles.bodyLarge.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                            child: const Icon(Icons.check_circle_outline, color: Colors.green, size: 20),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  DateFormat('d MMM yyyy').format(history.date ?? DateTime.now()),
+                                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                if (history.note != null && history.note!.isNotEmpty)
+                                  Text(history.note!, style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            currency.format(history.amount ?? 0),
+                            style: AppTextStyles.bodyLarge.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.more_vert, color: Colors.grey, size: 18),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -387,33 +402,15 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
   Future<void> _processPayment(double amount, String? walletId, String note) async {
     try {
       final debtRepo = ref.read(debtRepositoryProvider);
+      int? transactionId;
       
-      // 1. Update Debt
-      _debt.paidAmount += amount;
-      if (_debt.paidAmount >= _debt.amount) {
-        _debt.status = DebtStatus.paid;
-      }
-      
-      // Add history
-      final newHistory = List<DebtHistory>.from(_debt.history);
-      newHistory.add(DebtHistory(
-        date: DateTime.now(),
-        amount: amount,
-        note: note.isEmpty ? 'Payment' : note,
-      ));
-      _debt.history = newHistory;
-      
-      await debtRepo.updateDebt(_debt);
-
-      // 2. Update Wallet & Create Transaction
+      // 1. Create Transaction first to get the ID
       if (walletId != null) {
         final walletRepo = await ref.read(walletRepositoryProvider.future);
         final transactionRepo = await ref.read(transactionRepositoryProvider.future);
         
         final wallet = await walletRepo.getWallet(walletId);
         if (wallet != null) {
-          // If I borrowed (Owe), paying back is Expense.
-          // If I lent (Owed to me), receiving payment is Income.
           final isExpense = _debt.type == DebtType.borrowing;
           
           final transaction = Transaction.create(
@@ -421,17 +418,33 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
             amount: amount,
             type: isExpense ? TransactionType.expense : TransactionType.income,
             categoryId: 'debt',
-            walletId: wallet.externalId ?? wallet.id.toString(), // Fix: Use correct ID
+            walletId: wallet.externalId ?? wallet.id.toString(),
             note: note,
             date: DateTime.now(),
           );
 
-          // TransactionRepo handles balance update automatically
-          await transactionRepo.addTransaction(transaction);
+          transactionId = await transactionRepo.addTransaction(transaction);
         }
       }
 
-      setState(() {}); // Refresh UI
+      // 2. Update Debt with history including transactionId
+      _debt.paidAmount += amount;
+      if (_debt.paidAmount >= _debt.amount) {
+        _debt.status = DebtStatus.paid;
+      }
+      
+      final newHistory = List<DebtHistory>.from(_debt.history);
+      newHistory.add(DebtHistory(
+        date: DateTime.now(),
+        amount: amount,
+        note: note.isEmpty ? 'Payment' : note,
+        transactionId: transactionId,
+      ));
+      _debt.history = newHistory;
+      
+      await debtRepo.updateDebt(_debt);
+
+      setState(() {});
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -444,4 +457,261 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
       );
     }
   }
+
+  void _showPaymentOptions(BuildContext context, int index, DebtHistory history) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              AppLocalizations.of(context)!.paymentOptions,
+              style: AppTextStyles.h3,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              ref.read(currencyProvider).format(history.amount ?? 0),
+              style: AppTextStyles.h2.copyWith(color: Colors.green),
+            ),
+            const SizedBox(height: 24),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.edit, color: AppColors.primary),
+              ),
+              title: Text(AppLocalizations.of(context)!.editPayment),
+              subtitle: const Text('Modify amount or note'),
+              onTap: () {
+                Navigator.pop(context);
+                _editPayment(index, history);
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.delete, color: Colors.red),
+              ),
+              title: Text(AppLocalizations.of(context)!.deletePayment, style: const TextStyle(color: Colors.red)),
+              subtitle: const Text('Remove this payment record'),
+              onTap: () {
+                Navigator.pop(context);
+                _confirmDeletePayment(index, history);
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _editPayment(int index, DebtHistory history) {
+    final amountController = TextEditingController(text: history.amount?.toStringAsFixed(0) ?? '');
+    final noteController = TextEditingController(text: history.note ?? '');
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          top: 24,
+          left: 24,
+          right: 24,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(AppLocalizations.of(context)!.editPayment, style: AppTextStyles.h2),
+            const SizedBox(height: 24),
+            TextField(
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.amount,
+                prefixText: 'Rp ',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: noteController,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.note,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final newAmount = double.tryParse(amountController.text);
+                  if (newAmount == null || newAmount <= 0) return;
+
+                  await _updatePayment(index, history, newAmount, noteController.text);
+                  if (mounted) Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                child: Text(AppLocalizations.of(context)!.save),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _updatePayment(int index, DebtHistory history, double newAmount, String newNote) async {
+    try {
+      final debtRepo = ref.read(debtRepositoryProvider);
+      final oldAmount = history.amount ?? 0;
+      final amountDiff = newAmount - oldAmount;
+
+      // Update history
+      final newHistory = List<DebtHistory>.from(_debt.history);
+      newHistory[index] = DebtHistory(
+        date: history.date,
+        amount: newAmount,
+        note: newNote.isEmpty ? 'Payment' : newNote,
+        transactionId: history.transactionId,
+      );
+      _debt.history = newHistory;
+
+      // Update paid amount
+      _debt.paidAmount += amountDiff;
+      if (_debt.paidAmount >= _debt.amount) {
+        _debt.status = DebtStatus.paid;
+      } else if (_debt.status == DebtStatus.paid) {
+        _debt.status = DebtStatus.active;
+      }
+
+      await debtRepo.updateDebt(_debt);
+
+      // Update linked transaction if exists
+      if (history.transactionId != null) {
+        final transactionRepo = await ref.read(transactionRepositoryProvider.future);
+        final transaction = await transactionRepo.getTransactionById(history.transactionId!);
+        if (transaction != null) {
+          transaction.amount = newAmount;
+          transaction.note = newNote;
+          await transactionRepo.updateTransaction(transaction);
+        }
+      }
+
+      setState(() {});
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Payment updated'), backgroundColor: Colors.green),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _confirmDeletePayment(int index, DebtHistory history) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.deletePayment),
+        content: Text(
+          'This will remove the payment of ${ref.read(currencyProvider).format(history.amount ?? 0)}. '
+          '${history.transactionId != null ? 'The linked transaction will also be deleted.' : ''}'
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppLocalizations.of(context)!.cancel)),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(AppLocalizations.of(context)!.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await _deletePayment(index, history);
+    }
+  }
+
+  Future<void> _deletePayment(int index, DebtHistory history) async {
+    try {
+      final debtRepo = ref.read(debtRepositoryProvider);
+      final amount = history.amount ?? 0;
+
+      // Remove from history
+      final newHistory = List<DebtHistory>.from(_debt.history);
+      newHistory.removeAt(index);
+      _debt.history = newHistory;
+
+      // Update paid amount
+      _debt.paidAmount -= amount;
+      if (_debt.paidAmount < 0) _debt.paidAmount = 0;
+      
+      // Update status
+      if (_debt.paidAmount < _debt.amount) {
+        _debt.status = _debt.dueDate.isBefore(DateTime.now()) ? DebtStatus.overdue : DebtStatus.active;
+      }
+
+      await debtRepo.updateDebt(_debt);
+
+      // Delete linked transaction if exists
+      if (history.transactionId != null) {
+        final transactionRepo = await ref.read(transactionRepositoryProvider.future);
+        await transactionRepo.deleteTransaction(history.transactionId!);
+      }
+
+      setState(() {});
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Payment deleted'), backgroundColor: Colors.orange),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+      );
+    }
+  }
 }
+

@@ -19,6 +19,25 @@ class SendFeedbackScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _launchTelegram(BuildContext context) async {
+    const username = 'trianapriliant';
+    final url = Uri.parse('https://t.me/$username');
+    
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch Telegram');
+    }
+  }
+
+  Future<void> _launchEmail(BuildContext context) async {
+    final subject = 'Ollo App Feedback';
+    final body = AppLocalizations.of(context)!.whatsappMessage;
+    final url = Uri.parse('mailto:ollo.expenses@gmail.com?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}');
+    
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch Email');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +59,7 @@ class SendFeedbackScreen extends StatelessWidget {
           children: [
             // 3D Mascot Image
             Container(
-              height: 300,
+              height: 250,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(32),
@@ -57,7 +76,7 @@ class SendFeedbackScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
 
             // Title & Description
             Text(
@@ -65,7 +84,7 @@ class SendFeedbackScreen extends StatelessWidget {
               style: AppTextStyles.h2.copyWith(color: AppColors.primary),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               AppLocalizations.of(context)!.feedbackDescription,
               style: AppTextStyles.bodyLarge.copyWith(
@@ -74,38 +93,79 @@ class SendFeedbackScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 32),
 
             // WhatsApp Button
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton.icon(
-                onPressed: () => _launchWhatsApp(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF25D366), // WhatsApp Green
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 4,
-                  shadowColor: const Color(0xFF25D366).withOpacity(0.4),
-                ),
-                icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white),
-                label: Text(
-                  AppLocalizations.of(context)!.chatViaWhatsApp,
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            _buildContactButton(
+              context: context,
+              onPressed: () => _launchWhatsApp(context),
+              icon: FontAwesomeIcons.whatsapp,
+              label: AppLocalizations.of(context)!.chatViaWhatsApp,
+              color: const Color(0xFF25D366), // WhatsApp Green
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+
+            // Telegram Button
+            _buildContactButton(
+              context: context,
+              onPressed: () => _launchTelegram(context),
+              icon: FontAwesomeIcons.telegram,
+              label: 'Chat via Telegram',
+              color: const Color(0xFF0088CC), // Telegram Blue
+            ),
+            const SizedBox(height: 12),
+
+            // Email Button
+            _buildContactButton(
+              context: context,
+              onPressed: () => _launchEmail(context),
+              icon: Icons.email_outlined,
+              label: 'Send Email',
+              color: const Color(0xFF7C4DFF), // Purple
+              useFaIcon: false,
+            ),
+            
+            const SizedBox(height: 20),
             Text(
               AppLocalizations.of(context)!.repliesInHours,
               style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String label,
+    required Color color,
+    bool useFaIcon = true,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          elevation: 3,
+          shadowColor: color.withOpacity(0.4),
+        ),
+        icon: useFaIcon 
+            ? FaIcon(icon, color: Colors.white, size: 20)
+            : Icon(icon, color: Colors.white, size: 22),
+        label: Text(
+          label,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
