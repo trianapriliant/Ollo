@@ -2404,6 +2404,30 @@ class AppLocalizationsId extends AppLocalizations {
   String get badgeWealthDesc => 'Akumulasi volume transaksi lebih dari 10 Juta';
 
   @override
+  String get badgeTx50Title => 'Pencatat Pemula';
+
+  @override
+  String get badgeTx50Desc => 'Catat 50 transaksi';
+
+  @override
+  String get badgeTx100Title => 'Pencatat Tekun';
+
+  @override
+  String get badgeTx100Desc => 'Catat 100 transaksi';
+
+  @override
+  String get badgeTx500Title => 'Pencatat Pro';
+
+  @override
+  String get badgeTx500Desc => 'Catat 500 transaksi';
+
+  @override
+  String get badgeTx1000Title => 'Master Transaksi';
+
+  @override
+  String get badgeTx1000Desc => 'Catat 1000 transaksi';
+
+  @override
   String get level => 'Level';
 
   @override

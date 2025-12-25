@@ -457,6 +457,10 @@ class GamificationScreen extends ConsumerWidget {
        case 'badgeEarlyBirdTitle': return l10n.badgeEarlyBirdTitle;
        case 'badgeWeekendWarriorTitle': return l10n.badgeWeekendWarriorTitle;
        case 'badgeWealthTitle': return l10n.badgeWealthTitle;
+       case 'badgeTx50Title': return l10n.badgeTx50Title;
+       case 'badgeTx100Title': return l10n.badgeTx100Title;
+       case 'badgeTx500Title': return l10n.badgeTx500Title;
+       case 'badgeTx1000Title': return l10n.badgeTx1000Title;
        default: return key;
      }
   }
@@ -497,6 +501,10 @@ class GamificationScreen extends ConsumerWidget {
        case 'badgeEarlyBirdDesc': return l10n.badgeEarlyBirdDesc;
        case 'badgeWeekendWarriorDesc': return l10n.badgeWeekendWarriorDesc;
        case 'badgeWealthDesc': return l10n.badgeWealthDesc;
+       case 'badgeTx50Desc': return l10n.badgeTx50Desc;
+       case 'badgeTx100Desc': return l10n.badgeTx100Desc;
+       case 'badgeTx500Desc': return l10n.badgeTx500Desc;
+       case 'badgeTx1000Desc': return l10n.badgeTx1000Desc;
        default: return key;
      }
   }

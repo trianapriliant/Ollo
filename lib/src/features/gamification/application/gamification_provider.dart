@@ -262,6 +262,32 @@ final gamificationProvider = StreamProvider<GamificationStats>((ref) {
         xpReward: 20,
       ));
 
+      // -- Transaction Milestone Badges --
+      allBadges.add(GamificationBadge(
+        id: 'tx_50', titleKey: 'badgeTx50Title', descriptionKey: 'badgeTx50Desc',
+        icon: Icons.edit_document, color: Colors.lightBlue, isUnlocked: transactions.length >= 50,
+        category: BadgeCategory.misc,
+        xpReward: 30,
+      ));
+      allBadges.add(GamificationBadge(
+        id: 'tx_100', titleKey: 'badgeTx100Title', descriptionKey: 'badgeTx100Desc',
+        icon: Icons.inventory_2, color: Colors.blue, isUnlocked: transactions.length >= 100,
+        category: BadgeCategory.misc,
+        xpReward: 50,
+      ));
+      allBadges.add(GamificationBadge(
+        id: 'tx_500', titleKey: 'badgeTx500Title', descriptionKey: 'badgeTx500Desc',
+        icon: Icons.auto_awesome, color: Colors.deepPurple, isUnlocked: transactions.length >= 500,
+        category: BadgeCategory.misc,
+        xpReward: 100,
+      ));
+      allBadges.add(GamificationBadge(
+        id: 'tx_1000', titleKey: 'badgeTx1000Title', descriptionKey: 'badgeTx1000Desc',
+        icon: Icons.military_tech, color: Colors.amber, isUnlocked: transactions.length >= 1000,
+        category: BadgeCategory.misc,
+        xpReward: 200,
+      ));
+
       // Existing fun/misc badges
        allBadges.add(GamificationBadge(
         id: 'weekend_warrior', titleKey: 'badgeWeekendWarriorTitle', descriptionKey: 'badgeWeekendWarriorDesc',

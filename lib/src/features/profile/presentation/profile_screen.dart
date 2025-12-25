@@ -261,28 +261,7 @@ class ProfileScreen extends ConsumerWidget {
                             ProfileMenuItem(
                               icon: Icons.logout,
                               title: AppLocalizations.of(context)!.logout,
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text(AppLocalizations.of(context)!.exitAppTitle),
-                                    content: Text(AppLocalizations.of(context)!.exitAppConfirm),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text(AppLocalizations.of(context)!.cancel),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context); // Close dialog
-                                          SystemNavigator.pop(); // Exit app
-                                        },
-                                        child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
+                              onTap: () => _showLogoutDialog(context),
                               isDestructive: true,
                             ),
 
@@ -340,29 +319,216 @@ class ProfileScreen extends ConsumerWidget {
   void _showComingSoonDialog(BuildContext context, String title, String description) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.rocket_launch, color: AppColors.primary),
-            const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.comingSoon, style: AppTextStyles.h3),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text(description, style: AppTextStyles.bodyMedium),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cantWait),
+      builder: (dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
           ),
-        ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Rocket Icon with gradient background
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary.withOpacity(0.8), AppColors.primary],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.rocket_launch_rounded,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 20),
+              
+              // Coming Soon Title
+              Text(
+                AppLocalizations.of(context)!.comingSoon,
+                style: AppTextStyles.h2.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              
+              // Feature Title
+              Text(
+                title,
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              
+              // Description
+              Text(
+                description,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textSecondary,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              
+              // Action Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                    shadowColor: AppColors.primary.withOpacity(0.4),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.cantWait,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Exit Icon with gradient background
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.orange.shade400, Colors.deepOrange.shade500],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.exit_to_app_rounded,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 20),
+              
+              // Title
+              Text(
+                AppLocalizations.of(context)!.exitAppTitle,
+                style: AppTextStyles.h2.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              
+              // Description
+              Text(
+                AppLocalizations.of(context)!.exitAppConfirm,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textSecondary,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              
+              // Action Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        SystemNavigator.pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: Colors.deepOrange,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 4,
+                        shadowColor: Colors.deepOrange.withOpacity(0.4),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.logout,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -377,45 +543,145 @@ class ProfileScreen extends ConsumerWidget {
           final confirmationText = AppLocalizations.of(parentContext)!.deleteDataConfirmationText;
           final isMatch = controller.text == confirmationText;
           
-          return AlertDialog(
-            title: Text(AppLocalizations.of(parentContext)!.deleteAllData),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                  Text(AppLocalizations.of(parentContext)!.deleteAllDataConfirm(confirmationText)),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    hintText: confirmationText,
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Warning Icon with gradient background
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.red.shade400, Colors.red.shade600],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.red.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.delete_forever_rounded,
+                      color: Colors.white,
+                      size: 32,
+                    ),
                   ),
-                  onChanged: (_) => setState(() {}),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  
+                  // Title
+                  Text(
+                    AppLocalizations.of(parentContext)!.deleteAllData,
+                    style: AppTextStyles.h2.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // Description
+                  Text(
+                    AppLocalizations.of(parentContext)!.deleteAllDataConfirm(confirmationText),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textSecondary,
+                      height: 1.4,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Confirmation TextField
+                  TextField(
+                    controller: controller,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.red, width: 2),
+                      ),
+                      hintText: confirmationText,
+                      hintStyle: TextStyle(color: Colors.grey.shade400),
+                    ),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Action Buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(builderContext),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(color: Colors.grey.shade300),
+                            ),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(parentContext)!.cancel,
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isMatch 
+                              ? () async {
+                                  Navigator.pop(builderContext); 
+                                  await _performDeleteData(parentContext, ref); 
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            disabledBackgroundColor: Colors.red.withOpacity(0.3),
+                            disabledForegroundColor: Colors.white.withOpacity(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: isMatch ? 4 : 0,
+                            shadowColor: Colors.red.withOpacity(0.4),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(parentContext)!.deleteData,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(builderContext),
-                child: Text(AppLocalizations.of(parentContext)!.cancel),
-              ),
-              ElevatedButton(
-                onPressed: isMatch 
-                    ? () async {
-                        Navigator.pop(builderContext); 
-                        await _performDeleteData(parentContext, ref); 
-                      }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.red.withOpacity(0.3),
-                  disabledForegroundColor: Colors.white.withOpacity(0.5),
-                ),
-                child: Text(AppLocalizations.of(parentContext)!.deleteData),
-              ),
-            ],
           );
         }
       ),

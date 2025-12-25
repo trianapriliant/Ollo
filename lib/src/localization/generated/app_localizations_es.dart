@@ -2389,6 +2389,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get badgeWealthDesc => 'Acumula más de 10,000,000 en volumen';
 
   @override
+  String get badgeTx50Title => 'Beginner Logger';
+
+  @override
+  String get badgeTx50Desc => 'Record 50 transactions';
+
+  @override
+  String get badgeTx100Title => 'Dedicated Logger';
+
+  @override
+  String get badgeTx100Desc => 'Record 100 transactions';
+
+  @override
+  String get badgeTx500Title => 'Transaction Pro';
+
+  @override
+  String get badgeTx500Desc => 'Record 500 transactions';
+
+  @override
+  String get badgeTx1000Title => 'Transaction Master';
+
+  @override
+  String get badgeTx1000Desc => 'Record 1000 transactions';
+
+  @override
   String get level => 'Nivel';
 
   @override

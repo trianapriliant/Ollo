@@ -4614,6 +4614,54 @@ abstract class AppLocalizations {
   /// **'Accumulate over 10,000,000 in volume'**
   String get badgeWealthDesc;
 
+  /// No description provided for @badgeTx50Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner Logger'**
+  String get badgeTx50Title;
+
+  /// No description provided for @badgeTx50Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record 50 transactions'**
+  String get badgeTx50Desc;
+
+  /// No description provided for @badgeTx100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Dedicated Logger'**
+  String get badgeTx100Title;
+
+  /// No description provided for @badgeTx100Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record 100 transactions'**
+  String get badgeTx100Desc;
+
+  /// No description provided for @badgeTx500Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Pro'**
+  String get badgeTx500Title;
+
+  /// No description provided for @badgeTx500Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record 500 transactions'**
+  String get badgeTx500Desc;
+
+  /// No description provided for @badgeTx1000Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Master'**
+  String get badgeTx1000Title;
+
+  /// No description provided for @badgeTx1000Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Record 1000 transactions'**
+  String get badgeTx1000Desc;
+
   /// No description provided for @level.
   ///
   /// In en, this message translates to:
