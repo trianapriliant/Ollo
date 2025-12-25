@@ -90,7 +90,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       height: (state.state == QuickRecordState.listening || state.state == QuickRecordState.error || state.state == QuickRecordState.review)
-          ? MediaQuery.of(context).size.height * 0.60
+          ? MediaQuery.of(context).size.height * 0.70
           : MediaQuery.of(context).size.height * 0.35,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -186,6 +186,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
     
     return Column(
       children: [
+        const SizedBox(height: 40), // Push content down for better balance
         GestureDetector(
           onTap: () {
              final controller = ref.read(quickRecordControllerProvider.notifier);
@@ -264,60 +265,228 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
 
   Widget _buildReviewView(QuickRecordStateData state, BuildContext context) {
     final txn = state.draftTransaction!;
-    return SingleChildScrollView( // Scrollable to prevent bottom overflow
-      child: Card(
-        color: AppColors.cardBackground,
-        child: padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-             mainAxisSize: MainAxisSize.min, // Wrap content
-             children: [
-               Row(
-                 children: [
-                   const Icon(Icons.check_circle, color: Colors.green),
-                   const SizedBox(width: 8),
-                   Text(AppLocalizations.of(context)!.draftReady, style: AppTextStyles.bodyLarge),
-                 ],
-               ),
-               const Divider(),
-                _row(AppLocalizations.of(context)!.titleLabel, txn.title),
-                _row(AppLocalizations.of(context)!.amount, NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(txn.amount)),
-                _row(AppLocalizations.of(context)!.date, DateFormat('dd MMM yyyy').format(txn.date)),
-                _row(AppLocalizations.of(context)!.wallet, state.detectedWalletName ?? 'Default'),
-                _row(AppLocalizations.of(context)!.category, state.detectedSubCategoryName != null 
-                    ? '${state.detectedCategoryName} > ${state.detectedSubCategoryName}'
-                    : (state.detectedCategoryName ?? AppLocalizations.of(context)!.notFound)),
-                _row(AppLocalizations.of(context)!.typeLabel, txn.type.name.toUpperCase()), // Used typeLabel "Type"
-                _row(AppLocalizations.of(context)!.note, txn.note ?? '-'),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                            // Edit - for now just go back to input with text
-                            ref.read(quickRecordControllerProvider.notifier).startChat();
-                        },
-                        child: Text(AppLocalizations.of(context)!.edit),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Return transaction to caller
-                          context.pop(txn); 
-                        },
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                        child: Text(AppLocalizations.of(context)!.saveAdjust),
-                      ),
-                    ),
+    
+    // Check if this is a transfer transaction
+    if (state.isTransfer) {
+      return _buildTransferReviewView(state, context);
+    }
+    
+    // Regular transaction review
+    return Column(
+      children: [
+        // Scrollable content
+        Expanded(
+          child: SingleChildScrollView(
+            child: Card(
+              color: AppColors.cardBackground,
+              child: padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     Row(
+                       children: [
+                         const Icon(Icons.check_circle, color: Colors.green),
+                         const SizedBox(width: 8),
+                         Text(AppLocalizations.of(context)!.draftReady, style: AppTextStyles.bodyLarge),
+                       ],
+                     ),
+                     const Divider(),
+                      _row(AppLocalizations.of(context)!.titleLabel, txn.title),
+                      _row(AppLocalizations.of(context)!.amount, NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(txn.amount)),
+                      _row(AppLocalizations.of(context)!.date, DateFormat('dd MMM yyyy').format(txn.date)),
+                      _row(AppLocalizations.of(context)!.wallet, state.detectedWalletName ?? 'Default'),
+                      _row(AppLocalizations.of(context)!.category, state.detectedSubCategoryName != null 
+                          ? '${state.detectedCategoryName} > ${state.detectedSubCategoryName}'
+                          : (state.detectedCategoryName ?? AppLocalizations.of(context)!.notFound)),
+                      _row(AppLocalizations.of(context)!.typeLabel, txn.type.name.toUpperCase()),
+                      _row(AppLocalizations.of(context)!.note, txn.note ?? '-'),
                   ],
-                )
-            ],
+                ),
+              ),
+            ),
           ),
         ),
-      ),
+        
+        // Action Buttons - pinned at bottom
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () {
+                  ref.read(quickRecordControllerProvider.notifier).startChat();
+                },
+                child: Text(AppLocalizations.of(context)!.edit),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  context.pop(txn); 
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                child: Text(AppLocalizations.of(context)!.saveAdjust),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+  
+  /// Transfer-specific review view
+  Widget _buildTransferReviewView(QuickRecordStateData state, BuildContext context) {
+    final txn = state.draftTransaction!;
+    final sourceWallet = state.sourceWallet;
+    final destWallet = state.destinationWallet;
+    final adminFee = state.transferFee;
+    
+    return Column(
+      children: [
+        // Scrollable content
+        Expanded(
+          child: SingleChildScrollView(
+            child: Card(
+              color: AppColors.cardBackground,
+              child: padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     // Transfer Header - compact
+                     Row(
+                       children: [
+                         Container(
+                           padding: const EdgeInsets.all(6),
+                           decoration: BoxDecoration(
+                             color: Colors.blue.withOpacity(0.1),
+                             shape: BoxShape.circle,
+                           ),
+                           child: const Icon(Icons.swap_horiz_rounded, color: Colors.blue, size: 20),
+                         ),
+                         const SizedBox(width: 8),
+                         Text(
+                           AppLocalizations.of(context)!.transfer,
+                           style: AppTextStyles.bodyLarge.copyWith(color: Colors.blue, fontWeight: FontWeight.bold),
+                         ),
+                       ],
+                     ),
+                     const SizedBox(height: 12),
+                     
+                     // Transfer Flow Visualization - more compact
+                     Container(
+                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                       decoration: BoxDecoration(
+                         color: Colors.grey.shade50,
+                         borderRadius: BorderRadius.circular(10),
+                       ),
+                       child: Row(
+                         children: [
+                           // Source Wallet
+                           Expanded(
+                             child: Column(
+                               mainAxisSize: MainAxisSize.min,
+                               children: [
+                                 Container(
+                                   padding: const EdgeInsets.all(8),
+                                   decoration: BoxDecoration(
+                                     color: Colors.orange.withOpacity(0.1),
+                                     borderRadius: BorderRadius.circular(8),
+                                   ),
+                                   child: const Icon(Icons.account_balance_wallet, color: Colors.orange, size: 20),
+                                 ),
+                                 const SizedBox(height: 4),
+                                 Text(
+                                   sourceWallet?.name ?? 'Source',
+                                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                   textAlign: TextAlign.center,
+                                   maxLines: 1,
+                                   overflow: TextOverflow.ellipsis,
+                                 ),
+                               ],
+                             ),
+                           ),
+                           // Arrow
+                           const Padding(
+                             padding: EdgeInsets.symmetric(horizontal: 4),
+                             child: Icon(Icons.arrow_forward, color: Colors.grey, size: 18),
+                           ),
+                           // Destination Wallet
+                           Expanded(
+                             child: Column(
+                               mainAxisSize: MainAxisSize.min,
+                               children: [
+                                 Container(
+                                   padding: const EdgeInsets.all(8),
+                                   decoration: BoxDecoration(
+                                     color: Colors.green.withOpacity(0.1),
+                                     borderRadius: BorderRadius.circular(8),
+                                   ),
+                                   child: const Icon(Icons.account_balance_wallet, color: Colors.green, size: 20),
+                                 ),
+                                 const SizedBox(height: 4),
+                                 Text(
+                                   destWallet?.name ?? 'Destination',
+                                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                   textAlign: TextAlign.center,
+                                   maxLines: 1,
+                                   overflow: TextOverflow.ellipsis,
+                                 ),
+                               ],
+                             ),
+                           ),
+                         ],
+                       ),
+                     ),
+                     const SizedBox(height: 10),
+                     
+                     // Amount & Fee - compact rows
+                     _row(AppLocalizations.of(context)!.amount, NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(txn.amount)),
+                     _row(AppLocalizations.of(context)!.adminFee, NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(adminFee)),
+                     _row(AppLocalizations.of(context)!.date, DateFormat('dd MMM yyyy').format(txn.date)),
+                     _row(AppLocalizations.of(context)!.note, txn.note ?? '-'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        
+        // Action Buttons - pinned at bottom
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () {
+                  ref.read(quickRecordControllerProvider.notifier).startChat();
+                },
+                child: Text(AppLocalizations.of(context)!.edit),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  context.pop({
+                    'transaction': txn,
+                    'isTransfer': true,
+                    'sourceWallet': sourceWallet,
+                    'destinationWallet': destWallet,
+                    'transferFee': adminFee,
+                  }); 
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                child: Text(AppLocalizations.of(context)!.saveAdjust),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
   
@@ -455,18 +624,25 @@ class _RotatingHelpTextState extends State<_RotatingHelpText> with SingleTickerP
 
   @override
   Widget build(BuildContext context) {
-    final hints = [
-      AppLocalizations.of(context)!.quickRecordHelp1,
-      AppLocalizations.of(context)!.quickRecordHelp2,
-      AppLocalizations.of(context)!.quickRecordHelp3,
-      AppLocalizations.of(context)!.quickRecordHelp4,
-      AppLocalizations.of(context)!.quickRecordHelp5,
-      AppLocalizations.of(context)!.quickRecordHelp6,
-      AppLocalizations.of(context)!.quickRecordHelp7,
-      AppLocalizations.of(context)!.quickRecordHelp8,
-      AppLocalizations.of(context)!.quickRecordHelp9,
-      AppLocalizations.of(context)!.quickRecordHelp10,
+    // Hints with their corresponding category/type
+    final hintData = [
+      {'text': AppLocalizations.of(context)!.quickRecordHelp1, 'category': 'Coffee', 'type': 'expense'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp2, 'category': 'Salary', 'type': 'income'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp3, 'category': 'Food', 'type': 'expense'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp4, 'category': 'Transportation', 'type': 'expense'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp5, 'category': 'Housing', 'type': 'expense'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp6, 'category': 'Transfer', 'type': 'transfer'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp7, 'category': 'Transfer + Fee', 'type': 'transfer'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp8, 'category': 'Transfer', 'type': 'transfer'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp9, 'category': 'Transfer + Fee', 'type': 'transfer'},
+      {'text': AppLocalizations.of(context)!.quickRecordHelp10, 'category': 'Transfer', 'type': 'transfer'},
     ];
+    
+    final currentHint = hintData[_index % hintData.length];
+    final type = currentHint['type'] as String;
+    final categoryColor = type == 'expense' 
+        ? Colors.red[400]! 
+        : (type == 'income' ? Colors.green[500]! : Colors.blue[500]!);
 
     return FadeTransition(
       opacity: _opacity,
@@ -478,12 +654,43 @@ class _RotatingHelpTextState extends State<_RotatingHelpText> with SingleTickerP
             ),
             const SizedBox(height: 4),
             Text(
-              hints[_index % hints.length], // Safe modulo
+              currentHint['text'] as String,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.primary, 
                 fontStyle: FontStyle.italic
               ),
               textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 6),
+          // Category chip
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: categoryColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: categoryColor.withOpacity(0.3)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  type == 'expense' 
+                      ? Icons.arrow_upward 
+                      : (type == 'income' ? Icons.arrow_downward : Icons.swap_horiz),
+                  size: 12,
+                  color: categoryColor,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  currentHint['category'] as String,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: categoryColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

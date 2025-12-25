@@ -169,6 +169,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           } else if (extra is Transaction) {
             transactionToEdit = extra;
             type = transactionToEdit.type;
+          } else if (extra is Map && extra['isTransfer'] == true) {
+            // Transfer from Quick Record - extract transaction and set type
+            final txn = extra['transaction'] as Transaction;
+            final transferFee = extra['transferFee'] as double? ?? 0;
+            transactionToEdit = Transaction.create(
+              title: txn.title,
+              amount: txn.amount,
+              date: txn.date,
+              type: TransactionType.transfer,
+              walletId: (extra['sourceWallet'] as dynamic)?.externalId ?? (extra['sourceWallet'] as dynamic)?.id.toString(),
+              destinationWalletId: (extra['destinationWallet'] as dynamic)?.externalId ?? (extra['destinationWallet'] as dynamic)?.id.toString(),
+              note: txn.note,
+            );
+            type = TransactionType.transfer;
+            
+            return AddTransactionScreen(
+              type: type,
+              transactionToEdit: transactionToEdit,
+              initialTransferFee: transferFee,
+            );
           }
 
           return AddTransactionScreen(

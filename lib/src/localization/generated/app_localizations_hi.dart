@@ -139,6 +139,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get transfer => 'ट्रांसफर';
 
   @override
+  String get adminFee => 'Admin Fee';
+
+  @override
+  String get confirmTransfer => 'Confirm Transfer';
+
+  @override
   String get amount => 'राशि';
 
   @override

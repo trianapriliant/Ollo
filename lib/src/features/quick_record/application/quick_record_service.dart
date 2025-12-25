@@ -6,15 +6,94 @@ import '../data/quick_record_repository.dart';
 import '../domain/patterns/pattern_manager.dart';
 import '../domain/patterns/pattern_base.dart';
 
+/// Result class for parsed transaction - supports both regular and transfer transactions
+class ParsedTransactionResult {
+  final Transaction transaction;
+  final String? categoryName;
+  final String? subCategoryName;
+  final String? walletName;
+  
+  // Transfer-specific fields
+  final bool isTransfer;
+  final Wallet? sourceWallet;
+  final Wallet? destinationWallet;
+  final double transferFee;
+  
+  ParsedTransactionResult({
+    required this.transaction,
+    this.categoryName,
+    this.subCategoryName,
+    this.walletName,
+    this.isTransfer = false,
+    this.sourceWallet,
+    this.destinationWallet,
+    this.transferFee = 0,
+  });
+}
+
 class QuickRecordService {
   final QuickRecordRepository _repository;
 
   QuickRecordService(this._repository);
 
+  // Transfer detection keywords - VERY SPECIFIC to avoid false positives
+  static const _transferKeywords = [
+    'transfer', 'tf ', 'kirim uang', 'kirim ke', 'pindah dana', 'pindahkan',
+  ];
+  
+  // Pattern: must have BOTH "dari" AND "ke" for transfer (prevents false positive)
+  static final _transferPatternId = RegExp(
+    r'(?:transfer|tf|kirim|pindah)\s+.*(?:dari|from)\s+.+\s+(?:ke|to)\s+',
+    caseSensitive: false,
+  );
+  
+  static final _transferPatternEn = RegExp(
+    r'(?:transfer|send|move)\s+.*(?:from)\s+.+\s+(?:to)\s+',
+    caseSensitive: false,
+  );
+
   /// Parses a natural language string into a potential Transaction.
-  Future<({Transaction transaction, String? categoryName, String? subCategoryName, String? walletName})> parseTransaction(String input, {String languageCode = 'id_ID'}) async {
-    final categories = await _repository.getAllCategories();
+  /// PRIORITY: Transfer detection happens FIRST to prevent misclassification.
+  Future<ParsedTransactionResult> parseTransaction(String input, {String languageCode = 'id_ID'}) async {
     final wallets = await _repository.getAllWallets();
+    final categories = await _repository.getAllCategories();
+    
+    // ============================================
+    // STEP 0: TRANSFER DETECTION (HIGHEST PRIORITY)
+    // ============================================
+    // Transfer MUST be detected first, before any expense/income logic
+    // A valid transfer requires: transfer keyword + source wallet + destination wallet
+    if (_isTransferInput(input)) {
+      final transferResult = _parseTransfer(input, wallets);
+      if (transferResult != null && 
+          transferResult.sourceWallet != null && 
+          transferResult.destinationWallet != null) {
+        // Successfully parsed as transfer - return immediately
+        // This prevents any chance of being treated as expense/income
+        final transaction = Transaction.create(
+          title: 'Transfer',
+          amount: transferResult.amount,
+          date: _extractDate(input),
+          type: TransactionType.transfer,
+          walletId: transferResult.sourceWallet!.externalId ?? transferResult.sourceWallet!.id.toString(),
+          note: input,
+        );
+        
+        return ParsedTransactionResult(
+          transaction: transaction,
+          isTransfer: true,
+          sourceWallet: transferResult.sourceWallet,
+          destinationWallet: transferResult.destinationWallet,
+          transferFee: transferResult.adminFee,
+          walletName: transferResult.sourceWallet!.name,
+        );
+      }
+    }
+    
+    // ============================================
+    // REGULAR TRANSACTION PARSING (Expense/Income)
+    // ============================================
+    // Only reaches here if NOT a valid transfer
     
     // 1. Extract Amount
     double amount = _extractAmount(input);
@@ -64,16 +143,136 @@ class QuickRecordService {
       subCategoryId: matchedSubCategory?.id,
       subCategoryName: matchedSubCategory?.name,
       subCategoryIcon: matchedSubCategory?.iconPath,
-      walletId: matchedWallet?.externalId ?? matchedWallet?.id.toString() ?? '1', // Default to ID 1 or passed wallet
+      walletId: matchedWallet?.externalId ?? matchedWallet?.id.toString() ?? '1',
       note: note,
     );
 
-    return (
+    return ParsedTransactionResult(
       transaction: transaction, 
       categoryName: matchedCategory?.name, 
       subCategoryName: matchedSubCategory?.name,
-      walletName: matchedWallet?.name
+      walletName: matchedWallet?.name,
+      isTransfer: false,
     );
+  }
+  
+  /// Determines if input is a transfer command
+  /// Uses STRICT rules to prevent false positives
+  bool _isTransferInput(String input) {
+    final lower = input.toLowerCase();
+    
+    // Method 1: Check for transfer keyword + dari/ke pattern (Indonesian)
+    if (_transferPatternId.hasMatch(lower)) return true;
+    
+    // Method 2: Check for transfer keyword + from/to pattern (English)
+    if (_transferPatternEn.hasMatch(lower)) return true;
+    
+    // Method 3: Check explicit transfer keywords with wallet indicators
+    for (final keyword in _transferKeywords) {
+      if (lower.contains(keyword)) {
+        // Must also contain source AND destination indicators
+        bool hasSource = lower.contains('dari ') || lower.contains('from ');
+        bool hasDest = lower.contains(' ke ') || lower.contains(' to ');
+        if (hasSource && hasDest) return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  /// Parses transfer details from input
+  /// Returns null if parsing fails (will fallback to regular transaction)
+  ({double amount, Wallet? sourceWallet, Wallet? destinationWallet, double adminFee})? 
+  _parseTransfer(String input, List<Wallet> wallets) {
+    final lower = input.toLowerCase();
+    
+    // 1. Extract amount (same logic as regular)
+    final amount = _extractAmount(input);
+    if (amount <= 0) return null;
+    
+    // 2. Extract source wallet: text after "dari/from" until "ke/to"
+    Wallet? sourceWallet;
+    final sourceRegex = RegExp(r'(?:dari|from)\s+(.+?)\s+(?:ke|to)\s', caseSensitive: false);
+    final sourceMatch = sourceRegex.firstMatch(lower);
+    if (sourceMatch != null) {
+      final sourceText = sourceMatch.group(1)?.trim();
+      sourceWallet = _matchWalletByText(sourceText, wallets);
+    }
+    
+    // 3. Extract destination wallet: text after "ke/to" until end or "dengan/admin/fee"
+    Wallet? destWallet;
+    final destRegex = RegExp(r'(?:ke|to)\s+(.+?)(?:\s+(?:dengan|admin|fee|biaya)|$)', caseSensitive: false);
+    final destMatch = destRegex.firstMatch(lower);
+    if (destMatch != null) {
+      final destText = destMatch.group(1)?.trim();
+      destWallet = _matchWalletByText(destText, wallets);
+    }
+    
+    // 4. Extract admin fee (optional)
+    double adminFee = 0;
+    final adminRegex = RegExp(r'(?:admin|fee|biaya\s*admin?)\s*(?:rp\.?\s*)?(\d+(?:[.,]\d+)*)\s*(rb|k|ribu)?', caseSensitive: false);
+    final adminMatch = adminRegex.firstMatch(lower);
+    if (adminMatch != null) {
+      String numStr = adminMatch.group(1)!;
+      String? suffix = adminMatch.group(2);
+      
+      numStr = _cleanNumberString(numStr);
+      adminFee = double.tryParse(numStr) ?? 0;
+      
+      // Apply multiplier for rb/k/ribu
+      if (suffix != null && (suffix == 'rb' || suffix == 'k' || suffix == 'ribu')) {
+        adminFee *= 1000;
+      }
+    }
+    
+    return (
+      amount: amount,
+      sourceWallet: sourceWallet,
+      destinationWallet: destWallet,
+      adminFee: adminFee,
+    );
+  }
+  
+  /// Matches wallet by text using fuzzy matching
+  Wallet? _matchWalletByText(String? text, List<Wallet> wallets) {
+    if (text == null || text.isEmpty) return null;
+    
+    final searchText = text.toLowerCase().trim();
+    
+    // 1. Exact match
+    for (var wallet in wallets) {
+      if (wallet.name.toLowerCase() == searchText) {
+        return wallet;
+      }
+    }
+    
+    // 2. Contains match (wallet name contains search text)
+    for (var wallet in wallets) {
+      if (wallet.name.toLowerCase().contains(searchText)) {
+        return wallet;
+      }
+    }
+    
+    // 3. Reverse contains (search text contains wallet name)
+    for (var wallet in wallets) {
+      if (searchText.contains(wallet.name.toLowerCase())) {
+        return wallet;
+      }
+    }
+    
+    // 4. Fuzzy word match - check if distinctive word matches
+    final commonWords = ['bank', 'wallet', 'account', 'dompet', 'rekening', 'cash', 'tunai'];
+    for (var wallet in wallets) {
+      List<String> walletWords = wallet.name.toLowerCase().split(' ');
+      for (String word in walletWords) {
+        if (word.length < 3 || commonWords.contains(word)) continue;
+        if (searchText.contains(word)) {
+          return wallet;
+        }
+      }
+    }
+    
+    return null;
   }
 
 

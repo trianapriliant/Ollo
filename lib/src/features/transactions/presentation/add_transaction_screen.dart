@@ -26,8 +26,9 @@ import 'widgets/transaction_wallet_selector.dart';
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final TransactionType type;
   final Transaction? transactionToEdit;
+  final double? initialTransferFee; // For Quick Record voice transfer
 
-  const AddTransactionScreen({super.key, required this.type, this.transactionToEdit});
+  const AddTransactionScreen({super.key, required this.type, this.transactionToEdit, this.initialTransferFee});
 
   @override
   ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -54,6 +55,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       _titleController.text = t.title;
       _selectedWalletId = t.walletId;
       _selectedDestinationWalletId = t.destinationWalletId;
+    }
+    
+    // Pre-fill transfer fee from Quick Record voice input
+    if (widget.initialTransferFee != null && widget.initialTransferFee! > 0) {
+      _feeController.text = NumberFormat.decimalPattern('en_US').format(widget.initialTransferFee);
     } 
 
     // Logic to Auto-Select 'Cash' if no wallet is selected yet 
@@ -117,17 +123,23 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16.0), // Reduced from 24
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Scrollable content area
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
             // 1. Amount Input
             TransactionAmountInput(
               controller: _amountController,
               currencySymbol: ref.watch(currencyProvider).symbol,
               primaryColor: primaryColor,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // 2. Title Input
             Text(AppLocalizations.of(context)!.titleLabel, style: AppTextStyles.bodyMedium),
@@ -146,7 +158,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 contentPadding: const EdgeInsets.all(16),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // 3. Wallet Selection
             TransactionWalletSelector(
@@ -168,7 +180,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               },
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // 3b. Transfer Fee (Only if Transfer)
             if (isTransfer) ...[ 
@@ -179,7 +191,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   title: AppLocalizations.of(context)!.transferFee,
                   showSign: false, 
                ),
-               const SizedBox(height: 24),
+               const SizedBox(height: 16),
             ],
 
             // 4. Category Selection
@@ -314,14 +326,19 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               error: (err, stack) => Text('Error loading categories: $err'),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16), // Reduced from 24
 
             // 5. Note Input
             TransactionNoteInput(controller: _noteController),
-
-            const Spacer(),
-
-            // 6. Save Button (Logic kept here as it coordinates everything)
+            
+            const SizedBox(height: 16), // Bottom padding for scroll
+                  ],
+                ),
+              ),
+            ),
+            
+            // 6. Save Button - pinned at bottom
+            const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

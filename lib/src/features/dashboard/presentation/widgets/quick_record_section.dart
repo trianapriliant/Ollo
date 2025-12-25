@@ -97,9 +97,22 @@ class QuickRecordSection extends ConsumerWidget {
             child: QuickRecordModal(initialMode: mode),
           ),
         );
-
-        if (result is Transaction && context.mounted) {
-          context.push('/add-transaction', extra: result);
+        // Handle result from QuickRecordModal
+        if (result != null && context.mounted) {
+          if (result is Transaction) {
+            // Regular expense/income
+            context.push('/add-transaction', extra: result);
+          } else if (result is Map && result['isTransfer'] == true) {
+            // Transfer - extract transaction and pass transfer info
+            final txn = result['transaction'] as Transaction;
+            context.push('/add-transaction', extra: {
+              'transaction': txn,
+              'isTransfer': true,
+              'sourceWallet': result['sourceWallet'],
+              'destinationWallet': result['destinationWallet'],
+              'transferFee': result['transferFee'],
+            });
+          }
         }
       },
       child: Column(

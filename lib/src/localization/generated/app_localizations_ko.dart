@@ -138,6 +138,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get transfer => '이체';
 
   @override
+  String get adminFee => 'Admin Fee';
+
+  @override
+  String get confirmTransfer => 'Confirm Transfer';
+
+  @override
   String get amount => '금액';
 
   @override

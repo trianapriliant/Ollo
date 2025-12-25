@@ -147,31 +147,31 @@ abstract class AppLocalizations {
   /// No description provided for @quickRecordHelp6.
   ///
   /// In en, this message translates to:
-  /// **'\"Buy coffee 20k using BCA\"'**
+  /// **'\"Transfer 50k from BCA to OVO\"'**
   String get quickRecordHelp6;
 
   /// No description provided for @quickRecordHelp7.
   ///
   /// In en, this message translates to:
-  /// **'\"Pay wifi 300k using OVO on 20th\"'**
+  /// **'\"Transfer 100k from Jago to Mandiri admin 2500\"'**
   String get quickRecordHelp7;
 
   /// No description provided for @quickRecordHelp8.
   ///
   /// In en, this message translates to:
-  /// **'\"Cinema 100k using Dana this Sunday\"'**
+  /// **'\"Send 200k from Cash to Dana\"'**
   String get quickRecordHelp8;
 
   /// No description provided for @quickRecordHelp9.
   ///
   /// In en, this message translates to:
-  /// **'\"Pay debt Budi 50k using Cash\"'**
+  /// **'\"TF 1 million from BCA to Gopay admin 5k\"'**
   String get quickRecordHelp9;
 
   /// No description provided for @quickRecordHelp10.
   ///
   /// In en, this message translates to:
-  /// **'\"Transfer Mom 1 million using Mandiri\"'**
+  /// **'\"Transfer 500k from Mandiri to BCA\"'**
   String get quickRecordHelp10;
 
   /// No description provided for @customizeMenu.
@@ -365,6 +365,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transfer'**
   String get transfer;
+
+  /// No description provided for @adminFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Fee'**
+  String get adminFee;
+
+  /// No description provided for @confirmTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Transfer'**
+  String get confirmTransfer;
 
   /// No description provided for @amount.
   ///

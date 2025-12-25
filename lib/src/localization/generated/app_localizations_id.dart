@@ -27,19 +27,20 @@ class AppLocalizationsId extends AppLocalizations {
   String get quickRecordHelp5 => '\"Bayar kost 1.5 juta pakai Jago tanggal 1\"';
 
   @override
-  String get quickRecordHelp6 => '\"Beli kopi 20rb pakai BCA\"';
+  String get quickRecordHelp6 => '\"Transfer 50rb dari BCA ke OVO\"';
 
   @override
-  String get quickRecordHelp7 => '\"Bayar wifi 300rb pakai OVO tanggal 20\"';
+  String get quickRecordHelp7 =>
+      '\"Transfer 100rb dari Jago ke Mandiri admin 2500\"';
 
   @override
-  String get quickRecordHelp8 => '\"Nonton bioskop 100rb pakai Dana\"';
+  String get quickRecordHelp8 => '\"Kirim 200rb dari Tunai ke Dana\"';
 
   @override
-  String get quickRecordHelp9 => '\"Bayar hutang Budi 50rb pakai Tunai\"';
+  String get quickRecordHelp9 => '\"TF 1 juta dari BCA ke Gopay admin 5rb\"';
 
   @override
-  String get quickRecordHelp10 => '\"Transfer Mama 1 juta pakai Mandiri\"';
+  String get quickRecordHelp10 => '\"Transfer 500rb dari Mandiri ke BCA\"';
 
   @override
   String get customizeMenu => 'Atur Menu';
@@ -136,6 +137,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get transfer => 'Transfer';
+
+  @override
+  String get adminFee => 'Biaya Admin';
+
+  @override
+  String get confirmTransfer => 'Konfirmasi Transfer';
 
   @override
   String get amount => 'Jumlah';

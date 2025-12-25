@@ -27,19 +27,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickRecordHelp5 => '\"Pay rent 1.5 million using Jago on 1st\"';
 
   @override
-  String get quickRecordHelp6 => '\"Buy coffee 20k using BCA\"';
+  String get quickRecordHelp6 => '\"Transfer 50k from BCA to OVO\"';
 
   @override
-  String get quickRecordHelp7 => '\"Pay wifi 300k using OVO on 20th\"';
+  String get quickRecordHelp7 =>
+      '\"Transfer 100k from Jago to Mandiri admin 2500\"';
 
   @override
-  String get quickRecordHelp8 => '\"Cinema 100k using Dana this Sunday\"';
+  String get quickRecordHelp8 => '\"Send 200k from Cash to Dana\"';
 
   @override
-  String get quickRecordHelp9 => '\"Pay debt Budi 50k using Cash\"';
+  String get quickRecordHelp9 => '\"TF 1 million from BCA to Gopay admin 5k\"';
 
   @override
-  String get quickRecordHelp10 => '\"Transfer Mom 1 million using Mandiri\"';
+  String get quickRecordHelp10 => '\"Transfer 500k from Mandiri to BCA\"';
 
   @override
   String get customizeMenu => 'Customize Menu';
@@ -136,6 +137,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transfer => 'Transfer';
+
+  @override
+  String get adminFee => 'Admin Fee';
+
+  @override
+  String get confirmTransfer => 'Confirm Transfer';
 
   @override
   String get amount => 'Amount';

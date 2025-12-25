@@ -138,6 +138,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get transfer => '振替';
 
   @override
+  String get adminFee => 'Admin Fee';
+
+  @override
+  String get confirmTransfer => 'Confirm Transfer';
+
+  @override
   String get amount => '金額';
 
   @override

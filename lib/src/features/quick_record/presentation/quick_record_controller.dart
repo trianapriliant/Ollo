@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import '../../transactions/domain/transaction.dart';
+import '../../wallets/domain/wallet.dart';
 import '../application/quick_record_service.dart';
 import '../../settings/presentation/voice_language_provider.dart';
 
@@ -17,7 +18,13 @@ class QuickRecordStateData {
   final String? errorMessage;
   final String? detectedCategoryName;
   final String? detectedSubCategoryName;
-  final String? detectedWalletName; // New field
+  final String? detectedWalletName;
+  
+  // Transfer-specific fields
+  final bool isTransfer;
+  final Wallet? sourceWallet;
+  final Wallet? destinationWallet;
+  final double transferFee;
 
   QuickRecordStateData({
     this.state = QuickRecordState.initial,
@@ -27,6 +34,10 @@ class QuickRecordStateData {
     this.detectedCategoryName,
     this.detectedSubCategoryName,
     this.detectedWalletName,
+    this.isTransfer = false,
+    this.sourceWallet,
+    this.destinationWallet,
+    this.transferFee = 0,
   });
 
   QuickRecordStateData copyWith({
@@ -37,6 +48,10 @@ class QuickRecordStateData {
     String? detectedCategoryName,
     String? detectedSubCategoryName,
     String? detectedWalletName,
+    bool? isTransfer,
+    Wallet? sourceWallet,
+    Wallet? destinationWallet,
+    double? transferFee,
   }) {
     return QuickRecordStateData(
       state: state ?? this.state,
@@ -46,6 +61,10 @@ class QuickRecordStateData {
       detectedCategoryName: detectedCategoryName ?? this.detectedCategoryName,
       detectedSubCategoryName: detectedSubCategoryName ?? this.detectedSubCategoryName,
       detectedWalletName: detectedWalletName ?? this.detectedWalletName,
+      isTransfer: isTransfer ?? this.isTransfer,
+      sourceWallet: sourceWallet ?? this.sourceWallet,
+      destinationWallet: destinationWallet ?? this.destinationWallet,
+      transferFee: transferFee ?? this.transferFee,
     );
   }
 }
@@ -73,7 +92,12 @@ class QuickRecordController extends StateNotifier<QuickRecordStateData> {
         draftTransaction: result.transaction,
         detectedCategoryName: result.categoryName,
         detectedSubCategoryName: result.subCategoryName,
-        detectedWalletName: result.walletName, 
+        detectedWalletName: result.walletName,
+        // Transfer-specific fields
+        isTransfer: result.isTransfer,
+        sourceWallet: result.sourceWallet,
+        destinationWallet: result.destinationWallet,
+        transferFee: result.transferFee,
       );
     } catch (e) {
       state = state.copyWith(state: QuickRecordState.error, errorMessage: e.toString());
