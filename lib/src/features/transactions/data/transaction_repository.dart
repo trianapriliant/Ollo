@@ -5,6 +5,8 @@ import '../../transactions/domain/transaction.dart';
 import 'package:isar/isar.dart';
 import '../../common/data/isar_provider.dart';
 import '../../wallets/domain/wallet.dart';
+import '../../savings/domain/saving_log.dart';
+import '../../savings/domain/saving_goal.dart';
 
 abstract class TransactionRepository {
   Future<int> addTransaction(Transaction transaction);
@@ -108,6 +110,28 @@ class IsarTransactionRepository implements TransactionRepository {
                destWallet.balance -= transaction.amount;
                await isar.wallets.put(destWallet);
             }
+        }
+
+        // Cascade delete SavingLog if this is a savings transaction
+        if (transaction.categoryId == 'savings') {
+          final savingLog = await isar.savingLogs.filter()
+              .transactionIdEqualTo(id)
+              .findFirst();
+          
+          if (savingLog != null) {
+            // Revert SavingGoal.currentAmount
+            final savingGoal = await isar.savingGoals.get(savingLog.savingGoalId);
+            if (savingGoal != null) {
+              if (savingLog.type == SavingLogType.deposit) {
+                savingGoal.currentAmount -= savingLog.amount;
+              } else if (savingLog.type == SavingLogType.withdraw) {
+                savingGoal.currentAmount += savingLog.amount;
+              }
+              await isar.savingGoals.put(savingGoal);
+            }
+            // Delete the log
+            await isar.savingLogs.delete(savingLog.id);
+          }
         }
 
         await isar.transactions.delete(id);

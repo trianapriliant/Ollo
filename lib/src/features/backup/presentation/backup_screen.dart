@@ -221,6 +221,102 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     }
   }
 
+  void _showBackupInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.backup, color: AppColors.primary, size: 24),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    AppLocalizations.of(context)!.backupContentsTitle,
+                    style: AppTextStyles.h3,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              
+              // Data Section
+              Text(
+                AppLocalizations.of(context)!.backupDataSection,
+                style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              _buildInfoItem(Icons.swap_horiz, AppLocalizations.of(context)!.transactions),
+              _buildInfoItem(Icons.account_balance_wallet, AppLocalizations.of(context)!.wallets),
+              _buildInfoItem(Icons.category, AppLocalizations.of(context)!.categories),
+              _buildInfoItem(Icons.flag, AppLocalizations.of(context)!.budgets),
+              _buildInfoItem(Icons.receipt_long, AppLocalizations.of(context)!.bills),
+              _buildInfoItem(Icons.repeat, AppLocalizations.of(context)!.recurringTransactions),
+              _buildInfoItem(Icons.money_off, AppLocalizations.of(context)!.debts),
+              _buildInfoItem(Icons.star, AppLocalizations.of(context)!.wishlist),
+              _buildInfoItem(Icons.savings, AppLocalizations.of(context)!.savingGoals),
+              _buildInfoItem(Icons.credit_card, AppLocalizations.of(context)!.cards),
+              _buildInfoItem(Icons.note, AppLocalizations.of(context)!.smartNotes),
+              _buildInfoItem(Icons.person, AppLocalizations.of(context)!.profile),
+              
+              const Divider(height: 24),
+              
+              // Settings Section
+              Text(
+                AppLocalizations.of(context)!.backupSettingsSection,
+                style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              _buildInfoItem(Icons.palette, AppLocalizations.of(context)!.colorPalette),
+              _buildInfoItem(Icons.style, AppLocalizations.of(context)!.cardAppearance),
+              _buildInfoItem(Icons.language, AppLocalizations.of(context)!.appLanguage),
+              _buildInfoItem(Icons.mic, AppLocalizations.of(context)!.voiceLanguage),
+              _buildInfoItem(Icons.reorder, AppLocalizations.of(context)!.menuOrder),
+              
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: Text(AppLocalizations.of(context)!.gotIt),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(IconData icon, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppColors.textSecondary),
+          const SizedBox(width: 10),
+          Text(label, style: AppTextStyles.bodyMedium),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,6 +326,13 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline, color: AppColors.textSecondary),
+            onPressed: () => _showBackupInfoDialog(context),
+            tooltip: 'Info',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),

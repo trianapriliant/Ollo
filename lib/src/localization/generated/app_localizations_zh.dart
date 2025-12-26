@@ -1876,6 +1876,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subcategory_groceries => '买菜';
 
   @override
+  String get subcategory_fruits => 'Fruits';
+
+  @override
   String get subcategory_delivery => '外卖';
 
   @override
@@ -2784,4 +2787,43 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get thisFeatureRequiresPremium => '此功能需要高级订阅';
+
+  @override
+  String get backupContentsTitle => 'Backup Contents';
+
+  @override
+  String get backupDataSection => 'Data';
+
+  @override
+  String get backupSettingsSection => 'Settings';
+
+  @override
+  String get appLanguage => 'App Language';
+
+  @override
+  String get voiceLanguage => 'Voice Language';
+
+  @override
+  String get smartNotes => 'Smart Notes';
+
+  @override
+  String get gotIt => 'Got it';
+
+  @override
+  String get budgets => 'Budgets';
+
+  @override
+  String get recurringTransactions => 'Recurring Transactions';
+
+  @override
+  String get savingGoals => 'Saving Goals';
+
+  @override
+  String get bank => 'Bank';
+
+  @override
+  String get eWallet => 'E-Wallet';
+
+  @override
+  String get blockchain => 'Blockchain';
 }

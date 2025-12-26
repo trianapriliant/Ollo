@@ -1922,6 +1922,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get subcategory_groceries => 'Sembako';
 
   @override
+  String get subcategory_fruits => 'Buah';
+
+  @override
   String get subcategory_delivery => 'Pesan Antar';
 
   @override
@@ -2850,4 +2853,43 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get thisFeatureRequiresPremium =>
       'Fitur ini memerlukan langganan premium';
+
+  @override
+  String get backupContentsTitle => 'Isi Backup';
+
+  @override
+  String get backupDataSection => 'Data';
+
+  @override
+  String get backupSettingsSection => 'Pengaturan';
+
+  @override
+  String get appLanguage => 'Bahasa Aplikasi';
+
+  @override
+  String get voiceLanguage => 'Bahasa Suara';
+
+  @override
+  String get smartNotes => 'Catatan Pintar';
+
+  @override
+  String get gotIt => 'Mengerti';
+
+  @override
+  String get budgets => 'Anggaran';
+
+  @override
+  String get recurringTransactions => 'Transaksi Berulang';
+
+  @override
+  String get savingGoals => 'Target Tabungan';
+
+  @override
+  String get bank => 'Bank';
+
+  @override
+  String get eWallet => 'E-Wallet';
+
+  @override
+  String get blockchain => 'Blockchain';
 }

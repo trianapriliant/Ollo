@@ -890,6 +890,7 @@
   "subcategory_snacks": "Snacks",
   "subcategory_drinks": "Drinks",
   "subcategory_groceries": "Groceries",
+  "subcategory_fruits": "Fruits",
   "subcategory_delivery": "Delivery",
   "subcategory_alcohol": "Alcohol",
 
@@ -1245,5 +1246,20 @@
   "pro": "PRO",
   "unlockPremiumStats": "Unlock Premium Stats",
   "premiumFeature": "Premium Feature",
-  "thisFeatureRequiresPremium": "This feature requires a premium subscription"
+  "thisFeatureRequiresPremium": "This feature requires a premium subscription",
+  "backupContentsTitle": "Backup Contents",
+  "backupDataSection": "Data",
+  "backupSettingsSection": "Settings",
+  "colorPalette": "Color Palette",
+  "appLanguage": "App Language",
+  "voiceLanguage": "Voice Language", 
+  "menuOrder": "Menu Order",
+  "smartNotes": "Smart Notes",
+  "gotIt": "Got it",
+  "budgets": "Budgets",
+  "recurringTransactions": "Recurring Transactions",
+  "savingGoals": "Saving Goals",
+  "bank": "Bank",
+  "eWallet": "E-Wallet",
+  "blockchain": "Blockchain"
 }

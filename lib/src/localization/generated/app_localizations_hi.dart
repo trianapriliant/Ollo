@@ -1896,6 +1896,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get subcategory_groceries => 'किराना';
 
   @override
+  String get subcategory_fruits => 'Fruits';
+
+  @override
   String get subcategory_delivery => 'डिलीवरी';
 
   @override
@@ -2820,4 +2823,43 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get thisFeatureRequiresPremium =>
       'इस सुविधा के लिए प्रीमियम सदस्यता आवश्यक है';
+
+  @override
+  String get backupContentsTitle => 'Backup Contents';
+
+  @override
+  String get backupDataSection => 'Data';
+
+  @override
+  String get backupSettingsSection => 'Settings';
+
+  @override
+  String get appLanguage => 'App Language';
+
+  @override
+  String get voiceLanguage => 'Voice Language';
+
+  @override
+  String get smartNotes => 'Smart Notes';
+
+  @override
+  String get gotIt => 'Got it';
+
+  @override
+  String get budgets => 'Budgets';
+
+  @override
+  String get recurringTransactions => 'Recurring Transactions';
+
+  @override
+  String get savingGoals => 'Saving Goals';
+
+  @override
+  String get bank => 'Bank';
+
+  @override
+  String get eWallet => 'E-Wallet';
+
+  @override
+  String get blockchain => 'Blockchain';
 }

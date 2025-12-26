@@ -346,17 +346,54 @@ class _SystemCategoryList extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.systemCategoryTitle, style: AppTextStyles.h3),
-                  content: Text(
-                    AppLocalizations.of(context)!.systemCategoryMessage,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(AppLocalizations.of(context)!.ok),
+                builder: (ctx) => Dialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.lock_outline, color: Colors.grey.shade600, size: 32),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          AppLocalizations.of(context)!.systemCategoryTitle,
+                          style: AppTextStyles.h3,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          AppLocalizations.of(context)!.systemCategoryMessage,
+                          style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey.shade600),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pop(ctx),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              elevation: 0,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.gotIt,
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
@@ -206,7 +207,7 @@ class _BudgetCard extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Rp ${spent.toStringAsFixed(0)} / Rp ${budget.amount.toStringAsFixed(0)}',
+                '${NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(spent)} / ${NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(budget.amount)}',
                 style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
@@ -220,8 +221,8 @@ class _BudgetCard extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 remaining >= 0 
-                  ? 'Rp ${remaining.toStringAsFixed(0)} remaining' 
-                  : 'Over budget by Rp ${(remaining.abs()).toStringAsFixed(0)}',
+                  ? '${NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(remaining)} remaining' 
+                  : 'Over budget by ${NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(remaining.abs())}',
                 style: AppTextStyles.bodySmall.copyWith(
                   color: remaining >= 0 ? Colors.grey : Colors.red,
                 ),

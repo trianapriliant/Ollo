@@ -109,6 +109,10 @@ class IconHelper {
       case 'local_florist': return Icons.local_florist;
       case 'grass': return Icons.grass;
       case 'hiking': return Icons.hiking;
+      case 'eco': return Icons.eco;
+      case 'shopping_basket': return Icons.shopping_basket;
+      case 'apple': return Icons.apple;
+      case 'fruits': return Icons.apple;
       
       // Family & People
       case 'person': return Icons.person;

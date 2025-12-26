@@ -37,8 +37,13 @@ const SavingLogSchema = CollectionSchema(
       name: r'savingGoalId',
       type: IsarType.long,
     ),
-    r'type': PropertySchema(
+    r'transactionId': PropertySchema(
       id: 4,
+      name: r'transactionId',
+      type: IsarType.long,
+    ),
+    r'type': PropertySchema(
+      id: 5,
       name: r'type',
       type: IsarType.string,
       enumMap: _SavingLogtypeEnumValueMap,
@@ -84,7 +89,8 @@ void _savingLogSerialize(
   writer.writeDateTime(offsets[1], object.date);
   writer.writeString(offsets[2], object.note);
   writer.writeLong(offsets[3], object.savingGoalId);
-  writer.writeString(offsets[4], object.type.name);
+  writer.writeLong(offsets[4], object.transactionId);
+  writer.writeString(offsets[5], object.type.name);
 }
 
 SavingLog _savingLogDeserialize(
@@ -99,7 +105,8 @@ SavingLog _savingLogDeserialize(
     id: id,
     note: reader.readStringOrNull(offsets[2]),
     savingGoalId: reader.readLong(offsets[3]),
-    type: _SavingLogtypeValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+    transactionId: reader.readLongOrNull(offsets[4]),
+    type: _SavingLogtypeValueEnumMap[reader.readStringOrNull(offsets[5])] ??
         SavingLogType.deposit,
   );
   return object;
@@ -121,6 +128,8 @@ P _savingLogDeserializeProp<P>(
     case 3:
       return (reader.readLong(offset)) as P;
     case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    case 5:
       return (_SavingLogtypeValueEnumMap[reader.readStringOrNull(offset)] ??
           SavingLogType.deposit) as P;
     default:
@@ -599,6 +608,80 @@ extension SavingLogQueryFilter
     });
   }
 
+  QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition>
+      transactionIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition>
+      transactionIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'transactionId',
+      ));
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition>
+      transactionIdEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition>
+      transactionIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition>
+      transactionIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'transactionId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition>
+      transactionIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'transactionId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<SavingLog, SavingLog, QAfterFilterCondition> typeEqualTo(
     SavingLogType value, {
     bool caseSensitive = true,
@@ -785,6 +868,18 @@ extension SavingLogQuerySortBy on QueryBuilder<SavingLog, SavingLog, QSortBy> {
     });
   }
 
+  QueryBuilder<SavingLog, SavingLog, QAfterSortBy> sortByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterSortBy> sortByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavingLog, SavingLog, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -860,6 +955,18 @@ extension SavingLogQuerySortThenBy
     });
   }
 
+  QueryBuilder<SavingLog, SavingLog, QAfterSortBy> thenByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavingLog, SavingLog, QAfterSortBy> thenByTransactionIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'transactionId', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavingLog, SavingLog, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -900,6 +1007,12 @@ extension SavingLogQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SavingLog, SavingLog, QDistinct> distinctByTransactionId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'transactionId');
+    });
+  }
+
   QueryBuilder<SavingLog, SavingLog, QDistinct> distinctByType(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -937,6 +1050,12 @@ extension SavingLogQueryProperty
   QueryBuilder<SavingLog, int, QQueryOperations> savingGoalIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'savingGoalId');
+    });
+  }
+
+  QueryBuilder<SavingLog, int?, QQueryOperations> transactionIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'transactionId');
     });
   }
 

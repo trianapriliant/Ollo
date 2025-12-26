@@ -62,7 +62,7 @@ class SavingDetailScreen extends ConsumerWidget {
             Text(currentGoal.name, style: AppTextStyles.h2),
             const SizedBox(height: 8),
             Text(
-              NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(currentGoal.currentAmount),
+              NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(currentGoal.currentAmount),
               style: AppTextStyles.h1.copyWith(fontSize: 36),
             ),
             Text(
@@ -89,7 +89,7 @@ class SavingDetailScreen extends ConsumerWidget {
               children: [
                 Text('${(progress * 100).toStringAsFixed(1)}%', style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold)),
                 Text(
-                  'Rp ${(currentGoal.targetAmount - currentGoal.currentAmount).toStringAsFixed(0)} left',
+                  '${NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(currentGoal.targetAmount - currentGoal.currentAmount)} left',
                   style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                 ),
               ],

@@ -14,6 +14,37 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.6.1',
+      date: DateTime(2025, 12, 26),
+      changes: [
+        'NEW: Card Tabs - My Cards screen now has Bank, E-Wallet, Blockchain tabs.',
+        'NEW: Blockchain card type added for crypto wallets.',
+        'NEW: Fruits subcategory under Food & Drink with voice patterns (EN/ID).',
+        'Modernized: Savings Deposit/Withdraw dialog with icon header and horizontal wallet selector.',
+        'Modernized: Percentage shortcuts (5%, 10%, 25%, 50%) based on savings target amount.',
+        'Improved: Category migration logic - subcategory icons auto-update on app update.',
+        'Improved: Add/Edit Card now shows Blockchain option in provider picker.',
+        'Fixed: Blockchain tab only shows when user has blockchain cards.',
+      ],
+    ),
+    UpdateLog(
+      version: 'Beta 0.6.0',
+      date: DateTime(2025, 12, 25),
+      changes: [
+        '🎄 Christmas Release! Major Voice Transfer Feature.',
+        'NEW: Voice Transfer - Say "Transfer 100k dari BCA ke Mandiri admin 5k" to create transfers.',
+        'NEW: Smart transfer detection with source/destination wallet parsing.',
+        'NEW: Admin fee extraction from voice input.',
+        'NEW: Category hints in voice help showing expected detection result.',
+        'Improved: Transfer review UI with visual source → destination flow.',
+        'Improved: Add Transaction screen now scrollable, buttons pinned at bottom.',
+        'Improved: Reduced spacing throughout for better space utilization.',
+        'Fixed: Transfer draft now correctly navigates to Add Transaction screen.',
+        'Fixed: Unified app version across all screens (About, Profile, Bug Report).',
+        'Updated: Voice help examples now include 5 transfer examples.',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.5.7',
       date: DateTime(2025, 12, 24),
       changes: [

@@ -238,12 +238,14 @@ const _BankCardcategoryValueEnumMap = {
 const _BankCardtypeEnumValueMap = {
   'bank': 0,
   'eWallet': 1,
-  'other': 2,
+  'blockchain': 2,
+  'other': 3,
 };
 const _BankCardtypeValueEnumMap = {
   0: CardType.bank,
   1: CardType.eWallet,
-  2: CardType.other,
+  2: CardType.blockchain,
+  3: CardType.other,
 };
 
 Id _bankCardGetId(BankCard object) {

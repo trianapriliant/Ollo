@@ -2,12 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../../localization/generated/app_localizations.dart';
 
-class AboutOlloScreen extends StatelessWidget {
+class AboutOlloScreen extends StatefulWidget {
   const AboutOlloScreen({super.key});
+
+  @override
+  State<AboutOlloScreen> createState() => _AboutOlloScreenState();
+}
+
+class _AboutOlloScreenState extends State<AboutOlloScreen> {
+  String _version = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _version = 'Beta ${info.version}';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +128,7 @@ class AboutOlloScreen extends StatelessWidget {
             
             const SizedBox(height: 48),
             Text(
-              l10n.version('1.0.0'),
+              _version.isEmpty ? '' : _version,
               style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
             ),
           ],

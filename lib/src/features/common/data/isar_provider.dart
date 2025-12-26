@@ -66,14 +66,29 @@ final isarProvider = FutureProvider<Isar>((ref) async {
           await isar.categorys.put(defaultCat);
         });
       } else {
-        // Category exists, sync subcategories (add any missing ones)
+        // Category exists, sync subcategories (add any missing ones + update icons)
         bool changed = false;
         List<SubCategory> currentSubs = List.from(existingCat.subCategories ?? []);
         
         for (final defaultSub in defaultCat.subCategories ?? <SubCategory>[]) {
-          if (!currentSubs.any((s) => s.id == defaultSub.id)) {
+          final existingSubIndex = currentSubs.indexWhere((s) => s.id == defaultSub.id);
+          
+          if (existingSubIndex == -1) {
+            // Subcategory doesn't exist, add it
             currentSubs.add(defaultSub);
             changed = true;
+          } else {
+            // Subcategory exists, check if iconPath needs update
+            final existingSub = currentSubs[existingSubIndex];
+            if (existingSub.iconPath != defaultSub.iconPath) {
+              // Update iconPath to match default
+              currentSubs[existingSubIndex] = SubCategory(
+                id: existingSub.id,
+                name: existingSub.name,
+                iconPath: defaultSub.iconPath,
+              );
+              changed = true;
+            }
           }
         }
         
@@ -131,6 +146,7 @@ final defaultCategories = [
         SubCategory(id: 'snacks', name: 'Snacks', iconPath: 'icecream'),
         SubCategory(id: 'drinks', name: 'Drinks', iconPath: 'coffee'),
         SubCategory(id: 'groceries', name: 'Groceries', iconPath: 'local_grocery_store'),
+        SubCategory(id: 'fruits', name: 'Fruits', iconPath: 'apple'),
         SubCategory(id: 'delivery', name: 'Delivery', iconPath: 'delivery_dining'),
         SubCategory(id: 'alcohol', name: 'Alcohol', iconPath: 'liquor'),
       ],

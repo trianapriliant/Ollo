@@ -430,8 +430,8 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
     switch (type) {
       case CardType.bank: return Icons.account_balance;
       case CardType.eWallet: return Icons.account_balance_wallet;
+      case CardType.blockchain: return Icons.currency_bitcoin;
       case CardType.other: return Icons.credit_card;
-      default: return Icons.payment;
     }
   }
 

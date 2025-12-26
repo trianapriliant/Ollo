@@ -449,39 +449,70 @@ class _PayBillDialogState extends ConsumerState<_PayBillDialog> {
           Text(AppLocalizations.of(context)!.payFrom, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
           const SizedBox(height: 8),
           if (_isLoadingWallets)
-            const LinearProgressIndicator()
+            const Center(child: CircularProgressIndicator())
           else if (_wallets.isEmpty)
             Text(AppLocalizations.of(context)!.noWalletsFound, style: const TextStyle(color: Colors.red))
           else
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<Wallet>(
-                  value: _selectedWallet,
-                  isExpanded: true,
-                  items: _wallets.map((wallet) {
-                    return DropdownMenuItem(
-                      value: wallet,
-                      child: Row(
+            SizedBox(
+              height: 80,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _wallets.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final wallet = _wallets[index];
+                  final isSelected = _selectedWallet?.id == wallet.id;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedWallet = wallet),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 140,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isSelected ? AppColors.primary : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.account_balance_wallet, size: 16, color: AppColors.primary),
-                          const SizedBox(width: 8),
-                          Expanded(child: Text(wallet.name, style: AppTextStyles.bodyMedium)),
-                          Text(currency.format(wallet.balance), style: AppTextStyles.bodySmall),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.account_balance_wallet,
+                                size: 16,
+                                color: isSelected ? AppColors.primary : Colors.grey[600],
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  wallet.name,
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            currency.format(wallet.balance),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: isSelected ? AppColors.primary : Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (Wallet? value) {
-                    setState(() {
-                      _selectedWallet = value;
-                    });
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
 

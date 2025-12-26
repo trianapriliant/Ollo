@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
@@ -61,7 +62,7 @@ class BudgetSummaryCard extends ConsumerWidget {
                             style: AppTextStyles.bodySmall.copyWith(color: Colors.grey[600]),
                           ),
                           Text(
-                            'Rp ${remaining < 0 ? 0 : remaining.toStringAsFixed(0)}',
+                            NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(remaining < 0 ? 0 : remaining),
                             style: AppTextStyles.h3.copyWith(color: AppColors.primary),
                           ),
                           Text(
@@ -160,11 +161,11 @@ class BudgetSummaryCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Rp ${totalSpent.toStringAsFixed(0)}',
+                        NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(totalSpent),
                         style: AppTextStyles.h3,
                       ),
                       Text(
-                        ' / Rp ${totalBudget.toStringAsFixed(0)}',
+                        ' / ${NumberFormat.currency(locale: 'en_US', symbol: 'Rp ', decimalDigits: 0).format(totalBudget)}',
                         style: AppTextStyles.h3.copyWith(color: Colors.grey),
                       ),
                     ],

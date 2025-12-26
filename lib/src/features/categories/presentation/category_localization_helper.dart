@@ -112,6 +112,7 @@ class CategoryLocalizationHelper {
       'snacks': l10n.subcategory_snacks,
       'drinks': l10n.subcategory_drinks,
       'groceries': l10n.subcategory_groceries,
+      'fruits': l10n.subcategory_fruits,
       'delivery': l10n.subcategory_delivery,
       'alcohol': l10n.subcategory_alcohol,
 

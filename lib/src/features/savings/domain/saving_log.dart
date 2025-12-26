@@ -17,6 +17,8 @@ class SavingLog {
   late DateTime date;
   
   String? note;
+  
+  int? transactionId; // Link to Transaction for cascade delete
 
   SavingLog({
     this.id = Isar.autoIncrement,
@@ -25,6 +27,7 @@ class SavingLog {
     required this.type,
     required this.date,
     this.note,
+    this.transactionId,
   });
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class SavingLog {
       'type': type.name,
       'date': date.toIso8601String(),
       'note': note,
+      'transactionId': transactionId,
     };
   }
 
@@ -45,6 +49,7 @@ class SavingLog {
       type: SavingLogType.values.firstWhere((e) => e.name == json['type']),
       date: DateTime.parse(json['date'] as String),
       note: json['note'] as String?,
+      transactionId: json['transactionId'] as int?,
     )..id = json['id'] as int;
   }
 }

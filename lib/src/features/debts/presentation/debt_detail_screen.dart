@@ -305,77 +305,207 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppLocalizations.of(context)!.addPayment, style: AppTextStyles.h2),
-              const SizedBox(height: 24),
+              // Header with icon
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.payment, color: AppColors.primary, size: 24),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(AppLocalizations.of(context)!.addPayment, style: AppTextStyles.h2),
+                ],
+              ),
+              const SizedBox(height: 20),
               
-              // Percentage Shortcuts
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (final percent in [0.25, 0.5, 1.0])
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ActionChip(
-                          label: Text(percent == 1.0 ? 'Full' : '${(percent * 100).toInt()}%'),
-                          backgroundColor: AppColors.primary.withOpacity(0.1),
-                          labelStyle: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
-                          onPressed: () {
-                            final remaining = _debt.remainingAmount;
-                            final amount = remaining * percent;
-                            amountController.text = amount.toStringAsFixed(0);
-                          },
+              // Percentage Shortcuts - Modern pills
+              Row(
+                children: [
+                  for (final percent in [0.25, 0.5, 1.0])
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: percent == 1.0 ? 0 : 8),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () {
+                              final remaining = _debt.remainingAmount;
+                              final amount = remaining * percent;
+                              amountController.text = amount.toStringAsFixed(0);
+                              setModalState(() {});
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  percent == 1.0 ? 'Full' : '${(percent * 100).toInt()}%',
+                                  style: TextStyle(
+                                    color: AppColors.primary, 
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
-              TextField(
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.amount,
-                  prefixText: 'Rp ',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              // Amount - Borderless filled
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: TextField(
+                  controller: amountController,
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.amount,
+                    labelStyle: TextStyle(color: Colors.grey.shade600),
+                    prefixText: 'Rp ',
+                    prefixStyle: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               
-              // Wallet Selector
+              // Wallet Selector - Modern horizontal cards
+              Text(
+                '${AppLocalizations.of(context)!.wallet} (${AppLocalizations.of(context)!.optional})',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+              ),
+              const SizedBox(height: 8),
               FutureBuilder(
                 future: ref.read(walletRepositoryProvider.future).then((repo) => repo.getAllWallets()),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const SizedBox();
+                  if (!snapshot.hasData) return const SizedBox(height: 60);
                   final wallets = snapshot.data as List<Wallet>;
-                  return DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      labelText: '${AppLocalizations.of(context)!.wallet} (Optional)',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  return SizedBox(
+                    height: 70,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        // None option
+                        GestureDetector(
+                          onTap: () => setModalState(() => selectedWalletId = null),
+                          child: Container(
+                            width: 80,
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: BoxDecoration(
+                              color: selectedWalletId == null 
+                                  ? AppColors.primary.withOpacity(0.1) 
+                                  : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(14),
+                              border: selectedWalletId == null 
+                                  ? Border.all(color: AppColors.primary, width: 2)
+                                  : null,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.block,
+                                  color: selectedWalletId == null ? AppColors.primary : Colors.grey,
+                                  size: 22,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'None',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: selectedWalletId == null ? FontWeight.w600 : FontWeight.normal,
+                                    color: selectedWalletId == null ? AppColors.primary : Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Wallet options
+                        ...wallets.map((w) => GestureDetector(
+                          onTap: () => setModalState(() => selectedWalletId = w.id.toString()),
+                          child: Container(
+                            width: 80,
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: BoxDecoration(
+                              color: selectedWalletId == w.id.toString()
+                                  ? AppColors.primary.withOpacity(0.1)
+                                  : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(14),
+                              border: selectedWalletId == w.id.toString()
+                                  ? Border.all(color: AppColors.primary, width: 2)
+                                  : null,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.account_balance_wallet,
+                                  color: selectedWalletId == w.id.toString() ? AppColors.primary : Colors.grey,
+                                  size: 22,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  w.name,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: selectedWalletId == w.id.toString() ? FontWeight.w600 : FontWeight.normal,
+                                    color: selectedWalletId == w.id.toString() ? AppColors.primary : Colors.grey.shade700,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
+                      ],
                     ),
-                    items: [
-                      const DropdownMenuItem(value: null, child: Text('None (Just record)')),
-                      ...wallets.map((w) => DropdownMenuItem(value: w.id.toString(), child: Text(w.name))),
-                    ],
-                    onChanged: (val) => setModalState(() => selectedWalletId = val),
                   );
                 },
               ),
               const SizedBox(height: 16),
               
-              TextField(
-                controller: noteController,
-                decoration: InputDecoration(
-                  labelText: '${AppLocalizations.of(context)!.note} (Optional)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              // Note - Borderless filled
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: TextField(
+                  controller: noteController,
+                  style: AppTextStyles.bodyMedium,
+                  decoration: InputDecoration(
+                    labelText: '${AppLocalizations.of(context)!.note} (${AppLocalizations.of(context)!.optional})',
+                    labelStyle: TextStyle(color: Colors.grey.shade600),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
               
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 52,
                 child: ElevatedButton(
                   onPressed: () async {
                     final amount = double.tryParse(amountController.text);
@@ -388,8 +518,12 @@ class _DebtDetailScreenState extends ConsumerState<DebtDetailScreen> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 0,
                   ),
-                  child: Text(AppLocalizations.of(context)!.confirmPayment),
+                  child: Text(
+                    AppLocalizations.of(context)!.confirmPayment,
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  ),
                 ),
               ),
             ],

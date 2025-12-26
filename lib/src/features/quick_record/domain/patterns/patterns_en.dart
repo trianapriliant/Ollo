@@ -64,10 +64,21 @@ const Map<String, CategoryPattern> englishPatterns = {
         'market', 'supermarket', 'convenience store',
         'walmart', 'costco', 'target', 'whole foods',
         'kroger', 'publix', 'safeway', 'trader joe\'s',
-        'vegetables', 'fruits', 'meat', 'beef', 'chicken',
+        'vegetables', 'meat', 'beef', 'chicken',
         'fish', 'seafood', 'rice', 'oil', 'bread',
         'milk', 'eggs', 'butter', 'cheese',
         'household items'
+      ],
+
+      'Fruits': [
+        'fruit', 'fruits', 'fresh fruit', 'fruit basket',
+        'apple', 'apples', 'banana', 'bananas', 'orange', 'oranges',
+        'mango', 'mangoes', 'grape', 'grapes', 'strawberry', 'strawberries',
+        'watermelon', 'melon', 'pineapple', 'papaya', 'kiwi',
+        'pear', 'peach', 'plum', 'cherry', 'cherries',
+        'blueberry', 'blueberries', 'raspberry', 'raspberries',
+        'lemon', 'lime', 'avocado', 'coconut', 'pomegranate',
+        'dragon fruit', 'durian', 'lychee', 'passion fruit'
       ],
 
       'Delivery': [

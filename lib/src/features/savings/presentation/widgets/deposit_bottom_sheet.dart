@@ -34,14 +34,12 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final walletsAsync = ref.watch(walletRepositoryProvider.select((repo) => repo.value?.watchWallets()));
-
     return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 20,
-        right: 20,
-        top: 20,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        left: 24,
+        right: 24,
+        top: 24,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -54,46 +52,80 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
+              // Header with icon
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: (widget.isDeposit ? AppColors.primary : Colors.red).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      widget.isDeposit ? Icons.savings : Icons.money_off,
+                      color: widget.isDeposit ? AppColors.primary : Colors.red,
+                      size: 24,
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                widget.isDeposit ? 'Deposit to ${widget.goal.name}' : 'Withdraw from ${widget.goal.name}',
-                style: AppTextStyles.h2,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.isDeposit ? 'Deposit' : 'Withdraw',
+                          style: AppTextStyles.h2,
+                        ),
+                        Text(
+                          widget.goal.name,
+                          style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               
-              // Amount Input
-              TextFormField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  prefixIcon: const Icon(Icons.attach_money),
-                  prefixText: 'Rp ',
+              // Amount Input - Borderless filled
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                validator: (val) {
-                  if (val == null || val.isEmpty) return 'Please enter an amount';
-                  final amount = double.tryParse(val);
-                  if (amount == null || amount <= 0) return 'Invalid amount';
-                  if (!widget.isDeposit && amount > widget.goal.currentAmount) {
-                    return 'Insufficient savings balance';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600),
+                  decoration: InputDecoration(
+                    labelText: 'Amount',
+                    labelStyle: TextStyle(color: Colors.grey.shade600),
+                    prefixText: 'Rp ',
+                    prefixStyle: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                    border: InputBorder.none,
+                  ),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) return 'Please enter an amount';
+                    final amount = double.tryParse(val);
+                    if (amount == null || amount <= 0) return 'Invalid amount';
+                    if (!widget.isDeposit && amount > widget.goal.currentAmount) {
+                      return 'Insufficient savings balance';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
-              // Wallet Selector
+              // Wallet Selector - Modern horizontal cards
+              Text(
+                widget.isDeposit ? 'From Wallet' : 'To Wallet',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+              ),
+              const SizedBox(height: 8),
               StreamBuilder<List<Wallet>>(
                 stream: ref.watch(walletRepositoryProvider).value?.watchWallets() ?? const Stream.empty(),
                 builder: (context, snapshot) {
@@ -108,46 +140,139 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
                     });
                   }
 
-                  return DropdownButtonFormField<String>(
-                    value: _selectedWalletId,
-                    decoration: InputDecoration(
-                      labelText: widget.isDeposit ? 'From Wallet' : 'To Wallet',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
-                    ),
-                    items: wallets.map((w) {
-                      final id = w.externalId ?? w.id.toString();
-                      return DropdownMenuItem(
-                        value: id,
-                        child: Text('${w.name} (Rp ${w.balance.toStringAsFixed(0)})'),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      if (val != null) setState(() => _selectedWalletId = val);
-                    },
-                    validator: (val) => val == null ? 'Please select a wallet' : null,
+                  // Get selected wallet for percentage calculations
+                  final selectedWallet = wallets.where((w) {
+                    final id = w.externalId ?? w.id.toString();
+                    return id == _selectedWalletId;
+                  }).firstOrNull;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 80,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: wallets.length,
+                          itemBuilder: (context, index) {
+                            final w = wallets[index];
+                            final id = w.externalId ?? w.id.toString();
+                            final isSelected = _selectedWalletId == id;
+                            
+                            return GestureDetector(
+                              onTap: () => setState(() => _selectedWalletId = id),
+                              child: Container(
+                                width: 100,
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: isSelected 
+                                      ? AppColors.primary.withOpacity(0.1) 
+                                      : Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: isSelected 
+                                      ? Border.all(color: AppColors.primary, width: 2)
+                                      : null,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.account_balance_wallet,
+                                      color: isSelected ? AppColors.primary : Colors.grey,
+                                      size: 22,
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      w.name,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                        color: isSelected ? AppColors.primary : Colors.grey.shade700,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                      'Rp ${w.balance.toStringAsFixed(0)}',
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        color: isSelected ? AppColors.primary : Colors.grey.shade500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      
+                      // Percentage shortcuts (% of target amount) - Deposit only
+                      if (widget.isDeposit && widget.goal.targetAmount > 0) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          '% of target (Rp ${widget.goal.targetAmount.toStringAsFixed(0)})',
+                          style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            for (final pct in [5, 10, 25, 50])
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    final amount = (widget.goal.targetAmount * pct / 100).round();
+                                    _amountController.text = amount.toString();
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade100,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '$pct%',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ],
                   );
                 },
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
               // Submit Button
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 52,
                 child: ElevatedButton(
                   onPressed: _submitTransaction,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: widget.isDeposit ? AppColors.primary : Colors.red,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 0,
                   ),
                   child: Text(
                     widget.isDeposit ? 'Confirm Deposit' : 'Confirm Withdraw',
-                    style: AppTextStyles.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -191,16 +316,7 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
       await walletRepo.updateWallet(wallet);
       await savingRepo.updateSavingGoal(widget.goal);
 
-      // 5. Create Log
-      final log = SavingLog(
-        savingGoalId: widget.goal.id,
-        amount: amount,
-        type: widget.isDeposit ? SavingLogType.deposit : SavingLogType.withdraw,
-        date: DateTime.now(),
-      );
-      await savingRepo.addLog(log);
-
-      // 6. Create System Transaction
+      // 5. Create System Transaction FIRST (to get ID)
       final transaction = Transaction.create(
         title: widget.isDeposit ? 'Deposit to ${widget.goal.name}' : 'Withdraw from ${widget.goal.name}',
         amount: amount,
@@ -211,6 +327,16 @@ class _DepositBottomSheetState extends ConsumerState<DepositBottomSheet> {
         date: DateTime.now(),
       );
       await transactionRepo.addTransaction(transaction);
+
+      // 6. Create Log with transactionId for cascade delete
+      final log = SavingLog(
+        savingGoalId: widget.goal.id,
+        amount: amount,
+        type: widget.isDeposit ? SavingLogType.deposit : SavingLogType.withdraw,
+        date: DateTime.now(),
+        transactionId: transaction.id, // Link to transaction
+      );
+      await savingRepo.addLog(log);
 
       if (mounted) context.pop();
     }

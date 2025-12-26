@@ -255,8 +255,8 @@ class DailyData {
 
 final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>((ref, date) async {
   final transactions = await ref.watch(transactionListProvider.future);
-  final savingRepo = ref.watch(savingRepositoryProvider);
-  final savingLogs = await savingRepo.getAllLogs();
+  // Watch the savingLog stream for reactive updates when logs change
+  final savingLogs = await ref.watch(savingLogListProvider.future);
   
   final monthStart = DateTime(date.year, date.month, 1);
   final monthEnd = DateTime(date.year, date.month + 1, 0);

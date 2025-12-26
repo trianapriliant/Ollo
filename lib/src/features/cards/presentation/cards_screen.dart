@@ -16,9 +16,29 @@ class CardsScreen extends ConsumerStatefulWidget {
   ConsumerState<CardsScreen> createState() => _CardsScreenState();
 }
 
-class _CardsScreenState extends ConsumerState<CardsScreen> {
+class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProviderStateMixin {
   final Set<int> _selectedIds = {};
   bool get _isMultiSelectMode => _selectedIds.isNotEmpty;
+  TabController? _tabController;
+  int _lastTabCount = 2;
+
+  void _initTabController(int tabCount) {
+    _tabController?.dispose();
+    _tabController = TabController(length: tabCount, vsync: this);
+    _lastTabCount = tabCount;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initTabController(2); // Default to 2 tabs
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
 
   void _toggleSelection(int id) {
     setState(() {
@@ -48,103 +68,180 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
     });
   }
 
+  CardType _getTypeForTab(int index) {
+    switch (index) {
+      case 0: return CardType.bank;
+      case 1: return CardType.eWallet;
+      case 2: return CardType.blockchain;
+      default: return CardType.bank;
+    }
+  }
+
+  IconData _getIconForType(CardType type) {
+    switch (type) {
+      case CardType.bank: return Icons.account_balance;
+      case CardType.eWallet: return Icons.account_balance_wallet;
+      case CardType.blockchain: return Icons.currency_bitcoin;
+      case CardType.other: return Icons.credit_card;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cardsAsync = ref.watch(cardListProvider);
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          _isMultiSelectMode ? l10n.selectedCount(_selectedIds.length) : l10n.myCards,
-          style: AppTextStyles.h2,
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(_isMultiSelectMode ? Icons.close : Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            if (_isMultiSelectMode) {
-              setState(() => _selectedIds.clear());
-            } else {
-              context.pop();
+    return cardsAsync.when(
+      data: (cards) {
+        final hasBlockchain = cards.any((c) => c.type == CardType.blockchain);
+        final tabCount = hasBlockchain ? 3 : 2;
+        
+        // Schedule tab controller update for next frame if needed
+        if (_lastTabCount != tabCount) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _initTabController(tabCount);
+              });
             }
-          },
-        ),
-        actions: [
-          if (_isMultiSelectMode)
-            IconButton(
-              icon: const Icon(Icons.copy_all, color: AppColors.primary),
-              onPressed: () => cardsAsync.whenData((cards) => _copySelected(cards, l10n)),
+          });
+        }
+        
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: Text(
+              _isMultiSelectMode ? l10n.selectedCount(_selectedIds.length) : l10n.myCards,
+              style: AppTextStyles.h2,
             ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            onSelected: (value) {
-              if (value == 'home') {
-                context.go('/home');
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'home',
-                  child: Row(
-                    children: [
-                      const Icon(Icons.home, color: Colors.black),
-                      const SizedBox(width: 8),
-                      Text(l10n.home),
-                    ],
-                  ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(_isMultiSelectMode ? Icons.close : Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                if (_isMultiSelectMode) {
+                  setState(() => _selectedIds.clear());
+                } else {
+                  context.pop();
+                }
+              },
+            ),
+            actions: [
+              if (_isMultiSelectMode)
+                IconButton(
+                  icon: const Icon(Icons.copy_all, color: AppColors.primary),
+                  onPressed: () => _copySelected(cards, l10n),
                 ),
-              ];
-            },
-          ),
-        ],
-      ),
-      body: cardsAsync.when(
-        data: (cards) {
-          if (cards.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.credit_card, size: 64, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text(l10n.noCardsYet, style: AppTextStyles.h3.copyWith(color: Colors.grey)),
-                  const SizedBox(height: 8),
-                  Text(l10n.addCardsMessage, style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
-                ],
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, color: Colors.black),
+                onSelected: (value) {
+                  if (value == 'home') {
+                    context.go('/home');
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem<String>(
+                      value: 'home',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.home, color: Colors.black),
+                          const SizedBox(width: 8),
+                          Text(l10n.home),
+                        ],
+                      ),
+                    ),
+                  ];
+                },
               ),
-            );
-          }
-
-          // Sort: Pinned first
-          // Note: Repository already sorts by pinned desc, but we ensure it here if needed or just trust repo.
-          // Repo does: sortByIsPinnedDesc().thenByName()
-          
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: cards.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
-            itemBuilder: (context, index) {
-              final card = cards[index];
-              return _buildCardItem(context, card, l10n);
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
-      ),
-      floatingActionButton: _isMultiSelectMode 
-          ? null 
-          : FloatingActionButton(
-              heroTag: 'cards_fab',
-              onPressed: () => context.push('/cards/add'),
-              backgroundColor: AppColors.primary,
-              child: const Icon(Icons.add, color: Colors.white),
+            ],
+            bottom: TabBar(
+              controller: _tabController,
+              labelColor: AppColors.primary,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: AppColors.primary,
+              tabs: [
+                Tab(
+                  icon: const Icon(Icons.account_balance, size: 20),
+                  text: l10n.bank,
+                ),
+                Tab(
+                  icon: const Icon(Icons.account_balance_wallet, size: 20),
+                  text: l10n.eWallet,
+                ),
+                if (_lastTabCount == 3)
+                  Tab(
+                    icon: const Icon(Icons.currency_bitcoin, size: 20),
+                    text: l10n.blockchain,
+                  ),
+              ],
             ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildCardList(cards.where((c) => c.type == CardType.bank).toList(), l10n, CardType.bank),
+              _buildCardList(cards.where((c) => c.type == CardType.eWallet).toList(), l10n, CardType.eWallet),
+              if (_lastTabCount == 3)
+                _buildCardList(cards.where((c) => c.type == CardType.blockchain).toList(), l10n, CardType.blockchain),
+            ],
+          ),
+          floatingActionButton: _isMultiSelectMode 
+              ? null 
+              : FloatingActionButton(
+                  heroTag: 'cards_fab',
+                  onPressed: () => context.push('/cards/add'),
+                  backgroundColor: AppColors.primary,
+                  child: const Icon(Icons.add, color: Colors.white),
+                ),
+        );
+      },
+      loading: () => Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(l10n.myCards, style: AppTextStyles.h2),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => context.pop(),
+          ),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (err, stack) => Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(child: Text('Error: $err')),
+      ),
+    );
+  }
+
+  Widget _buildCardList(List<BankCard> cards, AppLocalizations l10n, CardType type) {
+    if (cards.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(_getIconForType(type), size: 64, color: Colors.grey[300]),
+            const SizedBox(height: 16),
+            Text(l10n.noCardsYet, style: AppTextStyles.h3.copyWith(color: Colors.grey)),
+            const SizedBox(height: 8),
+            Text(l10n.addCardsMessage, style: AppTextStyles.bodySmall.copyWith(color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: cards.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
+      itemBuilder: (context, index) {
+        final card = cards[index];
+        return _buildCardItem(context, card, l10n);
+      },
     );
   }
 
@@ -206,7 +303,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Icon(
-                          card.type == CardType.bank ? Icons.account_balance : Icons.account_balance_wallet,
+                          _getIconForType(card.type),
                           color: Colors.white.withOpacity(0.8),
                         ),
                         const SizedBox(height: 4),

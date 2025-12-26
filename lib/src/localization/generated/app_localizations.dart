@@ -3678,6 +3678,12 @@ abstract class AppLocalizations {
   /// **'Groceries'**
   String get subcategory_groceries;
 
+  /// No description provided for @subcategory_fruits.
+  ///
+  /// In en, this message translates to:
+  /// **'Fruits'**
+  String get subcategory_fruits;
+
   /// No description provided for @subcategory_delivery.
   ///
   /// In en, this message translates to:
@@ -5477,6 +5483,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This feature requires a premium subscription'**
   String get thisFeatureRequiresPremium;
+
+  /// No description provided for @backupContentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup Contents'**
+  String get backupContentsTitle;
+
+  /// No description provided for @backupDataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get backupDataSection;
+
+  /// No description provided for @backupSettingsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get backupSettingsSection;
+
+  /// No description provided for @appLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'App Language'**
+  String get appLanguage;
+
+  /// No description provided for @voiceLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Language'**
+  String get voiceLanguage;
+
+  /// No description provided for @smartNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Notes'**
+  String get smartNotes;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotIt;
+
+  /// No description provided for @budgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get budgets;
+
+  /// No description provided for @recurringTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Transactions'**
+  String get recurringTransactions;
+
+  /// No description provided for @savingGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving Goals'**
+  String get savingGoals;
+
+  /// No description provided for @bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get bank;
+
+  /// No description provided for @eWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'E-Wallet'**
+  String get eWallet;
+
+  /// No description provided for @blockchain.
+  ///
+  /// In en, this message translates to:
+  /// **'Blockchain'**
+  String get blockchain;
 }
 
 class _AppLocalizationsDelegate

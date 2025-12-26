@@ -5,6 +5,7 @@ part 'card.g.dart';
 enum CardType {
   bank,
   eWallet,
+  blockchain,
   other,
 }
 

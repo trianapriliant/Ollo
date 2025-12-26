@@ -71,13 +71,24 @@ const Map<String, CategoryPattern> indonesianPatterns = {
       ],
 
       'Groceries': [
-        'belanja', 'belanja bulanan', 'sayur', 'buah', 
+        'belanja', 'belanja bulanan', 'sayur', 
         'beras', 'minyak', 'telur', 'bumbu', 'gula', 'garam',
         'tisu', 'sabun', 'susu', 'baygon', 'mie instan',
         'supermarket', 'pasar', 'indomaret', 'alfamart',
         'superindo', 'lottemart', 'hypermart', 'fresh market',
         'grocery', 'groceries', 'belanja dapur', 'bahan makanan', 'belanja makanan', 'belanja bahan makanan',
-        'market', 'supermarket', 'convenience store', 'vegetables', 'fruits', 'rice', 'oil', 'galon', 'galon air', 'galon air minum', 'galon akua', 'akua', 'le mineral'
+        'market', 'supermarket', 'convenience store', 'vegetables', 'rice', 'oil', 'galon', 'galon air', 'galon air minum', 'galon akua', 'akua', 'le mineral'
+      ],
+
+      'Fruits': [
+        'buah', 'buah-buahan', 'buah buahan', 'beli buah', 'buah segar',
+        'apel', 'pisang', 'jeruk', 'mangga', 'anggur', 
+        'strawberry', 'stroberi', 'semangka', 'melon', 'nanas', 'pepaya', 
+        'pir', 'persik', 'plum', 'ceri', 'blueberry', 'raspberry',
+        'lemon', 'limau', 'alpukat', 'kelapa', 'delima',
+        'durian', 'leci', 'rambutan', 'manggis', 'salak', 'duku', 'langsat',
+        'jambu', 'jambu biji', 'sirsak', 'nangka', 'sawo', 'markisa',
+        'fruit', 'fruits', 'banana', 'orange', 'apple', 'mango', 'grape'
       ],
 
       'Delivery': [

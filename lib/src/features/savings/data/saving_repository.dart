@@ -16,6 +16,7 @@ abstract class SavingRepository {
   Future<void> addLog(SavingLog log);
   Future<List<SavingLog>> getLogsForGoal(int goalId);
   Future<List<SavingLog>> getAllLogs();
+  Stream<List<SavingLog>> watchAllLogs();
   Future<void> clearAll();
   Future<void> importAll(List<SavingGoal> goals, List<SavingLog> logs);
 }
@@ -79,6 +80,11 @@ class IsarSavingRepository implements SavingRepository {
   }
 
   @override
+  Stream<List<SavingLog>> watchAllLogs() {
+    return isar.savingLogs.where().watch(fireImmediately: true);
+  }
+
+  @override
   Future<void> clearAll() async {
     await isar.writeTxn(() async {
       await isar.savingLogs.clear();
@@ -104,4 +110,9 @@ final savingRepositoryProvider = Provider<IsarSavingRepository>((ref) {
 final savingListProvider = StreamProvider<List<SavingGoal>>((ref) {
   final repo = ref.watch(savingRepositoryProvider);
   return repo.watchSavingGoals();
+});
+
+final savingLogListProvider = StreamProvider<List<SavingLog>>((ref) {
+  final repo = ref.watch(savingRepositoryProvider);
+  return repo.watchAllLogs();
 });

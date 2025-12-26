@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bills/data/bill_repository.dart';
 import '../../bills/domain/bill.dart';
@@ -70,6 +71,16 @@ class BackupService {
     final savingLogs = await savingRepo.getAllLogs();
     final cards = await cardRepo.watchCards().first; // Stream
     final profile = await profileRepo.getUserProfile();
+    
+    // Fetch settings from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final settings = {
+      'transaction_color_theme': prefs.getInt('transaction_color_theme'),
+      'main_card_theme': prefs.getString('main_card_theme'),
+      'language_code': prefs.getString('language_code'),
+      'voice_language_code': prefs.getString('voice_language_code'),
+      'dashboard_menu_order': prefs.getStringList('dashboard_menu_order'),
+    };
 
     // 2. Construct Data Map
     final backupData = {
@@ -89,6 +100,7 @@ class BackupService {
         'savingLogs': savingLogs.map((e) => e.toJson()).toList(),
         'cards': cards.map((e) => e.toJson()).toList(),
         'profile': profile.toJson(),
+        'settings': settings,
       }
     };
 
@@ -219,6 +231,38 @@ class BackupService {
     
     if (profile != null) {
       await profileRepo.importProfile(profile);
+    }
+    
+    // 5. Restore Settings from SharedPreferences (if present in backup)
+    if (data['settings'] != null) {
+      final settings = data['settings'] as Map<String, dynamic>;
+      final prefs = await SharedPreferences.getInstance();
+      
+      // Color Palette Theme
+      if (settings['transaction_color_theme'] != null) {
+        await prefs.setInt('transaction_color_theme', settings['transaction_color_theme'] as int);
+      }
+      
+      // Card Appearance Theme
+      if (settings['main_card_theme'] != null) {
+        await prefs.setString('main_card_theme', settings['main_card_theme'] as String);
+      }
+      
+      // App Language
+      if (settings['language_code'] != null) {
+        await prefs.setString('language_code', settings['language_code'] as String);
+      }
+      
+      // Voice Input Language
+      if (settings['voice_language_code'] != null) {
+        await prefs.setString('voice_language_code', settings['voice_language_code'] as String);
+      }
+      
+      // Dashboard Menu Order
+      if (settings['dashboard_menu_order'] != null) {
+        await prefs.setStringList('dashboard_menu_order', 
+            (settings['dashboard_menu_order'] as List).cast<String>());
+      }
     }
   }
 }
