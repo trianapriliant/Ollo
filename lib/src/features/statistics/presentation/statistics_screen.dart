@@ -49,6 +49,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
     final monthlyStatsAsync = ref.watch(monthlyStatisticsProvider(_selectedDate));
     final dailyStatsAsync = ref.watch(dailyStatisticsProvider(_selectedDate));
+    final weeklyDailyStatsAsync = ref.watch(weeklyDailyStatisticsProvider(_selectedDate));
     final weeklyStatsAsync = ref.watch(weeklyStatisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
 
     final comparativeAsync = ref.watch(comparativeStatisticsProvider(StatisticsFilter(isExpense: _isExpense, timeRange: _timeRange, date: _selectedDate)));
@@ -151,7 +152,40 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
               const SizedBox(height: 16),
 
               // 6. Trend Chart Section
-              if (_timeRange == TimeRange.month)
+              if (_timeRange == TimeRange.week)
+                weeklyDailyStatsAsync.when(
+                  data: (data) {
+                    if (data.isEmpty) return const SizedBox();
+                    
+                    // Calculate Averages for 7 days
+                    double totalIncome = 0;
+                    double totalExpense = 0;
+                    double totalSavings = 0;
+                    
+                    for (var day in data) {
+                      totalIncome += day.income;
+                      totalExpense += day.expense;
+                      totalSavings += day.savings;
+                    }
+                    
+                    final avgIncome = totalIncome / 7;
+                    final avgExpense = totalExpense / 7;
+                    final avgSavings = totalSavings / 7;
+
+                    return DailyStackedBarChart(
+                      data: data,
+                      currency: currency,
+                      avgIncome: avgIncome,
+                      avgExpense: avgExpense,
+                      avgSavings: avgSavings,
+                      selectedDate: _selectedDate,
+                      isWeekly: true,
+                    );
+                  },
+                  loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+                  error: (_, __) => const SizedBox(),
+                )
+              else if (_timeRange == TimeRange.month)
                 dailyStatsAsync.when(
                   data: (data) {
                     if (data.isEmpty) return const SizedBox();
@@ -230,7 +264,29 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(AppLocalizations.of(context)!.dailyOverview, style: AppTextStyles.h3),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(AppLocalizations.of(context)!.monthlyOverview, style: AppTextStyles.h3),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'Avg Inc: ${currency.format(avgIncome)}',
+                                    style: AppTextStyles.bodySmall.copyWith(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Avg Exp: ${currency.format(avgExpense)}',
+                                    style: AppTextStyles.bodySmall.copyWith(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 16),
                         MonthlyBarChart(
                           data: data,
@@ -253,7 +309,11 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 child: comparativeAsync.when(
                   data: (data) {
                     if (data == null) return const SizedBox();
-                    return ComparativeAnalysisCard(data: data, isExpense: _isExpense);
+                    return ComparativeAnalysisCard(
+                      data: data, 
+                      isExpense: _isExpense,
+                      timeRange: _timeRange,
+                    );
                   }, 
                   loading: () => const SizedBox(), 
                   error: (_,__) => const SizedBox(),
@@ -354,7 +414,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
 
   void _changeDate(int offset) {
     setState(() {
-      if (_timeRange == TimeRange.month) {
+      if (_timeRange == TimeRange.week) {
+        _selectedDate = _selectedDate.add(Duration(days: offset * 7));
+      } else if (_timeRange == TimeRange.month) {
         _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + offset, 1);
       } else {
         _selectedDate = DateTime(_selectedDate.year + offset, 1, 1);

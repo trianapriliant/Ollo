@@ -1412,6 +1412,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get monthlyComparison => 'Perbandingan Bulanan';
 
   @override
+  String get yearlyComparison => 'Perbandingan Tahunan';
+
+  @override
+  String get weeklyComparison => 'Perbandingan Mingguan';
+
+  @override
+  String get weeklyOverview => 'Ringkasan Mingguan';
+
+  @override
   String get spendingLessNote =>
       'Anda menghabiskan lebih sedikit dari bulan lalu!';
 

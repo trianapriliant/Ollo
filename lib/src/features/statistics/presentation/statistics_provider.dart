@@ -9,7 +9,7 @@ import '../../savings/data/saving_repository.dart';
 import '../../savings/domain/saving_log.dart';
 import '../../transactions/domain/transaction.dart';
 
-enum TimeRange { month, year }
+enum TimeRange { week, month, year }
 
 class StatisticsFilter {
   final bool isExpense;
@@ -26,10 +26,18 @@ class StatisticsFilter {
           isExpense == other.isExpense &&
           timeRange == other.timeRange &&
           date.year == other.date.year &&
-          date.month == other.date.month;
+          date.month == other.date.month &&
+          (timeRange != TimeRange.week || _weekNumber(date) == _weekNumber(other.date));
+
+  int _weekNumber(DateTime date) {
+    final firstDayOfYear = DateTime(date.year, 1, 1);
+    final dayOfYear = date.difference(firstDayOfYear).inDays;
+    return (dayOfYear / 7).floor() + 1;
+  }
 
   @override
-  int get hashCode => Object.hash(isExpense, timeRange, date.year, date.month);
+  int get hashCode => Object.hash(isExpense, timeRange, date.year, date.month, 
+    timeRange == TimeRange.week ? _weekNumber(date) : 0);
 }
 
 final statisticsProvider = FutureProvider.autoDispose.family<List<CategoryData>, StatisticsFilter>((ref, filter) async {
@@ -38,7 +46,13 @@ final statisticsProvider = FutureProvider.autoDispose.family<List<CategoryData>,
 
   // 1. Calculate Date Range (Standardized with InsightProvider)
   DateTime start, end;
-  if (filter.timeRange == TimeRange.month) {
+  if (filter.timeRange == TimeRange.week) {
+    // Get Monday of current week
+    final weekday = filter.date.weekday;
+    start = filter.date.subtract(Duration(days: weekday - 1));
+    start = DateTime(start.year, start.month, start.day);
+    end = start.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59, milliseconds: 999));
+  } else if (filter.timeRange == TimeRange.month) {
     start = DateTime(filter.date.year, filter.date.month, 1);
     end = DateTime(filter.date.year, filter.date.month + 1, 0, 23, 59, 59, 999);
   } else {
@@ -141,7 +155,15 @@ final insightProvider = FutureProvider.autoDispose.family<InsightData?, Statisti
   final now = filter.date;
   DateTime currentStart, currentEnd, previousStart, previousEnd;
 
-  if (filter.timeRange == TimeRange.month) {
+  if (filter.timeRange == TimeRange.week) {
+    // Get Monday of current week
+    final weekday = now.weekday;
+    currentStart = now.subtract(Duration(days: weekday - 1));
+    currentStart = DateTime(currentStart.year, currentStart.month, currentStart.day);
+    currentEnd = currentStart.add(const Duration(days: 6));
+    previousStart = currentStart.subtract(const Duration(days: 7));
+    previousEnd = previousStart.add(const Duration(days: 6));
+  } else if (filter.timeRange == TimeRange.month) {
     currentStart = DateTime(now.year, now.month, 1);
     currentEnd = DateTime(now.year, now.month + 1, 0);
     previousStart = DateTime(now.year, now.month - 1, 1);
@@ -180,20 +202,30 @@ final insightProvider = FutureProvider.autoDispose.family<InsightData?, Statisti
   String message;
   bool isGood;
 
+  String _getPeriodName(TimeRange range) {
+    switch (range) {
+      case TimeRange.week: return 'week';
+      case TimeRange.month: return 'month';
+      case TimeRange.year: return 'year';
+    }
+  }
+  
+  final periodName = _getPeriodName(filter.timeRange);
+  
   if (filter.isExpense) {
     if (percentage < 0) {
-      message = 'Expenses down ${percentage.abs().toStringAsFixed(1)}% from last ${filter.timeRange == TimeRange.month ? "month" : "year"}';
+      message = 'Expenses down ${percentage.abs().toStringAsFixed(1)}% from last $periodName';
       isGood = true;
     } else {
-      message = 'Expenses up ${percentage.abs().toStringAsFixed(1)}% from last ${filter.timeRange == TimeRange.month ? "month" : "year"}';
+      message = 'Expenses up ${percentage.abs().toStringAsFixed(1)}% from last $periodName';
       isGood = false;
     }
   } else {
     if (percentage > 0) {
-      message = 'Income up ${percentage.abs().toStringAsFixed(1)}% from last ${filter.timeRange == TimeRange.month ? "month" : "year"}';
+      message = 'Income up ${percentage.abs().toStringAsFixed(1)}% from last $periodName';
       isGood = true;
     } else {
-      message = 'Income down ${percentage.abs().toStringAsFixed(1)}% from last ${filter.timeRange == TimeRange.month ? "month" : "year"}';
+      message = 'Income down ${percentage.abs().toStringAsFixed(1)}% from last $periodName';
       isGood = false;
     }
   }
@@ -304,6 +336,73 @@ final dailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>
     }
     
     data.add(DailyData(day: day, income: income, expense: expense, savings: savings));
+  }
+
+  return data;
+});
+
+// Weekly Daily Statistics Provider - returns 7 DailyData items (Mon-Sun)
+final weeklyDailyStatisticsProvider = FutureProvider.family<List<DailyData>, DateTime>((ref, date) async {
+  final transactions = await ref.watch(transactionListProvider.future);
+  final savingLogs = await ref.watch(savingLogListProvider.future);
+  
+  // Get Monday of the selected week
+  final weekday = date.weekday;
+  final monday = date.subtract(Duration(days: weekday - 1));
+  final weekStart = DateTime(monday.year, monday.month, monday.day);
+  final weekEnd = weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+
+  final List<DailyData> data = [];
+
+  // Filter transactions for selected week
+  final weekTransactions = transactions.where((t) {
+    return t.date.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+           t.date.isBefore(weekEnd.add(const Duration(seconds: 1)));
+  }).toList();
+
+  // Filter saving logs for selected week
+  final weekSavingLogs = savingLogs.where((l) {
+    return l.date.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+           l.date.isBefore(weekEnd.add(const Duration(seconds: 1)));
+  }).toList();
+
+  for (int dayOffset = 0; dayOffset < 7; dayOffset++) {
+    final currentDay = weekStart.add(Duration(days: dayOffset));
+    final dayTransactions = weekTransactions.where((t) => 
+      t.date.year == currentDay.year && 
+      t.date.month == currentDay.month && 
+      t.date.day == currentDay.day
+    );
+    final daySavingLogs = weekSavingLogs.where((l) => 
+      l.date.year == currentDay.year && 
+      l.date.month == currentDay.month && 
+      l.date.day == currentDay.day
+    );
+    
+    double income = 0;
+    double expense = 0;
+    double savings = 0;
+
+    for (var t in dayTransactions) {
+      if (t.type == TransactionType.expense) {
+        expense += t.amount;
+      } else if (t.type == TransactionType.system && t.categoryId != 'savings') {
+        expense += t.amount;
+      } else if (t.type == TransactionType.income) {
+        income += t.amount;
+      }
+    }
+
+    for (var l in daySavingLogs) {
+      if (l.type == SavingLogType.deposit) {
+        savings += l.amount;
+      } else if (l.type == SavingLogType.withdraw) {
+        savings -= l.amount;
+      }
+    }
+    
+    // Use dayOffset + 1 as the day number (1-7 for Mon-Sun)
+    data.add(DailyData(day: dayOffset + 1, income: income, expense: expense, savings: savings));
   }
 
   return data;

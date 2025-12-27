@@ -1391,6 +1391,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get monthlyComparison => '先月との比較';
 
   @override
+  String get yearlyComparison => 'Yearly Comparison';
+
+  @override
+  String get weeklyComparison => 'Weekly Comparison';
+
+  @override
+  String get weeklyOverview => 'Weekly Overview';
+
+  @override
   String get spendingLessNote => '先月より節約できています！';
 
   @override

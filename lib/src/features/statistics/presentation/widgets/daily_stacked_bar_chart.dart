@@ -13,6 +13,7 @@ class DailyStackedBarChart extends StatefulWidget {
   final double avgExpense;
   final double avgSavings;
   final DateTime selectedDate;
+  final bool isWeekly;
 
   const DailyStackedBarChart({
     super.key,
@@ -22,6 +23,7 @@ class DailyStackedBarChart extends StatefulWidget {
     required this.avgExpense,
     required this.avgSavings,
     required this.selectedDate,
+    this.isWeekly = false,
   });
 
   @override
@@ -124,7 +126,7 @@ class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.dailyOverview, style: AppTextStyles.h3),
+            Text(widget.isWeekly ? AppLocalizations.of(context)!.weeklyOverview : AppLocalizations.of(context)!.dailyOverview, style: AppTextStyles.h3),
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
               child: Column(
@@ -166,39 +168,21 @@ class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
                       color: const Color(0xFF4ADE80).withOpacity(0.8),
                       strokeWidth: 1,
                       dashArray: [5, 5],
-                      label: HorizontalLineLabel(
-                        show: true,
-                        alignment: Alignment.topRight,
-                        padding: const EdgeInsets.only(right: 5, bottom: 5),
-                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF4ADE80), fontSize: 10),
-                        labelResolver: (line) => 'Avg Inc: ${widget.currency.format(line.y)}',
-                      ),
+                      label: HorizontalLineLabel(show: false),
                     ),
                     HorizontalLine(
                       y: widget.avgExpense,
                       color: const Color(0xFFF87171).withOpacity(0.8),
                       strokeWidth: 1,
                       dashArray: [5, 5],
-                      label: HorizontalLineLabel(
-                        show: true,
-                        alignment: Alignment.topRight,
-                        padding: const EdgeInsets.only(right: 5, bottom: 20), // Stagger labels
-                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFF87171), fontSize: 10),
-                        labelResolver: (line) => 'Avg Exp: ${widget.currency.format(line.y)}',
-                      ),
+                      label: HorizontalLineLabel(show: false),
                     ),
                     HorizontalLine(
                       y: widget.avgSavings,
                       color: const Color(0xFF60A5FA).withOpacity(0.8),
                       strokeWidth: 1,
                       dashArray: [5, 5],
-                      label: HorizontalLineLabel(
-                        show: true,
-                        alignment: Alignment.topRight,
-                        padding: const EdgeInsets.only(right: 5, bottom: 35), // Stagger labels
-                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF60A5FA), fontSize: 10),
-                        labelResolver: (line) => 'Avg Sav: ${widget.currency.format(line.y)}',
-                      ),
+                      label: HorizontalLineLabel(show: false),
                     ),
                   ],
                 ),
@@ -254,6 +238,20 @@ class _DailyStackedBarChartState extends State<DailyStackedBarChart> {
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
                         final day = value.toInt();
+                        if (widget.isWeekly) {
+                          // Weekly view: show M T W T F S S
+                          const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+                          if (day >= 1 && day <= 7) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                dayNames[day - 1],
+                                style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        }
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(

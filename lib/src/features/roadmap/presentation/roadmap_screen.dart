@@ -60,6 +60,11 @@ class RoadmapScreen extends StatelessWidget {
             ]),
             _buildFeatureList([
               _FeatureItem(
+                 title: "Weekly Statistics Tab",
+                 description: "7-day statistics view with M-T-W-T-F-S-S chart & weekly comparison",
+                 isDone: true,
+              ),
+              _FeatureItem(
                  title: "Home Widgets",
                  description: "Budget Widget, Daily Graph, Quick Record Shortcut",
                  isDone: true,

@@ -1393,6 +1393,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get monthlyComparison => '월간 비교';
 
   @override
+  String get yearlyComparison => 'Yearly Comparison';
+
+  @override
+  String get weeklyComparison => 'Weekly Comparison';
+
+  @override
+  String get weeklyOverview => 'Weekly Overview';
+
+  @override
   String get spendingLessNote => '지난달보다 적게 쓰고 있습니다!';
 
   @override

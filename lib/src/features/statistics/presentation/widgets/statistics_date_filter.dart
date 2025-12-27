@@ -22,7 +22,7 @@ class StatisticsDateFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Toggle Month/Year
+        // Toggle Week/Month/Year
         Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -32,6 +32,7 @@ class StatisticsDateFilter extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              _buildToggleBtn(AppLocalizations.of(context)!.weekly, TimeRange.week),
               _buildToggleBtn(AppLocalizations.of(context)!.monthly, TimeRange.month),
               _buildToggleBtn(AppLocalizations.of(context)!.yearly, TimeRange.year),
             ],
@@ -65,7 +66,7 @@ class StatisticsDateFilter extends StatelessWidget {
     return GestureDetector(
       onTap: () => onRangeChanged(range),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
@@ -83,8 +84,22 @@ class StatisticsDateFilter extends StatelessWidget {
   }
 
   String _formatDate(BuildContext context, DateTime date) {
-    if (timeRange == TimeRange.month) {
-      return DateFormat('MMMM y', Localizations.localeOf(context).toString()).format(date);
+    final locale = Localizations.localeOf(context).toString();
+    
+    if (timeRange == TimeRange.week) {
+      // Get Monday and Sunday of the week
+      final weekday = date.weekday;
+      final monday = date.subtract(Duration(days: weekday - 1));
+      final sunday = monday.add(const Duration(days: 6));
+      
+      // Format as "Dec 23 - 29" or "Dec 30 - Jan 5" if cross-month
+      if (monday.month == sunday.month) {
+        return '${DateFormat('MMM d', locale).format(monday)} - ${DateFormat('d', locale).format(sunday)}';
+      } else {
+        return '${DateFormat('MMM d', locale).format(monday)} - ${DateFormat('MMM d', locale).format(sunday)}';
+      }
+    } else if (timeRange == TimeRange.month) {
+      return DateFormat('MMMM y', locale).format(date);
     } else {
       return '${date.year}';
     }

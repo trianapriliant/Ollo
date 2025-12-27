@@ -1390,6 +1390,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get monthlyComparison => '月度对比';
 
   @override
+  String get yearlyComparison => 'Yearly Comparison';
+
+  @override
+  String get weeklyComparison => 'Weekly Comparison';
+
+  @override
+  String get weeklyOverview => 'Weekly Overview';
+
+  @override
   String get spendingLessNote => '花费比上月少！';
 
   @override

@@ -27,7 +27,15 @@ final comparativeStatisticsProvider = FutureProvider.autoDispose.family<Comparat
   final now = filter.date;
   DateTime currentStart, currentEnd, previousStart, previousEnd;
 
-  if (filter.timeRange == TimeRange.month) {
+  if (filter.timeRange == TimeRange.week) {
+    // Weekly view: compare days (7 days)
+    final weekday = now.weekday;
+    currentStart = now.subtract(Duration(days: weekday - 1));
+    currentStart = DateTime(currentStart.year, currentStart.month, currentStart.day);
+    currentEnd = currentStart.add(const Duration(days: 6));
+    previousStart = currentStart.subtract(const Duration(days: 7));
+    previousEnd = previousStart.add(const Duration(days: 6));
+  } else if (filter.timeRange == TimeRange.month) {
     currentStart = DateTime(now.year, now.month, 1);
     currentEnd = DateTime(now.year, now.month + 1, 0);
     previousStart = DateTime(now.year, now.month - 1, 1);
@@ -39,7 +47,7 @@ final comparativeStatisticsProvider = FutureProvider.autoDispose.family<Comparat
     previousEnd = DateTime(now.year - 1, 12, 31);
   }
 
-  // Helper to filter and aggregate
+  // Helper to filter and aggregate by day (for weekly/monthly view)
   List<double> getDailyTotals(DateTime start, DateTime end) {
     final days = end.difference(start).inDays + 1;
     final List<double> dailyTotals = List.filled(days, 0.0);
@@ -65,8 +73,43 @@ final comparativeStatisticsProvider = FutureProvider.autoDispose.family<Comparat
     return dailyTotals;
   }
 
-  final currentData = getDailyTotals(currentStart, currentEnd);
-  final previousData = getDailyTotals(previousStart, previousEnd);
+  // Helper to filter and aggregate by month (for yearly view)
+  List<double> getMonthlyTotals(int year) {
+    final List<double> monthlyTotals = List.filled(12, 0.0);
+    
+    final periodTransactions = transactions.where((t) {
+      if (filter.isExpense) {
+          bool isValidExpense = t.type == TransactionType.expense || (t.type == TransactionType.system && t.categoryId != 'savings');
+          if (!isValidExpense) return false;
+      } else {
+          if (t.type != TransactionType.income) return false;
+      }
+      return t.date.year == year;
+    }).toList();
+
+    for (var t in periodTransactions) {
+      final monthIndex = t.date.month - 1; // 0-based
+      monthlyTotals[monthIndex] += t.amount;
+    }
+    return monthlyTotals;
+  }
+
+  List<double> currentData;
+  List<double> previousData;
+
+  if (filter.timeRange == TimeRange.week) {
+    // Weekly view: compare days (7 days)
+    currentData = getDailyTotals(currentStart, currentEnd);
+    previousData = getDailyTotals(previousStart, previousEnd);
+  } else if (filter.timeRange == TimeRange.month) {
+    // Monthly view: compare days
+    currentData = getDailyTotals(currentStart, currentEnd);
+    previousData = getDailyTotals(previousStart, previousEnd);
+  } else {
+    // Yearly view: compare months
+    currentData = getMonthlyTotals(now.year);
+    previousData = getMonthlyTotals(now.year - 1);
+  }
 
   final currentTotal = currentData.fold(0.0, (sum, val) => sum + val);
   final previousTotal = previousData.fold(0.0, (sum, val) => sum + val);

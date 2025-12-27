@@ -14,6 +14,21 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.6.4',
+      date: DateTime(2025, 12, 27),
+      changes: [
+        'NEW: Weekly Statistics Tab - 3-tab toggle (Week/Month/Year) for statistics.',
+        'NEW: 7-day bar chart with M-T-W-T-F-S-S x-axis labels.',
+        'NEW: Weekly comparison chart showing this week vs last week.',
+        'NEW: Weekly date navigation (+/- 7 days) with "Dec 23 - 29" format.',
+        'Improved: Yearly statistics now shows Monthly Overview with Jan-Dec months.',
+        'Improved: Removed duplicate average labels from charts (now only at top).',
+        'Improved: Monthly Comparison chart now independent per tab.',
+        'Improved: Transaction Table modernized with 2-row filter layout.',
+        'Fixed: Social media links updated to @ollowithyou.',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.6.3',
       date: DateTime(2025, 12, 27),
       changes: [

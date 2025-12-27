@@ -2766,6 +2766,24 @@ abstract class AppLocalizations {
   /// **'Monthly Comparison'**
   String get monthlyComparison;
 
+  /// No description provided for @yearlyComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly Comparison'**
+  String get yearlyComparison;
+
+  /// No description provided for @weeklyComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Comparison'**
+  String get weeklyComparison;
+
+  /// No description provided for @weeklyOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Overview'**
+  String get weeklyOverview;
+
   /// No description provided for @spendingLessNote.
   ///
   /// In en, this message translates to:

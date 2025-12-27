@@ -120,17 +120,7 @@ class MonthlyBarChart extends ConsumerWidget {
                   color: Colors.green.withOpacity(0.5),
                   strokeWidth: 2,
                   dashArray: [5, 5],
-                  label: HorizontalLineLabel(
-                    show: true,
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.only(right: 5, bottom: 5),
-                    style: TextStyle(
-                      color: Colors.green.withOpacity(0.8),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                    ),
-                    labelResolver: (line) => 'Avg Income',
-                  ),
+                  label: HorizontalLineLabel(show: false),
                 ),
               if (avgExpense > 0)
                 HorizontalLine(
@@ -138,17 +128,7 @@ class MonthlyBarChart extends ConsumerWidget {
                   color: Colors.red.withOpacity(0.5),
                   strokeWidth: 2,
                   dashArray: [5, 5],
-                  label: HorizontalLineLabel(
-                    show: true,
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.only(right: 5, bottom: 5),
-                    style: TextStyle(
-                      color: Colors.red.withOpacity(0.8),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                    ),
-                    labelResolver: (line) => 'Avg Expense',
-                  ),
+                  label: HorizontalLineLabel(show: false),
                 ),
             ],
           ),

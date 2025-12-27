@@ -1,28 +1,43 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_text_styles.dart';
 import '../../extended_statistics_provider.dart';
+import '../../statistics_provider.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 
 class ComparativeAnalysisCard extends StatelessWidget {
   final ComparativeData data;
   final bool isExpense;
+  final TimeRange timeRange;
 
-  const ComparativeAnalysisCard({super.key, required this.data, required this.isExpense});
+  const ComparativeAnalysisCard({
+    super.key, 
+    required this.data, 
+    required this.isExpense,
+    required this.timeRange,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isGood = isExpense ? data.percentageChange < 0 : data.percentageChange > 0;
     final color = isGood ? Colors.green : Colors.red;
-    final icon = isGood ? Icons.trending_down : Icons.trending_up; // Typically down is good for expense
-    
-    // Adjust icon logic: trending_up is literally up arrow. 
-    // If expense and up (bad), use trending_up (red). 
-    // If expense and down (good), use trending_down (green).
-    // If income and up (good), use trending_up (green).
-    // If income and down (bad), use trending_down (red).
     final displayIcon = data.percentageChange >= 0 ? Icons.trending_up : Icons.trending_down;
+
+    // Dynamic title based on view
+    String title;
+    switch (timeRange) {
+      case TimeRange.week:
+        title = AppLocalizations.of(context)!.weeklyComparison;
+        break;
+      case TimeRange.month:
+        title = AppLocalizations.of(context)!.monthlyComparison;
+        break;
+      case TimeRange.year:
+        title = AppLocalizations.of(context)!.yearlyComparison;
+        break;
+    }
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -43,7 +58,7 @@ class ComparativeAnalysisCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context)!.monthlyComparison, style: AppTextStyles.h3.copyWith(fontSize: 16)),
+              Text(title, style: AppTextStyles.h3.copyWith(fontSize: 16)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -81,18 +96,9 @@ class ComparativeAnalysisCard extends StatelessWidget {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      interval: 5, // Show label every 5 days
-                      getTitlesWidget: (value, meta) {
-                         if (value == 0 || value > 31) return const SizedBox();
-                         return Padding(
-                           padding: const EdgeInsets.only(top: 4),
-                           child: Text(
-                             value.toInt().toString(),
-                             style: const TextStyle(fontSize: 10, color: Colors.grey),
-                           ),
-                         );
-                      },
-                      reservedSize: 20,
+                      interval: _getInterval(),
+                      getTitlesWidget: (value, meta) => _buildXAxisLabel(value, context),
+                      reservedSize: 18,
                     ),
                   ),
                   leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -101,7 +107,7 @@ class ComparativeAnalysisCard extends StatelessWidget {
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
-                  // Previous Month (Grey, Dashed or lighter)
+                  // Previous Period (Grey, lighter)
                   LineChartBarData(
                     spots: _generateSpots(data.previousPeriodData),
                     isCurved: true,
@@ -110,7 +116,7 @@ class ComparativeAnalysisCard extends StatelessWidget {
                     dotData: FlDotData(show: false),
                     belowBarData: BarAreaData(show: false),
                   ),
-                  // Current Month (Color)
+                  // Current Period (Color)
                   LineChartBarData(
                     spots: _generateSpots(data.currentPeriodData),
                     isCurved: true,
@@ -131,15 +137,69 @@ class ComparativeAnalysisCard extends StatelessWidget {
     );
   }
 
+  double _getInterval() {
+    switch (timeRange) {
+      case TimeRange.week:
+        return 1; // Every day
+      case TimeRange.month:
+        return 10; // Every 10 days
+      case TimeRange.year:
+        return 1; // Every month
+    }
+  }
+
+  Widget _buildXAxisLabel(double value, BuildContext context) {
+    switch (timeRange) {
+      case TimeRange.week:
+        // For weekly: show day abbreviations
+        final dayIndex = value.toInt();
+        if (dayIndex < 0 || dayIndex >= 7) return const SizedBox();
+        const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+        return Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            dayNames[dayIndex],
+            style: const TextStyle(fontSize: 9, color: Colors.grey),
+          ),
+        );
+      case TimeRange.month:
+        // For monthly: show day numbers
+        final day = value.toInt();
+        if (day != 1 && day != 10 && day != 20 && day != 30) {
+          return const SizedBox();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            day.toString(),
+            style: const TextStyle(fontSize: 9, color: Colors.grey),
+          ),
+        );
+      case TimeRange.year:
+        // For yearly: show month abbreviations
+        final monthIndex = value.toInt();
+        if (monthIndex < 0 || monthIndex >= 12) {
+          return const SizedBox();
+        }
+        // Show only every 2 months to avoid overlap
+        if (monthIndex % 2 != 0) {
+          return const SizedBox();
+        }
+        final monthName = DateFormat('MMM').format(DateTime(2024, monthIndex + 1));
+        return Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            monthName,
+            style: const TextStyle(fontSize: 8, color: Colors.grey),
+          ),
+        );
+    }
+  }
+
   List<FlSpot> _generateSpots(List<double> values) {
     if (values.isEmpty) return [];
     
-    // Accumulate sum for "Area" effect or just daily values?
-    // Sparklines usually show trend of value over time. 
-    // Since this is "Comparison", let's show CUMULATIVE spending to see where we deviate?
-    // OR just daily spikes. Cumulative is smoother and often more meaningful for "Am I ahead of schedule?".
-    // Let's try Cumulative.
-    
+    // Cumulative sum for trend line
     double sum = 0;
     return values.asMap().entries.map((e) {
       sum += e.value;

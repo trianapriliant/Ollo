@@ -1410,6 +1410,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get monthlyComparison => 'Comparación Mensual';
 
   @override
+  String get yearlyComparison => 'Yearly Comparison';
+
+  @override
+  String get weeklyComparison => 'Weekly Comparison';
+
+  @override
+  String get weeklyOverview => 'Weekly Overview';
+
+  @override
   String get spendingLessNote => '¡Estás gastando menos que el mes pasado!';
 
   @override

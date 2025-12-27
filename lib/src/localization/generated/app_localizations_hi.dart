@@ -1406,6 +1406,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get monthlyComparison => 'मासिक तुलना';
 
   @override
+  String get yearlyComparison => 'Yearly Comparison';
+
+  @override
+  String get weeklyComparison => 'Weekly Comparison';
+
+  @override
+  String get weeklyOverview => 'Weekly Overview';
+
+  @override
   String get spendingLessNote => 'आप कम खर्च कर रहे हैं!';
 
   @override
