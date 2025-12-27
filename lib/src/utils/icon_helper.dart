@@ -83,6 +83,8 @@ class IconHelper {
       case 'file_download': return Icons.download;
       case 'file_upload': return Icons.upload_file;
       case 'send': return Icons.send;
+      case 'search': return Icons.search;
+      case 'filter': return Icons.filter_list;
       case 'house': return Icons.home; // Added mapping for 'house'
       case 'apartment': return Icons.apartment;
       case 'cottage': return Icons.cottage;

@@ -120,6 +120,10 @@ class IconoirMapper {
         return Upload(width: size, height: size, color: effectiveColor);
       case 'send':
         return ShareAndroid(width: size, height: size, color: effectiveColor);
+      case 'search':
+        return Search(width: size, height: size, color: effectiveColor);
+      case 'filter':
+        return FilterList(width: size, height: size, color: effectiveColor);
       case 'apartment':
         return Building(width: size, height: size, color: effectiveColor);
       case 'weekend':

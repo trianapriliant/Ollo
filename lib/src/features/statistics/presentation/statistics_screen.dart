@@ -23,6 +23,7 @@ import 'widgets/new_stats/weekly_spending_heatmap.dart';
 import 'widgets/statistics_category_item.dart';
 import 'widgets/statistics_date_filter.dart';
 import 'widgets/statistics_type_toggle.dart';
+import 'widgets/transaction_table_preview.dart';
 import '../../subscription/presentation/premium_provider.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
@@ -338,6 +339,10 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 error: (e,s) => Text(AppLocalizations.of(context)!.error(e.toString())),
               ),
 
+              const SizedBox(height: 24),
+
+              // 10. Transaction Log
+              const TransactionTablePreview(),
 
               const SizedBox(height: 80),
             ],

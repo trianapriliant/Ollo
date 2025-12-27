@@ -1268,5 +1268,22 @@
   "savingGoals": "Saving Goals",
   "bank": "Bank",
   "eWallet": "E-Wallet",
-  "blockchain": "Blockchain"
+  "blockchain": "Blockchain",
+  
+  "transactionTable": "Transaction Table",
+  "transactionLog": "Transaction Log",
+  "searchTransactions": "Search transactions...",
+  "viewAll": "View All",
+  "viewAllTransactions": "View All Transactions",
+  "noTransactionsYet": "No transactions yet",
+  "filter": "Filter",
+  "clearFilters": "Clear Filters",
+  "sortBy": "Sort By",
+  "dateNewest": "Date (Newest)",
+  "dateOldest": "Date (Oldest)",
+  "amountHighest": "Amount (High)",
+  "amountLowest": "Amount (Low)",
+  "last3Months": "Last 3 Months",
+  "customRange": "Custom Range",
+  "type": "Type"
 }

@@ -2907,4 +2907,49 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get blockchain => 'Blockchain';
+
+  @override
+  String get transactionTable => 'Tabel Transaksi';
+
+  @override
+  String get transactionLog => 'Log Transaksi';
+
+  @override
+  String get searchTransactions => 'Cari transaksi...';
+
+  @override
+  String get viewAll => 'Lihat Semua';
+
+  @override
+  String get viewAllTransactions => 'Lihat Semua Transaksi';
+
+  @override
+  String get noTransactionsYet => 'Belum ada transaksi';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get clearFilters => 'Hapus Filter';
+
+  @override
+  String get sortBy => 'Urutkan';
+
+  @override
+  String get dateNewest => 'Tanggal (Terbaru)';
+
+  @override
+  String get dateOldest => 'Tanggal (Terlama)';
+
+  @override
+  String get amountHighest => 'Jumlah (Tertinggi)';
+
+  @override
+  String get amountLowest => 'Jumlah (Terendah)';
+
+  @override
+  String get last3Months => '3 Bulan Terakhir';
+
+  @override
+  String get customRange => 'Rentang Khusus';
 }

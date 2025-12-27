@@ -5591,6 +5591,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blockchain'**
   String get blockchain;
+
+  /// No description provided for @transactionTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Table'**
+  String get transactionTable;
+
+  /// No description provided for @transactionLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Log'**
+  String get transactionLog;
+
+  /// No description provided for @searchTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Search transactions...'**
+  String get searchTransactions;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @viewAllTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Transactions'**
+  String get viewAllTransactions;
+
+  /// No description provided for @noTransactionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions yet'**
+  String get noTransactionsYet;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filters'**
+  String get clearFilters;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @dateNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Date (Newest)'**
+  String get dateNewest;
+
+  /// No description provided for @dateOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Date (Oldest)'**
+  String get dateOldest;
+
+  /// No description provided for @amountHighest.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (High)'**
+  String get amountHighest;
+
+  /// No description provided for @amountLowest.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (Low)'**
+  String get amountLowest;
+
+  /// No description provided for @last3Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3Months;
+
+  /// No description provided for @customRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Range'**
+  String get customRange;
 }
 
 class _AppLocalizationsDelegate

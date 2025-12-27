@@ -7,8 +7,8 @@ import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/statistics/presentation/statistics_screen.dart';
 import '../features/dashboard/presentation/filtered_transactions_screen.dart';
 import '../features/statistics/presentation/category_transactions_screen.dart';
-import '../features/statistics/presentation/category_transactions_screen.dart';
 import '../features/statistics/presentation/statistics_provider.dart'; // For TimeRange enum
+import '../features/statistics/presentation/transaction_table_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/quick_record/presentation/widgets/scan_receipt_screen.dart';
 import '../features/wallets/presentation/add_wallet_screen.dart';
@@ -153,6 +153,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             endDate: extra['endDate'] as DateTime?,
           );
         },
+      ),
+      GoRoute(
+        path: '/transaction-table',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const TransactionTableScreen(),
       ),
       GoRoute(
         path: '/add-transaction',

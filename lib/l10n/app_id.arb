@@ -1057,5 +1057,22 @@
   "savingGoals": "Target Tabungan",
   "bank": "Bank",
   "eWallet": "E-Wallet",
-  "blockchain": "Blockchain"
+  "blockchain": "Blockchain",
+  
+  "transactionTable": "Tabel Transaksi",
+  "transactionLog": "Log Transaksi",
+  "searchTransactions": "Cari transaksi...",
+  "viewAll": "Lihat Semua",
+  "viewAllTransactions": "Lihat Semua Transaksi",
+  "noTransactionsYet": "Belum ada transaksi",
+  "filter": "Filter",
+  "clearFilters": "Hapus Filter",
+  "sortBy": "Urutkan",
+  "dateNewest": "Tanggal (Terbaru)",
+  "dateOldest": "Tanggal (Terlama)",
+  "amountHighest": "Jumlah (Tertinggi)",
+  "amountLowest": "Jumlah (Terendah)",
+  "last3Months": "3 Bulan Terakhir",
+  "customRange": "Rentang Khusus",
+  "type": "Tipe"
 }

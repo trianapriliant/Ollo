@@ -2895,4 +2895,49 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get blockchain => 'Blockchain';
+
+  @override
+  String get transactionTable => 'Transaction Table';
+
+  @override
+  String get transactionLog => 'Transaction Log';
+
+  @override
+  String get searchTransactions => 'Search transactions...';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get viewAllTransactions => 'View All Transactions';
+
+  @override
+  String get noTransactionsYet => 'No transactions yet';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get clearFilters => 'Clear Filters';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get dateNewest => 'Date (Newest)';
+
+  @override
+  String get dateOldest => 'Date (Oldest)';
+
+  @override
+  String get amountHighest => 'Amount (High)';
+
+  @override
+  String get amountLowest => 'Amount (Low)';
+
+  @override
+  String get last3Months => 'Last 3 Months';
+
+  @override
+  String get customRange => 'Custom Range';
 }
