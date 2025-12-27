@@ -13,6 +13,7 @@ import '../../../categories/data/category_repository.dart';
 import '../../../categories/domain/category.dart';
 import '../dashboard_filter_provider.dart';
 import 'package:ollo/src/utils/icon_helper.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 import '../../../wallets/presentation/wallet_provider.dart';
 import '../../../../localization/generated/app_localizations.dart';
 import 'package:ollo/src/features/transactions/data/transaction_repository.dart';
@@ -76,6 +77,7 @@ class RecentTransactionsList extends ConsumerWidget {
     final categoriesAsync = ref.watch(allCategoriesStreamProvider);
     final categories = categoriesAsync.valueOrNull ?? [];
     final colorTheme = ref.watch(colorPaletteProvider);
+    final iconPack = ref.watch(iconPackProvider);
 
     // Directly use the passed transactions list
     if (transactions.isEmpty) {
@@ -328,6 +330,7 @@ class RecentTransactionsList extends ConsumerWidget {
                                 isSystem: isSystem,
                                 isReimbursement: transaction.type == TransactionType.reimbursement,
                                 isTransfer: transaction.type == TransactionType.transfer,
+                                iconPack: iconPack, // New parameter
                               ),
                             ),
                           ), // Slidable
@@ -425,10 +428,11 @@ class RecentTransactionsList extends ConsumerWidget {
     Currency currency,
     String? note,
     DateTime date, 
-    TransactionTheme theme, { // New parameter
+    TransactionTheme theme, {
     bool isSystem = false,
     bool isReimbursement = false,
-    bool isTransfer = false, // New parameter
+    bool isTransfer = false,
+    required IconPack iconPack,
   }) {
     // Determine if it's a Wishlist, Bill, Debt, or Savings transaction based on Category ID or Title
     final isWishlist = (category?.externalId == 'wishlist') || (isSystem && title.toLowerCase().contains('wishlist'));
@@ -439,20 +443,6 @@ class RecentTransactionsList extends ConsumerWidget {
 
     final iconPath = subCategoryIcon ?? category?.iconPath;
 
-    final iconData = isReimbursement 
-        ? Icons.currency_exchange
-        : (isBill 
-            ? Icons.receipt_long_rounded
-            : (isWishlist 
-                ? Icons.favorite_rounded
-                : (isDebt 
-                    ? Icons.handshake_rounded
-                    : (isSavings 
-                        ? Icons.savings_rounded
-                        : (isTransfer 
-                            ? Icons.swap_horiz
-                            : (iconPath != null ? IconHelper.getIcon(iconPath) : Icons.help_outline))))));
-        
     final iconColor = isReimbursement
         ? Colors.orangeAccent
         : (isBill 
@@ -466,6 +456,20 @@ class RecentTransactionsList extends ConsumerWidget {
                         : (isTransfer 
                             ? Colors.indigo 
                             : (category?.color ?? AppColors.primary))))));
+    
+    final Widget iconWidget = isReimbursement 
+        ? IconHelper.getIconWidget('reimburse', pack: iconPack, color: iconColor)
+        : (isBill 
+            ? IconHelper.getIconWidget('bill', pack: iconPack, color: iconColor)
+            : (isWishlist 
+                ? IconHelper.getIconWidget('favorite', pack: iconPack, color: iconColor)
+                : (isDebt 
+                    ? IconHelper.getIconWidget('debts', pack: iconPack, color: iconColor)
+                    : (isSavings 
+                        ? IconHelper.getIconWidget('savings', pack: iconPack, color: iconColor)
+                        : (isTransfer 
+                            ? IconHelper.getIconWidget('transfer', pack: iconPack, color: iconColor)
+                            : (iconPath != null ? IconHelper.getIconWidget(iconPath, pack: iconPack, color: iconColor) : Icon(Icons.help_outline, color: iconColor)))))));
         
     final backgroundColor = isReimbursement
         ? Colors.orangeAccent.withOpacity(0.1)
@@ -510,7 +514,7 @@ class RecentTransactionsList extends ConsumerWidget {
               color: backgroundColor,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(iconData, color: iconColor),
+            child: iconWidget,
           ),
           const SizedBox(width: 16),
           Expanded(

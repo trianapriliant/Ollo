@@ -3,10 +3,12 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../categories/domain/category.dart';
 import '../../../categories/presentation/category_localization_helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 
 import '../../../../utils/icon_helper.dart';
 
-class CategorySelector extends StatelessWidget {
+class CategorySelector extends ConsumerWidget {
   final List<Category> categories;
   final Category? selectedCategory;
   final Function(Category) onCategorySelected;
@@ -19,7 +21,7 @@ class CategorySelector extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 90,
       child: ListView.separated(
@@ -52,8 +54,9 @@ class CategorySelector extends StatelessWidget {
                           ]
                         : null,
                   ),
-                  child: Icon(
-                    IconHelper.getIcon(category.iconPath),
+                  child: IconHelper.getIconWidget(
+                    category.iconPath,
+                    pack: ref.watch(iconPackProvider),
                     color: isSelected ? Colors.white : category.color,
                     size: 24,
                   ),

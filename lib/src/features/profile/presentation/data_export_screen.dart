@@ -14,6 +14,7 @@ import '../../profile/application/data_export_service.dart';
 import '../../subscription/presentation/premium_provider.dart';
 import '../../subscription/presentation/widgets/premium_gate_widget.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 
 class DataExportScreen extends ConsumerStatefulWidget {
   const DataExportScreen({super.key});
@@ -314,7 +315,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                                    color: AppColors.primary.withOpacity(0.1),
                                    borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Icon(Icons.account_balance_wallet, color: AppColors.primary, size: 20),
+                                child: IconHelper.getIconWidget('wallet', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 20),
                              ),
                              const SizedBox(width: 12),
                              Expanded(
@@ -323,7 +324,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w500),
                                 ),
                              ),
-                             const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                             IconHelper.getIconWidget('keyboard_arrow_down', pack: ref.watch(iconPackProvider), color: Colors.grey),
                           ],
                        ),
                     ),
@@ -362,15 +363,19 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                                    color: AppColors.primary.withOpacity(0.1),
                                    borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(
-                                  selectedCategory != null 
-                                      ? IconHelper.getIcon(selectedCategory.iconPath) 
-                                      : Icons.category,
-                                  color: selectedCategory != null 
-                                      ? Color(selectedCategory.colorValue ?? 0xFF000000).withOpacity(1.0) 
-                                      : AppColors.primary,
-                                  size: 20
-                                ),
+                              child: selectedCategory != null 
+                                  ? IconHelper.getIconWidget(
+                                      selectedCategory.iconPath,
+                                      pack: ref.read(iconPackProvider),
+                                      color: Color(selectedCategory.colorValue ?? 0xFF000000).withOpacity(1.0),
+                                      size: 20,
+                                    )
+                                  : IconHelper.getIconWidget(
+                                      'category',
+                                      pack: ref.read(iconPackProvider),
+                                      color: AppColors.primary,
+                                      size: 20,
+                                    ),
                              ),
                              const SizedBox(width: 12),
                              Expanded(
@@ -379,7 +384,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w500),
                                 ),
                              ),
-                             const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                             IconHelper.getIconWidget('keyboard_arrow_down', pack: ref.watch(iconPackProvider), color: Colors.grey),
                           ],
                        ),
                     ),
@@ -566,7 +571,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(Icons.account_balance_wallet, 
+                        child: IconHelper.getIconWidget('wallet', pack: ref.read(iconPackProvider), 
                           color: _selectedWalletId == null ? AppColors.primary : Colors.grey[700]),
                       ),
                       title: Text(
@@ -577,7 +582,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                         ),
                       ),
                       trailing: _selectedWalletId == null 
-                          ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                          ? IconHelper.getIconWidget('check_circle', pack: ref.read(iconPackProvider), color: AppColors.primary, size: 24)
                           : null,
                       onTap: () {
                         setState(() => _selectedWalletId = null);
@@ -597,7 +602,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
-                          child: Icon(Icons.wallet, 
+                          child: IconHelper.getIconWidget('wallet', pack: ref.read(iconPackProvider), 
                             color: isSelected ? AppColors.primary : Colors.grey[700]),
                         ),
                         title: Text(
@@ -608,7 +613,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                           ),
                         ),
                         trailing: isSelected 
-                            ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                            ? IconHelper.getIconWidget('check_circle', pack: ref.read(iconPackProvider), color: AppColors.primary, size: 24)
                             : null,
                         onTap: () {
                           setState(() => _selectedWalletId = w.externalId ?? w.id.toString());
@@ -674,7 +679,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(Icons.category, 
+                        child: IconHelper.getIconWidget('category', pack: ref.read(iconPackProvider), 
                           color: _selectedCategoryId == null ? AppColors.primary : Colors.grey[700]),
                       ),
                       title: Text(
@@ -685,7 +690,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                         ),
                       ),
                       trailing: _selectedCategoryId == null 
-                          ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                          ? IconHelper.getIconWidget('check_circle', pack: ref.read(iconPackProvider), color: AppColors.primary, size: 24)
                           : null,
                       onTap: () {
                         setState(() => _selectedCategoryId = null);
@@ -705,8 +710,9 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
-                          child: Icon(
-                            IconHelper.getIcon(c.iconPath),
+                          child: IconHelper.getIconWidget(
+                            c.iconPath,
+                            pack: ref.read(iconPackProvider),
                             color: isSelected ? AppColors.primary : (Color(c.colorValue ?? 0xFF000000).withOpacity(1.0)),
                           ),
                         ),
@@ -718,7 +724,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                           ),
                         ),
                         trailing: isSelected 
-                            ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                            ? IconHelper.getIconWidget('check_circle', pack: ref.read(iconPackProvider), color: AppColors.primary, size: 24)
                             : null,
                         onTap: () {
                           setState(() => _selectedCategoryId = c.externalId ?? c.id.toString());

@@ -7,6 +7,7 @@ import '../../../../constants/app_text_styles.dart';
 import '../../../../common_widgets/modern_confirm_dialog.dart';
 import '../../domain/transaction.dart';
 import '../../../../utils/icon_helper.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 import '../../categories/data/category_repository.dart';
 import '../../categories/domain/category.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -35,33 +36,36 @@ class TransactionListItem extends ConsumerWidget {
     
     final isSavings = isSystem && (transaction.title.toLowerCase().contains('deposit to') || transaction.title.toLowerCase().contains('withdraw from') || transaction.title.toLowerCase().contains('savings'));
 
-    IconData? iconData;
+    final iconPack = ref.watch(iconPackProvider);
+
+    String? dynamicIconPath;
+    IconData? staticIconData;
     Color? iconColor;
     Color? backgroundColor;
 
     if (isBill) {
-      iconData = Icons.receipt_long_rounded;
+      dynamicIconPath = 'bill';
       iconColor = Colors.orange;
       backgroundColor = Colors.orange.withOpacity(0.1);
     } else if (isWishlist) {
-      iconData = Icons.favorite_rounded;
+      dynamicIconPath = 'favorite';
       iconColor = Colors.pinkAccent;
       backgroundColor = Colors.pinkAccent.withOpacity(0.1);
     } else if (isDebt) {
-      iconData = Icons.handshake_rounded;
+      dynamicIconPath = 'debts';
       iconColor = Colors.purple;
       backgroundColor = Colors.purple.withOpacity(0.1);
     } else if (isNote) {
-      iconData = Icons.edit_note_rounded;
+      dynamicIconPath = 'notes';
       iconColor = Colors.teal;
       backgroundColor = Colors.teal.withOpacity(0.1);
     } else if (isSystem) {
       if (isSavings) {
-        iconData = Icons.savings_rounded;
+        dynamicIconPath = 'savings';
         iconColor = Colors.blue;
         backgroundColor = Colors.blue.withOpacity(0.1);
       } else {
-        iconData = Icons.settings;
+        dynamicIconPath = 'settings';
         iconColor = Colors.grey;
         backgroundColor = Colors.grey.withOpacity(0.1);
       }
@@ -90,12 +94,12 @@ class TransactionListItem extends ConsumerWidget {
             );
             
             if (sub != null && sub.id != null) {
-              iconData = IconHelper.getIcon(sub.iconPath ?? mainCategory.iconPath);
+              dynamicIconPath = sub.iconPath ?? mainCategory.iconPath;
             }
           }
           
-          if (iconData == null) {
-            iconData = IconHelper.getIcon(mainCategory.iconPath);
+          if (dynamicIconPath == null) {
+            dynamicIconPath = mainCategory.iconPath;
           }
           
         } catch (e) {
@@ -103,16 +107,23 @@ class TransactionListItem extends ConsumerWidget {
         }
       }
 
-      if (iconData == null && transaction.subCategoryIcon != null) {
-         iconData = IconHelper.getIcon(transaction.subCategoryIcon!);
+      if (dynamicIconPath == null && transaction.subCategoryIcon != null) {
+         dynamicIconPath = transaction.subCategoryIcon!;
          iconColor ??= defaultColor;
          backgroundColor ??= iconColor!.withOpacity(0.1);
       }
 
-      iconData ??= defaultIcon;
+      if (dynamicIconPath == null && staticIconData == null) {
+          staticIconData = defaultIcon;
+      }
+      
       iconColor ??= defaultColor;
       backgroundColor ??= iconColor!.withOpacity(0.1);
     }
+
+    final Widget iconWidget = dynamicIconPath != null 
+        ? IconHelper.getIconWidget(dynamicIconPath, pack: iconPack, color: iconColor)
+        : Icon(staticIconData ?? Icons.help_outline, color: iconColor);
 
     final isDebtIncome = isSystem && (transaction.title.toLowerCase().contains('borrowed') || transaction.title.toLowerCase().contains('received payment'));
     final isSavingsWithdraw = isSystem && transaction.title.toLowerCase().contains('withdraw from');
@@ -188,7 +199,7 @@ class TransactionListItem extends ConsumerWidget {
             contentPadding: const EdgeInsets.all(16),
             leading: CircleAvatar(
               backgroundColor: backgroundColor,
-              child: Icon(iconData, color: iconColor),
+              child: iconWidget,
             ),
             title: Text(displayTitle, style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
             subtitle: Text(

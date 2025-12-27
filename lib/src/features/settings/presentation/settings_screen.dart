@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
 import 'currency_provider.dart';
 import 'language_provider.dart';
 import 'voice_language_provider.dart';
+import 'icon_pack_provider.dart';
 import '../../../localization/generated/app_localizations.dart';
 
 
@@ -22,7 +24,7 @@ class SettingsScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: IconHelper.getIconWidget('arrow_back', pack: ref.watch(iconPackProvider), color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(AppLocalizations.of(context)!.settings, style: AppTextStyles.h2),
@@ -41,60 +43,66 @@ class SettingsScreen extends ConsumerWidget {
               ),
               child: Column(
                 children: [
-                  ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentBlue,
-                        shape: BoxShape.circle,
+                    ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(child: IconHelper.getIconWidget('currency_exchange', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 20)),
                       ),
-                      child: const Icon(Icons.currency_exchange, color: AppColors.primary),
+                      title: Text(AppLocalizations.of(context)!.currency, style: AppTextStyles.bodyLarge),
+                      subtitle: Text('${currentCurrency.name} (${currentCurrency.symbol})'),
+                      trailing: IconHelper.getIconWidget('chevron_right', pack: ref.watch(iconPackProvider), color: Colors.grey),
+                      onTap: () => _showCurrencyPicker(context, ref),
                     ),
-                    title: Text(AppLocalizations.of(context)!.currency, style: AppTextStyles.bodyLarge),
-                    subtitle: Text('${currentCurrency.name} (${currentCurrency.symbol})'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _showCurrencyPicker(context, ref),
-                  ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
-                  ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentBlue,
-                        shape: BoxShape.circle,
+                    ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(child: IconHelper.getIconWidget('language', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 20)),
                       ),
-                      child: const Icon(Icons.language, color: AppColors.primary),
+                      title: Text(AppLocalizations.of(context)!.language, style: AppTextStyles.bodyLarge),
+                      subtitle: Consumer(
+                        builder: (context, ref, _) {
+                          final language = ref.watch(languageProvider);
+                          return Text(language.name);
+                        },
+                      ),
+                      trailing: IconHelper.getIconWidget('chevron_right', pack: ref.watch(iconPackProvider), color: Colors.grey),
+                      onTap: () => _showLanguagePicker(context, ref),
                     ),
-                    title: Text(AppLocalizations.of(context)!.language, style: AppTextStyles.bodyLarge),
-                    subtitle: Consumer(
-                      builder: (context, ref, _) {
-                        final language = ref.watch(languageProvider);
-                        return Text(language.name);
-                      },
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _showLanguagePicker(context, ref),
-                  ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
-                  ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentBlue,
-                        shape: BoxShape.circle,
+                    ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(child: IconHelper.getIconWidget('mic', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 20)),
                       ),
-                      child: const Icon(Icons.mic, color: AppColors.primary),
+                      title: Text('Voice Input Language', style: AppTextStyles.bodyLarge),
+                      subtitle: Consumer(
+                        builder: (context, ref, _) {
+                          final voiceLang = ref.watch(voiceLanguageProvider);
+                          return Text(voiceLang.name);
+                        },
+                      ),
+                      trailing: IconHelper.getIconWidget('chevron_right', pack: ref.watch(iconPackProvider), color: Colors.grey),
+                      onTap: () => _showVoiceLanguagePicker(context, ref),
                     ),
-                    title: Text('Voice Input Language', style: AppTextStyles.bodyLarge),
-                    subtitle: Consumer(
-                      builder: (context, ref, _) {
-                        final voiceLang = ref.watch(voiceLanguageProvider);
-                        return Text(voiceLang.name);
-                      },
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _showVoiceLanguagePicker(context, ref),
-                  ),
                 ],
               ),
             ),
@@ -179,7 +187,7 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                           trailing: isSelected 
-                              ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                              ? IconHelper.getIconWidget('check_circle', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 24)
                               : null,
                           onTap: () {
                             ref.read(currencyProvider.notifier).setCurrency(currency);
@@ -268,7 +276,7 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                           trailing: isSelected 
-                              ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                              ? IconHelper.getIconWidget('check_circle', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 24)
                               : null,
                           onTap: () {
                             ref.read(languageProvider.notifier).setLanguage(language);
@@ -357,7 +365,7 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                           trailing: isSelected 
-                              ? Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                              ? IconHelper.getIconWidget('check_circle', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 24)
                               : null,
                           onTap: () {
                             ref.read(voiceLanguageProvider.notifier).setLanguage(language);

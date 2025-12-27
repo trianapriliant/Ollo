@@ -5,6 +5,8 @@ import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import '../../../localization/generated/app_localizations.dart';
 import '../../dashboard/presentation/dashboard_menu_order_provider.dart';
+import '../../../utils/icon_helper.dart';
+import '../../../features/settings/presentation/icon_pack_provider.dart';
 
 class ReorderMenuScreen extends ConsumerStatefulWidget {
   const ReorderMenuScreen({super.key});
@@ -46,26 +48,26 @@ class _ReorderMenuScreenState extends ConsumerState<ReorderMenuScreen> {
     }
   }
 
-  IconData _getIcon(DashboardMenuItem item) {
+  String _getIcon(DashboardMenuItem item) {
     switch (item) {
       case DashboardMenuItem.budget:
-        return Icons.pie_chart_outline;
+        return 'budget';
       case DashboardMenuItem.recurring:
-        return Icons.repeat;
+        return 'recurring';
       case DashboardMenuItem.savings:
-        return Icons.savings_outlined;
+        return 'savings_outlined';
       case DashboardMenuItem.bills:
-        return Icons.receipt_long;
+        return 'bills';
       case DashboardMenuItem.debts:
-        return Icons.handshake_outlined;
+        return 'handshake_outlined';
       case DashboardMenuItem.wishlist:
-        return Icons.card_giftcard;
+        return 'wishlist';
       case DashboardMenuItem.cards:
-        return Icons.credit_card;
+        return 'cards';
       case DashboardMenuItem.notes:
-        return Icons.checklist;
+        return 'checklist';
       case DashboardMenuItem.reimburse:
-        return Icons.currency_exchange;
+        return 'reimburse';
     }
   }
 
@@ -95,6 +97,7 @@ class _ReorderMenuScreenState extends ConsumerState<ReorderMenuScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final pack = ref.watch(iconPackProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -131,13 +134,21 @@ class _ReorderMenuScreenState extends ConsumerState<ReorderMenuScreen> {
                     side: BorderSide(color: Colors.grey.withOpacity(0.1)),
                   ),
                   child: ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: _getColor(item).withOpacity(0.1),
-                        shape: BoxShape.circle,
+                      leading: Container(
+                        width: 48,
+                        height: 48,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: _getColor(item).withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                      child: Center(
+                        child: IconHelper.getIconWidget(
+                          _getIcon(item),
+                          pack: pack,
+                          color: _getColor(item),
+                        ),
                       ),
-                      child: Icon(_getIcon(item), color: _getColor(item)),
                     ),
                     title: Text(
                       _getLabel(context, item),

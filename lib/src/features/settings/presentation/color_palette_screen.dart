@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import 'icon_pack_provider.dart';
 import '../domain/transaction_color_theme.dart';
 import '../../../localization/generated/app_localizations.dart';
 
@@ -19,7 +21,7 @@ class ColorPaletteScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
+          icon: IconHelper.getIconWidget('arrow_back', pack: ref.watch(iconPackProvider), color: AppColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(AppLocalizations.of(context)!.colorPalette, style: AppTextStyles.h2),
@@ -53,7 +55,8 @@ class ColorPaletteScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     _buildPreviewItem(
-                      icon: Icons.fastfood,
+                      ref: ref,
+                      iconName: 'fastfood',
                       title: 'Lunch',
                       date: 'Today',
                       amount: '- Rp 50.000',
@@ -63,7 +66,8 @@ class ColorPaletteScreen extends ConsumerWidget {
                     ),
                     const Divider(),
                     _buildPreviewItem(
-                      icon: Icons.work,
+                      ref: ref,
+                      iconName: 'work',
                       title: 'Salary',
                       date: 'Yesterday',
                       amount: '+ Rp 5.000.000',
@@ -73,7 +77,8 @@ class ColorPaletteScreen extends ConsumerWidget {
                     ),
                     const Divider(),
                     _buildPreviewItem(
-                      icon: Icons.swap_horiz,
+                      ref: ref,
+                      iconName: 'transfer',
                       title: 'Transfer to Savings',
                       date: '20 Dec 2024',
                       amount: '- Rp 1.000.000',
@@ -146,7 +151,8 @@ class ColorPaletteScreen extends ConsumerWidget {
   }
 
   Widget _buildPreviewItem({
-    required IconData icon,
+    required WidgetRef ref,
+    required String iconName,
     required String title,
     required String date,
     required String amount,
@@ -158,7 +164,7 @@ class ColorPaletteScreen extends ConsumerWidget {
       children: [
         CircleAvatar(
           backgroundColor: iconBg,
-          child: Icon(icon, color: iconColor, size: 20),
+          child: IconHelper.getIconWidget(iconName, pack: ref.watch(iconPackProvider), color: iconColor, size: 20),
         ),
         const SizedBox(width: 16),
         Expanded(

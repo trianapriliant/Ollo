@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../categories/domain/category.dart';
 import '../../../categories/presentation/category_localization_helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../settings/presentation/currency_provider.dart';
@@ -8,7 +10,7 @@ import '../../../../utils/icon_helper.dart';
 import '../../domain/category_data.dart';
 import '../statistics_provider.dart';
 
-class StatisticsCategoryItem extends StatelessWidget {
+class StatisticsCategoryItem extends ConsumerWidget {
   final CategoryData item;
   final Currency currency;
   final DateTime filterDate;
@@ -25,7 +27,7 @@ class StatisticsCategoryItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         final localizedName = CategoryLocalizationHelper.getLocalizedCategoryName(
@@ -58,8 +60,9 @@ class StatisticsCategoryItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              IconHelper.getIcon(item.iconPath),
+            IconHelper.getIconWidget(
+              item.iconPath,
+              pack: ref.watch(iconPackProvider),
               color: item.color,
               size: 24,
             ),

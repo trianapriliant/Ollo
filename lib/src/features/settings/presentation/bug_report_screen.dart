@@ -6,7 +6,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
+import 'icon_pack_provider.dart';
 
 class BugReportScreen extends ConsumerStatefulWidget {
   const BugReportScreen({super.key});
@@ -264,22 +266,22 @@ Sent via Ollo App
     );
   }
 
-  IconData _getFeatureIcon(String feature) {
+  String _getFeatureIconName(String feature) {
     switch (feature) {
-      case 'Quick Record': return Icons.flash_on;
-      case 'Transactions': return Icons.receipt_long;
-      case 'Budget': return Icons.account_balance_wallet;
-      case 'Cards': return Icons.credit_card;
-      case 'Wallets': return Icons.wallet;
-      case 'Categories': return Icons.category;
-      case 'Debts': return Icons.money_off;
-      case 'Bills': return Icons.receipt;
-      case 'Wishlist': return Icons.favorite;
-      case 'Savings': return Icons.savings;
-      case 'Statistics': return Icons.bar_chart;
-      case 'Backup/Restore': return Icons.backup;
-      case 'Settings': return Icons.settings;
-      default: return Icons.more_horiz;
+      case 'Quick Record': return 'flash';
+      case 'Transactions': return 'receipt';
+      case 'Budget': return 'wallet';
+      case 'Cards': return 'credit_card';
+      case 'Wallets': return 'wallet';
+      case 'Categories': return 'category';
+      case 'Debts': return 'debts';
+      case 'Bills': return 'bill';
+      case 'Wishlist': return 'wishlist';
+      case 'Savings': return 'savings';
+      case 'Statistics': return 'statistics';
+      case 'Backup/Restore': return 'restore';
+      case 'Settings': return 'settings';
+      default: return 'more_horiz';
     }
   }
 
@@ -331,8 +333,9 @@ Sent via Ollo App
                             : Colors.grey[100],
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
-                        _getFeatureIcon(feature),
+                      child: IconHelper.getIconWidget(
+                        _getFeatureIconName(feature),
+                        pack: ref.watch(iconPackProvider),
                         color: isSelected ? AppColors.primary : Colors.grey[600],
                         size: 22,
                       ),
@@ -345,7 +348,7 @@ Sent via Ollo App
                       ),
                     ),
                     trailing: isSelected 
-                        ? const Icon(Icons.check_circle, color: AppColors.primary, size: 24)
+                        ? IconHelper.getIconWidget('check_circle', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 24)
                         : null,
                     onTap: () {
                       setState(() => _selectedFeature = feature);
@@ -381,7 +384,7 @@ Sent via Ollo App
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
+          icon: IconHelper.getIconWidget('arrow_back', pack: ref.watch(iconPackProvider), color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(l10n.bugReport, style: AppTextStyles.h2),
@@ -451,7 +454,7 @@ Sent via Ollo App
                             color: AppColors.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Icon(_getFeatureIcon(_selectedFeature), color: AppColors.primary, size: 20),
+                          child: IconHelper.getIconWidget(_getFeatureIconName(_selectedFeature), pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 20),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -460,7 +463,7 @@ Sent via Ollo App
                             style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w500),
                           ),
                         ),
-                        Icon(Icons.keyboard_arrow_down, color: Colors.grey[600]),
+                        IconHelper.getIconWidget('keyboard_arrow_down', pack: ref.watch(iconPackProvider), color: Colors.grey[600]),
                       ],
                     ),
                   ),
@@ -643,7 +646,7 @@ Sent via Ollo App
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.send, size: 20),
+                        IconHelper.getIconWidget('send', pack: ref.watch(iconPackProvider), color: Colors.white, size: 20),
                         const SizedBox(width: 12),
                         Text(
                           l10n.bugReportSend,

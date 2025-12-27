@@ -8,6 +8,7 @@ import '../../../../common_widgets/modern_confirm_dialog.dart';
 import '../../domain/category.dart';
 import '../../../../localization/generated/app_localizations.dart';
 import '../../../transactions/data/transaction_repository.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 
 class SubCategoryManager extends ConsumerStatefulWidget {
   final List<SubCategory> subCategories;
@@ -194,8 +195,9 @@ class _SubCategoryManagerState extends ConsumerState<SubCategoryManager> {
                                     ),
                                   ] : null,
                                 ),
-                                child: Icon(
-                                  IconHelper.getIcon(icon),
+                                child: IconHelper.getIconWidget(
+                                  icon,
+                                  pack: ref.read(iconPackProvider),
                                   color: isSelected ? AppColors.primary : Colors.grey[600],
                                   size: 24,
                                 ),
@@ -288,8 +290,9 @@ class _SubCategoryManagerState extends ConsumerState<SubCategoryManager> {
                           color: AppColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(
-                          IconHelper.getIcon(sub.iconPath ?? 'category'),
+                        child: IconHelper.getIconWidget(
+                          sub.iconPath ?? 'category',
+                          pack: ref.watch(iconPackProvider),
                           size: 20,
                           color: AppColors.primary,
                         ),

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ollo/src/constants/app_colors.dart';
 import 'package:ollo/src/constants/app_text_styles.dart';
+import 'package:ollo/src/utils/icon_helper.dart';
+import 'package:ollo/src/features/settings/presentation/icon_pack_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../application/backup_service.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
@@ -328,7 +330,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: AppColors.textSecondary),
+            icon: IconHelper.getIconWidget('help', pack: ref.watch(iconPackProvider), color: AppColors.textSecondary),
             onPressed: () => _showBackupInfoDialog(context),
             tooltip: 'Info',
           ),
@@ -381,7 +383,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
             _buildActionButton(
               title: AppLocalizations.of(context)!.createBackup,
               subtitle: AppLocalizations.of(context)!.createBackupSubtitle,
-              icon: Icons.save_alt,
+              iconName: 'file_download',
               color: AppColors.primary,
               onTap: _isLoading ? null : _createBackup,
             ),
@@ -392,7 +394,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
             _buildActionButton(
               title: AppLocalizations.of(context)!.restoreBackup,
               subtitle: AppLocalizations.of(context)!.restoreBackupSubtitle,
-              icon: Icons.restore_page,
+              iconName: 'restore',
               color: Colors.orange,
               onTap: _isLoading ? null : _restoreBackup,
               isDestructive: true,
@@ -412,7 +414,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
   Widget _buildActionButton({
     required String title,
     required String subtitle,
-    required IconData icon,
+    required String iconName,
     required Color color,
     required VoidCallback? onTap,
     bool isDestructive = false,
@@ -442,7 +444,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
                 color: color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: color, size: 28),
+              child: IconHelper.getIconWidget(iconName, pack: ref.watch(iconPackProvider), color: color, size: 28),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -466,7 +468,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.grey[400]),
+            IconHelper.getIconWidget('chevron_right', pack: ref.watch(iconPackProvider), color: Colors.grey[400]),
           ],
         ),
       ),

@@ -9,6 +9,7 @@ import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
 
 import 'category_localization_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 
 class CategoryManagementScreen extends ConsumerStatefulWidget {
   const CategoryManagementScreen({super.key});
@@ -110,13 +111,13 @@ class _CategoryList extends ConsumerWidget {
   }
 }
 
-class _CategoryCard extends StatelessWidget {
+class _CategoryCard extends ConsumerWidget {
   final Category category;
 
   const _CategoryCard({required this.category});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final subCategories = category.subCategories ?? [];
 
     return Container(
@@ -142,9 +143,11 @@ class _CategoryCard extends StatelessWidget {
               color: category.color.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              IconHelper.getIcon(category.iconPath),
+            child: IconHelper.getIconWidget(
+              category.iconPath,
+              pack: ref.watch(iconPackProvider),
               color: category.color,
+              size: 24, // Explicit size since Icon had none (default 24?) Helper defaults to 24.
             ),
           ),
           title: Text(
@@ -187,8 +190,9 @@ class _CategoryCard extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          child: Icon(
-                            IconHelper.getIcon(sub.iconPath ?? 'category'),
+                          child: IconHelper.getIconWidget(
+                            sub.iconPath ?? 'category',
+                            pack: ref.watch(iconPackProvider),
                             size: 16,
                             color: category.color.withOpacity(0.8), // Inherit parent color theme
                           ),
@@ -247,159 +251,172 @@ class _SystemCategoryList extends StatelessWidget {
   Widget build(BuildContext context) {
     // Static list of system categories
     // Static list of system categories
+    // Static list of system categories
+    // Map icons to string keys for IconHelper
     final systemCategories = [
       {
         'name': AppLocalizations.of(context)!.sysCatTransfer,
-        'icon': Icons.swap_horiz_rounded,
+        'icon': 'transfer',
         'color': Colors.indigo,
         'description': AppLocalizations.of(context)!.sysCatTransferDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatRecurring,
-        'icon': Icons.update_rounded,
+        'icon': 'update', // Uses Icons.update
         'color': Colors.blueGrey,
         'description': AppLocalizations.of(context)!.sysCatRecurringDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatWishlist,
-        'icon': Icons.favorite_rounded,
+        'icon': 'favorite', // Uses Icons.favorite (Heart)
         'color': Colors.pinkAccent,
         'description': AppLocalizations.of(context)!.sysCatWishlistDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatBills,
-        'icon': Icons.receipt_long_rounded,
+        'icon': 'bill',
         'color': Colors.orange,
         'description': AppLocalizations.of(context)!.sysCatBillsDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatDebts,
-        'icon': Icons.handshake_rounded,
+        'icon': 'debts',
         'color': Colors.purple,
         'description': AppLocalizations.of(context)!.sysCatDebtsDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatSavings,
-        'icon': Icons.savings_rounded,
+        'icon': 'saving',
         'color': Colors.blue,
         'description': AppLocalizations.of(context)!.sysCatSavingsDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatSmartNotes,
-        'icon': Icons.shopping_basket_rounded,
+        'icon': 'shopping_basket',
         'color': Colors.teal,
         'description': AppLocalizations.of(context)!.sysCatSmartNotesDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatReimburse,
-        'icon': Icons.currency_exchange,
+        'icon': 'reimburse',
         'color': Colors.orangeAccent,
         'description': AppLocalizations.of(context)!.sysCatReimburseDesc,
       },
       {
         'name': AppLocalizations.of(context)!.sysCatAdjustment,
-        'icon': Icons.tune_rounded,
+        'icon': 'adjustment',
         'color': Colors.blueGrey,
         'description': AppLocalizations.of(context)!.sysCatAdjustmentDesc,
       },
     ];
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: systemCategories.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final category = systemCategories[index];
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ListTile(
-            leading: Container(
-              padding: const EdgeInsets.all(10),
+    return Consumer(
+      builder: (context, ref, child) {
+        final pack = ref.watch(iconPackProvider);
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: systemCategories.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final category = systemCategories[index];
+            return Container(
               decoration: BoxDecoration(
-                color: (category['color'] as Color).withOpacity(0.1),
-                shape: BoxShape.circle,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-              child: Icon(
-                category['icon'] as IconData,
-                color: category['color'] as Color,
-              ),
-            ),
-            title: Text(
-              category['name'] as String, 
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)
-            ),
-            subtitle: Text(
-              category['description'] as String, 
-              style: AppTextStyles.bodySmall
-            ),
-            trailing: const Icon(Icons.lock_outline, color: Colors.grey, size: 20),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (ctx) => Dialog(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(Icons.lock_outline, color: Colors.grey.shade600, size: 32),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          AppLocalizations.of(context)!.systemCategoryTitle,
-                          style: AppTextStyles.h3,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          AppLocalizations.of(context)!.systemCategoryMessage,
-                          style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey.shade600),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.pop(ctx),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 0,
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context)!.gotIt,
-                              style: const TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ],
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: (category['color'] as Color).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    widthFactor: 1.0, 
+                    heightFactor: 1.0,
+                    child: IconHelper.getIconWidget(
+                      category['icon'] as String,
+                      pack: pack,
+                      color: category['color'] as Color,
+                      size: 24,
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+                title: Text(
+                  category['name'] as String, 
+                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)
+                ),
+                subtitle: Text(
+                  category['description'] as String, 
+                  style: AppTextStyles.bodySmall
+                ),
+                trailing: const Icon(Icons.lock_outline, color: Colors.grey, size: 20),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => Dialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.lock_outline, color: Colors.grey.shade600, size: 32),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              AppLocalizations.of(context)!.systemCategoryTitle,
+                              style: AppTextStyles.h3,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              AppLocalizations.of(context)!.systemCategoryMessage,
+                              style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey.shade600),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 24),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  elevation: 0,
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.gotIt,
+                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         );
-      },
+      }
     );
   }
 }

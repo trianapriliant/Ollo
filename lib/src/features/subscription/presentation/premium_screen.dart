@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import '../application/revenuecat_service.dart';
 import '../domain/subscription_model.dart';
 import 'premium_provider.dart';
@@ -283,20 +285,20 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                   // Features Section
                   Text('Premium Features', style: AppTextStyles.h2),
                   const SizedBox(height: 16),
-                  _buildFeatureItem(Icons.mic, 'Voice Quick Record', 'Add transactions with your voice'),
-                  _buildFeatureItem(Icons.analytics, 'Advanced Statistics', 'Deep insights into your finances'),
-                  _buildFeatureItem(Icons.file_download, 'Data Export', 'Export to CSV and Excel'),
-                  _buildFeatureItem(Icons.document_scanner, 'Smart Scan', 'Scan receipts automatically'),
-                  _buildFeatureItem(Icons.palette, 'Premium Themes', 'Exclusive gradient themes'),
-                  _buildFeatureItem(Icons.account_balance_wallet, 'Unlimited Wallets', 'No limits on wallets'),
+                  _buildFeatureItem('mic', 'Voice Quick Record', 'Add transactions with your voice'),
+                  _buildFeatureItem('analytics', 'Advanced Statistics', 'Deep insights into your finances'),
+                  _buildFeatureItem('file_download', 'Data Export', 'Export to CSV and Excel'),
+                  _buildFeatureItem('document_scanner', 'Smart Scan', 'Scan receipts automatically'),
+                  _buildFeatureItem('palette', 'Premium Themes', 'Exclusive gradient themes'),
+                  _buildFeatureItem('wallet', 'Unlimited Wallets', 'No limits on wallets'),
 
                   if (isVip && !isDeveloper) ...[
                     const SizedBox(height: 24),
                     Text('VIP Exclusive', style: AppTextStyles.h2),
                     const SizedBox(height: 16),
-                    _buildFeatureItem(Icons.access_time, 'Early Access', 'Get new features first', isVipFeature: true),
-                    _buildFeatureItem(Icons.support_agent, 'Priority Support', 'Fast-track bug reports', isVipFeature: true),
-                    _buildFeatureItem(Icons.auto_awesome, 'Beta Features', 'Try experimental features', isVipFeature: true),
+                    _buildFeatureItem('access_time', 'Early Access', 'Get new features first', isVipFeature: true),
+                    _buildFeatureItem('support_agent', 'Priority Support', 'Fast-track bug reports', isVipFeature: true),
+                    _buildFeatureItem('auto_awesome', 'Beta Features', 'Try experimental features', isVipFeature: true),
                   ],
 
                   // Developer Exclusive Benefits
@@ -310,9 +312,9 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildFeatureItem(Icons.favorite, 'Built This App', 'Thank you for creating Ollo! 💖', isDeveloperFeature: true),
-                    _buildFeatureItem(Icons.all_inclusive, 'Everything Unlocked', 'All features, forever', isDeveloperFeature: true),
-                    _buildFeatureItem(Icons.bug_report, 'Debug Access', 'Developer tools & testing', isDeveloperFeature: true),
+                    _buildFeatureItem('favorite', 'Built This App', 'Thank you for creating Ollo! 💖', isDeveloperFeature: true),
+                    _buildFeatureItem('all_inclusive', 'Everything Unlocked', 'All features, forever', isDeveloperFeature: true),
+                    _buildFeatureItem('bug_report', 'Debug Access', 'Developer tools & testing', isDeveloperFeature: true),
                   ],
 
                   // Restore Purchases
@@ -343,7 +345,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
     );
   }
 
-  Widget _buildFeatureItem(IconData icon, String title, String subtitle, {bool isVipFeature = false, bool isDeveloperFeature = false}) {
+  Widget _buildFeatureItem(String iconName, String title, String subtitle, {bool isVipFeature = false, bool isDeveloperFeature = false}) {
     final Color accentColor;
     if (isDeveloperFeature) {
       accentColor = const Color(0xFF00D9FF); // Cyan for developer
@@ -353,11 +355,15 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
       accentColor = const Color(0xFF4A90E2); // Blue for regular premium
     }
     
+    final iconPack = ref.watch(iconPackProvider);
+    
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
           Container(
+            width: 40,
+            height: 40,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isDeveloperFeature 
@@ -365,10 +371,13 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                   : accentColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              icon,
-              color: accentColor,
-              size: 20,
+            child: Center(
+              child: IconHelper.getIconWidget(
+                iconName,
+                pack: iconPack,
+                color: accentColor,
+                size: 20,
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -384,8 +393,9 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
               ],
             ),
           ),
-          Icon(
-            isDeveloperFeature ? Icons.verified : Icons.check_circle, 
+          IconHelper.getIconWidget(
+            isDeveloperFeature ? 'verified' : 'check_circle', 
+            pack: iconPack,
             color: isDeveloperFeature ? const Color(0xFF00D9FF) : Colors.green, 
             size: 20,
           ),

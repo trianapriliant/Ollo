@@ -11,6 +11,7 @@ import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../transactions/domain/transaction.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 
 class AddEditWalletScreen extends ConsumerStatefulWidget {
   final Wallet? wallet;
@@ -135,8 +136,9 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
                             color: Colors.white.withAlpha(51), // 0.2 * 255
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
-                            IconHelper.getIcon(_selectedIcon),
+                          child: IconHelper.getIconWidget(
+                            _selectedIcon,
+                            pack: ref.watch(iconPackProvider),
                             color: Colors.white,
                             size: 24,
                           ),
@@ -271,8 +273,9 @@ class _AddEditWalletScreenState extends ConsumerState<AddEditWalletScreen> {
                           color: isSelected ? AppColors.primary : Colors.grey[300]!,
                         ),
                       ),
-                      child: Icon(
-                        IconHelper.getIcon(iconName),
+                      child: IconHelper.getIconWidget(
+                        iconName,
+                        pack: ref.watch(iconPackProvider),
                         color: isSelected ? Colors.white : Colors.grey[600],
                       ),
                     ),

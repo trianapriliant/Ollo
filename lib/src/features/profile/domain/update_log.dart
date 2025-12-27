@@ -14,6 +14,21 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.6.3',
+      date: DateTime(2025, 12, 27),
+      changes: [
+        'NEW: Iconoir Icon Pack - Modern line-style icon alternative.',
+        'NEW: Icon Pack switcher in Settings → Appearance (Material Icons / Iconoir).',
+        'Migrated: Dashboard Menu, Bottom Navigation, Profile Screen icons to dynamic icon system.',
+        'Migrated: Import Wallet Templates, Color Palette, Backup & Recovery screens.',
+        'Migrated: Data Export/Import screens with wallet & category selector icons.',
+        'Migrated: Bug Report screen with feature selector icons.',
+        'Migrated: Cards screens (Add/Edit Card, My Cards) with dynamic icons.',
+        'NEW: Icon mappings for help, restore, file_download, file_upload, send, info, folder.',
+        'Improved: Differentiated subcategory icons (lunch/dinner/eateries, books/courses, weekly/monthly).',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.6.2',
       date: DateTime(2025, 12, 27),
       changes: [

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import '../../cards/data/card_repository.dart';
 import '../../cards/domain/card.dart';
 
@@ -78,7 +80,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: IconHelper.getIconWidget('close', pack: ref.watch(iconPackProvider), color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -89,7 +91,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
         actions: [
           if (isEditing)
             IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              icon: IconHelper.getIconWidget('delete', pack: ref.watch(iconPackProvider), color: Colors.red),
               onPressed: _deleteCard,
             ),
         ],
@@ -141,8 +143,9 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Icon(
-                              _getTypeIcon(_type),
+                            IconHelper.getIconWidget(
+                              _getTypeIconName(_type),
+                              pack: ref.watch(iconPackProvider),
                               color: Colors.white.withOpacity(0.8),
                             ),
                             const SizedBox(height: 4),
@@ -175,7 +178,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                           style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
                         ),
                         if (_isPinned)
-                          const Icon(Icons.push_pin, color: Colors.white, size: 16),
+                          IconHelper.getIconWidget('push_pin', pack: ref.watch(iconPackProvider), color: Colors.white, size: 16),
                       ],
                     ),
                   ],
@@ -205,7 +208,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                           shape: BoxShape.circle,
                           border: isSelected ? Border.all(color: Colors.grey, width: 3) : null,
                         ),
-                        child: isSelected ? const Icon(Icons.check, color: Colors.white) : null,
+                        child: isSelected ? IconHelper.getIconWidget('check', pack: ref.watch(iconPackProvider), color: Colors.white) : null,
                       ),
                     );
                   },
@@ -218,7 +221,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                 controller: _nameController,
                 label: 'Bank / Wallet Name',
                 hint: 'e.g. BCA, GoPay',
-                icon: Icons.business,
+                iconName: 'bank',
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 16),
@@ -226,7 +229,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                 controller: _numberController,
                 label: 'Account Number',
                 hint: 'e.g. 1234567890',
-                icon: Icons.numbers,
+                iconName: 'numbers',
                 keyboardType: TextInputType.number,
                 onChanged: (_) => setState(() {}),
               ),
@@ -235,7 +238,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                 controller: _holderController,
                 label: 'Holder Name',
                 hint: 'e.g. John Doe',
-                icon: Icons.person_outline,
+                iconName: 'person_outline',
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 16),
@@ -248,7 +251,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                       controller: _labelController,
                       label: 'Label (Optional)',
                       hint: 'e.g. Main Savings',
-                      icon: Icons.label_outline,
+                      iconName: 'label',
                       isRequired: false, // Explicitly not required
                       onChanged: (_) => setState(() {}),
                     ),
@@ -259,7 +262,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                       controller: _branchController,
                       label: 'Branch (Optional)',
                       hint: 'e.g. KCP Sudirman',
-                      icon: Icons.location_on_outlined,
+                      iconName: 'location',
                       isRequired: false, // Explicitly not required
                       onChanged: (_) => setState(() {}),
                     ),
@@ -275,7 +278,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                     child: _buildSelector(
                       label: 'Provider',
                       value: _type.name.toUpperCase(),
-                      icon: _getTypeIcon(_type),
+                      iconName: _getTypeIconName(_type),
                       onTap: _showProviderPicker,
                     ),
                   ),
@@ -284,7 +287,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                     child: _buildSelector(
                       label: 'Type',
                       value: _accountType.name.toUpperCase(),
-                      icon: _getAccountTypeIcon(_accountType),
+                      iconName: _getAccountTypeIconName(_accountType),
                       onTap: _showAccountTypePicker,
                     ),
                   ),
@@ -296,7 +299,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
               _buildSelector(
                 label: 'Category',
                 value: _category.name.toUpperCase(),
-                icon: Icons.category_outlined, 
+                iconName: 'category', 
                 onTap: _showCategoryPicker,
               ),
               const SizedBox(height: 16),
@@ -309,7 +312,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                 ),
                 child: SwitchListTile(
                   title: const Text('Pin to Top'),
-                  secondary: const Icon(Icons.push_pin_outlined),
+                  secondary: IconHelper.getIconWidget('push_pin', pack: ref.watch(iconPackProvider), color: AppColors.textSecondary),
                   value: _isPinned,
                   onChanged: (val) => setState(() => _isPinned = val),
                   activeColor: AppColors.primary,
@@ -347,7 +350,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
     required TextEditingController controller,
     required String label,
     required String hint,
-    required IconData icon,
+    required String iconName,
     TextInputType? keyboardType,
     bool isRequired = true,
     void Function(String)? onChanged,
@@ -370,7 +373,10 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.withOpacity(0.1)),
         ),
-        prefixIcon: Icon(icon, color: AppColors.textSecondary),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(12),
+          child: IconHelper.getIconWidget(iconName, pack: ref.watch(iconPackProvider), color: AppColors.textSecondary, size: 20),
+        ),
         labelStyle: const TextStyle(color: AppColors.textSecondary),
       ),
       validator: (val) {
@@ -385,7 +391,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
   Widget _buildSelector({
     required String label,
     required String value,
-    required IconData icon,
+    required String iconName,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -404,7 +410,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
             ),
             child: Row(
               children: [
-                Icon(icon, color: AppColors.textSecondary),
+                IconHelper.getIconWidget(iconName, pack: ref.watch(iconPackProvider), color: AppColors.textSecondary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -416,7 +422,7 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
                     ],
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary),
+                IconHelper.getIconWidget('keyboard_arrow_down', pack: ref.watch(iconPackProvider), color: AppColors.textSecondary),
               ],
             ),
           ),
@@ -426,6 +432,24 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
   }
 
   // --- Helpers for Icons ---
+  String _getTypeIconName(CardType type) {
+    switch (type) {
+      case CardType.bank: return 'bank';
+      case CardType.eWallet: return 'wallet';
+      case CardType.blockchain: return 'bitcoin';
+      case CardType.other: return 'credit_card';
+    }
+  }
+
+  String _getAccountTypeIconName(CardAccountType type) {
+    switch (type) {
+      case CardAccountType.personal: return 'person';
+      case CardAccountType.business: return 'business_center';
+      default: return 'person';
+    }
+  }
+
+  // IconData getters for picker compatibility
   IconData _getTypeIcon(CardType type) {
     switch (type) {
       case CardType.bank: return Icons.account_balance;
@@ -439,7 +463,6 @@ class _AddEditCardScreenState extends ConsumerState<AddEditCardScreen> {
     switch (type) {
       case CardAccountType.personal: return Icons.person;
       case CardAccountType.business: return Icons.business_center;
-
       default: return Icons.work;
     }
   }

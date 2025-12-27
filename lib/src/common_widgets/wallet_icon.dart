@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../features/settings/presentation/icon_pack_provider.dart';
 import '../utils/icon_helper.dart';
 
-class WalletIcon extends StatelessWidget {
+class WalletIcon extends ConsumerWidget {
   final String iconPath;
   final double size;
   final Color? color;
@@ -18,7 +20,7 @@ class WalletIcon extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Check if it's a custom file (user uploaded image or imported icon)
     if (_isCustomFilePath(iconPath)) {
       return Container(
@@ -49,15 +51,16 @@ class WalletIcon extends StatelessWidget {
       );
     }
 
-    // It's a Material Icon string
+    // It's a Material Icon string (or Iconoir string)
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.grey[100],
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        IconHelper.getIcon(iconPath),
+      child: IconHelper.getIconWidget(
+        iconPath,
+        pack: ref.watch(iconPackProvider),
         size: size,
         color: color ?? Colors.black,
       ),

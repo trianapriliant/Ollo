@@ -3,10 +3,12 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../categories/domain/category.dart';
 import '../../../categories/presentation/category_localization_helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 
 import '../../../../utils/icon_helper.dart';
 
-class SubCategorySelector extends StatelessWidget {
+class SubCategorySelector extends ConsumerWidget {
   final List<SubCategory> subCategories;
   final SubCategory? selectedSubCategory;
   final Function(SubCategory) onSubCategorySelected;
@@ -21,7 +23,7 @@ class SubCategorySelector extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (subCategories.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
@@ -46,8 +48,9 @@ class SubCategorySelector extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    IconHelper.getIcon(subCategory.iconPath ?? 'category'),
+                  IconHelper.getIconWidget(
+                    subCategory.iconPath ?? 'category',
+                    pack: ref.watch(iconPackProvider),
                     size: 18,
                     color: isSelected ? Colors.white : Colors.grey[600],
                   ),

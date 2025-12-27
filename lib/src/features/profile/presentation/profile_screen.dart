@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../constants/app_colors.dart';
@@ -31,6 +33,7 @@ import '../../settings/presentation/reorder_menu_screen.dart';
 import '../../settings/presentation/card_theme_selection_screen.dart';
 import '../../settings/presentation/color_palette_screen.dart';
 import '../../settings/presentation/bug_report_screen.dart';
+import '../../settings/presentation/icon_pack_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -120,19 +123,19 @@ class ProfileScreen extends ConsumerWidget {
                             // Data Management Section (MOVED TO TOP)
                             ProfileMenuSection(title: AppLocalizations.of(context)!.dataManagement),
                             ProfileMenuItem(
-                              icon: Icons.category,
+                              iconName: 'category',
                               title: AppLocalizations.of(context)!.categories,
                               onTap: () => context.push('/categories'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.account_balance_wallet,
+                              iconName: 'wallet',
                               title: AppLocalizations.of(context)!.wallets,
                               onTap: () => context.go('/wallet'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.downloading,
+                              iconName: 'download', // downloading -> download
                               title: 'Import Wallet Templates',
                               onTap: () => context.push('/import-wallet-templates'),
                             ),
@@ -141,7 +144,7 @@ class ProfileScreen extends ConsumerWidget {
                             // Preferences Section
                             ProfileMenuSection(title: AppLocalizations.of(context)!.preferences),
                             ProfileMenuItem(
-                              icon: Icons.grid_view_rounded,
+                              iconName: 'sort', 
                               title: AppLocalizations.of(context)!.customizeMenu,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -151,7 +154,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.palette,
+                              iconName: 'palette',
                               title: AppLocalizations.of(context)!.cardAppearance,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -161,11 +164,21 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.color_lens_outlined,
+                              iconName: 'color_lens', // color_lens_outlined -> color_lens
                               title: AppLocalizations.of(context)!.colorPalette,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => const ColorPaletteScreen(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            ProfileMenuItem(
+                              iconName: 'widgets', // widgets_outlined -> widgets
+                              title: 'Icon Pack',
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const IconPackScreen(),
                                 ),
                               ),
                             ),
@@ -174,25 +187,25 @@ class ProfileScreen extends ConsumerWidget {
                             // Future Features Section
                             ProfileMenuSection(title: AppLocalizations.of(context)!.futureFeatures),
                             ProfileMenuItem(
-                              icon: Icons.cloud_sync_outlined,
+                              iconName: 'cloud_sync', // cloud_sync_outlined -> cloud_sync
                               title: AppLocalizations.of(context)!.backupRecovery,
                               onTap: () => context.push('/backup'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.auto_awesome_outlined,
+                              iconName: 'auto_awesome', // auto_awesome_outlined -> auto_awesome
                               title: AppLocalizations.of(context)!.aiAutomation,
                               onTap: () => _showComingSoonDialog(context, AppLocalizations.of(context)!.aiAutomation, AppLocalizations.of(context)!.comingSoonDesc),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.feedback_outlined,
+                              iconName: 'feedback', // feedback_outlined -> feedback
                               title: AppLocalizations.of(context)!.feedbackRoadmap,
                               onTap: () => context.push('/roadmap'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.file_download_outlined,
+                              iconName: 'file_download', // file_download_outlined -> file_download
                               title: AppLocalizations.of(context)!.dataExport,
                               onTap: () {
                                  context.push('/data-export');
@@ -200,7 +213,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.file_upload_outlined,
+                              iconName: 'file_upload', // file_upload_outlined -> file_upload
                               title: AppLocalizations.of(context)!.importData,
                               onTap: () => context.push('/data-import'),
                             ),
@@ -209,25 +222,25 @@ class ProfileScreen extends ConsumerWidget {
                             // General Section
                             ProfileMenuSection(title: AppLocalizations.of(context)!.general),
                             ProfileMenuItem(
-                              icon: Icons.settings,
+                              iconName: 'settings',
                               title: AppLocalizations.of(context)!.settings,
                               onTap: () => context.push('/settings'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.help_outline,
+                              iconName: 'help_outline', // help_outline -> help
                               title: AppLocalizations.of(context)!.helpSupport,
                               onTap: () => context.push('/help-support'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.chat_bubble_outline,
+                              iconName: 'chat_bubble_outline', // chat_bubble_outline -> chat_bubble
                               title: AppLocalizations.of(context)!.sendFeedback,
                               onTap: () => context.push('/send-feedback'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.bug_report_outlined,
+                              iconName: 'bug_report', // bug_report_outlined -> bug_report
                               title: AppLocalizations.of(context)!.bugReport,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -237,13 +250,13 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.info_outline,
+                              iconName: 'info_outline', // info_outline -> info
                               title: AppLocalizations.of(context)!.aboutOllo,
                               onTap: () => context.push('/about-ollo'),
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.history,
+                              iconName: 'history',
                               title: AppLocalizations.of(context)!.updateLog ?? 'Update Log',
                               onTap: () => context.push('/update-log'),
                             ),
@@ -252,14 +265,14 @@ class ProfileScreen extends ConsumerWidget {
                             // Account Section (MOVED TO BOTTOM)
                             ProfileMenuSection(title: AppLocalizations.of(context)!.account),
                             ProfileMenuItem(
-                              icon: Icons.delete_forever,
+                              iconName: 'delete_forever',
                               title: AppLocalizations.of(context)!.deleteData,
                               onTap: () => _showDeleteDataDialog(context, ref),
                               isDestructive: true,
                             ),
                             const SizedBox(height: 8),
                             ProfileMenuItem(
-                              icon: Icons.logout,
+                              iconName: 'logout',
                               title: AppLocalizations.of(context)!.logout,
                               onTap: () => _showLogoutDialog(context),
                               isDestructive: true,
@@ -348,10 +361,13 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.rocket_launch_rounded,
-                  color: Colors.white,
-                  size: 32,
+                child: Consumer(
+                  builder: (context, ref, _) => IconHelper.getIconWidget(
+                    'rocket', // rocket_launch_rounded -> rocket
+                    color: Colors.white,
+                    size: 32,
+                    pack: ref.watch(iconPackProvider),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -449,10 +465,13 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.exit_to_app_rounded,
-                  color: Colors.white,
-                  size: 32,
+                child: Consumer(
+                    builder: (context, ref, _) => IconHelper.getIconWidget(
+                    'logout', // exit_to_app_rounded -> logout
+                    color: Colors.white,
+                    size: 32,
+                    pack: ref.watch(iconPackProvider),
+                  )
                 ),
               ),
               const SizedBox(height: 20),

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
 import '../features/transactions/presentation/widgets/add_transaction_bottom_sheet.dart';
 import '../localization/generated/app_localizations.dart';
+import '../features/settings/presentation/icon_pack_provider.dart';
+import '../utils/icon_helper.dart';
 
 import 'package:flutter/services.dart';
 
-class ScaffoldWithNavBar extends StatefulWidget {
+class ScaffoldWithNavBar extends ConsumerStatefulWidget {
   const ScaffoldWithNavBar({
     required this.navigationShell,
     super.key,
@@ -16,14 +19,16 @@ class ScaffoldWithNavBar extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
 
   @override
-  State<ScaffoldWithNavBar> createState() => _ScaffoldWithNavBarState();
+  ConsumerState<ScaffoldWithNavBar> createState() => _ScaffoldWithNavBarState();
 }
 
-class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
+class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
   DateTime? _lastPressedAt;
 
   @override
   Widget build(BuildContext context) {
+    final iconPack = ref.watch(iconPackProvider);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
@@ -35,12 +40,6 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
           if (didPop) return;
 
           // Only handle double-back-to-exit on the first tab (Home)
-          // For other tabs, we might want to go back to Home first?
-          // Standard pattern: If at root of a branch, handle exit.
-          // Since StatefulShellRoute handles internal navigation, if we are here,
-          // it generally means we are at the root of the app navigation stack from GoRouter's perspective
-          // or GoRouter didn't handle the pop.
-          
           final now = DateTime.now();
           if (_lastPressedAt == null ||
               now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
@@ -75,20 +74,20 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                     children: [
                       Expanded(
                         child: _NavBarItem(
-                          icon: Icons.home_outlined,
-                          selectedIcon: Icons.home,
+                          iconName: 'home',
                           label: AppLocalizations.of(context)!.home,
                           isSelected: widget.navigationShell.currentIndex == 0,
                           onTap: () => _onTap(context, 0),
+                          iconPack: iconPack,
                         ),
                       ),
                       Expanded(
                         child: _NavBarItem(
-                          icon: Icons.bar_chart_outlined,
-                          selectedIcon: Icons.bar_chart,
+                          iconName: 'show_chart', // or bar_chart
                           label: AppLocalizations.of(context)!.statistics,
                           isSelected: widget.navigationShell.currentIndex == 1,
                           onTap: () => _onTap(context, 1),
+                          iconPack: iconPack,
                         ),
                       ),
                     ],
@@ -104,20 +103,20 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                     children: [
                       Expanded(
                         child: _NavBarItem(
-                          icon: Icons.wallet_outlined,
-                          selectedIcon: Icons.wallet,
+                          iconName: 'wallet',
                           label: AppLocalizations.of(context)!.wallet,
                           isSelected: widget.navigationShell.currentIndex == 2,
                           onTap: () => _onTap(context, 2),
+                          iconPack: iconPack,
                         ),
                       ),
                       Expanded(
                         child: _NavBarItem(
-                          icon: Icons.person_outline,
-                          selectedIcon: Icons.person,
+                          iconName: 'person',
                           label: AppLocalizations.of(context)!.profile,
                           isSelected: widget.navigationShell.currentIndex == 3,
                           onTap: () => _onTap(context, 3),
+                          iconPack: iconPack,
                         ),
                       ),
                     ],
@@ -145,7 +144,12 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                 backgroundColor: AppColors.primary,
                 elevation: 4,
                 shape: const CircleBorder(),
-                child: const Icon(Icons.add, color: Colors.white, size: 32),
+                child: IconHelper.getIconWidget(
+                  'add',
+                  color: Colors.white,
+                  size: 32,
+                  pack: iconPack,
+                ),
               ),
             ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -163,18 +167,18 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
 }
 
 class _NavBarItem extends StatelessWidget {
-  final IconData icon;
-  final IconData selectedIcon;
+  final String iconName;
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final IconPack iconPack;
 
   const _NavBarItem({
-    required this.icon,
-    required this.selectedIcon,
+    required this.iconName,
     required this.label,
     required this.isSelected,
     required this.onTap,
+    required this.iconPack,
   });
 
   @override
@@ -187,10 +191,11 @@ class _NavBarItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isSelected ? selectedIcon : icon,
+            IconHelper.getIconWidget(
+              iconName,
               color: isSelected ? AppColors.primary : Colors.grey,
               size: 24,
+              pack: iconPack,
             ),
             const SizedBox(height: 4),
             Text(

@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // Material UI
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../utils/icon_helper.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../../localization/generated/app_localizations.dart';
+import '../../../../features/settings/presentation/icon_pack_provider.dart';
 
-class CategoryIconSelector extends StatefulWidget {
+class CategoryIconSelector extends ConsumerStatefulWidget {
   final String selectedIcon;
   final ValueChanged<String> onIconSelected;
 
@@ -15,10 +17,10 @@ class CategoryIconSelector extends StatefulWidget {
   });
 
   @override
-  State<CategoryIconSelector> createState() => _CategoryIconSelectorState();
+  ConsumerState<CategoryIconSelector> createState() => _CategoryIconSelectorState();
 }
 
-class _CategoryIconSelectorState extends State<CategoryIconSelector> {
+class _CategoryIconSelectorState extends ConsumerState<CategoryIconSelector> {
   static const Map<String, List<String>> iconGroups = {
     'Food & Drink': [
       'fastfood', 'restaurant', 'lunch_dining', 'local_cafe', 'local_bar', 'local_pizza', 'bakery_dining', 'icecream'
@@ -118,8 +120,9 @@ class _CategoryIconSelectorState extends State<CategoryIconSelector> {
             ),
           ] : null,
         ),
-        child: Icon(
-          IconHelper.getIcon(iconPath),
+        child: IconHelper.getIconWidget(
+          iconPath,
+          pack: ref.watch(iconPackProvider),
           color: isSelected ? AppColors.primary : Colors.grey[500],
           size: 24,
         ),
@@ -202,8 +205,9 @@ class _CategoryIconSelectorState extends State<CategoryIconSelector> {
                                     ),
                                   ] : null,
                                 ),
-                                child: Icon(
-                                  IconHelper.getIcon(icon),
+                                child: IconHelper.getIconWidget(
+                                  icon,
+                                  pack: ref.read(iconPackProvider), // Use read or passed pack? ref.watch is better if possible but this is inside a builder. BottomSheet might need its own Consumer or just read current state. Usually sheet is transient.
                                   color: isSelected ? AppColors.primary : Colors.grey[600],
                                   size: 24,
                                 ),

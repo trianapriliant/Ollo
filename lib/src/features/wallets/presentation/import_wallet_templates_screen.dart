@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import '../application/wallet_template_service.dart';
 
 class ImportWalletTemplatesScreen extends ConsumerWidget {
@@ -20,7 +22,7 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: IconHelper.getIconWidget('arrow_back', pack: ref.watch(iconPackProvider), color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text('Import Wallet Templates', style: AppTextStyles.h2),
@@ -59,9 +61,10 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
                           color: const Color(0xFF4A90E2).withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(
-                          Icons.account_balance_wallet,
-                          color: Color(0xFF4A90E2),
+                        child: IconHelper.getIconWidget(
+                          'wallet',
+                          pack: ref.watch(iconPackProvider),
+                          color: const Color(0xFF4A90E2),
                           size: 28,
                         ),
                       ),
@@ -107,7 +110,7 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.info_outline, color: Colors.grey[600], size: 20),
+                        IconHelper.getIconWidget('info', pack: ref.watch(iconPackProvider), color: Colors.grey[600], size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -147,7 +150,7 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
                             color: Colors.grey[100],
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Icon(Icons.folder_open, color: Colors.grey[400]),
+                          child: IconHelper.getIconWidget('folder', pack: ref.watch(iconPackProvider), color: Colors.grey[400]),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
@@ -185,7 +188,7 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
                                 color: const Color(0xFF4CAF50).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Icon(Icons.check_circle, color: Color(0xFF4CAF50)),
+                              child: IconHelper.getIconWidget('check_circle', pack: ref.watch(iconPackProvider), color: const Color(0xFF4CAF50)),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
@@ -226,11 +229,11 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
                         color: Color(0xFFE8F5E9),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.downloading, color: Color(0xFF4CAF50)),
+                      child: IconHelper.getIconWidget('file_download', pack: ref.watch(iconPackProvider), color: const Color(0xFF4CAF50)),
                     ),
                     title: Text('Import Icon Pack', style: AppTextStyles.bodyLarge),
                     subtitle: const Text('Import from ZIP file'),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: IconHelper.getIconWidget('chevron_right', pack: ref.watch(iconPackProvider)),
                     onTap: () => _importIconPack(context, ref),
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
@@ -241,11 +244,11 @@ class ImportWalletTemplatesScreen extends ConsumerWidget {
                         color: Color(0xFFFFEBEE),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.delete_outline, color: Color(0xFFF44336)),
+                      child: IconHelper.getIconWidget('delete', pack: ref.watch(iconPackProvider), color: const Color(0xFFF44336)),
                     ),
                     title: Text('Clear All Packs', style: AppTextStyles.bodyLarge),
                     subtitle: const Text('Remove all imported icons'),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: IconHelper.getIconWidget('chevron_right', pack: ref.watch(iconPackProvider)),
                     onTap: () => _clearIconPacks(context, ref),
                   ),
                 ],

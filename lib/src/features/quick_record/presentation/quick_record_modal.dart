@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import '../presentation/quick_record_controller.dart';
 import '../../transactions/domain/transaction.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
@@ -107,7 +109,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                     style: AppTextStyles.h3,
                   ),
               IconButton(
-                icon: const Icon(Icons.close),
+                icon: IconHelper.getIconWidget('close', pack: ref.watch(iconPackProvider)),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
@@ -207,11 +209,12 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                    color: isError ? Colors.red.withOpacity(0.1) : AppColors.primary.withOpacity(0.1),
                    shape: BoxShape.circle,
                  ),
-                 child: Icon(
-                   isError ? Icons.refresh : Icons.mic, 
-                   size: 50, 
-                   color: isError ? Colors.red : AppColors.primary
-                 ),
+                  child: IconHelper.getIconWidget(
+                    isError ? 'refresh' : 'mic', 
+                    size: 50, 
+                    color: isError ? Colors.red : AppColors.primary,
+                    pack: ref.watch(iconPackProvider),
+                  ),
                ),
              ],
           ),
@@ -243,7 +246,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
             hintText: AppLocalizations.of(context)!.textInputHint,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             suffixIcon: IconButton(
-              icon: const Icon(Icons.send, color: AppColors.primary),
+              icon: IconHelper.getIconWidget('send', pack: ref.watch(iconPackProvider), color: AppColors.primary),
               onPressed: () {
                 ref.read(quickRecordControllerProvider.notifier).processText(_textController.text);
               },
@@ -286,7 +289,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                    children: [
                      Row(
                        children: [
-                         const Icon(Icons.check_circle, color: Colors.green),
+                         IconHelper.getIconWidget('check_circle', pack: ref.watch(iconPackProvider), color: Colors.green, size: 24),
                          const SizedBox(width: 8),
                          Text(AppLocalizations.of(context)!.draftReady, style: AppTextStyles.bodyLarge),
                        ],
@@ -365,7 +368,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                              color: Colors.blue.withOpacity(0.1),
                              shape: BoxShape.circle,
                            ),
-                           child: const Icon(Icons.swap_horiz_rounded, color: Colors.blue, size: 20),
+                           child: IconHelper.getIconWidget('transfer', pack: ref.watch(iconPackProvider), color: Colors.blue, size: 20),
                          ),
                          const SizedBox(width: 8),
                          Text(
@@ -396,7 +399,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                                      color: Colors.orange.withOpacity(0.1),
                                      borderRadius: BorderRadius.circular(8),
                                    ),
-                                   child: const Icon(Icons.account_balance_wallet, color: Colors.orange, size: 20),
+                                   child: IconHelper.getIconWidget('wallet', pack: ref.watch(iconPackProvider), color: Colors.orange, size: 20),
                                  ),
                                  const SizedBox(height: 4),
                                  Text(
@@ -409,10 +412,9 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                                ],
                              ),
                            ),
-                           // Arrow
                            const Padding(
                              padding: EdgeInsets.symmetric(horizontal: 4),
-                             child: Icon(Icons.arrow_forward, color: Colors.grey, size: 18),
+                             child: Icon(Icons.arrow_forward, color: Colors.grey, size: 18),  // Keep simple arrow for layout
                            ),
                            // Destination Wallet
                            Expanded(
@@ -425,7 +427,7 @@ class _QuickRecordModalState extends ConsumerState<QuickRecordModal> {
                                      color: Colors.green.withOpacity(0.1),
                                      borderRadius: BorderRadius.circular(8),
                                    ),
-                                   child: const Icon(Icons.account_balance_wallet, color: Colors.green, size: 20),
+                                   child: IconHelper.getIconWidget('wallet', pack: ref.watch(iconPackProvider), color: Colors.green, size: 20),
                                  ),
                                  const SizedBox(height: 4),
                                  Text(

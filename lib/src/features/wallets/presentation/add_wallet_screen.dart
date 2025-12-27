@@ -15,6 +15,7 @@ import '../../settings/presentation/currency_provider.dart';
 import '../../../utils/icon_helper.dart';
 import '../../../common_widgets/wallet_icon.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 
 class AddWalletScreen extends ConsumerStatefulWidget {
   final Wallet? walletToEdit;
@@ -578,8 +579,9 @@ class _AddWalletScreenState extends ConsumerState<AddWalletScreen> {
                           shape: BoxShape.circle,
                           border: isSelected ? Border.all(color: AppColors.primary, width: 2) : null,
                         ),
-                        child: Icon(
-                          IconHelper.getIcon(iconName),
+                        child: IconHelper.getIconWidget(
+                          iconName,
+                          pack: ref.watch(iconPackProvider),
                           color: isSelected ? AppColors.primary : Colors.grey[600],
                           size: 24,
                         ),

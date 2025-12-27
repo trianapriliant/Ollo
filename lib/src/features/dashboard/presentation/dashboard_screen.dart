@@ -23,6 +23,8 @@ import '../../budget/domain/budget.dart';
 import '../../home_widget/home_widget_service.dart';
 import 'transaction_provider.dart';
 import '../../../localization/generated/app_localizations.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -204,7 +206,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.star, color: Colors.orange, size: 14),
+                          IconHelper.getIconWidget(
+                            'star',
+                            color: Colors.orange,
+                            size: 14,
+                            pack: ref.watch(iconPackProvider),
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Lvl ${ref.watch(gamificationProvider).value?.level ?? 1}',
@@ -224,7 +231,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ? FileImage(File(profile.profileImagePath!))
                       : null,
                   child: profile.profileImagePath == null
-                      ? const Icon(Icons.person, color: AppColors.primary)
+                      ? IconHelper.getIconWidget(
+                          'person',
+                          color: AppColors.primary,
+                          pack: ref.watch(iconPackProvider),
+                        )
                       : null,
                 ),
                 ],

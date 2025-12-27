@@ -4,6 +4,8 @@ import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../budget/presentation/budget_screen.dart';
 import '../../../../localization/generated/app_localizations.dart';
+import '../../../../utils/icon_helper.dart';
+import '../../../settings/presentation/icon_pack_provider.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../dashboard_menu_order_provider.dart';
@@ -27,7 +29,7 @@ class DashboardMenuGrid extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: menuItems.map((item) => Padding(
               padding: const EdgeInsets.only(right: 20), // Slightly larger spacing
-              child: _buildMenuCard(item),
+              child: _buildMenuCard(item, ref),
             )).toList(),
           ),
         ),
@@ -39,28 +41,28 @@ class DashboardMenuGrid extends ConsumerWidget {
     switch (item) {
       case DashboardMenuItem.budget:
         return _MenuItem(
-          icon: Icons.pie_chart_outline,
+          iconName: 'budget',
           label: AppLocalizations.of(context)!.budget,
           color: Colors.orange,
           onTap: () => context.push('/budget'),
         );
       case DashboardMenuItem.recurring:
         return _MenuItem(
-          icon: Icons.repeat,
+          iconName: 'recurring',
           label: AppLocalizations.of(context)!.recurring,
           color: Colors.blue,
           onTap: () => context.push('/recurring'),
         );
       case DashboardMenuItem.savings:
         return _MenuItem(
-          icon: Icons.savings_outlined,
+          iconName: 'savings_outlined',
           label: AppLocalizations.of(context)!.savings,
           color: Colors.green,
           onTap: () => context.push('/savings'),
         );
       case DashboardMenuItem.bills:
         return _MenuItem(
-          icon: Icons.receipt_long,
+          iconName: 'bills',
           label: AppLocalizations.of(context)!.bills,
           color: Colors.red,
           onTap: () {
@@ -69,7 +71,7 @@ class DashboardMenuGrid extends ConsumerWidget {
         );
       case DashboardMenuItem.debts:
         return _MenuItem(
-          icon: Icons.handshake_outlined,
+          iconName: 'handshake_outlined',
           label: AppLocalizations.of(context)!.debts,
           color: Colors.purple,
           onTap: () {
@@ -78,7 +80,7 @@ class DashboardMenuGrid extends ConsumerWidget {
         );
       case DashboardMenuItem.wishlist:
         return _MenuItem(
-          icon: Icons.card_giftcard,
+          iconName: 'wishlist',
           label: AppLocalizations.of(context)!.wishlist,
           color: Colors.pink,
           onTap: () {
@@ -87,21 +89,21 @@ class DashboardMenuGrid extends ConsumerWidget {
         );
       case DashboardMenuItem.cards:
         return _MenuItem(
-          icon: Icons.credit_card,
+          iconName: 'cards',
           label: AppLocalizations.of(context)!.cards,
           color: Colors.indigo,
           onTap: () => context.push('/cards'),
         );
       case DashboardMenuItem.notes:
         return _MenuItem(
-          icon: Icons.checklist,
+          iconName: 'checklist',
           label: AppLocalizations.of(context)!.notes,
           color: Colors.teal,
           onTap: () => context.push('/smart-notes'),
         );
       case DashboardMenuItem.reimburse:
         return _MenuItem(
-          icon: Icons.currency_exchange,
+          iconName: 'reimburse',
           label: AppLocalizations.of(context)!.reimburse,
           color: Colors.orangeAccent,
           onTap: () => context.push('/reimburse'),
@@ -109,7 +111,8 @@ class DashboardMenuGrid extends ConsumerWidget {
     }
   }
 
-  Widget _buildMenuCard(_MenuItem item) {
+  Widget _buildMenuCard(_MenuItem item, WidgetRef ref) {
+    final pack = ref.watch(iconPackProvider);
     return GestureDetector(
       onTap: item.onTap,
       child: Column(
@@ -121,7 +124,14 @@ class DashboardMenuGrid extends ConsumerWidget {
               color: item.color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(item.icon, color: item.color, size: 24),
+            child: Center(
+              child: IconHelper.getIconWidget(
+                item.iconName,
+                pack: pack,
+                color: item.color,
+                size: 24,
+              ),
+            ),
           ),
           const SizedBox(height: 4),
           SizedBox(
@@ -136,18 +146,18 @@ class DashboardMenuGrid extends ConsumerWidget {
           ),
         ],
       ),
-      );
+    );
   }
 }
 
 class _MenuItem {
-  final IconData icon;
+  final String iconName;
   final String label;
   final Color color;
   final VoidCallback onTap;
 
   _MenuItem({
-    required this.icon,
+    required this.iconName,
     required this.label,
     required this.color,
     required this.onTap,

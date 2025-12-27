@@ -7,6 +7,8 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../profile/application/data_import_service.dart';
 
@@ -105,7 +107,7 @@ class _DataImportScreenState extends ConsumerState<DataImportScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: IconHelper.getIconWidget('arrow_back', pack: ref.watch(iconPackProvider), color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(AppLocalizations.of(context)!.importDataTitle, style: AppTextStyles.h2),
@@ -125,7 +127,7 @@ class _DataImportScreenState extends ConsumerState<DataImportScreen> {
               ),
               child: Row(
                 children: [
-                   const Icon(Icons.info_outline, color: Colors.blue),
+                   IconHelper.getIconWidget('info', pack: ref.watch(iconPackProvider), color: Colors.blue),
                    const SizedBox(width: 12),
                    Expanded(
                      child: Text(
@@ -148,7 +150,7 @@ class _DataImportScreenState extends ConsumerState<DataImportScreen> {
                   side: const BorderSide(color: AppColors.primary),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                icon: const Icon(Icons.download, color: AppColors.primary),
+                icon: IconHelper.getIconWidget('file_download', pack: ref.watch(iconPackProvider), color: AppColors.primary),
                 label: Text(
                   AppLocalizations.of(context)!.downloadTemplate,
                   style: AppTextStyles.bodyLarge.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
@@ -172,7 +174,7 @@ class _DataImportScreenState extends ConsumerState<DataImportScreen> {
                 ),
                 icon: _isLoading 
                     ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : const Icon(Icons.upload_file),
+                    : IconHelper.getIconWidget('file_upload', pack: ref.watch(iconPackProvider), color: Colors.white),
                 label: Text(
                   AppLocalizations.of(context)!.uploadCsv,
                   style: AppTextStyles.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),

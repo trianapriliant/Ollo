@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
+import '../../../../utils/icon_helper.dart';
+import '../../../settings/presentation/icon_pack_provider.dart';
 import '../../../quick_record/presentation/quick_record_modal.dart';
 import '../../../subscription/presentation/premium_provider.dart';
 import '../../../subscription/presentation/widgets/premium_gate_widget.dart';
@@ -32,7 +34,7 @@ class QuickRecordSection extends ConsumerWidget {
               _buildQuickActionItem(
                 context,
                 ref,
-                Icons.chat_bubble_outline,
+                'chat_bubble',
                 AppLocalizations.of(context)!.chatAction,
                 'chat',
                 isPremiumFeature: false,
@@ -43,7 +45,7 @@ class QuickRecordSection extends ConsumerWidget {
               _buildQuickActionItem(
                 context,
                 ref,
-                Icons.camera_alt_outlined,
+                'camera_alt',
                 AppLocalizations.of(context)!.scanAction,
                 'scan',
                 isPremiumFeature: true,
@@ -54,7 +56,7 @@ class QuickRecordSection extends ConsumerWidget {
               _buildQuickActionItem(
                 context,
                 ref,
-                Icons.mic_none_outlined,
+                'mic_outline',
                 AppLocalizations.of(context)!.voiceAction,
                 'voice',
                 isPremiumFeature: true,
@@ -70,13 +72,14 @@ class QuickRecordSection extends ConsumerWidget {
   Widget _buildQuickActionItem(
     BuildContext context,
     WidgetRef ref,
-    IconData icon,
+    String iconName,
     String label,
     String mode, {
     required bool isPremiumFeature,
     required bool hasPremiumAccess,
   }) {
     final isLocked = isPremiumFeature && !hasPremiumAccess;
+    final iconPack = ref.watch(iconPackProvider);
 
     return GestureDetector(
       onTap: () async {
@@ -132,9 +135,12 @@ class QuickRecordSection extends ConsumerWidget {
                     ),
                   ],
                 ),
-                child: Icon(
-                  icon,
-                  color: isLocked ? Colors.grey : AppColors.primary,
+                child: Center(
+                  child: IconHelper.getIconWidget(
+                    iconName,
+                    pack: iconPack,
+                    color: isLocked ? Colors.grey : AppColors.primary,
+                  ),
                 ),
               ),
               // Premium badge for locked features

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:isar/isar.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
+import '../../../utils/icon_helper.dart';
+import '../../settings/presentation/icon_pack_provider.dart';
 import '../../cards/data/card_repository.dart';
 import '../../cards/domain/card.dart';
 import '../../../localization/generated/app_localizations.dart';
@@ -85,12 +87,12 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
     }
   }
 
-  IconData _getIconForType(CardType type) {
+  String _getIconNameForType(CardType type) {
     switch (type) {
-      case CardType.bank: return Icons.account_balance;
-      case CardType.eWallet: return Icons.account_balance_wallet;
-      case CardType.blockchain: return Icons.currency_bitcoin;
-      case CardType.other: return Icons.credit_card;
+      case CardType.bank: return 'bank';
+      case CardType.eWallet: return 'wallet';
+      case CardType.blockchain: return 'bitcoin';
+      case CardType.other: return 'credit_card';
     }
   }
 
@@ -128,7 +130,11 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
             ),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(_isMultiSelectMode ? Icons.close : Icons.arrow_back, color: Colors.black),
+              icon: IconHelper.getIconWidget(
+                _isMultiSelectMode ? 'close' : 'arrow_back', 
+                pack: ref.watch(iconPackProvider),
+                color: Colors.black,
+              ),
               onPressed: () {
                 if (_isMultiSelectMode) {
                   setState(() => _selectedIds.clear());
@@ -140,7 +146,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
             actions: [
               if (_isMultiSelectMode)
                 IconButton(
-                  icon: const Icon(Icons.copy_all, color: AppColors.primary),
+                  icon: IconHelper.getIconWidget('copy_all', pack: ref.watch(iconPackProvider), color: AppColors.primary),
                   onPressed: () => _copySelected(sortedCards, l10n),
                 ),
               PopupMenuButton<String>(
@@ -216,16 +222,16 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
               indicatorColor: AppColors.primary,
               tabs: [
                 Tab(
-                  icon: const Icon(Icons.account_balance, size: 20),
+                  icon: IconHelper.getIconWidget('bank', pack: ref.watch(iconPackProvider), size: 20),
                   text: l10n.bank,
                 ),
                 Tab(
-                  icon: const Icon(Icons.account_balance_wallet, size: 20),
+                  icon: IconHelper.getIconWidget('wallet', pack: ref.watch(iconPackProvider), size: 20),
                   text: l10n.eWallet,
                 ),
                 if (_lastTabCount == 3)
                   Tab(
-                    icon: const Icon(Icons.currency_bitcoin, size: 20),
+                    icon: IconHelper.getIconWidget('bitcoin', pack: ref.watch(iconPackProvider), size: 20),
                     text: l10n.blockchain,
                   ),
               ],
@@ -277,7 +283,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(_getIconForType(type), size: 64, color: Colors.grey[300]),
+            IconHelper.getIconWidget(_getIconNameForType(type), pack: ref.watch(iconPackProvider), size: 64, color: Colors.grey[300]),
             const SizedBox(height: 16),
             Text(l10n.noCardsYet, style: AppTextStyles.h3.copyWith(color: Colors.grey)),
             const SizedBox(height: 8),
@@ -355,8 +361,9 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Icon(
-                          _getIconForType(card.type),
+                        IconHelper.getIconWidget(
+                          _getIconNameForType(card.type),
+                          pack: ref.watch(iconPackProvider),
                           color: Colors.white.withOpacity(0.8),
                         ),
                         const SizedBox(height: 4),
@@ -389,7 +396,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
                       style: AppTextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
                     ),
                     if (isPinned)
-                      const Icon(Icons.push_pin, color: Colors.white, size: 16),
+                      IconHelper.getIconWidget('push_pin', pack: ref.watch(iconPackProvider), color: Colors.white, size: 16),
                   ],
                 ),
                 if (!_isMultiSelectMode) ...[
@@ -399,7 +406,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
                       Expanded(
                         child: _buildActionButton(
                           context,
-                          icon: Icons.copy,
+                          iconName: 'copy',
                           label: l10n.copyNumber,
                           onTap: () {
                             Clipboard.setData(ClipboardData(text: card.number));
@@ -413,7 +420,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
                       Expanded(
                         child: _buildActionButton(
                           context,
-                          icon: Icons.copy_all,
+                          iconName: 'copy_all',
                           label: l10n.copyTemplate,
                           onTap: () {
                             // Format: "Trian | BCA: 123456"
@@ -441,7 +448,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: AppColors.primary, size: 20),
+                child: IconHelper.getIconWidget('check', pack: ref.watch(iconPackProvider), color: AppColors.primary, size: 20),
               ),
             ),
         ],
@@ -449,7 +456,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
     );
   }
 
-  Widget _buildActionButton(BuildContext context, {required IconData icon, required String label, required VoidCallback onTap}) {
+  Widget _buildActionButton(BuildContext context, {required String iconName, required String label, required VoidCallback onTap}) {
     return Material(
       color: Colors.white.withOpacity(0.2),
       borderRadius: BorderRadius.circular(12),
@@ -462,7 +469,7 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 16, color: Colors.white),
+              IconHelper.getIconWidget(iconName, pack: ref.watch(iconPackProvider), size: 16, color: Colors.white),
               const SizedBox(width: 8),
               Text(
                 label,
