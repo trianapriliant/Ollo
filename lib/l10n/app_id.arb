@@ -1057,5 +1057,16 @@
   "savingGoals": "Target Tabungan",
   "bank": "Bank",
   "eWallet": "E-Wallet",
-  "blockchain": "Blockchain"
+  "blockchain": "Blockchain",
+  "iconStyleTitle": "Gaya Ikon",
+  "iconStyleDescription": "Pilih tampilan ikon di seluruh aplikasi",
+  "iconStylePreview": "Pratinjau",
+  "iconStyleFilled": "Solid",
+  "iconStyleFilledDesc": "Ikon klasik terisi",
+  "iconStyleOutlined": "Garis Tepi",
+  "iconStyleOutlinedDesc": "Gaya outline bersih",
+  "iconStyleRounded": "Bulat",
+  "iconStyleRoundedDesc": "Sudut yang lembut",
+  "iconStyleSharp": "Tajam",
+  "iconStyleSharpDesc": "Tepi sudut tegas"
 }

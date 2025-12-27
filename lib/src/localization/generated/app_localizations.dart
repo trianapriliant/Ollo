@@ -5591,6 +5591,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blockchain'**
   String get blockchain;
+
+  /// No description provided for @iconStyleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon Style'**
+  String get iconStyleTitle;
+
+  /// No description provided for @iconStyleDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how icons appear throughout the app'**
+  String get iconStyleDescription;
+
+  /// No description provided for @iconStylePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get iconStylePreview;
+
+  /// No description provided for @iconStyleFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled'**
+  String get iconStyleFilled;
+
+  /// No description provided for @iconStyleFilledDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic solid icons'**
+  String get iconStyleFilledDesc;
+
+  /// No description provided for @iconStyleOutlined.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlined'**
+  String get iconStyleOutlined;
+
+  /// No description provided for @iconStyleOutlinedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean outline style'**
+  String get iconStyleOutlinedDesc;
+
+  /// No description provided for @iconStyleRounded.
+  ///
+  /// In en, this message translates to:
+  /// **'Rounded'**
+  String get iconStyleRounded;
+
+  /// No description provided for @iconStyleRoundedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft rounded corners'**
+  String get iconStyleRoundedDesc;
+
+  /// No description provided for @iconStyleSharp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharp'**
+  String get iconStyleSharp;
+
+  /// No description provided for @iconStyleSharpDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold angular edges'**
+  String get iconStyleSharpDesc;
 }
 
 class _AppLocalizationsDelegate

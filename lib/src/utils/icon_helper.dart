@@ -1,6 +1,222 @@
 import 'package:flutter/material.dart';
+import '../features/settings/presentation/icon_style_provider.dart';
 
 class IconHelper {
+  /// Get icon with the current style applied
+  /// This method converts the base filled icon to the requested variant
+  static IconData getIconWithStyle(String iconName, IconStyle style) {
+    final baseIcon = getIcon(iconName);
+    return _applyStyle(baseIcon, style);
+  }
+
+  /// Apply style variant to an IconData
+  /// Material Icons have a consistent pattern for variants:
+  /// - Filled: base codepoint
+  /// - Outlined: usually base + offset or _outlined suffix
+  /// - Rounded: _rounded suffix
+  /// - Sharp: _sharp suffix
+  static IconData _applyStyle(IconData baseIcon, IconStyle style) {
+    if (style == IconStyle.filled) return baseIcon;
+    
+    // For icons that have known variants, we use a lookup
+    // This covers the most commonly used icons
+    final variantMap = _getVariantMap(baseIcon);
+    if (variantMap != null) {
+      switch (style) {
+        case IconStyle.outlined:
+          return variantMap['outlined'] ?? baseIcon;
+        case IconStyle.rounded:
+          return variantMap['rounded'] ?? baseIcon;
+        case IconStyle.sharp:
+          return variantMap['sharp'] ?? baseIcon;
+        case IconStyle.filled:
+          return baseIcon;
+      }
+    }
+    
+    // Fallback: return base icon if no variant found
+    return baseIcon;
+  }
+
+  /// Get variant map for common icons
+  static Map<String, IconData>? _getVariantMap(IconData icon) {
+    // Most frequently used icons with their variants
+    final variants = <int, Map<String, IconData>>{
+      Icons.home.codePoint: {
+        'outlined': Icons.home_outlined,
+        'rounded': Icons.home_rounded,
+        'sharp': Icons.home_sharp,
+      },
+      Icons.shopping_bag.codePoint: {
+        'outlined': Icons.shopping_bag_outlined,
+        'rounded': Icons.shopping_bag_rounded,
+        'sharp': Icons.shopping_bag_sharp,
+      },
+      Icons.account_balance_wallet.codePoint: {
+        'outlined': Icons.account_balance_wallet_outlined,
+        'rounded': Icons.account_balance_wallet_rounded,
+        'sharp': Icons.account_balance_wallet_sharp,
+      },
+      Icons.credit_card.codePoint: {
+        'outlined': Icons.credit_card_outlined,
+        'rounded': Icons.credit_card_rounded,
+        'sharp': Icons.credit_card_sharp,
+      },
+      Icons.savings.codePoint: {
+        'outlined': Icons.savings_outlined,
+        'rounded': Icons.savings_rounded,
+        'sharp': Icons.savings_sharp,
+      },
+      Icons.favorite.codePoint: {
+        'outlined': Icons.favorite_outline,
+        'rounded': Icons.favorite_rounded,
+        'sharp': Icons.favorite_sharp,
+      },
+      Icons.fastfood.codePoint: {
+        'outlined': Icons.fastfood_outlined,
+        'rounded': Icons.fastfood_rounded,
+        'sharp': Icons.fastfood_sharp,
+      },
+      Icons.directions_car.codePoint: {
+        'outlined': Icons.directions_car_outlined,
+        'rounded': Icons.directions_car_rounded,
+        'sharp': Icons.directions_car_sharp,
+      },
+      Icons.restaurant.codePoint: {
+        'outlined': Icons.restaurant_outlined,
+        'rounded': Icons.restaurant_rounded,
+        'sharp': Icons.restaurant_sharp,
+      },
+      Icons.local_cafe.codePoint: {
+        'outlined': Icons.local_cafe_outlined,
+        'rounded': Icons.local_cafe_rounded,
+        'sharp': Icons.local_cafe_sharp,
+      },
+      Icons.medical_services.codePoint: {
+        'outlined': Icons.medical_services_outlined,
+        'rounded': Icons.medical_services_rounded,
+        'sharp': Icons.medical_services_sharp,
+      },
+      Icons.movie.codePoint: {
+        'outlined': Icons.movie_outlined,
+        'rounded': Icons.movie_rounded,
+        'sharp': Icons.movie_sharp,
+      },
+      Icons.work.codePoint: {
+        'outlined': Icons.work_outline,
+        'rounded': Icons.work_rounded,
+        'sharp': Icons.work_sharp,
+      },
+      Icons.school.codePoint: {
+        'outlined': Icons.school_outlined,
+        'rounded': Icons.school_rounded,
+        'sharp': Icons.school_sharp,
+      },
+      Icons.pets.codePoint: {
+        'outlined': Icons.pets_outlined,
+        'rounded': Icons.pets_rounded,
+        'sharp': Icons.pets_sharp,
+      },
+      Icons.child_care.codePoint: {
+        'outlined': Icons.child_care_outlined,
+        'rounded': Icons.child_care_rounded,
+        'sharp': Icons.child_care_sharp,
+      },
+      Icons.receipt.codePoint: {
+        'outlined': Icons.receipt_outlined,
+        'rounded': Icons.receipt_rounded,
+        'sharp': Icons.receipt_sharp,
+      },
+      Icons.handshake.codePoint: {
+        'outlined': Icons.handshake_outlined,
+        'rounded': Icons.handshake_rounded,
+        'sharp': Icons.handshake_sharp,
+      },
+      Icons.settings.codePoint: {
+        'outlined': Icons.settings_outlined,
+        'rounded': Icons.settings_rounded,
+        'sharp': Icons.settings_sharp,
+      },
+      Icons.person.codePoint: {
+        'outlined': Icons.person_outline,
+        'rounded': Icons.person_rounded,
+        'sharp': Icons.person_sharp,
+      },
+      Icons.people.codePoint: {
+        'outlined': Icons.people_outline,
+        'rounded': Icons.people_rounded,
+        'sharp': Icons.people_sharp,
+      },
+      Icons.star.codePoint: {
+        'outlined': Icons.star_outline,
+        'rounded': Icons.star_rounded,
+        'sharp': Icons.star_sharp,
+      },
+      Icons.shopping_cart.codePoint: {
+        'outlined': Icons.shopping_cart_outlined,
+        'rounded': Icons.shopping_cart_rounded,
+        'sharp': Icons.shopping_cart_sharp,
+      },
+      Icons.store.codePoint: {
+        'outlined': Icons.store_outlined,
+        'rounded': Icons.store_rounded,
+        'sharp': Icons.store_sharp,
+      },
+      Icons.local_mall.codePoint: {
+        'outlined': Icons.local_mall_outlined,
+        'rounded': Icons.local_mall_rounded,
+        'sharp': Icons.local_mall_sharp,
+      },
+      Icons.flight.codePoint: {
+        'outlined': Icons.flight_outlined,
+        'rounded': Icons.flight_rounded,
+        'sharp': Icons.flight_sharp,
+      },
+      Icons.train.codePoint: {
+        'outlined': Icons.train_outlined,
+        'rounded': Icons.train_rounded,
+        'sharp': Icons.train_sharp,
+      },
+      Icons.local_hospital.codePoint: {
+        'outlined': Icons.local_hospital_outlined,
+        'rounded': Icons.local_hospital_rounded,
+        'sharp': Icons.local_hospital_sharp,
+      },
+      Icons.fitness_center.codePoint: {
+        'outlined': Icons.fitness_center_outlined,
+        'rounded': Icons.fitness_center_rounded,
+        'sharp': Icons.fitness_center_sharp,
+      },
+      Icons.music_note.codePoint: {
+        'outlined': Icons.music_note_outlined,
+        'rounded': Icons.music_note_rounded,
+        'sharp': Icons.music_note_sharp,
+      },
+      Icons.sports_esports.codePoint: {
+        'outlined': Icons.sports_esports_outlined,
+        'rounded': Icons.sports_esports_rounded,
+        'sharp': Icons.sports_esports_sharp,
+      },
+      Icons.category.codePoint: {
+        'outlined': Icons.category_outlined,
+        'rounded': Icons.category_rounded,
+        'sharp': Icons.category_sharp,
+      },
+      Icons.account_balance.codePoint: {
+        'outlined': Icons.account_balance_outlined,
+        'rounded': Icons.account_balance_rounded,
+        'sharp': Icons.account_balance_sharp,
+      },
+      Icons.wallet.codePoint: {
+        'outlined': Icons.wallet_outlined,
+        'rounded': Icons.wallet_rounded,
+        'sharp': Icons.wallet_sharp,
+      },
+    };
+    
+    return variants[icon.codePoint];
+  }
+
   static IconData getIcon(String iconName) {
     switch (iconName.toLowerCase().trim()) {
       // Finance & Wallet

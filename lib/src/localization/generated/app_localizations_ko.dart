@@ -2857,4 +2857,38 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get blockchain => 'Blockchain';
+
+  @override
+  String get iconStyleTitle => 'Icon Style';
+
+  @override
+  String get iconStyleDescription =>
+      'Choose how icons appear throughout the app';
+
+  @override
+  String get iconStylePreview => 'Preview';
+
+  @override
+  String get iconStyleFilled => 'Filled';
+
+  @override
+  String get iconStyleFilledDesc => 'Classic solid icons';
+
+  @override
+  String get iconStyleOutlined => 'Outlined';
+
+  @override
+  String get iconStyleOutlinedDesc => 'Clean outline style';
+
+  @override
+  String get iconStyleRounded => 'Rounded';
+
+  @override
+  String get iconStyleRoundedDesc => 'Soft rounded corners';
+
+  @override
+  String get iconStyleSharp => 'Sharp';
+
+  @override
+  String get iconStyleSharpDesc => 'Bold angular edges';
 }

@@ -13,6 +13,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../data/transaction_repository.dart';
 import 'package:ollo/src/localization/generated/app_localizations.dart';
 import '../../../settings/domain/transaction_color_theme.dart';
+import '../../../settings/presentation/icon_style_provider.dart';
 
 class TransactionListItem extends ConsumerWidget {
   final Transaction transaction;
@@ -24,6 +25,7 @@ class TransactionListItem extends ConsumerWidget {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     final dateFormat = DateFormat('dd MMM yyyy');
     final colorTheme = ref.watch(colorPaletteProvider);
+    final iconStyle = ref.watch(iconStyleProvider);
 
     final isSystem = transaction.type == TransactionType.system;
     
@@ -90,12 +92,12 @@ class TransactionListItem extends ConsumerWidget {
             );
             
             if (sub != null && sub.id != null) {
-              iconData = IconHelper.getIcon(sub.iconPath ?? mainCategory.iconPath);
+              iconData = IconHelper.getIconWithStyle(sub.iconPath ?? mainCategory.iconPath, iconStyle);
             }
           }
           
           if (iconData == null) {
-            iconData = IconHelper.getIcon(mainCategory.iconPath);
+            iconData = IconHelper.getIconWithStyle(mainCategory.iconPath, iconStyle);
           }
           
         } catch (e) {
@@ -104,7 +106,7 @@ class TransactionListItem extends ConsumerWidget {
       }
 
       if (iconData == null && transaction.subCategoryIcon != null) {
-         iconData = IconHelper.getIcon(transaction.subCategoryIcon!);
+         iconData = IconHelper.getIconWithStyle(transaction.subCategoryIcon!, iconStyle);
          iconColor ??= defaultColor;
          backgroundColor ??= iconColor!.withOpacity(0.1);
       }

@@ -9,6 +9,7 @@ import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
 
 import 'category_localization_helper.dart';
+import '../../settings/presentation/icon_style_provider.dart';
 
 class CategoryManagementScreen extends ConsumerStatefulWidget {
   const CategoryManagementScreen({super.key});
@@ -110,13 +111,13 @@ class _CategoryList extends ConsumerWidget {
   }
 }
 
-class _CategoryCard extends StatelessWidget {
+class _CategoryCard extends ConsumerWidget {
   final Category category;
 
   const _CategoryCard({required this.category});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final subCategories = category.subCategories ?? [];
 
     return Container(
@@ -143,7 +144,7 @@ class _CategoryCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              IconHelper.getIcon(category.iconPath),
+              IconHelper.getIconWithStyle(category.iconPath, ref.watch(iconStyleProvider)),
               color: category.color,
             ),
           ),
@@ -188,7 +189,7 @@ class _CategoryCard extends StatelessWidget {
                               ],
                             ),
                           child: Icon(
-                            IconHelper.getIcon(sub.iconPath ?? 'category'),
+                            IconHelper.getIconWithStyle(sub.iconPath ?? 'category', ref.watch(iconStyleProvider)),
                             size: 16,
                             color: category.color.withOpacity(0.8), // Inherit parent color theme
                           ),

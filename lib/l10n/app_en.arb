@@ -1268,5 +1268,16 @@
   "savingGoals": "Saving Goals",
   "bank": "Bank",
   "eWallet": "E-Wallet",
-  "blockchain": "Blockchain"
+  "blockchain": "Blockchain",
+  "iconStyleTitle": "Icon Style",
+  "iconStyleDescription": "Choose how icons appear throughout the app",
+  "iconStylePreview": "Preview",
+  "iconStyleFilled": "Filled",
+  "iconStyleFilledDesc": "Classic solid icons",
+  "iconStyleOutlined": "Outlined",
+  "iconStyleOutlinedDesc": "Clean outline style",
+  "iconStyleRounded": "Rounded",
+  "iconStyleRoundedDesc": "Soft rounded corners",
+  "iconStyleSharp": "Sharp",
+  "iconStyleSharpDesc": "Bold angular edges"
 }

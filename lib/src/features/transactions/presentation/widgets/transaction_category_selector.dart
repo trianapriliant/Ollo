@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_text_styles.dart';
 import '../../../../utils/icon_helper.dart';
 import '../../../categories/domain/category.dart';
 import '../../../transactions/domain/transaction.dart';
 import '../category_selection_item.dart';
-
 import '../../../categories/presentation/category_localization_helper.dart';
 import '../../../../localization/generated/app_localizations.dart';
+import '../../../settings/presentation/icon_style_provider.dart';
 
-class TransactionCategorySelector extends StatelessWidget {
+class TransactionCategorySelector extends ConsumerWidget {
   final TransactionType type;
   final CategorySelectionItem? selectedItem;
   final Transaction? transactionToEdit;
@@ -26,7 +27,9 @@ class TransactionCategorySelector extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final iconStyle = ref.watch(iconStyleProvider);
+    
     if (type == TransactionType.system ||
         type == TransactionType.transfer ||
         (transactionToEdit != null &&
@@ -41,7 +44,7 @@ class TransactionCategorySelector extends StatelessWidget {
         Text(AppLocalizations.of(context)!.category, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         GestureDetector(
-          onTap: () => _showCategoryPicker(context),
+          onTap: () => _showCategoryPicker(context, ref),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             decoration: BoxDecoration(
@@ -59,7 +62,7 @@ class TransactionCategorySelector extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      IconHelper.getIcon(selectedItem!.subCategory?.iconPath ?? selectedItem!.category.iconPath),
+                      IconHelper.getIconWithStyle(selectedItem!.subCategory?.iconPath ?? selectedItem!.category.iconPath, iconStyle),
                       color: selectedItem!.category.color,
                       size: 20,
                     ),
@@ -92,7 +95,9 @@ class TransactionCategorySelector extends StatelessWidget {
     );
   }
 
-  void _showCategoryPicker(BuildContext context) {
+  void _showCategoryPicker(BuildContext context, WidgetRef ref) {
+    final iconStyle = ref.read(iconStyleProvider);
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -149,7 +154,7 @@ class TransactionCategorySelector extends StatelessWidget {
                         ),
                         alignment: Alignment.center,
                         child: Icon(
-                          IconHelper.getIcon(item.subCategory?.iconPath ?? item.category.iconPath),
+                          IconHelper.getIconWithStyle(item.subCategory?.iconPath ?? item.category.iconPath, iconStyle),
                           color: isSelected ? AppColors.primary : item.category.color,
                           size: 20,
                         ),

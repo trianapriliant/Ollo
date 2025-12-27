@@ -13,6 +13,7 @@ import 'widgets/budget_summary_card.dart';
 import '../../../utils/icon_helper.dart';
 import '../../../localization/generated/app_localizations.dart';
 import '../../categories/presentation/category_localization_helper.dart';
+import '../../settings/presentation/icon_style_provider.dart';
 
 
 enum BudgetSortType { none, name, amount }
@@ -293,7 +294,7 @@ class _BudgetCard extends ConsumerWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  IconHelper.getIcon(category?.iconPath ?? 'category'),
+                                  IconHelper.getIconWithStyle(category?.iconPath ?? 'category', ref.watch(iconStyleProvider)),
                                   color: category?.color ?? Colors.grey,
                                   size: 20,
                                 ),

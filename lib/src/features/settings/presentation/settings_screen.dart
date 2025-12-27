@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_styles.dart';
 import 'currency_provider.dart';
+import 'icon_style_provider.dart';
 import 'language_provider.dart';
 import 'voice_language_provider.dart';
 import '../../../localization/generated/app_localizations.dart';
@@ -94,6 +95,26 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _showVoiceLanguagePicker(context, ref),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.purple.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.palette_outlined, color: Colors.purple),
+                    ),
+                    title: Text(AppLocalizations.of(context)!.iconStyleTitle, style: AppTextStyles.bodyLarge),
+                    subtitle: Consumer(
+                      builder: (context, ref, _) {
+                        final style = ref.watch(iconStyleProvider);
+                        return Text(style.displayName);
+                      },
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/settings/icon-style'),
                   ),
                 ],
               ),

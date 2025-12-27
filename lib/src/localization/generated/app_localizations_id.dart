@@ -2907,4 +2907,37 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get blockchain => 'Blockchain';
+
+  @override
+  String get iconStyleTitle => 'Gaya Ikon';
+
+  @override
+  String get iconStyleDescription => 'Pilih tampilan ikon di seluruh aplikasi';
+
+  @override
+  String get iconStylePreview => 'Pratinjau';
+
+  @override
+  String get iconStyleFilled => 'Solid';
+
+  @override
+  String get iconStyleFilledDesc => 'Ikon klasik terisi';
+
+  @override
+  String get iconStyleOutlined => 'Garis Tepi';
+
+  @override
+  String get iconStyleOutlinedDesc => 'Gaya outline bersih';
+
+  @override
+  String get iconStyleRounded => 'Bulat';
+
+  @override
+  String get iconStyleRoundedDesc => 'Sudut yang lembut';
+
+  @override
+  String get iconStyleSharp => 'Tajam';
+
+  @override
+  String get iconStyleSharpDesc => 'Tepi sudut tegas';
 }
