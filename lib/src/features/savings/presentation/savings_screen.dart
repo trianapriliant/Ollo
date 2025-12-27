@@ -11,11 +11,29 @@ import '../../savings/domain/saving_log.dart';
 import '../../../localization/generated/app_localizations.dart';
 import 'add_edit_saving_screen.dart';
 
-class SavingsScreen extends ConsumerWidget {
+class SavingsScreen extends ConsumerStatefulWidget {
   const SavingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SavingsScreen> createState() => _SavingsScreenState();
+}
+
+class _SavingsScreenState extends ConsumerState<SavingsScreen> {
+  bool _sortByProgress = false;
+
+  List<SavingGoal> _sortSavings(List<SavingGoal> savings) {
+    if (!_sortByProgress) return savings;
+    final sorted = List<SavingGoal>.from(savings);
+    sorted.sort((a, b) {
+      final progressA = a.currentAmount / a.targetAmount;
+      final progressB = b.currentAmount / b.targetAmount;
+      return progressB.compareTo(progressA); // High to low
+    });
+    return sorted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final savingsAsync = ref.watch(savingListProvider);
     final currency = ref.watch(currencyProvider);
     final l10n = AppLocalizations.of(context)!;
@@ -32,17 +50,77 @@ class SavingsScreen extends ConsumerWidget {
         title: Text(l10n.savings, style: AppTextStyles.h2),
         centerTitle: true,
         actions: [
-          IconButton(
+          PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {
-              // Future menu
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
+            onSelected: (value) {
+              if (value == 'home') {
+                context.go('/home');
+              }
+              if (value == 'sort_progress') {
+                setState(() => _sortByProgress = !_sortByProgress);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByProgress ? l10n.sortByProgress : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_progress',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByProgress 
+                            ? Colors.green.withOpacity(0.2)
+                            : Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.trending_up, size: 18, color: Colors.green),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(l10n.sortByProgress, style: AppTextStyles.bodyMedium),
+                    if (_sortByProgress) ...[
+                      const Spacer(),
+                      const Icon(Icons.check, size: 18, color: Colors.green),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(l10n.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
       body: savingsAsync.when(
         data: (savings) {
-          final totalSavings = savings.fold<double>(0, (sum, item) => sum + item.currentAmount);
+          final sortedSavings = _sortSavings(savings);
+          final totalSavings = sortedSavings.fold<double>(0, (sum, item) => sum + item.currentAmount);
 
           // Calculate Growth
           return FutureBuilder<List<SavingLog>>(
@@ -142,7 +220,7 @@ class SavingsScreen extends ConsumerWidget {
                       Text(l10n.financialBuckets, style: AppTextStyles.h3),
                       const SizedBox(height: 16),
 
-                      if (savings.isEmpty)
+                      if (sortedSavings.isEmpty)
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 40),
@@ -159,10 +237,10 @@ class SavingsScreen extends ConsumerWidget {
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: savings.length,
+                          itemCount: sortedSavings.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
-                            final goal = savings[index];
+                            final goal = sortedSavings[index];
                             return _buildSavingItem(context, goal, currency);
                           },
                         ),

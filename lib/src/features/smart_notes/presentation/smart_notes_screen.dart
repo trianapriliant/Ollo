@@ -12,11 +12,25 @@ import '../../wallets/presentation/wallet_provider.dart';
 import '../data/smart_note_repository.dart';
 import '../domain/smart_note.dart';
 
-class SmartNotesScreen extends ConsumerWidget {
+class SmartNotesScreen extends ConsumerStatefulWidget {
   const SmartNotesScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SmartNotesScreen> createState() => _SmartNotesScreenState();
+}
+
+class _SmartNotesScreenState extends ConsumerState<SmartNotesScreen> {
+  bool _sortByDate = false;
+
+  List<SmartNote> _sortNotes(List<SmartNote> notes) {
+    if (!_sortByDate) return notes;
+    final sorted = List<SmartNote>.from(notes);
+    sorted.sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Newest first
+    return sorted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final notesAsync = ref.watch(smartNoteListProvider);
 
     return Scaffold(
@@ -30,11 +44,84 @@ class SmartNotesScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
+            onSelected: (value) {
+              if (value == 'home') {
+                context.go('/home');
+              }
+              if (value == 'sort_date') {
+                setState(() => _sortByDate = !_sortByDate);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByDate 
+                        ? AppLocalizations.of(context)!.sortByDate 
+                        : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_date',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByDate 
+                            ? Colors.teal.withOpacity(0.2)
+                            : Colors.teal.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.calendar_today, size: 18, color: Colors.teal),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByDate, style: AppTextStyles.bodyMedium),
+                    if (_sortByDate) ...[
+                      const Spacer(),
+                      const Icon(Icons.check, size: 18, color: Colors.teal),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: notesAsync.when(
         data: (notes) {
-          final activeNotes = notes.where((n) => !n.isCompleted).toList();
-          final completedNotes = notes.where((n) => n.isCompleted).toList();
+          var activeNotes = notes.where((n) => !n.isCompleted).toList();
+          var completedNotes = notes.where((n) => n.isCompleted).toList();
+          
+          // Apply sorting if enabled
+          activeNotes = _sortNotes(activeNotes);
+          completedNotes = _sortNotes(completedNotes);
           
           return ListView(
             padding: const EdgeInsets.all(16),

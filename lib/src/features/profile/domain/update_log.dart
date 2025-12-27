@@ -14,6 +14,21 @@ class UpdateLog {
   // Sample data
   static List<UpdateLog> get logs => [
     UpdateLog(
+      version: 'Beta 0.6.2',
+      date: DateTime(2025, 12, 27),
+      changes: [
+        'Modernized: All PopupMenuButton menus with rounded corners, icon containers, and dividers.',
+        'Modernized: Budget, Wishlist, Savings, Recurring, Bills, Cards screens with functional sorting.',
+        'Modernized: Debts screen popup menu with Sort by Amount toggle.',
+        'Modernized: Smart Notes and Reimburse screens now have triple-dot menus.',
+        'Modernized: Wallet Detail popup (Update Balance, Edit, Delete) with colored icons.',
+        'Modernized: Update Balance dialog with premium design and wallet name display.',
+        'NEW: Sort options toggle on/off with checkmark indicator and snackbar feedback.',
+        'NEW: Thousand separator formatting in Update Balance input field.',
+        'Improved: All popup menus now have consistent Home navigation option.',
+      ],
+    ),
+    UpdateLog(
       version: 'Beta 0.6.1',
       date: DateTime(2025, 12, 26),
       changes: [

@@ -275,6 +275,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings => '설정';
 
   @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByAmount => '금액순 정렬';
+
+  @override
+  String get sortByDate => '날짜순 정렬';
+
+  @override
+  String get sortByPrice => 'Sort by Price';
+
+  @override
+  String get sortByProgress => 'Sort by Progress';
+
+  @override
+  String get sortByDueDate => 'Sort by Due Date';
+
+  @override
+  String get sortByBalance => 'Sort by Balance';
+
+  @override
   String get developerOptions => '개발자 옵션';
 
   @override
@@ -703,12 +724,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get deleteDebtConfirm => '채무 기록이 삭제됩니다.';
-
-  @override
-  String get sortByDate => '날짜순 정렬';
-
-  @override
-  String get sortByAmount => '금액순 정렬';
 
   @override
   String get editDebt => '채무/대출 편집';

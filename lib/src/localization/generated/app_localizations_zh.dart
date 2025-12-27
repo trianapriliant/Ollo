@@ -275,6 +275,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings => '设置';
 
   @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByAmount => '按金额排序';
+
+  @override
+  String get sortByDate => '按日期排序';
+
+  @override
+  String get sortByPrice => 'Sort by Price';
+
+  @override
+  String get sortByProgress => 'Sort by Progress';
+
+  @override
+  String get sortByDueDate => 'Sort by Due Date';
+
+  @override
+  String get sortByBalance => 'Sort by Balance';
+
+  @override
   String get developerOptions => '开发者选项';
 
   @override
@@ -701,12 +722,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteDebtConfirm => '这将删除债务记录。';
-
-  @override
-  String get sortByDate => '按日期排序';
-
-  @override
-  String get sortByAmount => '按金额排序';
 
   @override
   String get editDebt => '编辑';

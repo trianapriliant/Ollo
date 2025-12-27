@@ -636,6 +636,48 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @sortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Name'**
+  String get sortByName;
+
+  /// No description provided for @sortByAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Amount'**
+  String get sortByAmount;
+
+  /// No description provided for @sortByDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Date'**
+  String get sortByDate;
+
+  /// No description provided for @sortByPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Price'**
+  String get sortByPrice;
+
+  /// No description provided for @sortByProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Progress'**
+  String get sortByProgress;
+
+  /// No description provided for @sortByDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Due Date'**
+  String get sortByDueDate;
+
+  /// No description provided for @sortByBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Balance'**
+  String get sortByBalance;
+
   /// No description provided for @developerOptions.
   ///
   /// In en, this message translates to:
@@ -1475,18 +1517,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This will remove the debt record.'**
   String get deleteDebtConfirm;
-
-  /// No description provided for @sortByDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort by Date'**
-  String get sortByDate;
-
-  /// No description provided for @sortByAmount.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort by Amount'**
-  String get sortByAmount;
 
   /// No description provided for @editDebt.
   ///

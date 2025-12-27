@@ -275,6 +275,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings => '設定';
 
   @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByAmount => '金額順';
+
+  @override
+  String get sortByDate => '日付順';
+
+  @override
+  String get sortByPrice => 'Sort by Price';
+
+  @override
+  String get sortByProgress => 'Sort by Progress';
+
+  @override
+  String get sortByDueDate => 'Sort by Due Date';
+
+  @override
+  String get sortByBalance => 'Sort by Balance';
+
+  @override
   String get developerOptions => '開発者オプション';
 
   @override
@@ -701,12 +722,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get deleteDebtConfirm => 'この記録を削除します。';
-
-  @override
-  String get sortByDate => '日付順';
-
-  @override
-  String get sortByAmount => '金額順';
 
   @override
   String get editDebt => '編集';

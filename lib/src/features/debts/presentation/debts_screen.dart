@@ -23,6 +23,7 @@ class DebtsScreen extends ConsumerStatefulWidget {
 
 class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _sortByAmount = false;
 
   @override
   void initState() {
@@ -47,21 +48,71 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
             onSelected: (value) {
-              // Handle menu actions
-            },
-            itemBuilder: (BuildContext context) {
-              return {
-                AppLocalizations.of(context)!.sortByDate,
-                AppLocalizations.of(context)!.sortByAmount,
-                AppLocalizations.of(context)!.settings
-              }.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
+              if (value == 'home') {
+                context.go('/home');
+              }
+              if (value == 'sort_amount') {
+                setState(() => _sortByAmount = !_sortByAmount);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByAmount 
+                        ? AppLocalizations.of(context)!.sortByAmount 
+                        : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
+                  ),
                 );
-              }).toList();
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_amount',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByAmount 
+                            ? Colors.orange.withOpacity(0.2)
+                            : Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.attach_money, size: 18, color: Colors.orange),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByAmount, style: AppTextStyles.bodyMedium),
+                    if (_sortByAmount) ...[
+                      const Spacer(),
+                      const Icon(Icons.check, size: 18, color: Colors.orange),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -107,9 +158,9 @@ class _DebtsScreenState extends ConsumerState<DebtsScreen> with SingleTickerProv
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: const [
-                _DebtList(type: DebtType.borrowing),
-                _DebtList(type: DebtType.lending),
+              children: [
+                _DebtList(type: DebtType.borrowing, sortByAmount: _sortByAmount),
+                _DebtList(type: DebtType.lending, sortByAmount: _sortByAmount),
               ],
             ),
           ),
@@ -252,7 +303,8 @@ class _DebtsSummaryCard extends ConsumerWidget {
 
 class _DebtList extends ConsumerWidget {
   final DebtType type;
-  const _DebtList({required this.type});
+  final bool sortByAmount;
+  const _DebtList({required this.type, this.sortByAmount = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -280,8 +332,13 @@ class _DebtList extends ConsumerWidget {
         }
 
         // Separate active and completed debts
-        final activeDebts = debts.where((d) => !d.isPaid).toList();
+        var activeDebts = debts.where((d) => !d.isPaid).toList();
         final completedDebts = debts.where((d) => d.isPaid).toList();
+        
+        // Apply sorting if enabled
+        if (sortByAmount && activeDebts.isNotEmpty) {
+          activeDebts.sort((a, b) => b.remainingAmount.compareTo(a.remainingAmount)); // High to low
+        }
 
         return ListView(
           padding: const EdgeInsets.all(20),

@@ -279,6 +279,27 @@ class AppLocalizationsHi extends AppLocalizations {
   String get settings => 'सेटिंग्स';
 
   @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByAmount => 'राशि के अनुसार क्रमबद्ध करें';
+
+  @override
+  String get sortByDate => 'तिथि के अनुसार क्रमबद्ध करें';
+
+  @override
+  String get sortByPrice => 'Sort by Price';
+
+  @override
+  String get sortByProgress => 'Sort by Progress';
+
+  @override
+  String get sortByDueDate => 'Sort by Due Date';
+
+  @override
+  String get sortByBalance => 'Sort by Balance';
+
+  @override
   String get developerOptions => 'डेवलपर विकल्प';
 
   @override
@@ -711,12 +732,6 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get deleteDebtConfirm => 'यह उधारी रिकॉर्ड हटा देगा।';
-
-  @override
-  String get sortByDate => 'तिथि के अनुसार क्रमबद्ध करें';
-
-  @override
-  String get sortByAmount => 'राशि के अनुसार क्रमबद्ध करें';
 
   @override
   String get editDebt => 'संपादित करें';

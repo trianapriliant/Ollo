@@ -18,6 +18,7 @@ class ReimburseScreen extends ConsumerStatefulWidget {
 
 class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _sortByDate = false;
 
   @override
   void initState() {
@@ -45,6 +46,73 @@ class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTi
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
+            onSelected: (value) {
+              if (value == 'home') {
+                context.go('/home');
+              }
+              if (value == 'sort_date') {
+                setState(() => _sortByDate = !_sortByDate);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByDate ? l10n.sortByDate : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_date',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByDate 
+                            ? const Color(0xFF1E1E1E).withOpacity(0.2)
+                            : const Color(0xFF1E1E1E).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.calendar_today, size: 18, color: Color(0xFF1E1E1E)),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(l10n.sortByDate, style: AppTextStyles.bodyMedium),
+                    if (_sortByDate) ...[
+                      const Spacer(),
+                      const Icon(Icons.check, size: 18, color: Color(0xFF1E1E1E)),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(l10n.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
@@ -59,14 +127,14 @@ class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTi
       floatingActionButton: FloatingActionButton(
         heroTag: 'reimburse_fab',
         onPressed: () => context.push('/reimburse/add'),
-        backgroundColor: const Color(0xFF1E1E1E), // Dark background like premium menus
+        backgroundColor: const Color(0xFF1E1E1E),
         child: const Icon(Icons.add, color: Colors.white),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          _ReimburseList(status: TransactionStatus.pending),
-          _ReimburseList(status: TransactionStatus.completed),
+        children: [
+          _ReimburseList(status: TransactionStatus.pending, sortByDate: _sortByDate),
+          _ReimburseList(status: TransactionStatus.completed, sortByDate: _sortByDate),
         ],
       ),
     );
@@ -75,8 +143,9 @@ class _ReimburseScreenState extends ConsumerState<ReimburseScreen> with SingleTi
 
 class _ReimburseList extends ConsumerWidget {
   final TransactionStatus status;
+  final bool sortByDate;
 
-  const _ReimburseList({required this.status});
+  const _ReimburseList({required this.status, this.sortByDate = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -86,7 +155,12 @@ class _ReimburseList extends ConsumerWidget {
 
     return transactionsAsync.when(
       data: (transactions) {
-        final reimbursements = transactions.where((t) => t.type == TransactionType.reimbursement && t.status == status).toList();
+        var reimbursements = transactions.where((t) => t.type == TransactionType.reimbursement && t.status == status).toList();
+        
+        // Apply sorting if enabled
+        if (sortByDate && reimbursements.isNotEmpty) {
+          reimbursements.sort((a, b) => b.date.compareTo(a.date)); // Newest first
+        }
 
         if (reimbursements.isEmpty) {
           return Center(

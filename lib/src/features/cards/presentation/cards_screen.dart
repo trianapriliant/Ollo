@@ -21,6 +21,14 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
   bool get _isMultiSelectMode => _selectedIds.isNotEmpty;
   TabController? _tabController;
   int _lastTabCount = 2;
+  bool _sortByName = false;
+
+  List<BankCard> _sortCards(List<BankCard> cards) {
+    if (!_sortByName) return cards;
+    final sorted = List<BankCard>.from(cards);
+    sorted.sort((a, b) => a.name.compareTo(b.name)); // A-Z
+    return sorted;
+  }
 
   void _initTabController(int tabCount) {
     _tabController?.dispose();
@@ -93,7 +101,9 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
 
     return cardsAsync.when(
       data: (cards) {
-        final hasBlockchain = cards.any((c) => c.type == CardType.blockchain);
+        // Apply sorting
+        final sortedCards = _sortCards(cards);
+        final hasBlockchain = sortedCards.any((c) => c.type == CardType.blockchain);
         final tabCount = hasBlockchain ? 3 : 2;
         
         // Schedule tab controller update for next frame if needed
@@ -131,29 +141,72 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
               if (_isMultiSelectMode)
                 IconButton(
                   icon: const Icon(Icons.copy_all, color: AppColors.primary),
-                  onPressed: () => _copySelected(cards, l10n),
+                  onPressed: () => _copySelected(sortedCards, l10n),
                 ),
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, color: Colors.black),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                color: Colors.white,
+                elevation: 8,
+                offset: const Offset(0, 50),
                 onSelected: (value) {
                   if (value == 'home') {
                     context.go('/home');
                   }
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'home',
-                      child: Row(
-                        children: [
-                          const Icon(Icons.home, color: Colors.black),
-                          const SizedBox(width: 8),
-                          Text(l10n.home),
-                        ],
+                  if (value == 'sort_name') {
+                    setState(() => _sortByName = !_sortByName);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(_sortByName ? l10n.sortByName : 'Sort cleared'),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 1),
                       ),
-                    ),
-                  ];
+                    );
+                  }
                 },
+                itemBuilder: (context) => [
+                  PopupMenuItem<String>(
+                    value: 'sort_name',
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: _sortByName 
+                                ? AppColors.primary.withOpacity(0.2) 
+                                : AppColors.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(Icons.sort_by_alpha, size: 18, color: AppColors.primary),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(l10n.sortByName, style: AppTextStyles.bodyMedium),
+                        if (_sortByName) ...[
+                          const Spacer(),
+                          Icon(Icons.check, size: 18, color: AppColors.primary),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem<String>(
+                    value: 'home',
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(l10n.home, style: AppTextStyles.bodyMedium),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
             bottom: TabBar(
@@ -181,10 +234,10 @@ class _CardsScreenState extends ConsumerState<CardsScreen> with SingleTickerProv
           body: TabBarView(
             controller: _tabController,
             children: [
-              _buildCardList(cards.where((c) => c.type == CardType.bank).toList(), l10n, CardType.bank),
-              _buildCardList(cards.where((c) => c.type == CardType.eWallet).toList(), l10n, CardType.eWallet),
+              _buildCardList(sortedCards.where((c) => c.type == CardType.bank).toList(), l10n, CardType.bank),
+              _buildCardList(sortedCards.where((c) => c.type == CardType.eWallet).toList(), l10n, CardType.eWallet),
               if (_lastTabCount == 3)
-                _buildCardList(cards.where((c) => c.type == CardType.blockchain).toList(), l10n, CardType.blockchain),
+                _buildCardList(sortedCards.where((c) => c.type == CardType.blockchain).toList(), l10n, CardType.blockchain),
             ],
           ),
           floatingActionButton: _isMultiSelectMode 

@@ -10,11 +10,25 @@ import '../../recurring/domain/recurring_transaction.dart';
 import 'widgets/recurring_summary_card.dart';
 import '../../../localization/generated/app_localizations.dart';
 
-class RecurringScreen extends ConsumerWidget {
+class RecurringScreen extends ConsumerStatefulWidget {
   const RecurringScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RecurringScreen> createState() => _RecurringScreenState();
+}
+
+class _RecurringScreenState extends ConsumerState<RecurringScreen> {
+  bool _sortByDate = false;
+
+  List<RecurringTransaction> _sortTransactions(List<RecurringTransaction> transactions) {
+    if (!_sortByDate) return transactions;
+    final sorted = List<RecurringTransaction>.from(transactions);
+    sorted.sort((a, b) => a.nextDueDate.compareTo(b.nextDueDate)); // Earliest first
+    return sorted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final recurringAsync = ref.watch(recurringListProvider);
     final currency = ref.watch(currencyProvider);
 
@@ -32,25 +46,68 @@ class RecurringScreen extends ConsumerWidget {
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
             onSelected: (value) {
               if (value == 'home') {
                 context.go('/home');
               }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'home',
-                  child: Row(
-                    children: [
-                      const Icon(Icons.home, color: Colors.black),
-                      const SizedBox(width: 8),
-                      Text(AppLocalizations.of(context)!.home),
-                    ],
+              if (value == 'sort_date') {
+                setState(() => _sortByDate = !_sortByDate);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByDate ? AppLocalizations.of(context)!.sortByDate : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
                   ),
-                ),
-              ];
+                );
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_date',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByDate 
+                            ? AppColors.primary.withOpacity(0.2) 
+                            : AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.calendar_today, size: 18, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByDate, style: AppTextStyles.bodyMedium),
+                    if (_sortByDate) ...[
+                      const Spacer(),
+                      Icon(Icons.check, size: 18, color: AppColors.primary),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -66,16 +123,17 @@ class RecurringScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               recurringAsync.when(
                 data: (transactions) {
-                  if (transactions.isEmpty) {
+                  final sortedTx = _sortTransactions(transactions);
+                  if (sortedTx.isEmpty) {
                     return Center(child: Text(AppLocalizations.of(context)!.noActiveSubscriptions));
                   }
                   return ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: transactions.length,
+                    itemCount: sortedTx.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
-                      final tx = transactions[index];
+                      final tx = sortedTx[index];
                       return _buildRecurringItem(context, tx, ref, currency);
                     },
                   );

@@ -23,6 +23,7 @@ class BillsScreen extends ConsumerStatefulWidget {
 
 class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _sortByDueDate = false;
 
   @override
   void initState() {
@@ -53,25 +54,70 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
             onSelected: (value) {
               if (value == 'home') {
                 context.go('/home');
               }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'home',
-                  child: Row(
-                    children: [
-                      Icon(Icons.home, color: Colors.black),
-                      SizedBox(width: 8),
-                      Text(AppLocalizations.of(context)!.home),
-                    ],
+              if (value == 'sort_due') {
+                setState(() => _sortByDueDate = !_sortByDueDate);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByDueDate 
+                        ? AppLocalizations.of(context)!.sortByDueDate 
+                        : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
                   ),
-                ),
-              ];
+                );
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_due',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByDueDate 
+                            ? AppColors.primary.withOpacity(0.2)
+                            : AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.event, size: 18, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByDueDate, style: AppTextStyles.bodyMedium),
+                    if (_sortByDueDate) ...[
+                      const Spacer(),
+                      Icon(Icons.check, size: 18, color: AppColors.primary),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -109,7 +155,7 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
             child: TabBarView(
               controller: _tabController,
               children: [
-                _UnpaidBillsList(currency: currency),
+                _UnpaidBillsList(currency: currency, sortByDueDate: _sortByDueDate),
                 _PaidBillsList(currency: currency),
               ],
             ),
@@ -132,8 +178,9 @@ class _BillsScreenState extends ConsumerState<BillsScreen> with SingleTickerProv
 
 class _UnpaidBillsList extends ConsumerWidget {
   final Currency currency;
+  final bool sortByDueDate;
 
-  const _UnpaidBillsList({required this.currency});
+  const _UnpaidBillsList({required this.currency, this.sortByDueDate = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -145,7 +192,14 @@ class _UnpaidBillsList extends ConsumerWidget {
         if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
         if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
 
-        final bills = snapshot.data!;
+        var bills = snapshot.data!;
+        
+        // Apply sorting if enabled
+        if (sortByDueDate && bills.isNotEmpty) {
+          bills = List<Bill>.from(bills);
+          bills.sort((a, b) => a.dueDate.compareTo(b.dueDate)); // Earliest first
+        }
+        
         if (bills.isEmpty) {
           return Center(
             child: Column(

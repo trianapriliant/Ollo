@@ -278,6 +278,27 @@ class AppLocalizationsId extends AppLocalizations {
   String get settings => 'Pengaturan';
 
   @override
+  String get sortByName => 'Urutkan Nama';
+
+  @override
+  String get sortByAmount => 'Urut Jumlah';
+
+  @override
+  String get sortByDate => 'Urut Tanggal';
+
+  @override
+  String get sortByPrice => 'Urutkan Harga';
+
+  @override
+  String get sortByProgress => 'Urutkan Progres';
+
+  @override
+  String get sortByDueDate => 'Urutkan Jatuh Tempo';
+
+  @override
+  String get sortByBalance => 'Urutkan Saldo';
+
+  @override
   String get developerOptions => 'Opsi Pengembang';
 
   @override
@@ -714,12 +735,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get deleteDebtConfirm => 'Ini akan menghapus catatan hutang.';
-
-  @override
-  String get sortByDate => 'Urut Tanggal';
-
-  @override
-  String get sortByAmount => 'Urut Jumlah';
 
   @override
   String get editDebt => 'Ubah Hutang/Piutang';

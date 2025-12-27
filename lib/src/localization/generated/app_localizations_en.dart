@@ -280,6 +280,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByAmount => 'Sort by Amount';
+
+  @override
+  String get sortByDate => 'Sort by Date';
+
+  @override
+  String get sortByPrice => 'Sort by Price';
+
+  @override
+  String get sortByProgress => 'Sort by Progress';
+
+  @override
+  String get sortByDueDate => 'Sort by Due Date';
+
+  @override
+  String get sortByBalance => 'Sort by Balance';
+
+  @override
   String get developerOptions => 'Developer Options';
 
   @override
@@ -715,12 +736,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteDebtConfirm => 'This will remove the debt record.';
-
-  @override
-  String get sortByDate => 'Sort by Date';
-
-  @override
-  String get sortByAmount => 'Sort by Amount';
 
   @override
   String get editDebt => 'Edit Debt/Loan';

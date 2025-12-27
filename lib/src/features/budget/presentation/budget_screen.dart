@@ -15,11 +15,33 @@ import '../../../localization/generated/app_localizations.dart';
 import '../../categories/presentation/category_localization_helper.dart';
 
 
-class BudgetScreen extends ConsumerWidget {
+enum BudgetSortType { none, name, amount }
+
+class BudgetScreen extends ConsumerStatefulWidget {
   const BudgetScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BudgetScreen> createState() => _BudgetScreenState();
+}
+
+class _BudgetScreenState extends ConsumerState<BudgetScreen> {
+  BudgetSortType _sortType = BudgetSortType.none;
+
+  List<Budget> _sortBudgets(List<Budget> budgets) {
+    if (_sortType == BudgetSortType.none) return budgets;
+    
+    final sorted = List<Budget>.from(budgets);
+    if (_sortType == BudgetSortType.name) {
+      // We need category names for this, so we sort by categoryId for now
+      sorted.sort((a, b) => a.categoryId.compareTo(b.categoryId));
+    } else if (_sortType == BudgetSortType.amount) {
+      sorted.sort((a, b) => b.amount.compareTo(a.amount)); // High to low
+    }
+    return sorted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final budgetsAsync = ref.watch(budgetListProvider);
 
     return Scaffold(
@@ -34,22 +56,115 @@ class BudgetScreen extends ConsumerWidget {
         ),
         title: Text(AppLocalizations.of(context)!.budgetsTitle, style: AppTextStyles.h2),
         actions: [
-          IconButton(
+          PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {
-              // Future functionality
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
+            onSelected: (value) {
+              if (value == 'home') {
+                context.go('/home');
+              }
+              if (value == 'sort_name') {
+                setState(() => _sortType = BudgetSortType.name);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.sortByName),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
+              if (value == 'sort_amount') {
+                setState(() => _sortType = BudgetSortType.amount);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.sortByAmount),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_name',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortType == BudgetSortType.name 
+                            ? AppColors.primary.withOpacity(0.2) 
+                            : AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.sort_by_alpha, size: 18, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByName, style: AppTextStyles.bodyMedium),
+                    if (_sortType == BudgetSortType.name) ...[
+                      const Spacer(),
+                      Icon(Icons.check, size: 18, color: AppColors.primary),
+                    ],
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'sort_amount',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortType == BudgetSortType.amount 
+                            ? Colors.orange.withOpacity(0.2) 
+                            : Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.attach_money, size: 18, color: Colors.orange),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByAmount, style: AppTextStyles.bodyMedium),
+                    if (_sortType == BudgetSortType.amount) ...[
+                      const Spacer(),
+                      const Icon(Icons.check, size: 18, color: Colors.orange),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
       body: budgetsAsync.when(
         data: (budgets) {
+          final sortedBudgets = _sortBudgets(budgets);
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
               const BudgetSummaryCard(),
               const SizedBox(height: 24),
-              if (budgets.isEmpty) ...[
+              if (sortedBudgets.isEmpty) ...[
                 const SizedBox(height: 48),
                 Center(
                   child: Column(
@@ -74,7 +189,7 @@ class BudgetScreen extends ConsumerWidget {
               ] else ...[
                 Text(AppLocalizations.of(context)!.yourBudgets, style: AppTextStyles.h2),
                 const SizedBox(height: 16),
-                ...budgets.map((budget) => Padding(
+                ...sortedBudgets.map((budget) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: GestureDetector(
                     onTap: () {

@@ -25,6 +25,14 @@ class WishlistScreen extends ConsumerStatefulWidget {
 
 class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _sortByPrice = false;
+
+  List<Wishlist> _sortWishlists(List<Wishlist> wishlists) {
+    if (!_sortByPrice) return wishlists;
+    final sorted = List<Wishlist>.from(wishlists);
+    sorted.sort((a, b) => b.price.compareTo(a.price)); // High to low
+    return sorted;
+  }
 
   @override
   void initState() {
@@ -53,25 +61,70 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: Colors.white,
+            elevation: 8,
+            offset: const Offset(0, 50),
             onSelected: (value) {
               if (value == 'home') {
                 context.go('/home');
               }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'home',
-                  child: Row(
-                    children: [
-                      const Icon(Icons.home, color: Colors.black),
-                      const SizedBox(width: 8),
-                      Text(AppLocalizations.of(context)!.home),
-                    ],
+              if (value == 'sort_price') {
+                setState(() => _sortByPrice = !_sortByPrice);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(_sortByPrice 
+                        ? AppLocalizations.of(context)!.sortByPrice 
+                        : 'Sort cleared'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 1),
                   ),
-                ),
-              ];
+                );
+              }
             },
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: 'sort_price',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _sortByPrice 
+                            ? const Color(0xFFFF80AB).withOpacity(0.2)
+                            : const Color(0xFFFF80AB).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.attach_money, size: 18, color: Color(0xFFFF80AB)),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.sortByPrice, style: AppTextStyles.bodyMedium),
+                    if (_sortByPrice) ...[
+                      const Spacer(),
+                      const Icon(Icons.check, size: 18, color: Color(0xFFFF80AB)),
+                    ],
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                value: 'home',
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.home_outlined, size: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.home, style: AppTextStyles.bodyMedium),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -117,8 +170,8 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
                 }
 
                 final allWishlists = snapshot.data!;
-                final activeWishlists = allWishlists.where((w) => !w.isCompleted).toList();
-                final achievedWishlists = allWishlists.where((w) => w.isCompleted).toList();
+                final activeWishlists = _sortWishlists(allWishlists.where((w) => !w.isCompleted).toList());
+                final achievedWishlists = _sortWishlists(allWishlists.where((w) => w.isCompleted).toList());
 
                 return TabBarView(
                   controller: _tabController,
